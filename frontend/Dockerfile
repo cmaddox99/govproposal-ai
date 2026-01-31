@@ -15,6 +15,7 @@ COPY . .
 # Set environment variables for build
 ARG NEXT_PUBLIC_API_URL=http://localhost:8000
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV DOCKER_BUILD=true
 
 RUN npm run build
 
