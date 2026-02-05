@@ -32,7 +32,13 @@ class Settings(BaseSettings):
     def postgres_url(self) -> str:
         """Build PostgreSQL connection URL."""
         if self.database_url:
-            return self.database_url
+            # Railway provides postgresql:// but asyncpg needs postgresql+asyncpg://
+            url = self.database_url
+            if url.startswith("postgresql://"):
+                url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+            elif url.startswith("postgres://"):
+                url = url.replace("postgres://", "postgresql+asyncpg://", 1)
+            return url
         return (
             f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}"
             f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"

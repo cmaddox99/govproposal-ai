@@ -33,6 +33,10 @@ RUN pip install --no-cache-dir \
 COPY src/ ./src/
 COPY alembic/ ./alembic/
 COPY alembic.ini ./
+COPY startup.sh ./
+
+# Make startup script executable
+RUN chmod +x startup.sh
 
 # Set Python path
 ENV PYTHONPATH=/app/src
@@ -40,9 +44,9 @@ ENV PYTHONPATH=/app/src
 # Expose port
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+# Health check with longer start period for migrations
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
     CMD python -c "import httpx; httpx.get('http://localhost:8000/health')" || exit 1
 
-# Run migrations and start the application
-CMD alembic upgrade head && uvicorn govproposal.main:app --host 0.0.0.0 --port 8000
+# Run startup script (handles migrations and starts uvicorn)
+CMD ["./startup.sh"]
