@@ -4,6 +4,17 @@ set -e
 echo "=== GovProposalAI Backend Startup ==="
 echo "PORT: ${PORT:-8000}"
 echo "DATABASE_URL set: $(if [ -n "$DATABASE_URL" ]; then echo 'yes'; else echo 'no'; fi)"
+echo "DATABASE_URL prefix: $(echo $DATABASE_URL | cut -c1-30)..."
+
+# Debug: Show what URL the app will use
+python -c "
+from govproposal.config import settings
+url = settings.postgres_url
+# Mask password for security
+import re
+masked = re.sub(r':([^:@]+)@', ':****@', url)
+print(f'Processed URL: {masked}')
+" 2>&1 || echo "Config debug failed"
 
 # Run migrations
 echo ""
