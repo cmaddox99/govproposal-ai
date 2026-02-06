@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { Shield, Copy, Check } from 'lucide-react';
-import { authApi } from '@/lib/api';
-import { MfaSetupResponse, MfaCompleteResponse } from '@/types';
+import { authApi } from '../../lib/api';
+import { MfaSetupResponse, MfaCompleteResponse } from '../../types';
 
 interface MfaSetupProps {
   onComplete: (recoveryCodes: string[]) => void;

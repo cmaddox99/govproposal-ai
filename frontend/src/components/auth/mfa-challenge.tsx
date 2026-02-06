@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { Shield, Key } from 'lucide-react';
-import { authApi } from '@/lib/api';
-import { TokenResponse } from '@/types';
+import { authApi } from '../../lib/api';
+import { TokenResponse } from '../../types';
 
 interface MfaChallengeProps {
   mfaToken: string;

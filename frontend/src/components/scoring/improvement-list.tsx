@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowUp, AlertCircle } from 'lucide-react';
-import { ScoreImprovement } from '@/types';
+import { ScoreImprovement } from '../../types';
 
 interface ImprovementListProps {
   improvements: ScoreImprovement[];

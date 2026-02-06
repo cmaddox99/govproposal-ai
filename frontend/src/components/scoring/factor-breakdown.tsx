@@ -1,6 +1,6 @@
 'use client';
 
-import { ScoreFactor } from '@/types';
+import { ScoreFactor } from '../../types';
 
 interface FactorBreakdownProps {
   factors: ScoreFactor[];
