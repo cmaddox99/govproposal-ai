@@ -35,8 +35,8 @@ COPY alembic/ ./alembic/
 COPY alembic.ini ./
 COPY startup.sh ./
 
-# Make startup script executable
-RUN chmod +x startup.sh
+# Fix line endings and make startup script executable
+RUN sed -i 's/\r$//' startup.sh && chmod +x startup.sh
 
 # Set Python path
 ENV PYTHONPATH=/app/src
