@@ -41,12 +41,15 @@ export default function RegisterPage() {
     setError('');
 
     try {
-      const response = await authApi.register(email, password);
-      const data = response.data;
+      // Register the user
+      await authApi.register(email, password);
 
       // Auto-login after registration
-      localStorage.setItem('token', data.access_token);
-      localStorage.setItem('refreshToken', data.refresh_token);
+      const loginResponse = await authApi.login(email, password);
+      const tokens = loginResponse.data;
+
+      localStorage.setItem('token', tokens.access_token);
+      localStorage.setItem('refreshToken', tokens.refresh_token);
       router.push('/');
     } catch (err: any) {
       setError(err.response?.data?.detail?.message || 'Registration failed. Please try again.');
