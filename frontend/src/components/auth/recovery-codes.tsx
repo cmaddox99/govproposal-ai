@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Key, Copy, Check, RefreshCw, AlertTriangle } from 'lucide-react';
-import { authApi } from '../../lib/api';
+import { authApi } from '@/lib/api';
 
 interface RecoveryCodesProps {
   codes: string[];

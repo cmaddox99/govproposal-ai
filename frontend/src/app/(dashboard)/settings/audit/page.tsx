@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { ClipboardList, Filter, RefreshCw } from 'lucide-react';
-import { orgAdminApi } from '../../../../lib/api';
-import { AuditLog, AuditLogList } from '../../../../types';
+import { orgAdminApi } from '@/lib/api';
+import { AuditLog, AuditLogList } from '@/types';
 
 const eventTypeLabels: Record<string, string> = {
   login_success: 'Login Success',

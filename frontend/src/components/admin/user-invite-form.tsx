@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { UserPlus, X } from 'lucide-react';
-import { orgAdminApi } from '../../lib/api';
+import { orgAdminApi } from '@/lib/api';
 
 interface UserInviteFormProps {
   orgId: string;

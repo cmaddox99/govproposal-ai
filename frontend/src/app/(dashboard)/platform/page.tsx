@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { Building2, Settings, ToggleLeft, ToggleRight, RefreshCw } from 'lucide-react';
-import { platformApi } from '../../../lib/api';
-import { Tenant, FeatureToggle } from '../../../types';
+import { platformApi } from '@/lib/api';
+import { Tenant, FeatureToggle } from '@/types';
 
 export default function PlatformPage() {
   const [tenants, setTenants] = useState<Tenant[]>([]);

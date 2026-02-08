@@ -8,7 +8,7 @@ import {
   AlertOctagon,
   ArrowRight
 } from 'lucide-react';
-import { GoNoGoSummary } from '../../types';
+import { GoNoGoSummary } from '@/types';
 
 interface GoNoGoCardProps {
   summary: GoNoGoSummary;

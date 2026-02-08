@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { Users, UserPlus, MoreVertical, Shield, ShieldOff } from 'lucide-react';
-import { orgAdminApi } from '../../../../lib/api';
-import { OrgUser } from '../../../../types';
-import { RoleBadge } from '../../../../components/admin/role-badge';
-import { UserInviteForm } from '../../../../components/admin/user-invite-form';
+import { orgAdminApi } from '@/lib/api';
+import { OrgUser } from '@/types';
+import { RoleBadge } from '@/components/admin/role-badge';
+import { UserInviteForm } from '@/components/admin/user-invite-form';
 
 export default function UsersPage() {
   const [users, setUsers] = useState<OrgUser[]>([]);

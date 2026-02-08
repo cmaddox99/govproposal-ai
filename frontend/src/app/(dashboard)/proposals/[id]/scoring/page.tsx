@@ -3,13 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { BarChart3, RefreshCw, History, TrendingUp, FileCheck } from 'lucide-react';
-import { scoringApi } from '../../../../../lib/api';
-import { ProposalScore, ImprovementList, GoNoGoSummary, ColorTeamType } from '../../../../../types';
-import { ScoreGauge } from '../../../../../components/scoring/score-gauge';
-import { FactorBreakdown } from '../../../../../components/scoring/factor-breakdown';
-import { ImprovementList as ImprovementListComponent } from '../../../../../components/scoring/improvement-list';
-import { ReadinessBadge } from '../../../../../components/scoring/readiness-badge';
-import { GoNoGoCard } from '../../../../../components/scoring/go-nogo-card';
+import { scoringApi } from '@/lib/api';
+import { ProposalScore, ImprovementList, GoNoGoSummary, ColorTeamType } from '@/types';
+import { ScoreGauge } from '@/components/scoring/score-gauge';
+import { FactorBreakdown } from '@/components/scoring/factor-breakdown';
+import { ImprovementList as ImprovementListComponent } from '@/components/scoring/improvement-list';
+import { ReadinessBadge } from '@/components/scoring/readiness-badge';
+import { GoNoGoCard } from '@/components/scoring/go-nogo-card';
 
 const colorTeams: ColorTeamType[] = ['pink_team', 'red_team', 'gold_team', 'submission'];
 
