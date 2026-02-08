@@ -15,7 +15,9 @@ import {
   Settings,
   LogOut,
   ChevronDown,
+  AlertCircle,
 } from 'lucide-react';
+import { organizationsApi } from '@/lib/api';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -40,15 +42,153 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [orgName, setOrgName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
+  const [orgId, setOrgId] = useState('');
+  const [showCreateOrg, setShowCreateOrg] = useState(false);
+  const [newOrgName, setNewOrgName] = useState('');
+  const [newOrgSlug, setNewOrgSlug] = useState('');
+  const [createError, setCreateError] = useState('');
+  const [creating, setCreating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedOrgName = localStorage.getItem('currentOrgName');
-    if (storedOrgName) {
-      setOrgName(storedOrgName);
+    // Check authentication
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
     }
-    // You could also fetch user info here
-  }, []);
+
+    const storedOrgName = localStorage.getItem('currentOrgName');
+    const storedOrgId = localStorage.getItem('currentOrgId');
+
+    if (storedOrgName && storedOrgId) {
+      setOrgName(storedOrgName);
+      setOrgId(storedOrgId);
+    } else {
+      // No org, show create form
+      setShowCreateOrg(true);
+    }
+    setIsLoading(false);
+  }, [router]);
+
+  const generateSlug = (name: string) => {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
+  };
+
+  const handleOrgNameChange = (value: string) => {
+    setNewOrgName(value);
+    setNewOrgSlug(generateSlug(value));
+  };
+
+  const handleCreateOrg = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreating(true);
+    setCreateError('');
+
+    try {
+      const response = await organizationsApi.create(newOrgName, newOrgSlug);
+      const org = response.data;
+
+      localStorage.setItem('currentOrgId', org.id);
+      localStorage.setItem('currentOrgName', org.name);
+
+      setOrgId(org.id);
+      setOrgName(org.name);
+      setShowCreateOrg(false);
+    } catch (err: any) {
+      console.error('Create org error:', err);
+      const detail = err.response?.data?.detail;
+      let errorMessage = 'Failed to create organization';
+      if (typeof detail === 'string') {
+        errorMessage = detail;
+      } else if (detail?.message) {
+        errorMessage = detail.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      setCreateError(errorMessage);
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-gray-400">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show create organization form if no org exists
+  if (showCreateOrg) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-8">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600/20 rounded-full mb-4">
+                <Building2 className="w-8 h-8 text-blue-500" />
+              </div>
+              <h1 className="text-2xl font-bold text-white">Create Your Organization</h1>
+              <p className="text-gray-400 mt-1">Set up your team workspace to get started</p>
+            </div>
+
+            <form onSubmit={handleCreateOrg} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Organization Name
+                </label>
+                <input
+                  type="text"
+                  value={newOrgName}
+                  onChange={(e) => handleOrgNameChange(e.target.value)}
+                  placeholder="Acme Government Solutions"
+                  required
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  URL Slug
+                </label>
+                <input
+                  type="text"
+                  value={newOrgSlug}
+                  onChange={(e) => setNewOrgSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
+                  placeholder="acme-gov"
+                  required
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  This will be used in URLs and cannot be changed later
+                </p>
+              </div>
+
+              {createError && (
+                <div className="flex items-center gap-2 text-red-400 text-sm bg-red-900/20 border border-red-800 p-3 rounded-lg">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  {createError}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={creating || !newOrgName || !newOrgSlug}
+                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              >
+                {creating ? 'Creating...' : 'Create Organization'}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('token');

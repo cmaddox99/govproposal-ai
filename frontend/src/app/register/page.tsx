@@ -50,7 +50,7 @@ export default function RegisterPage() {
 
       localStorage.setItem('token', tokens.access_token);
       localStorage.setItem('refreshToken', tokens.refresh_token);
-      router.push('/create-org');
+      router.push('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.detail?.message || 'Registration failed. Please try again.');
     } finally {
