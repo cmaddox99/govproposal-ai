@@ -89,8 +89,28 @@ export default function DashboardLayout({
     setCreateError('');
 
     try {
-      const response = await organizationsApi.create(newOrgName, newOrgSlug);
-      const org = response.data;
+      const token = localStorage.getItem('token');
+      console.log('Creating org with token:', token ? 'exists' : 'missing');
+
+      // Use fetch directly instead of axios
+      const response = await fetch('https://backend-production-d1d1.up.railway.app/api/v1/organizations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name: newOrgName, slug: newOrgSlug }),
+      });
+
+      console.log('Response status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail?.message || errorData.detail || 'Failed to create organization');
+      }
+
+      const org = await response.json();
+      console.log('Org created:', org);
 
       localStorage.setItem('currentOrgId', org.id);
       localStorage.setItem('currentOrgName', org.name);
@@ -100,16 +120,7 @@ export default function DashboardLayout({
       setShowCreateOrg(false);
     } catch (err: any) {
       console.error('Create org error:', err);
-      const detail = err.response?.data?.detail;
-      let errorMessage = 'Failed to create organization';
-      if (typeof detail === 'string') {
-        errorMessage = detail;
-      } else if (detail?.message) {
-        errorMessage = detail.message;
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      setCreateError(errorMessage);
+      setCreateError(err.message || 'Failed to create organization');
     } finally {
       setCreating(false);
     }
