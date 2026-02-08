@@ -17,8 +17,23 @@ class Settings(BaseSettings):
     api_host: str = "0.0.0.0"
     api_port: int = 8000
 
-    # CORS
-    cors_origins: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    # CORS - raw string from env, parsed in property
+    cors_origins_str: str = '["http://localhost:3000", "http://127.0.0.1:3000"]'
+
+    @property
+    def cors_origins(self) -> List[str]:
+        """Parse CORS origins from JSON string or return as-is if already a list."""
+        import json
+        try:
+            origins = json.loads(self.cors_origins_str)
+            if isinstance(origins, list):
+                return origins
+            return [origins]
+        except (json.JSONDecodeError, TypeError):
+            # If not JSON, treat as comma-separated or single origin
+            if "," in self.cors_origins_str:
+                return [o.strip() for o in self.cors_origins_str.split(",")]
+            return [self.cors_origins_str]
 
     # Database - supports both individual vars and DATABASE_URL
     database_url: Optional[str] = None
