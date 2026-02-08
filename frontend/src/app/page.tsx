@@ -9,10 +9,17 @@ export default function HomePage() {
   useEffect(() => {
     // Check if user is authenticated
     const token = localStorage.getItem('token');
-    if (token) {
-      router.push('/settings/users');
-    } else {
+    if (!token) {
       router.push('/login');
+      return;
+    }
+
+    // Check if user has an organization
+    const orgId = localStorage.getItem('currentOrgId');
+    if (!orgId) {
+      router.push('/create-org');
+    } else {
+      router.push('/dashboard');
     }
   }, [router]);
 

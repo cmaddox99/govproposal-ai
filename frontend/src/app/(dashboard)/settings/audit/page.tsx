@@ -32,12 +32,16 @@ export default function AuditPage() {
   const [error, setError] = useState('');
   const [eventTypeFilter, setEventTypeFilter] = useState('');
   const [page, setPage] = useState(0);
+  const [orgId, setOrgId] = useState<string | null>(null);
   const limit = 20;
 
-  // In production, get orgId from context or route params
-  const orgId = 'current-org-id';
+  useEffect(() => {
+    const storedOrgId = localStorage.getItem('currentOrgId');
+    setOrgId(storedOrgId);
+  }, []);
 
   const fetchLogs = async () => {
+    if (!orgId) return;
     setLoading(true);
     try {
       const params: Record<string, unknown> = {
@@ -60,8 +64,10 @@ export default function AuditPage() {
   };
 
   useEffect(() => {
-    fetchLogs();
-  }, [page, eventTypeFilter]);
+    if (orgId) {
+      fetchLogs();
+    }
+  }, [page, eventTypeFilter, orgId]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

@@ -13,11 +13,15 @@ export default function UsersPage() {
   const [error, setError] = useState('');
   const [showInvite, setShowInvite] = useState(false);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [orgId, setOrgId] = useState<string | null>(null);
 
-  // In production, get orgId from context or route params
-  const orgId = 'current-org-id';
+  useEffect(() => {
+    const storedOrgId = localStorage.getItem('currentOrgId');
+    setOrgId(storedOrgId);
+  }, []);
 
   const fetchUsers = async () => {
+    if (!orgId) return;
     setLoading(true);
     try {
       const response = await orgAdminApi.listUsers(orgId);
@@ -30,8 +34,10 @@ export default function UsersPage() {
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (orgId) {
+      fetchUsers();
+    }
+  }, [orgId]);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     try {
