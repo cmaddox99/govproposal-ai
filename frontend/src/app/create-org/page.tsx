@@ -51,7 +51,12 @@ export default function CreateOrgPage() {
     setError('');
 
     try {
+      const token = localStorage.getItem('token');
+      console.log('Token exists:', !!token);
+      console.log('Creating org with:', { name, slug });
+
       const response = await organizationsApi.create(name, slug);
+      console.log('Response:', response);
       const org = response.data;
 
       // Store the organization ID
@@ -61,6 +66,10 @@ export default function CreateOrgPage() {
       router.push('/dashboard');
     } catch (err: any) {
       console.error('Create org error:', err);
+      console.error('Error response:', err.response);
+      console.error('Error request:', err.request);
+      console.error('Error config:', err.config);
+
       const detail = err.response?.data?.detail;
       let errorMessage = 'Failed to create organization';
       if (typeof detail === 'string') {
@@ -69,6 +78,10 @@ export default function CreateOrgPage() {
         errorMessage = detail.message;
       } else if (err.message) {
         errorMessage = err.message;
+      }
+      // Add more context to the error
+      if (err.code === 'ERR_NETWORK') {
+        errorMessage = `Network Error: Cannot reach server. Please check your connection.`;
       }
       setError(errorMessage);
     } finally {
