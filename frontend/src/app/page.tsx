@@ -14,13 +14,8 @@ export default function HomePage() {
       return;
     }
 
-    // Check if user has an organization
-    const orgId = localStorage.getItem('currentOrgId');
-    if (!orgId) {
-      router.push('/create-org');
-    } else {
-      router.push('/dashboard');
-    }
+    // Always go to dashboard - it will handle org creation if needed
+    router.push('/dashboard');
   }, [router]);
 
   return (
