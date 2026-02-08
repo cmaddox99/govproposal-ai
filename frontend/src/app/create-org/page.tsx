@@ -11,14 +11,25 @@ export default function CreateOrgPage() {
   const [slug, setSlug] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     // Check if user is authenticated
     const token = localStorage.getItem('token');
     if (!token) {
       router.push('/login');
+    } else {
+      setIsReady(true);
     }
   }, [router]);
+
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    );
+  }
 
   const generateSlug = (name: string) => {
     return name
