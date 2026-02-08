@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Building2, AlertCircle } from 'lucide-react';
-import { organizationsApi } from '@/lib/api';
+import { organizationsApi } from '../../lib/api';
 
 export default function CreateOrgPage() {
   const router = useRouter();
@@ -11,6 +11,14 @@ export default function CreateOrgPage() {
   const [slug, setSlug] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+    }
+  }, [router]);
 
   const generateSlug = (name: string) => {
     return name
@@ -41,7 +49,17 @@ export default function CreateOrgPage() {
 
       router.push('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.detail?.message || 'Failed to create organization');
+      console.error('Create org error:', err);
+      const detail = err.response?.data?.detail;
+      let errorMessage = 'Failed to create organization';
+      if (typeof detail === 'string') {
+        errorMessage = detail;
+      } else if (detail?.message) {
+        errorMessage = detail.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
