@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Building2, AlertCircle } from 'lucide-react';
-import { organizationsApi } from '../../lib/api';
+import { organizationsApi } from '@/lib/api';
 
 export default function CreateOrgPage() {
   const router = useRouter();
