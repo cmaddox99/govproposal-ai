@@ -92,8 +92,8 @@ export default function DashboardLayout({
       const token = localStorage.getItem('token');
       console.log('Creating org with token:', token ? 'exists' : 'missing');
 
-      // Use fetch directly instead of axios
-      const response = await fetch('https://backend-production-d1d1.up.railway.app/api/v1/organizations', {
+      // Use local API route to bypass CORS
+      const response = await fetch('/api/organizations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
