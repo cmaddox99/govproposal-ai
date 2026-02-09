@@ -104,12 +104,20 @@ export default function DashboardLayout({
 
       console.log('Response status:', response.status);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail?.message || errorData.detail || 'Failed to create organization');
+      const text = await response.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.error('Non-JSON response:', text);
+        throw new Error(text || 'Invalid server response');
       }
 
-      const org = await response.json();
+      if (!response.ok) {
+        throw new Error(data.detail?.message || data.detail || 'Failed to create organization');
+      }
+
+      const org = data;
       console.log('Org created:', org);
 
       localStorage.setItem('currentOrgId', org.id);

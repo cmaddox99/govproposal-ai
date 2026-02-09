@@ -16,7 +16,17 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      console.error('Non-JSON response:', text);
+      return NextResponse.json(
+        { detail: text || 'Invalid server response' },
+        { status: response.status || 500 }
+      );
+    }
 
     if (!response.ok) {
       return NextResponse.json(data, { status: response.status });
