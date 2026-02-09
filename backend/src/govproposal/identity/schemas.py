@@ -141,9 +141,29 @@ class OrganizationResponse(BaseModel):
     name: str
     slug: str
     is_active: bool
+    contact_email: str | None = None
+    phone: str | None = None
+    address: str | None = None
+    uei_number: str | None = None
+    cage_code: str | None = None
+    duns_number: str | None = None
+    naics_codes: list[str] | None = None
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class OrganizationUpdate(BaseModel):
+    """Schema for organization update."""
+
+    name: str | None = None
+    contact_email: str | None = None
+    phone: str | None = None
+    address: str | None = None
+    uei_number: str | None = None
+    cage_code: str | None = None
+    duns_number: str | None = None
+    naics_codes: list[str] | None = None
 
 
 class OrganizationMemberResponse(BaseModel):

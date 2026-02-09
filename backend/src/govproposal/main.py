@@ -12,6 +12,8 @@ from govproposal.identity.org_router import router as org_router
 from govproposal.identity.platform_router import router as platform_router
 from govproposal.scoring.router import router as scoring_router
 from govproposal.security.router import audit_router
+from govproposal.opportunities.router import router as opportunities_router
+from govproposal.proposals.router import router as proposals_router
 
 
 @asynccontextmanager
@@ -47,6 +49,8 @@ app.include_router(admin_router)
 app.include_router(platform_router)
 app.include_router(audit_router)
 app.include_router(scoring_router)
+app.include_router(opportunities_router)
+app.include_router(proposals_router)
 
 
 @app.get("/health")

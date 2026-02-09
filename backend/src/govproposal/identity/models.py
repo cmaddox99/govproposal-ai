@@ -101,6 +101,23 @@ class Organization(Base):
     slug: Mapped[str] = mapped_column(String(100), unique=True, nullable=False, index=True)
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
 
+    # Contact info
+    contact_email: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    phone: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    address: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Government credentials
+    uei_number: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    cage_code: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)
+    duns_number: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+
+    # NAICS codes (stored as JSON array)
+    naics_codes: Mapped[Optional[list]] = mapped_column(
+        "naics_codes",
+        type_=Text,
+        nullable=True,
+    )
+
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_utc_now, nullable=False
