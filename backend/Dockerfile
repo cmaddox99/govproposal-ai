@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 COPY pyproject.toml ./
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir \
-    fastapi>=0.109.0 \
+    fastapi[standard]>=0.109.0 \
     uvicorn[standard]>=0.27.0 \
     sqlalchemy[asyncio]>=2.0.0 \
     asyncpg>=0.29.0 \

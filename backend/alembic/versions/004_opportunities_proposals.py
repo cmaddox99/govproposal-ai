@@ -1,7 +1,7 @@
 """Opportunities and Proposals models
 
-Revision ID: 004
-Revises: 003
+Revision ID: 004_opportunities_proposals
+Revises: 003_scoring_models
 Create Date: 2026-02-08
 
 """
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '004'
-down_revision: Union[str, None] = '003'
+revision: str = '004_opportunities_proposals'
+down_revision: Union[str, None] = '003_scoring_models'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
