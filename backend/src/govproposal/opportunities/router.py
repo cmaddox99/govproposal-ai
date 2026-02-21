@@ -223,10 +223,11 @@ async def sync_opportunities(
         sam_service = SAMGovService()
         naics_list = [n.strip() for n in naics_codes.split(",")]
 
-        # Search for opportunities with future deadlines
+        # Search for recent opportunities (posted in last 90 days)
         result = await sam_service.search_opportunities(
             naics_codes=naics_list,
-            response_deadline_from=datetime.now(timezone.utc),
+            posted_from=datetime.now(timezone.utc) - timedelta(days=90),
+            posted_to=datetime.now(timezone.utc),
             limit=100,
         )
 
