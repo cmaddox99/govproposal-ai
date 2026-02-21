@@ -1,8 +1,9 @@
 """Pydantic schemas for identity module."""
 
+import json
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
 # User schemas
@@ -149,6 +150,15 @@ class OrganizationResponse(BaseModel):
     duns_number: str | None = None
     naics_codes: list[str] | None = None
     created_at: datetime
+
+    @field_validator("naics_codes", mode="before")
+    @classmethod
+    def parse_naics_codes(cls, v: object) -> list[str] | None:
+        if v is None:
+            return None
+        if isinstance(v, str):
+            return json.loads(v)
+        return v
 
     model_config = {"from_attributes": True}
 
