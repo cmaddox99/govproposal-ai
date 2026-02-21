@@ -133,4 +133,28 @@ export const scoringApi = {
     api.get(`/api/v1/proposals/${proposalId}/score/go-no-go`),
 };
 
+// Proposals API
+export const proposalsApi = {
+  list: (params?: { org_id?: string; status_filter?: string; limit?: number; offset?: number }) =>
+    api.get('/api/v1/proposals', { params }),
+  get: (proposalId: string) =>
+    api.get(`/api/v1/proposals/${proposalId}`),
+  create: (data: {
+    organization_id: string;
+    title: string;
+    description?: string;
+    solicitation_number?: string;
+    agency?: string;
+    naics_code?: string;
+    due_date?: string;
+    estimated_value?: number;
+  }) => api.post('/api/v1/proposals', data),
+  update: (proposalId: string, data: Record<string, any>) =>
+    api.put(`/api/v1/proposals/${proposalId}`, data),
+  delete: (proposalId: string) =>
+    api.delete(`/api/v1/proposals/${proposalId}`),
+  createFromOpportunity: (data: { opportunity_id: string; organization_id: string }) =>
+    api.post('/api/v1/proposals/from-opportunity', data),
+};
+
 export default api;

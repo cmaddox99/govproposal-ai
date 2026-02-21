@@ -100,14 +100,14 @@ Create, manage, and track government proposals through their lifecycle.
 
 | # | Feature | Backend | Frontend | Deployed | Notes |
 |---|---------|---------|----------|----------|-------|
-| 6.1 | Create Proposal (manual) | Done | Not started | Partial | Backend works, no "New Proposal" form |
+| 6.1 | Create Proposal (manual) | Done | Done | Yes | /proposals/new page with form |
 | 6.2 | Create Proposal from Opportunity | Done | Done | Yes | Button on opportunities page |
 | 6.3 | AI-Generated Executive Summary | Placeholder | N/A | Partial | Template text, Claude API not integrated |
-| 6.4 | List Proposals (filtered, paginated) | Done | Not started | Partial | Backend works, frontend shows empty state |
-| 6.5 | Proposal Detail/Edit View | Done | Not started | Partial | Backend CRUD works, no frontend editor |
-| 6.6 | Proposal Status Workflow | Done | Not started | Partial | Draft/InProgress/Review/Submitted/Awarded |
-| 6.7 | Delete Proposal (admin/owner) | Done | Not started | Partial | Backend enforces permissions |
-| 6.8 | Proposal Content Sections | Done | Not started | Partial | Exec summary, tech approach, etc. in model |
+| 6.4 | List Proposals (filtered, paginated) | Done | Done | Yes | Search, status filter, pagination |
+| 6.5 | Proposal Detail/Edit View | Done | Done | Yes | /proposals/[id] with Overview + Content tabs |
+| 6.6 | Proposal Status Workflow | Done | Done | Yes | Status dropdown on detail page |
+| 6.7 | Delete Proposal (admin/owner) | Done | Done | Yes | Delete button with confirmation |
+| 6.8 | Proposal Content Sections | Done | Done | Yes | 5 content sections on Content tab |
 
 ---
 
@@ -207,17 +207,16 @@ Deployment, containerization, and CI/CD.
 | 3. RBAC | 6 | 6 | 0 | 0 |
 | 4. Security & Audit | 9 | 3 | 4 | 2 |
 | 5. SAM.gov Opportunities | 9 | 7 | 2 | 0 |
-| 6. Proposals Management | 8 | 1 | 7 | 0 |
+| 6. Proposals Management | 8 | 7 | 1 | 0 |
 | 7. Proposal Scoring | 15 | 9 | 5 | 1 |
 | 8. Platform Admin | 5 | 4 | 0 | 1 |
 | 9. Dashboard & Analytics | 7 | 0 | 0 | 7 |
 | 10. AI Assistant | 6 | 1 | 0 | 5 |
 | 11. Infrastructure | 9 | 7 | 0 | 2 |
-| **TOTALS** | **92** | **48 (52%)** | **25 (27%)** | **19 (21%)** |
+| **TOTALS** | **92** | **54 (59%)** | **19 (21%)** | **19 (21%)** |
 
 ### Critical Gaps (Highest Priority)
-1. **Proposals List page** - Backend works but frontend doesn't fetch data
-2. **Dashboard** - All metrics are hardcoded mock data
-3. **Claude AI scoring** - Placeholder logic, not real AI analysis
-4. **MFA frontend flow** - Backend fully done, no frontend integration
-5. **AI Assistant backend** - Chat UI exists but no Claude integration
+1. **Dashboard** - All metrics are hardcoded mock data
+2. **Claude AI scoring** - Placeholder logic, not real AI analysis
+3. **MFA frontend flow** - Backend fully done, no frontend integration
+4. **AI Assistant backend** - Chat UI exists but no Claude integration

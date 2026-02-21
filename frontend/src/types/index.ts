@@ -197,3 +197,48 @@ export interface GoNoGoSummary {
 
 // Color team types
 export type ColorTeamType = 'pink_team' | 'red_team' | 'gold_team' | 'submission';
+
+// Proposal types
+export type ProposalStatus =
+  | 'draft'
+  | 'in_progress'
+  | 'review'
+  | 'submitted'
+  | 'awarded'
+  | 'not_awarded'
+  | 'cancelled';
+
+export interface Proposal {
+  id: string;
+  organization_id: string;
+  opportunity_id: string | null;
+  title: string;
+  description: string | null;
+  status: ProposalStatus;
+  solicitation_number: string | null;
+  agency: string | null;
+  naics_code: string | null;
+  due_date: string | null;
+  submitted_at: string | null;
+  estimated_value: number | null;
+  proposed_value: number | null;
+  awarded_value: number | null;
+  executive_summary: string | null;
+  technical_approach: string | null;
+  management_approach: string | null;
+  past_performance: string | null;
+  pricing_summary: string | null;
+  sections: Record<string, any> | null;
+  ai_generated_content: Record<string, any> | null;
+  created_by: string | null;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProposalListResponse {
+  proposals: Proposal[];
+  total: number;
+  limit: number;
+  offset: number;
+}
