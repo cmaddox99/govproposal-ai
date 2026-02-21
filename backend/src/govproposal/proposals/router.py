@@ -13,6 +13,7 @@ from govproposal.identity.dependencies import CurrentUser
 from govproposal.identity.models import OrganizationMember
 from govproposal.opportunities.models import Opportunity
 from govproposal.proposals.models import Proposal, ProposalStatus
+from govproposal.ai.service import generate_executive_summary
 
 router = APIRouter(prefix="/api/v1/proposals", tags=["proposals"])
 
@@ -344,9 +345,24 @@ async def create_proposal_from_opportunity(
         created_by=current_user.id,
     )
 
-    # Generate executive summary using AI (placeholder - integrate with Claude API)
-    executive_summary = f"""
-## Executive Summary
+    # Generate executive summary using Claude AI (falls back to template if no API key)
+    ai_summary = await generate_executive_summary(
+        title=opportunity.title,
+        agency=opportunity.agency,
+        description=opportunity.description,
+        solicitation_number=opportunity.solicitation_number,
+        naics_code=opportunity.naics_code,
+        response_deadline=opportunity.response_deadline.strftime('%B %d, %Y') if opportunity.response_deadline else None,
+        set_aside_type=opportunity.set_aside_type,
+        estimated_value=float(opportunity.estimated_value) if opportunity.estimated_value else None,
+    )
+
+    if ai_summary:
+        proposal.executive_summary = ai_summary
+        proposal.ai_generated_content = {"executive_summary": {"model": "claude", "generated": True}}
+    else:
+        # Fallback template when Claude is not available
+        proposal.executive_summary = f"""## Executive Summary
 
 This proposal responds to {opportunity.agency}'s requirement for {opportunity.title}.
 
@@ -364,10 +380,7 @@ We are pleased to submit our proposal demonstrating our capability to meet all r
 3. **Cost Efficiency** - Competitive pricing with maximum value delivery
 
 ### Conclusion
-We are committed to delivering exceptional results that meet and exceed the government's requirements.
-"""
-
-    proposal.executive_summary = executive_summary.strip()
+We are committed to delivering exceptional results that meet and exceed the government's requirements."""
 
     session.add(proposal)
     await session.commit()

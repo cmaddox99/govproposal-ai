@@ -102,7 +102,7 @@ Create, manage, and track government proposals through their lifecycle.
 |---|---------|---------|----------|----------|-------|
 | 6.1 | Create Proposal (manual) | Done | Done | Yes | /proposals/new page with form |
 | 6.2 | Create Proposal from Opportunity | Done | Done | Yes | Button on opportunities page |
-| 6.3 | AI-Generated Executive Summary | Placeholder | N/A | Partial | Template text, Claude API not integrated |
+| 6.3 | AI-Generated Executive Summary | Done | N/A | Yes | Claude AI with template fallback (needs ANTHROPIC_API_KEY) |
 | 6.4 | List Proposals (filtered, paginated) | Done | Done | Yes | Search, status filter, pagination |
 | 6.5 | Proposal Detail/Edit View | Done | Done | Yes | /proposals/[id] with Overview + Content tabs |
 | 6.6 | Proposal Status Workflow | Done | Done | Yes | Status dropdown on detail page |
@@ -207,13 +207,13 @@ Deployment, containerization, and CI/CD.
 | 3. RBAC | 6 | 6 | 0 | 0 |
 | 4. Security & Audit | 9 | 3 | 4 | 2 |
 | 5. SAM.gov Opportunities | 9 | 7 | 2 | 0 |
-| 6. Proposals Management | 8 | 7 | 1 | 0 |
+| 6. Proposals Management | 8 | 8 | 0 | 0 |
 | 7. Proposal Scoring | 15 | 9 | 5 | 1 |
 | 8. Platform Admin | 5 | 4 | 0 | 1 |
 | 9. Dashboard & Analytics | 7 | 0 | 0 | 7 |
 | 10. AI Assistant | 6 | 1 | 0 | 5 |
 | 11. Infrastructure | 9 | 7 | 0 | 2 |
-| **TOTALS** | **92** | **54 (59%)** | **19 (21%)** | **19 (21%)** |
+| **TOTALS** | **92** | **55 (60%)** | **18 (20%)** | **19 (21%)** |
 
 ### Critical Gaps (Highest Priority)
 1. **Dashboard** - All metrics are hardcoded mock data
