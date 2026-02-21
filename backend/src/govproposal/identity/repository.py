@@ -36,7 +36,7 @@ class UserRepository:
             return user
         except IntegrityError as e:
             await self._session.rollback()
-            if "users_email_key" in str(e):
+            if "users_email" in str(e):
                 raise UserAlreadyExistsError() from e
             raise
 
