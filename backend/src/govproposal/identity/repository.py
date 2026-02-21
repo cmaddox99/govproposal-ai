@@ -82,7 +82,7 @@ class OrganizationRepository:
             return org
         except IntegrityError as e:
             await self._session.rollback()
-            if "organizations_slug_key" in str(e):
+            if "organizations_slug" in str(e):
                 raise OrganizationSlugExistsError() from e
             raise
 
