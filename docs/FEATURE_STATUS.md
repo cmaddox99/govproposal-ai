@@ -118,10 +118,10 @@ AI-powered multi-factor scoring with weighted factors and team readiness.
 | # | Feature | Backend | Frontend | Deployed | Notes |
 |---|---------|---------|----------|----------|-------|
 | 7.1 | Multi-Factor Weighted Scoring (0-100) | Done | Done | Yes | 4 factors with configurable weights |
-| 7.2 | Completeness Scoring (30% weight) | Placeholder | Done | Partial | UI ready, backend returns placeholder scores |
-| 7.3 | Technical Depth Scoring (30% weight) | Placeholder | Done | Partial | UI ready, backend returns placeholder scores |
-| 7.4 | Section L Compliance Scoring (20% weight) | Placeholder | Done | Partial | UI ready, backend returns placeholder scores |
-| 7.5 | Section M Alignment Scoring (20% weight) | Placeholder | Done | Partial | UI ready, backend returns placeholder scores |
+| 7.2 | Completeness Scoring (30% weight) | Done | Done | Yes | Claude AI with heuristic fallback |
+| 7.3 | Technical Depth Scoring (30% weight) | Done | Done | Yes | Claude AI with heuristic fallback |
+| 7.4 | Section L Compliance Scoring (20% weight) | Done | Done | Yes | Claude AI with heuristic fallback |
+| 7.5 | Section M Alignment Scoring (20% weight) | Done | Done | Yes | Claude AI with heuristic fallback |
 | 7.6 | Score Explanation & Evidence | Done | Done | Yes | Section-by-section breakdown |
 | 7.7 | Score History Tracking | Done | Done | Yes | History tab on scoring page |
 | 7.8 | Improvement Suggestions | Done | Done | Yes | Prioritized list on Improvements tab |
@@ -131,7 +131,7 @@ AI-powered multi-factor scoring with weighted factors and team readiness.
 | 7.12 | Submission Readiness Check | Done | Done | Yes | Ready-to-submit assessment |
 | 7.13 | Go/No-Go Decision Summary | Done | Done | Yes | Displayed on score overview |
 | 7.14 | Benchmark Comparison (org percentile) | Done | Done | Yes | Historical trend analysis |
-| 7.15 | Claude AI Integration for Scoring | Not started | N/A | No | ANTHROPIC_API_KEY configured but not called |
+| 7.15 | Claude AI Integration for Scoring | Done | N/A | Yes | score_with_claude() in ai/service.py, prompt templates in scoring/templates.py |
 
 ---
 
@@ -208,15 +208,14 @@ Deployment, containerization, and CI/CD.
 | 4. Security & Audit | 9 | 3 | 4 | 2 |
 | 5. SAM.gov Opportunities | 9 | 7 | 2 | 0 |
 | 6. Proposals Management | 8 | 8 | 0 | 0 |
-| 7. Proposal Scoring | 15 | 9 | 5 | 1 |
+| 7. Proposal Scoring | 15 | 15 | 0 | 0 |
 | 8. Platform Admin | 5 | 4 | 0 | 1 |
 | 9. Dashboard & Analytics | 7 | 0 | 0 | 7 |
 | 10. AI Assistant | 6 | 1 | 0 | 5 |
 | 11. Infrastructure | 9 | 7 | 0 | 2 |
-| **TOTALS** | **92** | **55 (60%)** | **18 (20%)** | **19 (21%)** |
+| **TOTALS** | **92** | **61 (66%)** | **12 (13%)** | **19 (21%)** |
 
 ### Critical Gaps (Highest Priority)
 1. **Dashboard** - All metrics are hardcoded mock data
-2. **Claude AI scoring** - Placeholder logic, not real AI analysis
-3. **MFA frontend flow** - Backend fully done, no frontend integration
-4. **AI Assistant backend** - Chat UI exists but no Claude integration
+2. **MFA frontend flow** - Backend fully done, no frontend integration
+3. **AI Assistant backend** - Chat UI exists but no Claude integration

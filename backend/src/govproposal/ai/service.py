@@ -1,13 +1,68 @@
-"""AI service for generating proposal content using Claude."""
+"""AI service for generating proposal content and scoring using Claude."""
 
+import json
 import logging
-from typing import Optional
+from typing import Any, Optional
 
 import anthropic
 
 from govproposal.config import settings
 
 logger = logging.getLogger(__name__)
+
+
+def _get_client() -> Optional[anthropic.Anthropic]:
+    """Get an Anthropic client, or None if not configured."""
+    if not settings.anthropic_api_key:
+        return None
+    return anthropic.Anthropic(api_key=settings.anthropic_api_key)
+
+
+async def score_with_claude(
+    system_prompt: str,
+    user_prompt: str,
+) -> Optional[dict[str, Any]]:
+    """Call Claude to score a proposal factor.
+
+    Returns parsed JSON dict on success, None on failure (caller should use fallback).
+    """
+    client = _get_client()
+    if not client:
+        logger.info("Anthropic API key not configured, skipping AI scoring")
+        return None
+
+    try:
+        message = client.messages.create(
+            model=settings.anthropic_model,
+            max_tokens=1024,
+            messages=[
+                {"role": "user", "content": user_prompt}
+            ],
+            system=system_prompt,
+        )
+
+        text = message.content[0].text
+
+        # Claude may wrap JSON in markdown code blocks
+        if "```json" in text:
+            text = text.split("```json")[1].split("```")[0]
+        elif "```" in text:
+            text = text.split("```")[1].split("```")[0]
+
+        return json.loads(text.strip())
+
+    except json.JSONDecodeError as e:
+        logger.warning(f"Claude returned non-JSON response: {e}")
+        return None
+    except anthropic.AuthenticationError:
+        logger.error("Invalid Anthropic API key")
+        return None
+    except anthropic.RateLimitError:
+        logger.warning("Anthropic rate limit reached")
+        return None
+    except Exception as e:
+        logger.error(f"Claude API error during scoring: {e}")
+        return None
 
 
 async def generate_executive_summary(

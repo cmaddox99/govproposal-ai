@@ -1,11 +1,13 @@
 """Service layer for scoring operations."""
 
 import json
+import logging
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from govproposal.ai.service import score_with_claude
 from govproposal.config import settings
 from govproposal.scoring.models import (
     ColorTeamType,
@@ -35,6 +37,9 @@ from govproposal.scoring.schemas import (
     ScoreImprovementResponse,
     WarningItem,
 )
+from govproposal.scoring.templates import format_template, get_template
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -225,127 +230,155 @@ class ScoringService:
         factor_type: ScoreFactorType,
         proposal_data: dict | None,
     ) -> FactorResult:
-        """Calculate individual factor score.
+        """Calculate individual factor score using Claude AI with fallback."""
+        template_map = {
+            ScoreFactorType.COMPLETENESS: "completeness_scorer",
+            ScoreFactorType.TECHNICAL_DEPTH: "technical_depth_scorer",
+            ScoreFactorType.SECTION_L_COMPLIANCE: "compliance_scorer",
+            ScoreFactorType.SECTION_M_ALIGNMENT: "section_m_scorer",
+        }
 
-        In production, this would call AI service. For now, returns placeholder.
-        """
-        # Placeholder scoring logic - in production, would call AI
-        if factor_type == ScoreFactorType.COMPLETENESS:
-            return await self._score_completeness(proposal_data)
-        elif factor_type == ScoreFactorType.TECHNICAL_DEPTH:
-            return await self._score_technical_depth(proposal_data)
-        elif factor_type == ScoreFactorType.SECTION_L_COMPLIANCE:
-            return await self._score_compliance(proposal_data)
-        elif factor_type == ScoreFactorType.SECTION_M_ALIGNMENT:
-            return await self._score_section_m(proposal_data)
-        else:
+        template_name = template_map.get(factor_type)
+        if not template_name:
+            return self._fallback_score(factor_type, proposal_data)
+
+        template = get_template(template_name)
+        if not template or not proposal_data:
+            return self._fallback_score(factor_type, proposal_data)
+
+        # Build template variables from proposal data
+        template_vars = self._build_template_vars(factor_type, proposal_data)
+
+        try:
+            system_prompt, user_prompt = format_template(template, **template_vars)
+        except KeyError as e:
+            logger.warning(f"Missing template variable {e} for {factor_type}")
+            return self._fallback_score(factor_type, proposal_data)
+
+        # Call Claude
+        result = await score_with_claude(system_prompt, user_prompt)
+        if result:
             return FactorResult(
-                raw_score=70,
-                evidence="Default scoring - factor not implemented",
-                improvements=[],
+                raw_score=max(0, min(100, int(result.get("score", 50)))),
+                evidence=result.get("evidence", "AI analysis complete"),
+                improvements=result.get("improvements", []),
+                strengths=result.get("strengths") or result.get("well_aligned_factors"),
+                weaknesses=result.get("weaknesses") or result.get("poorly_aligned_factors"),
             )
 
-    async def _score_completeness(self, proposal_data: dict | None) -> FactorResult:
-        """Score proposal completeness."""
-        # Placeholder - would analyze sections for completeness
+        # Fallback to basic scoring if Claude unavailable
+        return self._fallback_score(factor_type, proposal_data)
+
+    def _build_template_vars(
+        self, factor_type: ScoreFactorType, proposal_data: dict
+    ) -> dict:
+        """Build template variables from proposal data for a given factor."""
+        title = proposal_data.get("title", "Untitled Proposal")
+        description = proposal_data.get("description", "")
+
+        # Build sections summary
+        section_names = ["executive_summary", "technical_approach", "management_approach",
+                         "past_performance", "pricing_summary"]
+        sections_parts = []
+        for name in section_names:
+            content = proposal_data.get(name, "")
+            label = name.replace("_", " ").title()
+            if content:
+                preview = content[:500] + ("..." if len(content) > 500 else "")
+                sections_parts.append(f"### {label}\n{preview}")
+            else:
+                sections_parts.append(f"### {label}\n[Not provided]")
+        sections_summary = "\n\n".join(sections_parts)
+
+        # All proposal content combined
+        all_content = "\n\n".join(
+            f"## {name.replace('_', ' ').title()}\n{proposal_data.get(name, '[Not provided]')}"
+            for name in section_names
+        )
+
+        if factor_type == ScoreFactorType.COMPLETENESS:
+            return {
+                "title": title,
+                "sections_summary": sections_summary,
+            }
+        elif factor_type == ScoreFactorType.TECHNICAL_DEPTH:
+            return {
+                "technical_content": proposal_data.get("technical_approach", "") or all_content,
+                "requirements_summary": description or f"Proposal for: {title}",
+            }
+        elif factor_type == ScoreFactorType.SECTION_L_COMPLIANCE:
+            return {
+                "section_l": description or "No specific Section L instructions available. Evaluate based on standard government proposal requirements.",
+                "proposal_structure": sections_summary,
+            }
+        elif factor_type == ScoreFactorType.SECTION_M_ALIGNMENT:
+            return {
+                "section_m": description or "No specific Section M criteria available. Evaluate based on standard evaluation factors: technical capability, past performance, price, and management approach.",
+                "proposal_content": all_content,
+            }
+        return {}
+
+    def _fallback_score(
+        self, factor_type: ScoreFactorType, proposal_data: dict | None
+    ) -> FactorResult:
+        """Basic scoring fallback when Claude is not available."""
         if not proposal_data:
             return FactorResult(
                 raw_score=50,
-                evidence="No proposal data provided for analysis",
+                evidence="No proposal content available for analysis. Add content to get an accurate score.",
                 improvements=[
-                    {
-                        "action": "Provide proposal content",
-                        "details": "Submit proposal sections for scoring",
-                        "priority": "high",
-                    }
+                    {"action": "Add proposal content", "details": "Fill in proposal sections for AI-powered scoring", "priority": "high"}
                 ],
             )
 
-        # Check for required sections
-        sections = proposal_data.get("sections", [])
-        required = [
-            "executive_summary",
-            "technical_approach",
-            "management_approach",
-            "past_performance",
-        ]
-        present = [s.get("type") for s in sections if s.get("content")]
+        # Check which sections have content
+        section_fields = ["executive_summary", "technical_approach", "management_approach",
+                          "past_performance", "pricing_summary"]
+        present = [f for f in section_fields if proposal_data.get(f)]
+        missing = [f for f in section_fields if not proposal_data.get(f)]
 
-        missing = [r for r in required if r not in present]
-        completeness = ((len(required) - len(missing)) / len(required)) * 100
-
-        improvements = []
-        for section in missing:
-            improvements.append(
-                {
-                    "action": f"Add {section.replace('_', ' ').title()}",
-                    "details": f"This required section is missing",
-                    "priority": "high",
-                }
-            )
-
-        return FactorResult(
-            raw_score=int(completeness),
-            evidence=f"Found {len(present)} of {len(required)} required sections",
-            improvements=improvements,
-        )
-
-    async def _score_technical_depth(self, proposal_data: dict | None) -> FactorResult:
-        """Score technical depth using content analysis."""
-        if not proposal_data:
+        if factor_type == ScoreFactorType.COMPLETENESS:
+            score = int((len(present) / len(section_fields)) * 100)
+            improvements = [
+                {"action": f"Add {s.replace('_', ' ').title()}", "details": "This section is missing", "priority": "high"}
+                for s in missing
+            ]
             return FactorResult(
-                raw_score=50,
-                evidence="No proposal data provided",
-                improvements=[],
+                raw_score=score,
+                evidence=f"{len(present)} of {len(section_fields)} sections completed",
+                improvements=improvements,
             )
 
-        # Placeholder technical depth scoring
-        return FactorResult(
-            raw_score=70,
-            evidence="Technical content present but could be more specific",
-            improvements=[
-                {
-                    "action": "Add specific methodologies",
-                    "details": "Replace generic statements with concrete approaches",
-                    "priority": "medium",
-                },
-                {
-                    "action": "Include technical details",
-                    "details": "Add tool names, version numbers, and technical specifications",
-                    "priority": "medium",
-                },
-            ],
-        )
+        elif factor_type == ScoreFactorType.TECHNICAL_DEPTH:
+            tech = proposal_data.get("technical_approach", "")
+            score = min(85, 40 + len(tech) // 50) if tech else 30
+            return FactorResult(
+                raw_score=score,
+                evidence=f"Technical approach has {len(tech)} characters" if tech else "No technical approach provided",
+                improvements=[
+                    {"action": "Add specific methodologies", "details": "Include concrete tools, processes, and technical details", "priority": "medium"},
+                ] if score < 80 else [],
+            )
 
-    async def _score_compliance(self, proposal_data: dict | None) -> FactorResult:
-        """Score Section L compliance."""
-        # Placeholder compliance scoring
-        return FactorResult(
-            raw_score=75,
-            evidence="Most format requirements appear to be met",
-            improvements=[
-                {
-                    "action": "Verify page limits",
-                    "details": "Confirm all sections are within specified page limits",
-                    "priority": "high",
-                }
-            ],
-        )
+        elif factor_type == ScoreFactorType.SECTION_L_COMPLIANCE:
+            score = 60 + len(present) * 6
+            return FactorResult(
+                raw_score=min(90, score),
+                evidence=f"Basic compliance check: {len(present)} sections present",
+                improvements=[
+                    {"action": "Verify format requirements", "details": "Confirm page limits, fonts, and margins meet solicitation requirements", "priority": "high"},
+                ] if score < 80 else [],
+            )
 
-    async def _score_section_m(self, proposal_data: dict | None) -> FactorResult:
-        """Score Section M alignment."""
-        # Placeholder Section M scoring
-        return FactorResult(
-            raw_score=65,
-            evidence="Some evaluation factors addressed, others need strengthening",
-            improvements=[
-                {
-                    "action": "Align with evaluation criteria",
-                    "details": "Reorganize content to directly address each evaluation factor",
-                    "priority": "high",
-                }
-            ],
-        )
+        else:  # SECTION_M_ALIGNMENT
+            score = 55 + len(present) * 7
+            return FactorResult(
+                raw_score=min(85, score),
+                evidence=f"Alignment check: {len(present)} sections available for evaluation",
+                improvements=[
+                    {"action": "Align content with evaluation criteria", "details": "Reorganize to directly address each evaluation factor", "priority": "high"},
+                ] if score < 80 else [],
+            )
 
     def _determine_confidence(
         self, proposal_data: dict | None, factors: list[ScoreFactor]
@@ -354,10 +387,14 @@ class ScoringService:
         if not proposal_data:
             return "low"
 
-        sections = proposal_data.get("sections", [])
-        if len(sections) >= 4:
+        # Count how many content sections have actual content
+        section_fields = ["executive_summary", "technical_approach", "management_approach",
+                          "past_performance", "pricing_summary"]
+        filled = sum(1 for f in section_fields if proposal_data.get(f))
+
+        if filled >= 4:
             return "high"
-        elif len(sections) >= 2:
+        elif filled >= 2:
             return "medium"
         return "low"
 

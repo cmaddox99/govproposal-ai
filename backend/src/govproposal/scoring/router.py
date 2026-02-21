@@ -2,10 +2,12 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import select
 
 from govproposal.db.base import get_db
 from govproposal.identity.dependencies import CurrentUser, DbSession
+from govproposal.proposals.models import Proposal
 from govproposal.scoring.models import ColorTeamType
 from govproposal.scoring.schemas import (
     BenchmarkResponse,
@@ -54,10 +56,27 @@ async def calculate_score(
         if existing:
             return existing
 
+    # Fetch proposal content for AI scoring
+    query = select(Proposal).where(Proposal.id == proposal_id)
+    result = await service._session.execute(query)
+    proposal = result.scalar_one_or_none()
+    if not proposal:
+        raise HTTPException(status_code=404, detail="Proposal not found")
+
+    proposal_data = {
+        "title": proposal.title,
+        "description": proposal.description or "",
+        "executive_summary": proposal.executive_summary or "",
+        "technical_approach": proposal.technical_approach or "",
+        "management_approach": proposal.management_approach or "",
+        "past_performance": proposal.past_performance or "",
+        "pricing_summary": proposal.pricing_summary or "",
+    }
+
     return await service.calculate_score(
         proposal_id=proposal_id,
         user_id=current_user.id,
-        proposal_data=None,  # In production, would fetch proposal data
+        proposal_data=proposal_data,
     )
 
 
