@@ -45,6 +45,13 @@ export default function OpportunitiesPage() {
   const [selectedOpp, setSelectedOpp] = useState<Opportunity | null>(null);
   const [creatingProposal, setCreatingProposal] = useState(false);
 
+  const extractError = (detail: any, fallback: string): string => {
+    if (!detail) return fallback;
+    if (typeof detail === 'string') return detail;
+    if (detail.message) return detail.message;
+    return fallback;
+  };
+
   const fetchOpportunities = async () => {
     setLoading(true);
     setError('');
@@ -66,7 +73,7 @@ export default function OpportunitiesPage() {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.detail || 'Failed to fetch opportunities');
+        throw new Error(extractError(data.detail, 'Failed to fetch opportunities'));
       }
 
       const data = await response.json();
@@ -101,7 +108,7 @@ export default function OpportunitiesPage() {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.detail || 'Failed to sync opportunities');
+        throw new Error(extractError(data.detail, 'Failed to sync opportunities'));
       }
 
       const data = await response.json();
@@ -141,7 +148,7 @@ export default function OpportunitiesPage() {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.detail || 'Failed to create proposal');
+        throw new Error(extractError(data.detail, 'Failed to create proposal'));
       }
 
       const data = await response.json();

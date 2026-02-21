@@ -51,24 +51,39 @@ export default function DashboardLayout({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check authentication
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
+    const init = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
 
-    const storedOrgName = localStorage.getItem('currentOrgName');
-    const storedOrgId = localStorage.getItem('currentOrgId');
+      const storedOrgName = localStorage.getItem('currentOrgName');
+      const storedOrgId = localStorage.getItem('currentOrgId');
 
-    if (storedOrgName && storedOrgId) {
-      setOrgName(storedOrgName);
-      setOrgId(storedOrgId);
-    } else {
-      // No org, show create form
-      setShowCreateOrg(true);
-    }
-    setIsLoading(false);
+      if (storedOrgName && storedOrgId) {
+        setOrgName(storedOrgName);
+        setOrgId(storedOrgId);
+      } else {
+        // Check if user already has organizations
+        try {
+          const response = await organizationsApi.list();
+          if (response.data && response.data.length > 0) {
+            const org = response.data[0];
+            localStorage.setItem('currentOrgId', org.id);
+            localStorage.setItem('currentOrgName', org.name);
+            setOrgId(org.id);
+            setOrgName(org.name);
+          } else {
+            setShowCreateOrg(true);
+          }
+        } catch {
+          setShowCreateOrg(true);
+        }
+      }
+      setIsLoading(false);
+    };
+    init();
   }, [router]);
 
   const generateSlug = (name: string) => {
