@@ -1,7 +1,7 @@
 """SAM.gov API integration service."""
 
 import httpx
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Optional, List, Dict, Any
 
 from govproposal.config import settings
@@ -30,41 +30,36 @@ class SAMGovService:
         limit: int = 100,
         offset: int = 0,
     ) -> Dict[str, Any]:
-        """
-        Search for opportunities on SAM.gov.
+        """Search for opportunities on SAM.gov."""
+        now = datetime.now(timezone.utc)
 
-        Args:
-            naics_codes: List of NAICS codes to filter by
-            keywords: Search keywords
-            posted_from: Posted date from
-            posted_to: Posted date to
-            response_deadline_from: Response deadline from
-            response_deadline_to: Response deadline to
-            notice_type: Notice type filter
-            set_aside: Set-aside type filter
-            limit: Number of results to return
-            offset: Offset for pagination
+        # postedFrom and postedTo are REQUIRED by the SAM.gov API
+        if not posted_from:
+            posted_from = now - timedelta(days=365)
+        if not posted_to:
+            posted_to = now
 
-        Returns:
-            Dictionary with opportunities data
-        """
-        params = {
+        params: Dict[str, Any] = {
             "api_key": self.api_key,
             "limit": limit,
             "offset": offset,
-            "postedFrom": posted_from.strftime("%m/%d/%Y") if posted_from else None,
-            "postedTo": posted_to.strftime("%m/%d/%Y") if posted_to else None,
-            "rdlfrom": response_deadline_from.strftime("%m/%d/%Y") if response_deadline_from else None,
-            "rdlto": response_deadline_to.strftime("%m/%d/%Y") if response_deadline_to else None,
+            "postedFrom": posted_from.strftime("%m/%d/%Y"),
+            "postedTo": posted_to.strftime("%m/%d/%Y"),
         }
 
-        # Add NAICS codes
-        if naics_codes:
-            params["naics"] = ",".join(naics_codes)
+        if response_deadline_from:
+            params["rdlfrom"] = response_deadline_from.strftime("%m/%d/%Y")
+        if response_deadline_to:
+            params["rdlto"] = response_deadline_to.strftime("%m/%d/%Y")
 
-        # Add keywords
+        # SAM.gov uses 'ncode' for NAICS filter (one code per request)
+        # Make multiple requests if needed, or use the first code
+        if naics_codes:
+            params["ncode"] = naics_codes[0]
+
+        # Add title search (SAM.gov doesn't support full-text keyword search)
         if keywords:
-            params["q"] = keywords
+            params["title"] = keywords
 
         # Add notice type
         if notice_type:
@@ -72,18 +67,43 @@ class SAMGovService:
 
         # Add set-aside
         if set_aside:
-            params["set-aside"] = set_aside
+            params["typeOfSetAside"] = set_aside
 
-        # Remove None values
-        params = {k: v for k, v in params.items() if v is not None}
+        all_opportunities: List[Dict[str, Any]] = []
 
         async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.get(
-                f"{self.BASE_URL}/search",
-                params=params,
-            )
-            response.raise_for_status()
-            return response.json()
+            # If multiple NAICS codes, search each one
+            codes_to_search = naics_codes if naics_codes and len(naics_codes) > 1 else [None]
+
+            for i, code in enumerate(codes_to_search):
+                if code:
+                    params["ncode"] = code
+                elif not naics_codes:
+                    params.pop("ncode", None)
+
+                response = await client.get(
+                    f"{self.BASE_URL}/search",
+                    params=params,
+                )
+                response.raise_for_status()
+                data = response.json()
+
+                opps = data.get("opportunitiesData", [])
+                all_opportunities.extend(opps)
+
+            # Deduplicate by noticeId
+            seen = set()
+            unique_opps = []
+            for opp in all_opportunities:
+                nid = opp.get("noticeId")
+                if nid and nid not in seen:
+                    seen.add(nid)
+                    unique_opps.append(opp)
+
+            return {
+                "totalRecords": len(unique_opps),
+                "opportunitiesData": unique_opps,
+            }
 
     async def get_opportunity(self, notice_id: str) -> Dict[str, Any]:
         """
