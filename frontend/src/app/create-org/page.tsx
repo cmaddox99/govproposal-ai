@@ -14,13 +14,31 @@ export default function CreateOrgPage() {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Check if user is authenticated
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login');
-    } else {
+    const init = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      // Check if user already has an organization
+      try {
+        const response = await organizationsApi.list();
+        if (response.data && response.data.length > 0) {
+          const org = response.data[0];
+          localStorage.setItem('currentOrgId', org.id);
+          localStorage.setItem('currentOrgName', org.name);
+          router.push('/dashboard');
+          return;
+        }
+      } catch (err) {
+        // If the check fails, just show the create form
+        console.error('Failed to check existing orgs:', err);
+      }
+
       setIsReady(true);
-    }
+    };
+    init();
   }, [router]);
 
   if (!isReady) {
