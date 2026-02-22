@@ -156,7 +156,7 @@ export const proposalsApi = {
   createFromOpportunity: (data: { opportunity_id: string; organization_id: string; generate_all_content?: boolean }) =>
     api.post('/api/v1/proposals/from-opportunity', data),
   generateContent: (proposalId: string, sections?: string[]) =>
-    api.post(`/api/v1/proposals/${proposalId}/generate`, { sections: sections || null }, { timeout: 120000 }),
+    api.post(`/api/v1/proposals/${proposalId}/generate`, { sections: sections || null }, { timeout: 300000 }),
   exportDocx: (proposalId: string) =>
     api.get(`/api/v1/proposals/${proposalId}/export?format=docx`, { responseType: 'blob' }),
 };
