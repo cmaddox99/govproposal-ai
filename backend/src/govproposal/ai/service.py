@@ -14,7 +14,9 @@ logger = logging.getLogger(__name__)
 def _get_client() -> Optional[anthropic.Anthropic]:
     """Get an Anthropic client, or None if not configured."""
     if not settings.anthropic_api_key:
+        logger.warning("ANTHROPIC_API_KEY is not set or empty")
         return None
+    logger.info(f"Anthropic client initialized, key starts with: {settings.anthropic_api_key[:12]}...")
     return anthropic.Anthropic(api_key=settings.anthropic_api_key)
 
 
@@ -252,6 +254,7 @@ Company Information:
 {org_context}"""
 
     try:
+        logger.info(f"Calling Claude for section: {section_type}, model: {settings.anthropic_model}")
         message = client.messages.create(
             model=settings.anthropic_model,
             max_tokens=4096,
@@ -261,16 +264,18 @@ Company Information:
             system=prompts["system"],
         )
 
-        return message.content[0].text
+        result_text = message.content[0].text
+        logger.info(f"Claude returned {len(result_text)} chars for {section_type}")
+        return result_text
 
-    except anthropic.AuthenticationError:
-        logger.error("Invalid Anthropic API key")
+    except anthropic.AuthenticationError as e:
+        logger.error(f"Invalid Anthropic API key: {e}")
         return None
-    except anthropic.RateLimitError:
-        logger.warning("Anthropic rate limit reached")
+    except anthropic.RateLimitError as e:
+        logger.warning(f"Anthropic rate limit reached: {e}")
         return None
     except Exception as e:
-        logger.error(f"Claude API error generating {section_type}: {e}")
+        logger.error(f"Claude API error generating {section_type}: {type(e).__name__}: {e}")
         return None
 
 
