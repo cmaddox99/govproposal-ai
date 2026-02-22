@@ -27,7 +27,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pyotp>=2.9.0 \
     httpx>=0.26.0 \
     anthropic>=0.18.0 \
-    python-multipart
+    python-multipart \
+    python-docx>=1.1.0
 
 # Copy application code - bust cache by copying all source
 COPY src/ ./src/
