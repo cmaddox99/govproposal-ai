@@ -1,6 +1,6 @@
 """Organization capabilities and past performance
 
-Revision ID: 005_org_capabilities_past_performance
+Revision ID: 005_org_caps_past_perf
 Revises: 004_opportunities_proposals
 Create Date: 2026-02-21
 
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '005_org_capabilities_past_performance'
+revision: str = '005_org_caps_past_perf'
 down_revision: Union[str, None] = '004_opportunities_proposals'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
