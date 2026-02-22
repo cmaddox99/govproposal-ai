@@ -50,7 +50,7 @@ export function ScoreGauge({ score, size = 'md', showLabel = true, confidence }:
           cy={config.width / 2}
           r={radius}
           fill="none"
-          stroke="#e5e7eb"
+          stroke="#374151"
           strokeWidth={config.strokeWidth}
           strokeDasharray={`${circumference} ${circumference}`}
           strokeLinecap="round"
@@ -73,7 +73,7 @@ export function ScoreGauge({ score, size = 'md', showLabel = true, confidence }:
         <span className={`font-bold ${config.fontSize}`} style={{ color }}>
           {score}
         </span>
-        <span className="text-gray-400 text-sm">/100</span>
+        <span className="text-gray-500 text-sm">/100</span>
       </div>
 
       {showLabel && (

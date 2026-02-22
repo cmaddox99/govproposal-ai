@@ -25,24 +25,24 @@ const getBarColor = (score: number) => {
 export function FactorBreakdown({ factors }: FactorBreakdownProps) {
   return (
     <div className="space-y-4">
-      <h3 className="font-medium text-gray-900">Score Breakdown</h3>
+      <h3 className="font-medium text-white">Score Breakdown</h3>
 
       <div className="space-y-3">
         {factors.map((factor) => (
           <div key={factor.id} className="space-y-1">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-700">
+              <span className="text-gray-300">
                 {factorLabels[factor.factor_type] || factor.factor_type}
               </span>
-              <span className="font-medium">
+              <span className="font-medium text-white">
                 {factor.raw_score}
-                <span className="text-gray-400 text-xs ml-1">
+                <span className="text-gray-500 text-xs ml-1">
                   ({(factor.factor_weight * 100).toFixed(0)}%)
                 </span>
               </span>
             </div>
 
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-700 rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all duration-500 ${getBarColor(factor.raw_score)}`}
                 style={{ width: `${factor.raw_score}%` }}
@@ -58,10 +58,10 @@ export function FactorBreakdown({ factors }: FactorBreakdownProps) {
         ))}
       </div>
 
-      <div className="pt-3 border-t">
+      <div className="pt-3 border-t border-gray-700">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Weighted Average</span>
-          <span className="font-semibold">
+          <span className="text-gray-400">Weighted Average</span>
+          <span className="font-semibold text-white">
             {factors.reduce((sum, f) => sum + f.weighted_score, 0).toFixed(0)}
           </span>
         </div>

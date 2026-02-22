@@ -17,24 +17,24 @@ interface GoNoGoCardProps {
 const recommendationConfig = {
   Proceed: {
     icon: CheckCircle,
-    bgColor: 'bg-green-50',
-    borderColor: 'border-green-200',
-    textColor: 'text-green-800',
-    iconColor: 'text-green-600',
+    bgColor: 'bg-green-900/20',
+    borderColor: 'border-green-800',
+    textColor: 'text-green-400',
+    iconColor: 'text-green-500',
   },
   'Proceed with caution': {
     icon: AlertTriangle,
-    bgColor: 'bg-yellow-50',
-    borderColor: 'border-yellow-200',
-    textColor: 'text-yellow-800',
-    iconColor: 'text-yellow-600',
+    bgColor: 'bg-yellow-900/20',
+    borderColor: 'border-yellow-800',
+    textColor: 'text-yellow-400',
+    iconColor: 'text-yellow-500',
   },
   'Do not proceed': {
     icon: XCircle,
-    bgColor: 'bg-red-50',
-    borderColor: 'border-red-200',
-    textColor: 'text-red-800',
-    iconColor: 'text-red-600',
+    bgColor: 'bg-red-900/20',
+    borderColor: 'border-red-800',
+    textColor: 'text-red-400',
+    iconColor: 'text-red-500',
   },
 };
 
@@ -52,7 +52,7 @@ export function GoNoGoCard({ summary }: GoNoGoCardProps) {
           <h3 className={`text-lg font-semibold ${config.textColor}`}>
             {summary.recommendation}
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-400">
             Overall Score: {summary.overall_score}/100 |
             Readiness: {summary.readiness_level.replace('_', ' ')}
           </p>
@@ -63,12 +63,12 @@ export function GoNoGoCard({ summary }: GoNoGoCardProps) {
       {summary.key_strengths.length > 0 && (
         <div className="mb-4">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-green-600" />
-            <h4 className="text-sm font-medium text-gray-700">Key Strengths</h4>
+            <TrendingUp className="w-4 h-4 text-green-400" />
+            <h4 className="text-sm font-medium text-gray-300">Key Strengths</h4>
           </div>
           <ul className="space-y-1">
             {summary.key_strengths.map((strength, index) => (
-              <li key={index} className="text-sm text-gray-600 flex items-start gap-2">
+              <li key={index} className="text-sm text-gray-400 flex items-start gap-2">
                 <span className="text-green-500 mt-1">+</span>
                 {strength}
               </li>
@@ -81,12 +81,12 @@ export function GoNoGoCard({ summary }: GoNoGoCardProps) {
       {summary.key_risks.length > 0 && (
         <div className="mb-4">
           <div className="flex items-center gap-2 mb-2">
-            <AlertOctagon className="w-4 h-4 text-red-600" />
-            <h4 className="text-sm font-medium text-gray-700">Key Risks</h4>
+            <AlertOctagon className="w-4 h-4 text-red-400" />
+            <h4 className="text-sm font-medium text-gray-300">Key Risks</h4>
           </div>
           <ul className="space-y-1">
             {summary.key_risks.map((risk, index) => (
-              <li key={index} className="text-sm text-gray-600 flex items-start gap-2">
+              <li key={index} className="text-sm text-gray-400 flex items-start gap-2">
                 <span className="text-red-500 mt-1">!</span>
                 {risk}
               </li>
@@ -97,15 +97,15 @@ export function GoNoGoCard({ summary }: GoNoGoCardProps) {
 
       {/* Next Steps */}
       {summary.next_steps.length > 0 && (
-        <div className="pt-4 border-t border-gray-200">
+        <div className="pt-4 border-t border-gray-700">
           <div className="flex items-center gap-2 mb-2">
-            <ArrowRight className="w-4 h-4 text-blue-600" />
-            <h4 className="text-sm font-medium text-gray-700">Recommended Next Steps</h4>
+            <ArrowRight className="w-4 h-4 text-blue-400" />
+            <h4 className="text-sm font-medium text-gray-300">Recommended Next Steps</h4>
           </div>
           <ul className="space-y-1">
             {summary.next_steps.map((step, index) => (
-              <li key={index} className="text-sm text-gray-600 flex items-start gap-2">
-                <span className="text-blue-500 font-medium">{index + 1}.</span>
+              <li key={index} className="text-sm text-gray-400 flex items-start gap-2">
+                <span className="text-blue-400 font-medium">{index + 1}.</span>
                 {step}
               </li>
             ))}

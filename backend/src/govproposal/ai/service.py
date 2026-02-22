@@ -20,12 +20,6 @@ def _get_client() -> Optional[anthropic.AsyncAnthropic]:
     return anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
 
 
-def _get_sync_client() -> Optional[anthropic.Anthropic]:
-    """Get a sync Anthropic client for scoring (non-blocking context)."""
-    if not settings.anthropic_api_key:
-        return None
-    return anthropic.Anthropic(api_key=settings.anthropic_api_key)
-
 
 async def score_with_claude(
     system_prompt: str,
@@ -35,13 +29,13 @@ async def score_with_claude(
 
     Returns parsed JSON dict on success, None on failure (caller should use fallback).
     """
-    client = _get_sync_client()
+    client = _get_client()
     if not client:
         logger.info("Anthropic API key not configured, skipping AI scoring")
         return None
 
     try:
-        message = client.messages.create(
+        message = await client.messages.create(
             model=settings.anthropic_model,
             max_tokens=1024,
             messages=[
