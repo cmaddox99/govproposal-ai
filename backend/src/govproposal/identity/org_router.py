@@ -102,6 +102,9 @@ async def update_organization(
         if field == "naics_codes" and value is not None:
             # Store NAICS codes as JSON string
             setattr(org, field, json.dumps(value))
+        elif field == "capabilities" and value is not None:
+            # JSONB handles dicts natively
+            setattr(org, field, value)
         else:
             setattr(org, field, value)
 
@@ -121,6 +124,8 @@ async def update_organization(
         "cage_code": org.cage_code,
         "duns_number": org.duns_number,
         "naics_codes": json.loads(org.naics_codes) if org.naics_codes else None,
+        "capabilities_summary": org.capabilities_summary,
+        "capabilities": org.capabilities,
         "created_at": org.created_at,
     }
 

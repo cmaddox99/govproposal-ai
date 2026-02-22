@@ -149,6 +149,8 @@ class OrganizationResponse(BaseModel):
     cage_code: str | None = None
     duns_number: str | None = None
     naics_codes: list[str] | None = None
+    capabilities_summary: str | None = None
+    capabilities: list[dict] | None = None
     created_at: datetime
 
     @field_validator("naics_codes", mode="before")
@@ -174,6 +176,8 @@ class OrganizationUpdate(BaseModel):
     cage_code: str | None = None
     duns_number: str | None = None
     naics_codes: list[str] | None = None
+    capabilities_summary: str | None = None
+    capabilities: list[dict] | None = None
 
 
 class OrganizationMemberResponse(BaseModel):
@@ -282,6 +286,64 @@ class SessionListResponse(BaseModel):
     """Schema for session list response."""
 
     sessions: list[SessionResponse]
+
+
+# Past Performance schemas
+class PastPerformanceCreate(BaseModel):
+    """Schema for creating a past performance record."""
+
+    contract_name: str = Field(..., min_length=1, max_length=500)
+    agency: str | None = None
+    contract_number: str | None = None
+    contract_value: float | None = None
+    period_of_performance_start: datetime | None = None
+    period_of_performance_end: datetime | None = None
+    description: str | None = None
+    relevance_tags: list[str] | None = None
+    contact_name: str | None = None
+    contact_email: str | None = None
+    contact_phone: str | None = None
+    performance_rating: str | None = None
+
+
+class PastPerformanceUpdate(BaseModel):
+    """Schema for updating a past performance record."""
+
+    contract_name: str | None = None
+    agency: str | None = None
+    contract_number: str | None = None
+    contract_value: float | None = None
+    period_of_performance_start: datetime | None = None
+    period_of_performance_end: datetime | None = None
+    description: str | None = None
+    relevance_tags: list[str] | None = None
+    contact_name: str | None = None
+    contact_email: str | None = None
+    contact_phone: str | None = None
+    performance_rating: str | None = None
+
+
+class PastPerformanceResponse(BaseModel):
+    """Schema for past performance response."""
+
+    id: str
+    organization_id: str
+    contract_name: str
+    agency: str | None = None
+    contract_number: str | None = None
+    contract_value: float | None = None
+    period_of_performance_start: datetime | None = None
+    period_of_performance_end: datetime | None = None
+    description: str | None = None
+    relevance_tags: list[str] | None = None
+    contact_name: str | None = None
+    contact_email: str | None = None
+    contact_phone: str | None = None
+    performance_rating: str | None = None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
 
 
 # Generic response

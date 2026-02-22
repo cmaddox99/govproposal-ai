@@ -16,10 +16,13 @@ from govproposal.identity.models import (
     MFARecoveryCode,
     Organization,
     OrganizationMember,
+    OrgPastPerformance,
     PasswordResetToken,
     User,
     UserSession,
 )
+from govproposal.opportunities.models import Opportunity
+from govproposal.proposals.models import Proposal
 from govproposal.scoring.models import (
     ProposalBenchmark,
     ProposalScore,

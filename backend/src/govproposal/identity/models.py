@@ -5,8 +5,8 @@ from enum import Enum
 from typing import Optional, List
 from uuid import uuid4
 
-from sqlalchemy import DateTime, ForeignKey, String, Text, UniqueConstraint
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import DateTime, ForeignKey, Numeric, String, Text, UniqueConstraint
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from govproposal.db.base import Base
@@ -118,6 +118,10 @@ class Organization(Base):
         nullable=True,
     )
 
+    # Capabilities
+    capabilities_summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    capabilities: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_utc_now, nullable=False
@@ -130,6 +134,46 @@ class Organization(Base):
     members: Mapped[List["OrganizationMember"]] = relationship(
         back_populates="organization",
         cascade="all, delete-orphan",
+    )
+
+
+class OrgPastPerformance(Base):
+    """Organization past performance record."""
+
+    __tablename__ = "org_past_performances"
+
+    id: Mapped[str] = mapped_column(
+        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+    )
+    organization_id: Mapped[str] = mapped_column(
+        UUID(as_uuid=False),
+        ForeignKey("organizations.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    contract_name: Mapped[str] = mapped_column(String(500), nullable=False)
+    agency: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    contract_number: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    contract_value: Mapped[Optional[float]] = mapped_column(
+        Numeric(15, 2), nullable=True
+    )
+    period_of_performance_start: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    period_of_performance_end: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    relevance_tags: Mapped[Optional[list]] = mapped_column(JSONB, nullable=True)
+    contact_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    contact_email: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    contact_phone: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    performance_rating: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_utc_now, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_utc_now, onupdate=_utc_now, nullable=False
     )
 
 

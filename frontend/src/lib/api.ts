@@ -153,8 +153,24 @@ export const proposalsApi = {
     api.put(`/api/v1/proposals/${proposalId}`, data),
   delete: (proposalId: string) =>
     api.delete(`/api/v1/proposals/${proposalId}`),
-  createFromOpportunity: (data: { opportunity_id: string; organization_id: string }) =>
+  createFromOpportunity: (data: { opportunity_id: string; organization_id: string; generate_all_content?: boolean }) =>
     api.post('/api/v1/proposals/from-opportunity', data),
+  generateContent: (proposalId: string, sections?: string[]) =>
+    api.post(`/api/v1/proposals/${proposalId}/generate`, { sections: sections || null }, { timeout: 120000 }),
+  exportDocx: (proposalId: string) =>
+    api.get(`/api/v1/proposals/${proposalId}/export?format=docx`, { responseType: 'blob' }),
+};
+
+// Past Performance API
+export const pastPerformanceApi = {
+  list: (orgId: string) =>
+    api.get(`/api/v1/organizations/${orgId}/past-performance`),
+  create: (orgId: string, data: Record<string, any>) =>
+    api.post(`/api/v1/organizations/${orgId}/past-performance`, data),
+  update: (orgId: string, ppId: string, data: Record<string, any>) =>
+    api.put(`/api/v1/organizations/${orgId}/past-performance/${ppId}`, data),
+  delete: (orgId: string, ppId: string) =>
+    api.delete(`/api/v1/organizations/${orgId}/past-performance/${ppId}`),
 };
 
 export default api;

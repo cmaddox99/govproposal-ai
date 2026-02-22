@@ -9,6 +9,7 @@ from govproposal.config import settings
 from govproposal.identity.admin_router import router as admin_router
 from govproposal.identity.auth_router import router as auth_router
 from govproposal.identity.org_router import router as org_router
+from govproposal.identity.past_performance_router import router as past_performance_router
 from govproposal.identity.platform_router import router as platform_router
 from govproposal.scoring.router import router as scoring_router
 from govproposal.security.router import audit_router
@@ -45,6 +46,7 @@ app.add_middleware(
 # Include routers
 app.include_router(auth_router)
 app.include_router(org_router)
+app.include_router(past_performance_router)
 app.include_router(admin_router)
 app.include_router(platform_router)
 app.include_router(audit_router)

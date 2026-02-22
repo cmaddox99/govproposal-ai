@@ -12,9 +12,23 @@ import {
   BarChart3,
   FileText,
   Settings,
+  Sparkles,
+  Download,
+  Loader2,
+  RefreshCw,
 } from 'lucide-react';
 import { proposalsApi } from '@/lib/api';
 import { Proposal, ProposalStatus } from '@/types';
+
+type SectionKey = 'executive_summary' | 'technical_approach' | 'management_approach' | 'past_performance' | 'pricing_summary';
+
+const sectionConfig: { key: SectionKey; label: string; placeholder: string; rows: number }[] = [
+  { key: 'executive_summary', label: 'Executive Summary', placeholder: 'Write the executive summary for your proposal...', rows: 10 },
+  { key: 'technical_approach', label: 'Technical Approach', placeholder: 'Describe the technical approach and methodology...', rows: 10 },
+  { key: 'management_approach', label: 'Management Approach', placeholder: 'Outline the management structure and staffing plan...', rows: 10 },
+  { key: 'past_performance', label: 'Past Performance', placeholder: 'Detail relevant past performance and references...', rows: 10 },
+  { key: 'pricing_summary', label: 'Pricing Summary', placeholder: 'Provide the pricing breakdown and cost justification...', rows: 10 },
+];
 
 const statusColors: Record<ProposalStatus, string> = {
   draft: 'bg-gray-600/20 text-gray-400',
@@ -75,6 +89,27 @@ export default function ProposalDetailPage() {
   const [managementApproach, setManagementApproach] = useState('');
   const [pastPerformance, setPastPerformance] = useState('');
   const [pricingSummary, setPricingSummary] = useState('');
+
+  // AI generation state
+  const [generatingAll, setGeneratingAll] = useState(false);
+  const [generatingSection, setGeneratingSection] = useState<SectionKey | null>(null);
+  const [exportingDocx, setExportingDocx] = useState(false);
+
+  const sectionSetters: Record<SectionKey, (v: string) => void> = {
+    executive_summary: setExecutiveSummary,
+    technical_approach: setTechnicalApproach,
+    management_approach: setManagementApproach,
+    past_performance: setPastPerformance,
+    pricing_summary: setPricingSummary,
+  };
+
+  const sectionValues: Record<SectionKey, string> = {
+    executive_summary: executiveSummary,
+    technical_approach: technicalApproach,
+    management_approach: managementApproach,
+    past_performance: pastPerformance,
+    pricing_summary: pricingSummary,
+  };
 
   const extractError = (detail: any, fallback: string): string => {
     if (!detail) return fallback;
@@ -198,6 +233,117 @@ export default function ProposalDetailPage() {
     }
   };
 
+  const handleGenerateAll = async () => {
+    const hasContent = Object.values(sectionValues).some((v) => v.trim());
+    if (hasContent) {
+      if (!window.confirm('This will overwrite all existing section content with AI-generated content. Continue?')) {
+        return;
+      }
+    }
+
+    setGeneratingAll(true);
+    setError('');
+    setSuccessMessage('');
+
+    try {
+      const response = await proposalsApi.generateContent(proposalId);
+      const data = response.data;
+
+      // Update local state with generated content
+      if (data.executive_summary) setExecutiveSummary(data.executive_summary);
+      if (data.technical_approach) setTechnicalApproach(data.technical_approach);
+      if (data.management_approach) setManagementApproach(data.management_approach);
+      if (data.past_performance) setPastPerformance(data.past_performance);
+      if (data.pricing_summary) setPricingSummary(data.pricing_summary);
+
+      // Update ai_generated_content tracking
+      if (data.ai_generated_content) {
+        setProposal((prev) => prev ? { ...prev, ai_generated_content: data.ai_generated_content } : prev);
+      }
+
+      setSuccessMessage('All sections generated with AI');
+      setTimeout(() => setSuccessMessage(''), 5000);
+    } catch (err: any) {
+      const detail = err.response?.data?.detail;
+      setError(extractError(detail, 'Failed to generate content. Please try again.'));
+    } finally {
+      setGeneratingAll(false);
+    }
+  };
+
+  const handleGenerateSection = async (sectionKey: SectionKey) => {
+    const currentValue = sectionValues[sectionKey];
+    if (currentValue.trim()) {
+      if (!window.confirm(`This will overwrite the existing ${sectionConfig.find(s => s.key === sectionKey)?.label} content. Continue?`)) {
+        return;
+      }
+    }
+
+    setGeneratingSection(sectionKey);
+    setError('');
+    setSuccessMessage('');
+
+    try {
+      const response = await proposalsApi.generateContent(proposalId, [sectionKey]);
+      const data = response.data;
+
+      if (data[sectionKey]) {
+        sectionSetters[sectionKey](data[sectionKey]);
+      }
+
+      if (data.ai_generated_content) {
+        setProposal((prev) => prev ? { ...prev, ai_generated_content: data.ai_generated_content } : prev);
+      }
+
+      const label = sectionConfig.find(s => s.key === sectionKey)?.label || sectionKey;
+      setSuccessMessage(`${label} generated with AI`);
+      setTimeout(() => setSuccessMessage(''), 5000);
+    } catch (err: any) {
+      const detail = err.response?.data?.detail;
+      setError(extractError(detail, `Failed to generate ${sectionKey}. Please try again.`));
+    } finally {
+      setGeneratingSection(null);
+    }
+  };
+
+  const handleExportDocx = async () => {
+    setExportingDocx(true);
+    setError('');
+
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      const response = await fetch(`/api/proposals/${proposalId}/export?format=docx`, {
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => null);
+        throw new Error(errData?.detail || 'Export failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const disposition = response.headers.get('content-disposition');
+      const filenameMatch = disposition?.match(/filename="?(.+?)"?$/);
+      a.download = filenameMatch ? filenameMatch[1] : `${proposal?.title || 'proposal'}.docx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      setSuccessMessage('Document exported successfully');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (err: any) {
+      setError(err.message || 'Failed to export document');
+    } finally {
+      setExportingDocx(false);
+    }
+  };
+
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete this proposal? This action cannot be undone.')) {
       return;
@@ -292,6 +438,19 @@ export default function ProposalDetailPage() {
               </option>
             ))}
           </select>
+
+          <button
+            onClick={handleExportDocx}
+            disabled={exportingDocx}
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white text-sm rounded-lg hover:bg-emerald-700 disabled:opacity-50"
+          >
+            {exportingDocx ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Download className="w-4 h-4" />
+            )}
+            {exportingDocx ? 'Exporting...' : 'Export DOCX'}
+          </button>
 
           <Link
             href={`/proposals/${proposalId}/scoring`}
@@ -476,75 +635,75 @@ export default function ProposalDetailPage() {
       {/* Content Tab */}
       {activeTab === 'content' && (
         <div className="space-y-6">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Executive Summary
-            </label>
-            <textarea
-              value={executiveSummary}
-              onChange={(e) => setExecutiveSummary(e.target.value)}
-              rows={10}
-              placeholder="Write the executive summary for your proposal..."
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-            />
+          {/* Generate All Sections Button */}
+          <div className="bg-purple-900/20 border border-purple-800 rounded-xl p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-purple-300 font-medium">AI Content Generation</h3>
+              <p className="text-purple-400/70 text-sm mt-1">
+                Generate all proposal sections using AI based on the solicitation details and your organization&apos;s capabilities.
+              </p>
+            </div>
+            <button
+              onClick={handleGenerateAll}
+              disabled={generatingAll || generatingSection !== null}
+              className="flex items-center gap-2 px-5 py-2.5 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap font-medium"
+            >
+              {generatingAll ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Sparkles className="w-4 h-4" />
+              )}
+              {generatingAll ? 'Generating All Sections...' : 'Generate All Sections with AI'}
+            </button>
           </div>
 
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Technical Approach
-            </label>
-            <textarea
-              value={technicalApproach}
-              onChange={(e) => setTechnicalApproach(e.target.value)}
-              rows={10}
-              placeholder="Describe the technical approach and methodology..."
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-            />
-          </div>
+          {/* Section editors */}
+          {sectionConfig.map((section) => {
+            const isGenerating = generatingSection === section.key || generatingAll;
+            const isAiGenerated = proposal?.ai_generated_content?.[section.key];
 
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Management Approach
-            </label>
-            <textarea
-              value={managementApproach}
-              onChange={(e) => setManagementApproach(e.target.value)}
-              rows={10}
-              placeholder="Outline the management structure and staffing plan..."
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-            />
-          </div>
-
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Past Performance
-            </label>
-            <textarea
-              value={pastPerformance}
-              onChange={(e) => setPastPerformance(e.target.value)}
-              rows={10}
-              placeholder="Detail relevant past performance and references..."
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-            />
-          </div>
-
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Pricing Summary
-            </label>
-            <textarea
-              value={pricingSummary}
-              onChange={(e) => setPricingSummary(e.target.value)}
-              rows={10}
-              placeholder="Provide the pricing breakdown and cost justification..."
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-            />
-          </div>
+            return (
+              <div key={section.key} className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <label className="block text-sm font-medium text-gray-300">
+                      {section.label}
+                    </label>
+                    {isAiGenerated && (
+                      <span className="px-2 py-0.5 text-xs font-medium bg-purple-600/20 text-purple-400 rounded border border-purple-800">
+                        AI Generated
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => handleGenerateSection(section.key)}
+                    disabled={isGenerating}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600/30 disabled:opacity-50 disabled:cursor-not-allowed border border-purple-800"
+                  >
+                    {generatingSection === section.key ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <RefreshCw className="w-3 h-3" />
+                    )}
+                    {generatingSection === section.key ? 'Generating...' : 'Generate'}
+                  </button>
+                </div>
+                <textarea
+                  value={sectionValues[section.key]}
+                  onChange={(e) => sectionSetters[section.key](e.target.value)}
+                  rows={section.rows}
+                  placeholder={section.placeholder}
+                  disabled={isGenerating}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm disabled:opacity-50"
+                />
+              </div>
+            );
+          })}
 
           <div>
             <button
               onClick={handleSaveContent}
-              disabled={saving}
+              disabled={saving || generatingAll || generatingSection !== null}
               className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               <Save className="w-4 h-4" />

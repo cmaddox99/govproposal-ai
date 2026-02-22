@@ -40,6 +40,9 @@ Organization management, government credentials, and NAICS code tracking.
 | 2.5 | List User's Organizations | Done | Done | Yes | Auto-loads on login |
 | 2.6 | Auto-detect Existing Org on Login | Done | Done | Yes | Dashboard layout fetches org from API |
 | 2.7 | Organization Switcher | Not started | Not started | No | Only supports single org currently |
+| 2.8 | Organization Capabilities Summary | Done | Done | Yes | Narrative textarea on org page |
+| 2.9 | Key Capabilities List | Done | Done | Yes | Structured name/description pairs |
+| 2.10 | Past Performance Records (CRUD) | Done | Done | Yes | Full CRUD with card UI on org page |
 
 ---
 
@@ -108,6 +111,11 @@ Create, manage, and track government proposals through their lifecycle.
 | 6.6 | Proposal Status Workflow | Done | Done | Yes | Status dropdown on detail page |
 | 6.7 | Delete Proposal (admin/owner) | Done | Done | Yes | Delete button with confirmation |
 | 6.8 | Proposal Content Sections | Done | Done | Yes | 5 content sections on Content tab |
+| 6.9 | AI Full Section Generation (All 5 Sections) | Done | Done | Yes | Claude generates all sections using org context + capabilities + past performance |
+| 6.10 | Per-Section AI Regeneration | Done | Done | Yes | Individual "Generate" button per section |
+| 6.11 | Organization Context in AI Prompts | Done | N/A | Yes | Org capabilities + past performance fed to Claude |
+| 6.12 | Proposal Export (DOCX) | Done | Done | Yes | Professional Word doc with cover page, numbered sections, markdown formatting |
+| 6.13 | AI Generated Content Tracking | Done | Done | Yes | "AI Generated" badge on sections, tracked in JSONB field |
 
 ---
 
@@ -203,17 +211,17 @@ Deployment, containerization, and CI/CD.
 | Proposal | Total Features | Deployed | Partial | Not Started |
 |----------|---------------|----------|---------|-------------|
 | 1. Identity & Auth | 11 | 4 | 7 | 0 |
-| 2. Organizations | 7 | 6 | 0 | 1 |
+| 2. Organizations | 10 | 9 | 0 | 1 |
 | 3. RBAC | 6 | 6 | 0 | 0 |
 | 4. Security & Audit | 9 | 3 | 4 | 2 |
 | 5. SAM.gov Opportunities | 9 | 7 | 2 | 0 |
-| 6. Proposals Management | 8 | 8 | 0 | 0 |
+| 6. Proposals Management | 13 | 13 | 0 | 0 |
 | 7. Proposal Scoring | 15 | 15 | 0 | 0 |
 | 8. Platform Admin | 5 | 4 | 0 | 1 |
 | 9. Dashboard & Analytics | 7 | 0 | 0 | 7 |
 | 10. AI Assistant | 6 | 1 | 0 | 5 |
 | 11. Infrastructure | 9 | 7 | 0 | 2 |
-| **TOTALS** | **92** | **61 (66%)** | **12 (13%)** | **19 (21%)** |
+| **TOTALS** | **100** | **69 (69%)** | **12 (12%)** | **19 (19%)** |
 
 ### Critical Gaps (Highest Priority)
 1. **Dashboard** - All metrics are hardcoded mock data

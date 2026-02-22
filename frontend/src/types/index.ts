@@ -198,6 +198,31 @@ export interface GoNoGoSummary {
 // Color team types
 export type ColorTeamType = 'pink_team' | 'red_team' | 'gold_team' | 'submission';
 
+// Organization capability types
+export interface OrgCapability {
+  name: string;
+  description: string;
+}
+
+export interface PastPerformance {
+  id: string;
+  organization_id: string;
+  contract_name: string;
+  agency: string | null;
+  contract_number: string | null;
+  contract_value: number | null;
+  period_of_performance_start: string | null;
+  period_of_performance_end: string | null;
+  description: string | null;
+  relevance_tags: string[] | null;
+  contact_name: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  performance_rating: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 // Proposal types
 export type ProposalStatus =
   | 'draft'
