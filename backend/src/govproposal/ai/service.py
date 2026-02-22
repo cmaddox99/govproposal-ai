@@ -117,6 +117,93 @@ def build_org_context(
     return "\n".join(parts)
 
 
+# --- Scoring-awareness block appended to all section instructions ---
+
+SCORING_AWARENESS_BLOCK = """
+
+SCORING CRITERIA — optimize your content to score 95+ on EACH of these factors:
+
+1. COMPLETENESS (30% weight):
+   - Include ALL required subsections with substantive, detailed content
+   - Never use placeholder text, "TBD", "[INSERT]", or leave any gaps
+   - Meet or exceed the target word count for this section
+   - Reference all required attachments and exhibits
+   - Every expected element must be present and fully developed
+
+2. TECHNICAL DEPTH (30% weight):
+   - Name specific methodologies, tools, technologies, frameworks, and standards (e.g., "PMI PMBOK 7th Edition", "Agile SAFe 6.0", "NIST SP 800-53 Rev 5") — not just "industry best practices"
+   - Describe concrete processes step-by-step, not abstract concepts
+   - Show deep domain understanding by using precise terminology from this work area
+   - Justify each technical choice — explain WHY this approach fits THIS requirement
+   - Avoid generic boilerplate that could apply to any proposal
+   - Connect every technical element back to a specific requirement
+
+3. SECTION L COMPLIANCE (20% weight):
+   - Follow standard government proposal format conventions
+   - Use proper section numbering and organization (##, ###)
+   - Address every element that would typically appear in Section L instructions
+   - Include required certifications and representations references where relevant
+   - Structure content so evaluators can easily find each required element
+
+4. SECTION M ALIGNMENT (20% weight):
+   - Organize content so each evaluation criterion is explicitly and visibly addressed
+   - Present clear discriminators — what makes this offeror uniquely qualified
+   - Weave win themes throughout (not just in the summary)
+   - Use headings and structure that mirror typical evaluation factors
+   - Make it effortless for an evaluator to award maximum points on every factor
+
+CRITICAL INSTRUCTIONS:
+- Do NOT use vague phrases: "best practices", "industry standard", "as needed", "as appropriate", "state-of-the-art", "cutting-edge", "world-class"
+- DO use specific names: tools, frameworks, standards, regulations, methodologies
+- Every paragraph must contain at least one concrete, verifiable detail
+- Structure content with clear headers that map to evaluation criteria
+"""
+
+SECTION_SCORING_GUIDANCE: dict[str, str] = {
+    "executive_summary": """
+SECTION-SPECIFIC SCORING GUIDANCE (Executive Summary):
+- Demonstrate completeness by touching on every major proposal theme (technical, management, past performance, pricing approach) even briefly
+- Show technical depth by naming your primary methodology and key tools in the summary
+- For compliance, reference the solicitation number, NAICS, set-aside type, and agency explicitly
+- For evaluation alignment, state your top 3 discriminators as a bulleted list and present 2-3 win themes clearly
+""",
+    "technical_approach": """
+SECTION-SPECIFIC SCORING GUIDANCE (Technical Approach):
+- Name specific tools, frameworks, platforms, and standards (e.g., "Jira for task tracking", "Jenkins CI/CD pipeline", "ISO 27001 controls")
+- Include a phased work breakdown with named phases, deliverables per phase, and milestone dates
+- For each technical solution element, state: the requirement it addresses, the approach, and why it is superior
+- Include a risk register with at least 3 risks, their likelihood, impact, and specific mitigation strategies
+- Reference relevant FAR/DFAR clauses, OMB circulars, or agency-specific standards by number
+- Quantify where possible: team size, response times, SLA targets, throughput metrics
+""",
+    "management_approach": """
+SECTION-SPECIFIC SCORING GUIDANCE (Management Approach):
+- Name specific management frameworks (PMI PMBOK, ITIL 4, SAFe, CMMI Level 3+, ISO 9001)
+- Define an explicit organizational chart description with named roles and reporting relationships
+- Include specific staffing numbers, labor categories, and FTE allocations
+- Detail your transition plan with a timeline for the first 30/60/90 days
+- Describe specific QA/QC tools and processes (e.g., peer review checklists, automated quality gates)
+- Include communication cadence: weekly status reports, monthly program reviews, quarterly executive briefings
+""",
+    "past_performance": """
+SECTION-SPECIFIC SCORING GUIDANCE (Past Performance):
+- For each contract, quantify outcomes: "delivered 15% under budget", "99.9% uptime", "zero security incidents over 3 years"
+- Draw explicit parallels: "This contract required [X], which directly mirrors the current requirement for [Y]"
+- Include performance ratings (Exceptional, Very Good, Satisfactory) and CPARS references where available
+- Organize by relevance to the current opportunity, most relevant first
+- If past performance records are limited, emphasize transferable skills with specific evidence and measurable outcomes
+""",
+    "pricing_summary": """
+SECTION-SPECIFIC SCORING GUIDANCE (Pricing Summary):
+- Name the specific pricing methodology (e.g., "bottom-up engineering estimate", "parametric modeling using SEER-SEM")
+- Reference specific labor categories from the relevant SCA/WD or GSA Schedule
+- Describe cost control mechanisms with measurable thresholds (e.g., "variance analysis triggered at 5% deviation")
+- Explain your basis of estimate approach with enough specificity to demonstrate realism
+- Address price reasonableness and how your approach delivers best value to the government
+""",
+}
+
+
 # --- Section-specific prompt templates ---
 
 SECTION_PROMPTS: dict[str, dict[str, str]] = {
@@ -238,7 +325,11 @@ async def generate_proposal_section(
     opportunity_details = "\n".join(details) if details else "No additional details available."
     description_text = description or "No description provided."
 
+    section_guidance = SECTION_SCORING_GUIDANCE.get(section_type, "")
+
     user_prompt = f"""{prompts['instruction']}
+{SCORING_AWARENESS_BLOCK}
+{section_guidance}
 
 Opportunity Title: {title}
 
