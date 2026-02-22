@@ -250,19 +250,24 @@ export default function ProposalDetailPage() {
       const data = response.data;
 
       // Update local state with generated content
-      if (data.executive_summary) setExecutiveSummary(data.executive_summary);
-      if (data.technical_approach) setTechnicalApproach(data.technical_approach);
-      if (data.management_approach) setManagementApproach(data.management_approach);
-      if (data.past_performance) setPastPerformance(data.past_performance);
-      if (data.pricing_summary) setPricingSummary(data.pricing_summary);
+      let generatedCount = 0;
+      if (data.executive_summary) { setExecutiveSummary(data.executive_summary); generatedCount++; }
+      if (data.technical_approach) { setTechnicalApproach(data.technical_approach); generatedCount++; }
+      if (data.management_approach) { setManagementApproach(data.management_approach); generatedCount++; }
+      if (data.past_performance) { setPastPerformance(data.past_performance); generatedCount++; }
+      if (data.pricing_summary) { setPricingSummary(data.pricing_summary); generatedCount++; }
 
       // Update ai_generated_content tracking
       if (data.ai_generated_content) {
         setProposal((prev) => prev ? { ...prev, ai_generated_content: data.ai_generated_content } : prev);
       }
 
-      setSuccessMessage('All sections generated with AI');
-      setTimeout(() => setSuccessMessage(''), 5000);
+      if (generatedCount > 0) {
+        setSuccessMessage(`${generatedCount} section(s) generated with AI`);
+        setTimeout(() => setSuccessMessage(''), 5000);
+      } else {
+        setError('AI generation failed. Please ensure the Anthropic API key is configured on the server.');
+      }
     } catch (err: any) {
       const detail = err.response?.data?.detail;
       setError(extractError(detail, 'Failed to generate content. Please try again.'));
@@ -287,17 +292,20 @@ export default function ProposalDetailPage() {
       const response = await proposalsApi.generateContent(proposalId, [sectionKey]);
       const data = response.data;
 
+      const label = sectionConfig.find(s => s.key === sectionKey)?.label || sectionKey;
+
       if (data[sectionKey]) {
         sectionSetters[sectionKey](data[sectionKey]);
-      }
 
-      if (data.ai_generated_content) {
-        setProposal((prev) => prev ? { ...prev, ai_generated_content: data.ai_generated_content } : prev);
-      }
+        if (data.ai_generated_content) {
+          setProposal((prev) => prev ? { ...prev, ai_generated_content: data.ai_generated_content } : prev);
+        }
 
-      const label = sectionConfig.find(s => s.key === sectionKey)?.label || sectionKey;
-      setSuccessMessage(`${label} generated with AI`);
-      setTimeout(() => setSuccessMessage(''), 5000);
+        setSuccessMessage(`${label} generated with AI`);
+        setTimeout(() => setSuccessMessage(''), 5000);
+      } else {
+        setError(`Failed to generate ${label}. Please ensure the Anthropic API key is configured on the server.`);
+      }
     } catch (err: any) {
       const detail = err.response?.data?.detail;
       setError(extractError(detail, `Failed to generate ${sectionKey}. Please try again.`));
