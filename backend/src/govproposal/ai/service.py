@@ -11,12 +11,19 @@ from govproposal.config import settings
 logger = logging.getLogger(__name__)
 
 
-def _get_client() -> Optional[anthropic.Anthropic]:
-    """Get an Anthropic client, or None if not configured."""
+def _get_client() -> Optional[anthropic.AsyncAnthropic]:
+    """Get an async Anthropic client, or None if not configured."""
     if not settings.anthropic_api_key:
         print("[AI] ANTHROPIC_API_KEY is not set or empty")
         return None
-    print(f"[AI] Anthropic client initialized, key starts with: {settings.anthropic_api_key[:12]}...")
+    print(f"[AI] Anthropic async client initialized, key starts with: {settings.anthropic_api_key[:12]}...")
+    return anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
+
+
+def _get_sync_client() -> Optional[anthropic.Anthropic]:
+    """Get a sync Anthropic client for scoring (non-blocking context)."""
+    if not settings.anthropic_api_key:
+        return None
     return anthropic.Anthropic(api_key=settings.anthropic_api_key)
 
 
@@ -28,7 +35,7 @@ async def score_with_claude(
 
     Returns parsed JSON dict on success, None on failure (caller should use fallback).
     """
-    client = _get_client()
+    client = _get_sync_client()
     if not client:
         logger.info("Anthropic API key not configured, skipping AI scoring")
         return None
@@ -255,7 +262,7 @@ Company Information:
 
     try:
         print(f"[AI] Calling Claude for section: {section_type}, model: {settings.anthropic_model}")
-        message = client.messages.create(
+        message = await client.messages.create(
             model=settings.anthropic_model,
             max_tokens=4096,
             messages=[
