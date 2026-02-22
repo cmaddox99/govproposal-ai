@@ -408,7 +408,7 @@ async def generate_proposal_content(
     estimated_value = float(opportunity.estimated_value) if opportunity and opportunity.estimated_value else proposal.estimated_value
 
     # Generate sections
-    logger.info(f"Generating sections for proposal {proposal_id}, sections={data.sections}, title={title}")
+    print(f"[GENERATE] Generating sections for proposal {proposal_id}, sections={data.sections}, title={title[:50] if title else 'None'}")
     generated = await generate_all_sections(
         title=title,
         description=description,
@@ -423,7 +423,7 @@ async def generate_proposal_content(
     )
 
     # Update proposal with generated content
-    logger.info(f"Generation results: {', '.join(f'{k}={len(v) if v else 0} chars' for k, v in generated.items())}")
+    print(f"[GENERATE] Results: {', '.join(f'{k}={len(v) if v else 0} chars' for k, v in generated.items())}")
     ai_tracking = proposal.ai_generated_content or {}
     for section_name, content in generated.items():
         if content:
