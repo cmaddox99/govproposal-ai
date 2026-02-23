@@ -1,251 +1,149 @@
-"""GSA eBuy Open integration service."""
+"""GSA eBuy / GSA Schedule integration service.
+
+GSA eBuy is a closed Angular SPA with no public API. However, GSA Schedule
+solicitations and RFQs that are posted publicly appear on SAM.gov. This
+service queries SAM.gov for GSA-sourced opportunities (agency = GSA,
+notice types including solicitations and combined synopses) and tags them
+with source="gsa_ebuy" to distinguish them from general SAM.gov results.
+"""
 
 import httpx
-from datetime import datetime, timezone
-from typing import Optional, Dict, Any
+from datetime import datetime, timedelta, timezone
+from typing import Optional, List, Dict, Any
 
-try:
-    from bs4 import BeautifulSoup
-
-    HAS_BS4 = True
-except ImportError:
-    HAS_BS4 = False
+from govproposal.config import settings
 
 
 class EBuyOpenService:
-    """Service for fetching solicitations from GSA eBuy Open."""
+    """Service for fetching GSA Schedule / eBuy-originated opportunities via SAM.gov."""
 
-    EBUY_OPEN_URL = "https://www.ebuy.gsa.gov/ebuyopen"
-    # Known eBuy Open API endpoints (Angular SPA backend)
-    EBUY_API_BASE = "https://www.ebuy.gsa.gov/ebuyopen/api"
+    BASE_URL = "https://api.sam.gov/opportunities/v2"
+
+    # GSA-related agencies and subtiers to filter on
+    GSA_AGENCIES = [
+        "General Services Administration",
+        "GSA",
+        "FEDERAL ACQUISITION SERVICE",
+        "PUBLIC BUILDINGS SERVICE",
+    ]
+
+    def __init__(self, api_key: Optional[str] = None):
+        self.api_key = api_key or settings.sam_api_key
 
     async def search_opportunities(
         self,
         keywords: Optional[str] = None,
-        limit: int = 50,
-    ) -> list[Dict[str, Any]]:
-        """Search for open RFQs on GSA eBuy Open.
+        limit: int = 100,
+    ) -> List[Dict[str, Any]]:
+        """Search SAM.gov for GSA-sourced opportunities.
 
-        Attempts the underlying API first. Falls back to HTML scraping
-        if the API is unavailable. Note: eBuy Open is an Angular SPA,
-        so full scraping may require Playwright in the future.
+        Fetches solicitations and combined synopses from GSA agencies
+        posted in the last 90 days.
         """
-        opportunities: list[Dict[str, Any]] = []
-
-        async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
-            # Attempt 1: Try the eBuy Open API directly
-            try:
-                opportunities = await self._fetch_from_api(client, keywords, limit)
-                if opportunities:
-                    return opportunities
-            except Exception:
-                pass
-
-            # Attempt 2: Fall back to scraping the HTML page
-            try:
-                opportunities = await self._fetch_from_html(client, keywords, limit)
-            except Exception:
-                pass
-
-        return opportunities
-
-    async def _fetch_from_api(
-        self,
-        client: httpx.AsyncClient,
-        keywords: Optional[str],
-        limit: int,
-    ) -> list[Dict[str, Any]]:
-        """Try fetching from eBuy Open's backend API."""
-        params: Dict[str, Any] = {
-            "status": "open",
-            "limit": limit,
-        }
-        if keywords:
-            params["keywords"] = keywords
-
-        response = await client.get(
-            f"{self.EBUY_API_BASE}/rfqs",
-            params=params,
-            headers={
-                "Accept": "application/json",
-                "User-Agent": "GovProposal-AI/1.0",
-            },
-        )
-        response.raise_for_status()
-        data = response.json()
-
-        results = []
-        items = data if isinstance(data, list) else data.get("results", data.get("rfqs", []))
-        for item in items[:limit]:
-            parsed = self.parse_opportunity(item)
-            if parsed:
-                results.append(parsed)
-        return results
-
-    async def _fetch_from_html(
-        self,
-        client: httpx.AsyncClient,
-        keywords: Optional[str],
-        limit: int,
-    ) -> list[Dict[str, Any]]:
-        """Fall back to scraping the eBuy Open HTML page.
-
-        Note: Since eBuy Open is an Angular SPA, this may only capture
-        server-rendered content. For full support, Playwright integration
-        may be needed in the future.
-        """
-        if not HAS_BS4:
+        if not self.api_key:
             return []
 
-        url = self.EBUY_OPEN_URL
-        if keywords:
-            url += f"?keywords={keywords}"
+        now = datetime.now(timezone.utc)
+        posted_from = now - timedelta(days=90)
 
-        response = await client.get(
-            url,
-            headers={
-                "User-Agent": "GovProposal-AI/1.0",
-                "Accept": "text/html",
-            },
-        )
-        response.raise_for_status()
-
-        soup = BeautifulSoup(response.text, "html.parser")
-        results = []
-
-        # Look for RFQ listing elements — CSS selectors may need
-        # refinement as the eBuy Open UI evolves
-        rfq_rows = soup.select("table tbody tr, .rfq-item, .rfq-row, [class*='rfq']")
-        for row in rfq_rows[:limit]:
-            try:
-                parsed = self._parse_html_row(row)
-                if parsed:
-                    results.append(parsed)
-            except Exception:
-                continue
-
-        return results
-
-    def _parse_html_row(self, row: Any) -> Optional[Dict[str, Any]]:
-        """Parse a single HTML row/element into opportunity format."""
-        cells = row.find_all("td") if hasattr(row, "find_all") else []
-        if len(cells) < 3:
-            # Try extracting from any element with text content
-            text = row.get_text(strip=True) if hasattr(row, "get_text") else ""
-            if not text:
-                return None
-            return {
-                "notice_id": f"ebuy-{hash(text) & 0xFFFFFFFF:08x}",
-                "title": text[:500],
-                "description": None,
-                "department": "General Services Administration",
-                "agency": "GSA",
-                "office": None,
-                "notice_type": "solicitation",
-                "naics_code": None,
-                "naics_description": None,
-                "psc_code": None,
-                "set_aside_type": None,
-                "set_aside_description": None,
-                "posted_date": None,
-                "response_deadline": None,
-                "archive_date": None,
-                "place_of_performance_city": None,
-                "place_of_performance_state": None,
-                "place_of_performance_country": "US",
-                "primary_contact_name": None,
-                "primary_contact_email": None,
-                "primary_contact_phone": None,
-                "sam_url": self.EBUY_OPEN_URL,
-                "raw_data": {"html_text": text},
-                "source": "gsa_ebuy",
-            }
-
-        # Table-based layout
-        title = cells[0].get_text(strip=True) if cells else ""
-        rfq_number = cells[1].get_text(strip=True) if len(cells) > 1 else ""
-        deadline_str = cells[2].get_text(strip=True) if len(cells) > 2 else ""
-
-        return {
-            "notice_id": f"ebuy-{rfq_number}" if rfq_number else f"ebuy-{hash(title) & 0xFFFFFFFF:08x}",
-            "solicitation_number": rfq_number or None,
-            "title": title[:500],
-            "description": None,
-            "department": "General Services Administration",
-            "agency": "GSA",
-            "office": None,
-            "notice_type": "solicitation",
-            "naics_code": None,
-            "naics_description": None,
-            "psc_code": None,
-            "set_aside_type": None,
-            "set_aside_description": None,
-            "posted_date": None,
-            "response_deadline": self._parse_date(deadline_str),
-            "archive_date": None,
-            "place_of_performance_city": None,
-            "place_of_performance_state": None,
-            "place_of_performance_country": "US",
-            "primary_contact_name": None,
-            "primary_contact_email": None,
-            "primary_contact_phone": None,
-            "sam_url": self.EBUY_OPEN_URL,
-            "raw_data": {"rfq_number": rfq_number, "title": title},
-            "source": "gsa_ebuy",
+        params: Dict[str, Any] = {
+            "api_key": self.api_key,
+            "limit": limit,
+            "offset": 0,
+            "postedFrom": posted_from.strftime("%m/%d/%Y"),
+            "postedTo": now.strftime("%m/%d/%Y"),
+            # Filter for solicitation types (where RFQs appear)
+            "ptype": "k,o,p",  # combined synopsis, solicitation, presolicitation
         }
 
-    def parse_opportunity(self, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Parse eBuy API response data into Opportunity model format."""
-        rfq_id = data.get("rfqId") or data.get("id") or data.get("rfqNumber", "")
-        title = data.get("title") or data.get("description") or data.get("rfqTitle", "")
+        if keywords:
+            params["title"] = keywords
 
-        if not title:
+        all_opportunities: List[Dict[str, Any]] = []
+
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            try:
+                response = await client.get(
+                    f"{self.BASE_URL}/search",
+                    params=params,
+                )
+                response.raise_for_status()
+                data = response.json()
+
+                for opp in data.get("opportunitiesData", []):
+                    # Filter to GSA-sourced opportunities
+                    agency = (opp.get("department") or "").upper()
+                    subtier = (opp.get("subtierAgency") or opp.get("agency") or "").upper()
+
+                    is_gsa = any(
+                        gsa.upper() in agency or gsa.upper() in subtier
+                        for gsa in self.GSA_AGENCIES
+                    )
+
+                    if is_gsa:
+                        parsed = self.parse_opportunity(opp)
+                        if parsed:
+                            all_opportunities.append(parsed)
+
+            except Exception:
+                # If SAM.gov API fails, return empty rather than crashing
+                pass
+
+        return all_opportunities
+
+    def parse_opportunity(self, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Parse SAM.gov opportunity data, tagged as gsa_ebuy source."""
+        notice_id = data.get("noticeId", "")
+        title = data.get("title", "")
+
+        if not notice_id or not title:
             return None
 
         return {
-            "notice_id": f"ebuy-{rfq_id}" if rfq_id else f"ebuy-{hash(title) & 0xFFFFFFFF:08x}",
-            "solicitation_number": data.get("rfqNumber"),
-            "title": title[:500],
-            "description": data.get("description") or data.get("details"),
-            "department": "General Services Administration",
-            "agency": data.get("agency") or "GSA",
+            "notice_id": notice_id,
+            "solicitation_number": data.get("solicitationNumber"),
+            "title": title,
+            "description": data.get("description"),
+            "department": data.get("department"),
+            "agency": data.get("subtierAgency") or data.get("agency"),
             "office": data.get("office"),
-            "notice_type": "solicitation",
+            "notice_type": data.get("type", "").lower().replace(" ", "_"),
             "naics_code": data.get("naicsCode"),
             "naics_description": data.get("naicsDescription"),
-            "psc_code": data.get("pscCode"),
-            "set_aside_type": data.get("setAside"),
-            "set_aside_description": data.get("setAsideDescription"),
-            "posted_date": self._parse_date(data.get("openDate") or data.get("postedDate")),
-            "response_deadline": self._parse_date(
-                data.get("closeDate") or data.get("responseDeadline")
+            "psc_code": data.get("classificationCode"),
+            "set_aside_type": data.get("typeOfSetAside"),
+            "set_aside_description": data.get("typeOfSetAsideDescription"),
+            "posted_date": self._parse_date(data.get("postedDate")),
+            "response_deadline": self._parse_date(data.get("responseDeadLine")),
+            "archive_date": self._parse_date(data.get("archiveDate")),
+            "place_of_performance_city": data.get("placeOfPerformanceCity"),
+            "place_of_performance_state": data.get("placeOfPerformanceState"),
+            "place_of_performance_country": data.get("placeOfPerformanceCountry"),
+            "primary_contact_name": (
+                data.get("pointOfContact", [{}])[0].get("fullName")
+                if data.get("pointOfContact") else None
             ),
-            "archive_date": None,
-            "place_of_performance_city": data.get("city"),
-            "place_of_performance_state": data.get("state"),
-            "place_of_performance_country": data.get("country", "US"),
-            "primary_contact_name": data.get("contactName"),
-            "primary_contact_email": data.get("contactEmail"),
-            "primary_contact_phone": data.get("contactPhone"),
-            "sam_url": data.get("url") or self.EBUY_OPEN_URL,
+            "primary_contact_email": (
+                data.get("pointOfContact", [{}])[0].get("email")
+                if data.get("pointOfContact") else None
+            ),
+            "primary_contact_phone": (
+                data.get("pointOfContact", [{}])[0].get("phone")
+                if data.get("pointOfContact") else None
+            ),
+            "sam_url": data.get("uiLink"),
             "raw_data": data,
             "source": "gsa_ebuy",
         }
 
     def _parse_date(self, date_str: Optional[str]) -> Optional[datetime]:
-        """Parse date string from eBuy API or HTML."""
+        """Parse date string from SAM.gov API."""
         if not date_str:
             return None
         try:
-            for fmt in [
-                "%Y-%m-%dT%H:%M:%S",
-                "%Y-%m-%d",
-                "%m/%d/%Y",
-                "%m/%d/%Y %I:%M %p",
-                "%b %d, %Y",
-            ]:
+            for fmt in ["%Y-%m-%d", "%m/%d/%Y", "%Y-%m-%dT%H:%M:%S"]:
                 try:
-                    return datetime.strptime(date_str.strip()[:19], fmt[:19]).replace(
+                    return datetime.strptime(date_str[:10], fmt[:10]).replace(
                         tzinfo=timezone.utc
                     )
                 except ValueError:

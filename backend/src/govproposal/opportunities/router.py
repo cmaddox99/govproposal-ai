@@ -96,8 +96,12 @@ async def list_opportunities(
     if not member:
         raise HTTPException(status_code=403, detail="Not a member of this organization")
 
-    # Get organization's NAICS codes if not specified
-    if not naics_codes:
+    # Only apply org NAICS codes when no other filters are active
+    has_filters = any([
+        set_aside_type, value_min is not None, value_max is not None,
+        posted_from, posted_to, source, keywords,
+    ])
+    if not naics_codes and not has_filters:
         org_query = select(Organization).where(Organization.id == org_id)
         org = (await session.execute(org_query)).scalar_one_or_none()
         if org and org.naics_codes:
@@ -153,9 +157,10 @@ async def list_opportunities(
         )
 
     if posted_to:
+        # Use end of day so "posted_to=2026-02-23" includes the entire day
         conditions.append(
             Opportunity.posted_date <= datetime.strptime(posted_to, "%Y-%m-%d").replace(
-                tzinfo=timezone.utc
+                hour=23, minute=59, second=59, tzinfo=timezone.utc
             )
         )
 
