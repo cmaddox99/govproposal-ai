@@ -1,5 +1,5 @@
 # GovProposalAI Backend Dockerfile
-# Build: 2026-02-10-v2 - Added opportunities and proposals modules
+# Build: 2026-02-22-v3 - Added eBuy integration, filters, invite fix
 FROM python:3.12-slim
 
 WORKDIR /app
@@ -28,7 +28,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
     httpx>=0.26.0 \
     anthropic>=0.18.0 \
     python-multipart \
-    python-docx>=1.1.0
+    python-docx>=1.1.0 \
+    beautifulsoup4>=4.12.0
 
 # Copy application code - bust cache by copying all source
 COPY src/ ./src/
