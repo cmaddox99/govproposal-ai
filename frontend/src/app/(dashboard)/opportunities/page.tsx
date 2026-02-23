@@ -426,8 +426,9 @@ export default function OpportunitiesPage() {
                 <input
                   type="date"
                   value={filters.posted_from}
+                  max={new Date().toISOString().split('T')[0]}
                   onChange={(e) => setFilters(prev => ({ ...prev, posted_from: e.target.value }))}
-                  className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent [color-scheme:dark]"
                 />
               </div>
               <div>
@@ -435,8 +436,9 @@ export default function OpportunitiesPage() {
                 <input
                   type="date"
                   value={filters.posted_to}
+                  max={new Date().toISOString().split('T')[0]}
                   onChange={(e) => setFilters(prev => ({ ...prev, posted_to: e.target.value }))}
-                  className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent [color-scheme:dark]"
                 />
               </div>
               <div>
