@@ -110,6 +110,12 @@ export default function OpportunitiesPage() {
       if (f.posted_to) params.set('posted_to', f.posted_to);
       if (f.source) params.set('source', f.source);
 
+      // When date filters are active, show all opportunities in range
+      // (not just ones with future deadlines)
+      if (f.posted_from || f.posted_to) {
+        params.set('active_only', 'false');
+      }
+
       const response = await fetch(`/api/opportunities?${params.toString()}`, {
         headers: {
           Authorization: `Bearer ${token}`,
