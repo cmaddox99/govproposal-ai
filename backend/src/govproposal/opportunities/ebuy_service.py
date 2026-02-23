@@ -7,11 +7,14 @@ notice types including solicitations and combined synopses) and tags them
 with source="gsa_ebuy" to distinguish them from general SAM.gov results.
 """
 
+import logging
 import httpx
 from datetime import datetime, timedelta, timezone
 from typing import Optional, List, Dict, Any
 
 from govproposal.config import settings
+
+logger = logging.getLogger(__name__)
 
 
 class EBuyOpenService:
@@ -85,9 +88,15 @@ class EBuyOpenService:
                         if parsed:
                             all_opportunities.append(parsed)
 
-            except Exception:
-                # If SAM.gov API fails, return empty rather than crashing
-                pass
+            except httpx.HTTPStatusError as e:
+                body = e.response.text
+                logger.warning("SAM.gov API error for GSA eBuy sync: %s — %s", e.response.status_code, body)
+                if "exceeded your quota" in body.lower() or "throttled" in body.lower():
+                    raise RuntimeError(
+                        "SAM.gov API daily quota exceeded. The quota resets at midnight UTC. Please try again later."
+                    )
+            except Exception as e:
+                logger.warning("GSA eBuy sync failed: %s", str(e))
 
         return all_opportunities
 

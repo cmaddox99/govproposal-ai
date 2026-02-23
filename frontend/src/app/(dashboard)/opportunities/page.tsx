@@ -157,7 +157,13 @@ export default function OpportunitiesPage() {
       }
 
       const data = await response.json();
-      setSuccessMessage(data.message);
+      if (data.synced === 0) {
+        setSuccessMessage(
+          'SAM.gov sync completed — no new opportunities found. This can happen if the API daily quota has been reached (resets at midnight UTC) or all opportunities are already synced.'
+        );
+      } else {
+        setSuccessMessage(data.message);
+      }
       await fetchOpportunities();
     } catch (err: any) {
       setError(err.message);
@@ -193,7 +199,13 @@ export default function OpportunitiesPage() {
       }
 
       const data = await response.json();
-      setSuccessMessage(data.message);
+      if (data.synced === 0) {
+        setSuccessMessage(
+          'GSA eBuy sync completed — no new opportunities found. This can happen if the SAM.gov API daily quota has been reached (resets at midnight UTC) or there are no new GSA solicitations.'
+        );
+      } else {
+        setSuccessMessage(data.message);
+      }
       await fetchOpportunities();
     } catch (err: any) {
       setError(err.message);
@@ -511,8 +523,10 @@ export default function OpportunitiesPage() {
             <Search className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-white mb-2">No Opportunities Found</h3>
             <p className="text-gray-500 max-w-md mx-auto">
-              {opportunities.length === 0
+              {opportunities.length === 0 && activeFilterCount === 0
                 ? "Click 'Sync from SAM.gov' or 'Sync from GSA eBuy' to fetch opportunities matching your organization's NAICS codes. Make sure you've added NAICS codes in your organization settings."
+                : activeFilterCount > 0
+                ? "No opportunities match your current filters. Try adjusting your date range (most opportunities are posted in the past, not the future) or clearing filters."
                 : "No opportunities match your search criteria."}
             </p>
           </div>
