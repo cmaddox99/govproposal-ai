@@ -164,6 +164,7 @@ class SAMGovService:
             "primary_contact_phone": data.get("pointOfContact", [{}])[0].get("phone") if data.get("pointOfContact") else None,
             "sam_url": data.get("uiLink"),
             "raw_data": data,
+            "source": "sam_gov",
         }
 
     def _parse_date(self, date_str: Optional[str]) -> Optional[datetime]:

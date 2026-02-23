@@ -32,15 +32,15 @@ export function UserInviteForm({ orgId, onSuccess, onCancel }: UserInviteFormPro
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 max-w-md">
+    <div className="bg-gray-800 border border-white/[0.12] rounded-lg shadow-lg p-6 max-w-md">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <UserPlus className="w-5 h-5 text-blue-600" />
-          <h3 className="font-semibold">Invite User</h3>
+          <UserPlus className="w-5 h-5 text-emerald-400" />
+          <h3 className="font-semibold text-white">Invite User</h3>
         </div>
         <button
           onClick={onCancel}
-          className="p-1 hover:bg-gray-100 rounded"
+          className="p-1 hover:bg-white/[0.08] rounded"
         >
           <X className="w-5 h-5 text-gray-500" />
         </button>
@@ -48,7 +48,7 @@ export function UserInviteForm({ orgId, onSuccess, onCancel }: UserInviteFormPro
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-300 mb-1">
             Email address
           </label>
           <input
@@ -57,18 +57,18 @@ export function UserInviteForm({ orgId, onSuccess, onCancel }: UserInviteFormPro
             onChange={(e) => setEmail(e.target.value)}
             placeholder="user@example.com"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent placeholder-gray-500"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-300 mb-1">
             Role
           </label>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           >
             <option value="member">Member</option>
             <option value="admin">Administrator</option>
@@ -81,21 +81,21 @@ export function UserInviteForm({ orgId, onSuccess, onCancel }: UserInviteFormPro
         </div>
 
         {error && (
-          <p className="text-red-600 text-sm">{error}</p>
+          <p className="text-red-400 text-sm">{error}</p>
         )}
 
         <div className="flex gap-3">
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 text-white py-2 px-4 rounded-lg hover:from-emerald-600 hover:to-blue-600 disabled:opacity-50"
           >
             {loading ? 'Sending invite...' : 'Send Invite'}
           </button>
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 border border-white/[0.08] text-gray-300 rounded-lg hover:bg-white/[0.08]"
           >
             Cancel
           </button>

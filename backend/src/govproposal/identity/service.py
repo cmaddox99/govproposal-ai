@@ -409,11 +409,35 @@ class OrganizationService:
 
     async def invite_user(
         self, org_id: str, email: str, role: str = "member"
-    ) -> OrganizationMemberResponse:
-        """Invite a user to organization."""
+    ) -> tuple[OrganizationMemberResponse, bool]:
+        """Invite a user to organization. Creates account if user doesn't exist.
+
+        Returns:
+            Tuple of (member response, is_new_user flag)
+        """
+        import secrets
+
+        is_new = False
         user = await self._user_repo.get_by_email(email.lower())
         if not user:
-            raise UserNotFoundError()
+            is_new = True
+            temp_password = secrets.token_urlsafe(24)
+            user = await self._user_repo.create(
+                email=email.lower(),
+                password_hash=hash_password(temp_password),
+            )
+
+        # Check if already a member
+        existing = await self._org_repo.get_member(org_id, user.id)
+        if existing:
+            return OrganizationMemberResponse(
+                id=existing.id,
+                user_id=user.id,
+                email=user.email,
+                role=existing.role,
+                invited_at=existing.invited_at,
+                joined_at=existing.joined_at,
+            ), is_new
 
         member = await self._org_repo.add_member(org_id, user.id, role)
         return OrganizationMemberResponse(
@@ -423,7 +447,7 @@ class OrganizationService:
             role=member.role,
             invited_at=member.invited_at,
             joined_at=member.joined_at,
-        )
+        ), is_new
 
     async def change_member_role(
         self, org_id: str, user_id: str, new_role: str

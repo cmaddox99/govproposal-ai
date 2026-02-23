@@ -2,7 +2,7 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, Request, status
 
 from govproposal.identity.dependencies import (
     CurrentUser,
@@ -11,6 +11,7 @@ from govproposal.identity.dependencies import (
     require_org_admin,
     require_org_owner,
 )
+from govproposal.security.service import AuditService
 from govproposal.identity.models import User
 from govproposal.identity.repository import OrganizationRepository, UserRepository
 from govproposal.identity.schemas import (
@@ -68,17 +69,33 @@ async def invite_user(
     current_user: CurrentUser,
     session: DbSession,
     service: OrgSvc,
+    request: Request,
 ) -> InviteResponse:
     """Invite user to organization. Requires admin role."""
     await require_org_admin(org_id, current_user, session)
 
-    member = await service.invite_user(org_id, data.email, data.role)
+    member, is_new = await service.invite_user(org_id, data.email, data.role)
+
+    audit = AuditService(session)
+    await audit.log_event(
+        event_type="user_invited",
+        action="New account created and invited" if is_new else "User invited to organization",
+        actor_id=current_user.id,
+        actor_email=current_user.email,
+        organization_id=org_id,
+        resource_type="organization_member",
+        resource_id=member.id,
+        ip_address=request.client.host if request.client else None,
+        details={"invited_email": data.email, "role": data.role, "is_new_user": is_new},
+    )
 
     return InviteResponse(
         id=member.id,
         email=member.email,
         role=member.role,
         invited_at=member.invited_at,
+        is_new_user=is_new,
+        message="New account created and invited" if is_new else "User invited successfully",
     )
 
 
@@ -90,6 +107,7 @@ async def change_user_role(
     current_user: CurrentUser,
     session: DbSession,
     service: OrgSvc,
+    request: Request,
 ) -> OrgUserResponse:
     """Change user's role. Requires owner role to change to/from owner."""
     # Check if changing to/from owner role - requires owner permission
@@ -105,6 +123,23 @@ async def change_user_role(
 
     user_repo = UserRepository(session)
     user = await user_repo.get_by_id(user_id)
+
+    audit = AuditService(session)
+    await audit.log_event(
+        event_type="user_role_changed",
+        action="User role changed",
+        actor_id=current_user.id,
+        actor_email=current_user.email,
+        organization_id=org_id,
+        resource_type="organization_member",
+        resource_id=updated_member.id,
+        ip_address=request.client.host if request.client else None,
+        details={
+            "target_user_id": user_id,
+            "previous_role": member.role if member else None,
+            "new_role": data.role,
+        },
+    )
 
     return OrgUserResponse(
         id=updated_member.id,
@@ -125,6 +160,7 @@ async def remove_user(
     current_user: CurrentUser,
     session: DbSession,
     service: OrgSvc,
+    request: Request,
 ) -> MessageResponse:
     """Remove user from organization. Requires admin role."""
     await require_org_admin(org_id, current_user, session)
@@ -148,5 +184,17 @@ async def remove_user(
         from govproposal.identity.exceptions import UserNotFoundError
 
         raise UserNotFoundError()
+
+    audit = AuditService(session)
+    await audit.log_event(
+        event_type="user_removed",
+        action="User removed from organization",
+        actor_id=current_user.id,
+        actor_email=current_user.email,
+        organization_id=org_id,
+        resource_type="organization_member",
+        ip_address=request.client.host if request.client else None,
+        details={"removed_user_id": user_id},
+    )
 
     return MessageResponse(message="User removed from organization")

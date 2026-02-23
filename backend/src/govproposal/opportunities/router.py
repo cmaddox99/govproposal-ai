@@ -13,6 +13,7 @@ from govproposal.identity.dependencies import CurrentUser
 from govproposal.identity.models import Organization, OrganizationMember
 from govproposal.opportunities.models import Opportunity
 from govproposal.opportunities.sam_service import SAMGovService
+from govproposal.opportunities.ebuy_service import EBuyOpenService
 from govproposal.config import settings
 
 router = APIRouter(prefix="/api/v1/opportunities", tags=["opportunities"])
@@ -43,6 +44,7 @@ class OpportunityResponse(BaseModel):
     primary_contact_email: Optional[str] = None
     sam_url: Optional[str] = None
     estimated_value: Optional[float] = None
+    source: str = "sam_gov"
 
     class Config:
         from_attributes = True
@@ -71,6 +73,12 @@ async def list_opportunities(
     naics_codes: Annotated[Optional[str], Query(description="Comma-separated NAICS codes")] = None,
     keywords: Annotated[Optional[str], Query(description="Search keywords")] = None,
     notice_type: Annotated[Optional[str], Query(description="Notice type filter")] = None,
+    set_aside_type: Annotated[Optional[str], Query(description="Comma-separated set-aside types")] = None,
+    value_min: Annotated[Optional[float], Query(description="Minimum estimated value")] = None,
+    value_max: Annotated[Optional[float], Query(description="Maximum estimated value")] = None,
+    posted_from: Annotated[Optional[str], Query(description="Posted from date (YYYY-MM-DD)")] = None,
+    posted_to: Annotated[Optional[str], Query(description="Posted to date (YYYY-MM-DD)")] = None,
+    source: Annotated[Optional[str], Query(description="Source filter (sam_gov, gsa_ebuy)")] = None,
     active_only: Annotated[bool, Query(description="Only show opportunities with future deadlines")] = True,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
@@ -127,6 +135,32 @@ async def list_opportunities(
 
     if notice_type:
         conditions.append(Opportunity.notice_type == notice_type)
+
+    if set_aside_type:
+        conditions.append(Opportunity.set_aside_type.in_(set_aside_type.split(",")))
+
+    if value_min is not None:
+        conditions.append(Opportunity.estimated_value >= value_min)
+
+    if value_max is not None:
+        conditions.append(Opportunity.estimated_value <= value_max)
+
+    if posted_from:
+        conditions.append(
+            Opportunity.posted_date >= datetime.strptime(posted_from, "%Y-%m-%d").replace(
+                tzinfo=timezone.utc
+            )
+        )
+
+    if posted_to:
+        conditions.append(
+            Opportunity.posted_date <= datetime.strptime(posted_to, "%Y-%m-%d").replace(
+                tzinfo=timezone.utc
+            )
+        )
+
+    if source:
+        conditions.append(Opportunity.source == source)
 
     if conditions:
         query = query.where(and_(*conditions))
@@ -271,4 +305,72 @@ async def sync_opportunities(
         synced=synced,
         errors=errors,
         message=f"Successfully synced {synced} opportunities" + (f" with {errors} errors" if errors else ""),
+    )
+
+
+@router.post("/sync-ebuy", response_model=SyncResponse)
+async def sync_ebuy_opportunities(
+    current_user: CurrentUser,
+    session: DbSession,
+    org_id: Annotated[str, Query(description="Organization ID")],
+    keywords: Annotated[Optional[str], Query(description="Search keywords")] = None,
+) -> SyncResponse:
+    """Sync opportunities from GSA eBuy Open."""
+
+    # Verify user is member of org
+    member_query = select(OrganizationMember).where(
+        and_(
+            OrganizationMember.organization_id == org_id,
+            OrganizationMember.user_id == current_user.id,
+        )
+    )
+    member = (await session.execute(member_query)).scalar_one_or_none()
+    if not member:
+        raise HTTPException(status_code=403, detail="Not a member of this organization")
+
+    synced = 0
+    errors = 0
+
+    try:
+        ebuy_service = EBuyOpenService()
+        opportunities_data = await ebuy_service.search_opportunities(
+            keywords=keywords,
+            limit=100,
+        )
+
+        for parsed in opportunities_data:
+            try:
+                # Check if opportunity already exists
+                existing_query = select(Opportunity).where(
+                    Opportunity.notice_id == parsed["notice_id"]
+                )
+                existing = (await session.execute(existing_query)).scalar_one_or_none()
+
+                if existing:
+                    for key, value in parsed.items():
+                        if value is not None:
+                            setattr(existing, key, value)
+                    existing.last_synced_at = datetime.now(timezone.utc)
+                else:
+                    new_opp = Opportunity(**parsed)
+                    session.add(new_opp)
+
+                synced += 1
+            except Exception:
+                errors += 1
+                continue
+
+        await session.commit()
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Failed to sync from GSA eBuy: {str(e)}",
+        )
+
+    return SyncResponse(
+        synced=synced,
+        errors=errors,
+        message=f"Successfully synced {synced} opportunities from GSA eBuy"
+        + (f" with {errors} errors" if errors else ""),
     )

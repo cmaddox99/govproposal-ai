@@ -64,12 +64,12 @@ export default function UsersPage() {
     <div className="p-6 max-w-6xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Users className="w-6 h-6 text-gray-600" />
-          <h1 className="text-2xl font-semibold">User Management</h1>
+          <Users className="w-6 h-6 text-gray-400" />
+          <h1 className="text-2xl font-semibold text-white">User Management</h1>
         </div>
         <button
           onClick={() => setShowInvite(true)}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white px-4 py-2 rounded-lg hover:from-emerald-600 hover:to-blue-600"
         >
           <UserPlus className="w-4 h-4" />
           Invite User
@@ -77,7 +77,7 @@ export default function UsersPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+        <div className="bg-red-900/20 border border-red-800 text-red-400 px-4 py-3 rounded-lg mb-4">
           {error}
         </div>
       )}
@@ -85,35 +85,35 @@ export default function UsersPage() {
       {loading ? (
         <div className="text-center py-12 text-gray-500">Loading users...</div>
       ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-white/[0.03] border border-white/[0.08] rounded-lg overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b">
+            <thead className="bg-white/[0.05] border-b border-white/[0.08]">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">
                   User
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">
                   Role
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">
                   MFA
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">
                   Joined
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-white/[0.08]">
               {users.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50">
+                <tr key={user.id} className="hover:bg-white/[0.05]">
                   <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">
+                    <div className="text-sm font-medium text-white">
                       {user.email}
                     </div>
                     <div className="text-xs text-gray-500">
@@ -125,12 +125,12 @@ export default function UsersPage() {
                   </td>
                   <td className="px-6 py-4">
                     {user.mfa_enabled ? (
-                      <span className="flex items-center gap-1 text-green-600 text-sm">
+                      <span className="flex items-center gap-1 text-green-400 text-sm">
                         <Shield className="w-4 h-4" />
                         Enabled
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1 text-gray-400 text-sm">
+                      <span className="flex items-center gap-1 text-gray-500 text-sm">
                         <ShieldOff className="w-4 h-4" />
                         Disabled
                       </span>
@@ -140,8 +140,8 @@ export default function UsersPage() {
                     <span
                       className={`px-2 py-1 text-xs rounded-full ${
                         user.is_active
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-gray-100 text-gray-600'
+                          ? 'bg-green-900/30 text-green-400'
+                          : 'bg-gray-800 text-gray-500'
                       }`}
                     >
                       {user.is_active ? 'Active' : 'Inactive'}
@@ -157,34 +157,34 @@ export default function UsersPage() {
                       onClick={() =>
                         setSelectedUser(selectedUser === user.id ? null : user.id)
                       }
-                      className="p-1 hover:bg-gray-100 rounded"
+                      className="p-1 hover:bg-white/[0.08] rounded"
                     >
                       <MoreVertical className="w-4 h-4 text-gray-500" />
                     </button>
 
                     {selectedUser === user.id && (
-                      <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border z-10">
+                      <div className="absolute right-0 mt-1 w-48 bg-gray-800 border border-white/[0.12] rounded-lg shadow-lg z-10">
                         <div className="py-1">
                           {user.role !== 'owner' && (
                             <>
                               <button
                                 onClick={() => handleRoleChange(user.user_id, 'admin')}
                                 disabled={user.role === 'admin'}
-                                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 disabled:opacity-50"
+                                className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/[0.08] disabled:opacity-50"
                               >
                                 Make Admin
                               </button>
                               <button
                                 onClick={() => handleRoleChange(user.user_id, 'member')}
                                 disabled={user.role === 'member'}
-                                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 disabled:opacity-50"
+                                className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/[0.08] disabled:opacity-50"
                               >
                                 Make Member
                               </button>
-                              <hr className="my-1" />
+                              <hr className="my-1 border-white/[0.08]" />
                               <button
                                 onClick={() => handleRemoveUser(user.user_id)}
-                                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-900/30"
                               >
                                 Remove User
                               </button>

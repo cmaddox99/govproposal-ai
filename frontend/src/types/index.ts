@@ -223,6 +223,62 @@ export interface PastPerformance {
   updated_at: string;
 }
 
+// Opportunity types
+export interface Opportunity {
+  id: string;
+  notice_id: string;
+  solicitation_number: string | null;
+  title: string;
+  description: string | null;
+  department: string | null;
+  agency: string | null;
+  office: string | null;
+  notice_type: string;
+  naics_code: string | null;
+  naics_description: string | null;
+  psc_code: string | null;
+  set_aside_type: string | null;
+  set_aside_description: string | null;
+  posted_date: string | null;
+  response_deadline: string | null;
+  archive_date: string | null;
+  place_of_performance_city: string | null;
+  place_of_performance_state: string | null;
+  place_of_performance_country: string | null;
+  estimated_value: number | null;
+  primary_contact_name: string | null;
+  primary_contact_email: string | null;
+  primary_contact_phone: string | null;
+  sam_url: string | null;
+  source: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// Assistant types
+export interface AssistantMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export interface AssistantContext {
+  org_id: string;
+  proposal_id: string | null;
+  opportunity_id: string | null;
+}
+
+export interface AssistantChatResponse {
+  message: string;
+  context_used: {
+    org: boolean;
+    opportunities_count: number;
+    proposals_count: number;
+    focused_proposal: boolean;
+    focused_opportunity: boolean;
+  };
+}
+
 // Proposal types
 export type ProposalStatus =
   | 'draft'

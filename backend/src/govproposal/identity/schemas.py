@@ -208,6 +208,7 @@ class InviteResponse(BaseModel):
     email: str
     role: str
     invited_at: datetime
+    is_new_user: bool = False
     message: str = "User invited successfully"
 
 

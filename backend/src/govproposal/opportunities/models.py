@@ -95,6 +95,11 @@ class Opportunity(Base):
     # URLs
     sam_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
+    # Source tracking
+    source: Mapped[str] = mapped_column(
+        String(50), nullable=False, default="sam_gov", server_default="sam_gov", index=True
+    )
+
     # Raw data from SAM.gov
     raw_data: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
 
