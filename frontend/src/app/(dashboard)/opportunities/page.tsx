@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Search,
@@ -85,7 +85,8 @@ export default function OpportunitiesPage() {
     return fallback;
   };
 
-  const fetchOpportunities = async () => {
+  const fetchOpportunities = async (currentFilters?: typeof filters) => {
+    const f = currentFilters ?? filters;
     setLoading(true);
     setError('');
 
@@ -100,14 +101,14 @@ export default function OpportunitiesPage() {
 
       const params = new URLSearchParams({ org_id: orgId });
 
-      if (filters.set_aside_type.length > 0) {
-        params.set('set_aside_type', filters.set_aside_type.join(','));
+      if (f.set_aside_type.length > 0) {
+        params.set('set_aside_type', f.set_aside_type.join(','));
       }
-      if (filters.value_min) params.set('value_min', filters.value_min);
-      if (filters.value_max) params.set('value_max', filters.value_max);
-      if (filters.posted_from) params.set('posted_from', filters.posted_from);
-      if (filters.posted_to) params.set('posted_to', filters.posted_to);
-      if (filters.source) params.set('source', filters.source);
+      if (f.value_min) params.set('value_min', f.value_min);
+      if (f.value_max) params.set('value_max', f.value_max);
+      if (f.posted_from) params.set('posted_from', f.posted_from);
+      if (f.posted_to) params.set('posted_to', f.posted_to);
+      if (f.source) params.set('source', f.source);
 
       const response = await fetch(`/api/opportunities?${params.toString()}`, {
         headers: {
@@ -260,19 +261,25 @@ export default function OpportunitiesPage() {
     }));
   };
 
-  // Initial fetch + refetch when filters change
-  const [filtersInitialized, setFiltersInitialized] = useState(false);
-
+  // Initial fetch
+  const isFirstRender = useRef(true);
   useEffect(() => {
     fetchOpportunities();
-    setFiltersInitialized(true);
+    isFirstRender.current = false;
   }, []);
 
+  // Refetch when filters change (skip initial render)
   useEffect(() => {
-    if (filtersInitialized) {
-      fetchOpportunities();
-    }
-  }, [filters]);
+    if (isFirstRender.current) return;
+    fetchOpportunities(filters);
+  }, [
+    filters.set_aside_type.join(','),
+    filters.value_min,
+    filters.value_max,
+    filters.posted_from,
+    filters.posted_to,
+    filters.source,
+  ]);
 
   const filteredOpportunities = opportunities.filter(opp =>
     !searchQuery ||
