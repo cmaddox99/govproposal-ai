@@ -78,6 +78,8 @@ async def list_opportunities(
     value_max: Annotated[Optional[float], Query(description="Maximum estimated value")] = None,
     posted_from: Annotated[Optional[str], Query(description="Posted from date (YYYY-MM-DD)")] = None,
     posted_to: Annotated[Optional[str], Query(description="Posted to date (YYYY-MM-DD)")] = None,
+    deadline_from: Annotated[Optional[str], Query(description="Response deadline from date (YYYY-MM-DD)")] = None,
+    deadline_to: Annotated[Optional[str], Query(description="Response deadline to date (YYYY-MM-DD)")] = None,
     source: Annotated[Optional[str], Query(description="Source filter (sam_gov, gsa_ebuy)")] = None,
     active_only: Annotated[bool, Query(description="Only show opportunities with future deadlines")] = True,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
@@ -99,7 +101,7 @@ async def list_opportunities(
     # Only apply org NAICS codes when no other filters are active
     has_filters = any([
         set_aside_type, value_min is not None, value_max is not None,
-        posted_from, posted_to, source, keywords,
+        posted_from, posted_to, deadline_from, deadline_to, source, keywords,
     ])
     if not naics_codes and not has_filters:
         org_query = select(Organization).where(Organization.id == org_id)
@@ -160,6 +162,20 @@ async def list_opportunities(
         # Use end of day so "posted_to=2026-02-23" includes the entire day
         conditions.append(
             Opportunity.posted_date <= datetime.strptime(posted_to, "%Y-%m-%d").replace(
+                hour=23, minute=59, second=59, tzinfo=timezone.utc
+            )
+        )
+
+    if deadline_from:
+        conditions.append(
+            Opportunity.response_deadline >= datetime.strptime(deadline_from, "%Y-%m-%d").replace(
+                tzinfo=timezone.utc
+            )
+        )
+
+    if deadline_to:
+        conditions.append(
+            Opportunity.response_deadline <= datetime.strptime(deadline_to, "%Y-%m-%d").replace(
                 hour=23, minute=59, second=59, tzinfo=timezone.utc
             )
         )
