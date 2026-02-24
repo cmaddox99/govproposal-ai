@@ -80,6 +80,8 @@ async def list_opportunities(
     posted_to: Annotated[Optional[str], Query(description="Posted to date (YYYY-MM-DD)")] = None,
     deadline_from: Annotated[Optional[str], Query(description="Response deadline from date (YYYY-MM-DD)")] = None,
     deadline_to: Annotated[Optional[str], Query(description="Response deadline to date (YYYY-MM-DD)")] = None,
+    date_from: Annotated[Optional[str], Query(description="Date from - matches posted date OR deadline (YYYY-MM-DD)")] = None,
+    date_to: Annotated[Optional[str], Query(description="Date to - matches posted date OR deadline (YYYY-MM-DD)")] = None,
     source: Annotated[Optional[str], Query(description="Source filter (sam_gov, gsa_ebuy)")] = None,
     active_only: Annotated[bool, Query(description="Only show opportunities with future deadlines")] = True,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
@@ -101,7 +103,8 @@ async def list_opportunities(
     # Only apply org NAICS codes when no other filters are active
     has_filters = any([
         set_aside_type, value_min is not None, value_max is not None,
-        posted_from, posted_to, deadline_from, deadline_to, source, keywords,
+        posted_from, posted_to, deadline_from, deadline_to,
+        date_from, date_to, source, keywords,
     ])
     if not naics_codes and not has_filters:
         org_query = select(Organization).where(Organization.id == org_id)
@@ -179,6 +182,33 @@ async def list_opportunities(
                 hour=23, minute=59, second=59, tzinfo=timezone.utc
             )
         )
+
+    # Unified date filter: matches opportunities where EITHER posted_date
+    # OR response_deadline falls within the range
+    if date_from or date_to:
+        date_conditions = []
+        if date_from:
+            d_from = datetime.strptime(date_from, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            if date_to:
+                d_to = datetime.strptime(date_to, "%Y-%m-%d").replace(
+                    hour=23, minute=59, second=59, tzinfo=timezone.utc
+                )
+                date_conditions.append(
+                    and_(Opportunity.posted_date >= d_from, Opportunity.posted_date <= d_to)
+                )
+                date_conditions.append(
+                    and_(Opportunity.response_deadline >= d_from, Opportunity.response_deadline <= d_to)
+                )
+            else:
+                date_conditions.append(Opportunity.posted_date >= d_from)
+                date_conditions.append(Opportunity.response_deadline >= d_from)
+        elif date_to:
+            d_to = datetime.strptime(date_to, "%Y-%m-%d").replace(
+                hour=23, minute=59, second=59, tzinfo=timezone.utc
+            )
+            date_conditions.append(Opportunity.posted_date <= d_to)
+            date_conditions.append(Opportunity.response_deadline <= d_to)
+        conditions.append(or_(*date_conditions))
 
     if source:
         conditions.append(Opportunity.source == source)

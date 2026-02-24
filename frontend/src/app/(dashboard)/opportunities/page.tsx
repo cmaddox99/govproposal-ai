@@ -64,10 +64,8 @@ export default function OpportunitiesPage() {
     set_aside_type: [] as string[],
     value_min: '',
     value_max: '',
-    posted_from: '',
-    posted_to: '',
-    deadline_from: '',
-    deadline_to: '',
+    date_from: '',
+    date_to: '',
     source: '' as '' | 'sam_gov' | 'gsa_ebuy',
   });
 
@@ -75,10 +73,8 @@ export default function OpportunitiesPage() {
     filters.set_aside_type.length > 0,
     filters.value_min !== '',
     filters.value_max !== '',
-    filters.posted_from !== '',
-    filters.posted_to !== '',
-    filters.deadline_from !== '',
-    filters.deadline_to !== '',
+    filters.date_from !== '',
+    filters.date_to !== '',
     filters.source !== '',
   ].filter(Boolean).length;
 
@@ -110,15 +106,12 @@ export default function OpportunitiesPage() {
       }
       if (f.value_min) params.set('value_min', f.value_min);
       if (f.value_max) params.set('value_max', f.value_max);
-      if (f.posted_from) params.set('posted_from', f.posted_from);
-      if (f.posted_to) params.set('posted_to', f.posted_to);
-      if (f.deadline_from) params.set('deadline_from', f.deadline_from);
-      if (f.deadline_to) params.set('deadline_to', f.deadline_to);
+      if (f.date_from) params.set('date_from', f.date_from);
+      if (f.date_to) params.set('date_to', f.date_to);
       if (f.source) params.set('source', f.source);
 
-      // When any date filters are active, show all opportunities in range
-      // (not just ones with future deadlines)
-      if (f.posted_from || f.posted_to || f.deadline_from || f.deadline_to) {
+      // When date filters are active, show all opportunities in range
+      if (f.date_from || f.date_to) {
         params.set('active_only', 'false');
       }
 
@@ -270,10 +263,8 @@ export default function OpportunitiesPage() {
       set_aside_type: [],
       value_min: '',
       value_max: '',
-      posted_from: '',
-      posted_to: '',
-      deadline_from: '',
-      deadline_to: '',
+      date_from: '',
+      date_to: '',
       source: '',
     });
   };
@@ -302,10 +293,8 @@ export default function OpportunitiesPage() {
     filters.set_aside_type.join(','),
     filters.value_min,
     filters.value_max,
-    filters.posted_from,
-    filters.posted_to,
-    filters.deadline_from,
-    filters.deadline_to,
+    filters.date_from,
+    filters.date_to,
     filters.source,
   ]);
 
@@ -429,48 +418,26 @@ export default function OpportunitiesPage() {
 
         {showFilters && (
           <div className="mb-6 p-4 bg-white/[0.03] border border-white/[0.08] rounded-lg space-y-4">
-            {/* Row 1: Posted Date and Deadline Date */}
+            {/* Row 1: Date range and Value range */}
             <div className="grid grid-cols-4 gap-4">
               <div>
-                <label className="block text-xs font-medium text-gray-400 mb-1">Posted From</label>
+                <label className="block text-xs font-medium text-gray-400 mb-1">Date From</label>
                 <input
                   type="date"
-                  value={filters.posted_from}
-                  onChange={(e) => setFilters(prev => ({ ...prev, posted_from: e.target.value }))}
+                  value={filters.date_from}
+                  onChange={(e) => setFilters(prev => ({ ...prev, date_from: e.target.value }))}
                   className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent [color-scheme:dark]"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-400 mb-1">Posted To</label>
+                <label className="block text-xs font-medium text-gray-400 mb-1">Date To</label>
                 <input
                   type="date"
-                  value={filters.posted_to}
-                  onChange={(e) => setFilters(prev => ({ ...prev, posted_to: e.target.value }))}
+                  value={filters.date_to}
+                  onChange={(e) => setFilters(prev => ({ ...prev, date_to: e.target.value }))}
                   className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent [color-scheme:dark]"
                 />
               </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-400 mb-1">Deadline From</label>
-                <input
-                  type="date"
-                  value={filters.deadline_from}
-                  onChange={(e) => setFilters(prev => ({ ...prev, deadline_from: e.target.value }))}
-                  className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent [color-scheme:dark]"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-400 mb-1">Deadline To</label>
-                <input
-                  type="date"
-                  value={filters.deadline_to}
-                  onChange={(e) => setFilters(prev => ({ ...prev, deadline_to: e.target.value }))}
-                  className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent [color-scheme:dark]"
-                />
-              </div>
-            </div>
-
-            {/* Row 2: Value range */}
-            <div className="grid grid-cols-4 gap-4">
               <div>
                 <label className="block text-xs font-medium text-gray-400 mb-1">Min Value ($)</label>
                 <input
