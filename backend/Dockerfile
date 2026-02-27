@@ -29,7 +29,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
     anthropic>=0.18.0 \
     python-multipart \
     python-docx>=1.1.0 \
-    beautifulsoup4>=4.12.0
+    beautifulsoup4>=4.12.0 \
+    slowapi>=0.1.9 \
+    redis>=5.0.0
 
 # Copy application code - bust cache by copying all source
 COPY src/ ./src/
