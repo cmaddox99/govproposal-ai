@@ -159,6 +159,8 @@ export const proposalsApi = {
     api.post(`/api/v1/proposals/${proposalId}/generate`, { sections: sections || null }, { timeout: 300000 }),
   exportDocx: (proposalId: string) =>
     api.get(`/api/v1/proposals/${proposalId}/export?format=docx`, { responseType: 'blob' }),
+  improve: (proposalId: string, sections?: string[], targetScore?: number) =>
+    api.post(`/api/v1/proposals/${proposalId}/improve`, { sections, target_score: targetScore || 95 }, { timeout: 300000 }),
 };
 
 // Past Performance API
@@ -171,6 +173,62 @@ export const pastPerformanceApi = {
     api.put(`/api/v1/organizations/${orgId}/past-performance/${ppId}`, data),
   delete: (orgId: string, ppId: string) =>
     api.delete(`/api/v1/organizations/${orgId}/past-performance/${ppId}`),
+};
+
+// Opportunities API
+export const opportunitiesApi = {
+  list: (params: { org_id?: string; limit?: number }) =>
+    api.get('/api/v1/opportunities', { params }),
+};
+
+// Assistant API
+export const assistantApi = {
+  chat: (messages: Array<{ role: string; content: string }>, context: { org_id: string; proposal_id?: string | null; opportunity_id?: string | null }) =>
+    api.post('/api/v1/assistant/chat', { messages, context }, { timeout: 120000 }),
+  applySection: (proposalId: string, sectionName: string, content: string) =>
+    api.post('/api/v1/assistant/apply-section', { proposal_id: proposalId, section_name: sectionName, content }),
+};
+
+// Compliance API
+export const complianceApi = {
+  getSummary: (orgId: string) =>
+    api.get(`/api/v1/organizations/${orgId}/compliance/summary`),
+  listItems: (orgId: string, params?: Record<string, unknown>) =>
+    api.get(`/api/v1/organizations/${orgId}/compliance/items`, { params }),
+  createItem: (orgId: string, data: Record<string, any>) =>
+    api.post(`/api/v1/organizations/${orgId}/compliance/items`, data),
+  updateItem: (orgId: string, itemId: string, data: Record<string, any>) =>
+    api.put(`/api/v1/organizations/${orgId}/compliance/items/${itemId}`, data),
+  listCertifications: (orgId: string, params?: Record<string, unknown>) =>
+    api.get(`/api/v1/organizations/${orgId}/compliance/certifications`, { params }),
+  createCertification: (orgId: string, data: Record<string, any>) =>
+    api.post(`/api/v1/organizations/${orgId}/compliance/certifications`, data),
+  updateCertification: (orgId: string, certId: string, data: Record<string, any>) =>
+    api.put(`/api/v1/organizations/${orgId}/compliance/certifications/${certId}`, data),
+  listCMMC: (orgId: string) =>
+    api.get(`/api/v1/organizations/${orgId}/compliance/cmmc`),
+  createCMMC: (orgId: string, data: Record<string, any>) =>
+    api.post(`/api/v1/organizations/${orgId}/compliance/cmmc`, data),
+};
+
+// Dashboard API
+export const dashboardApi = {
+  getDashboard: (orgId: string) =>
+    api.get(`/api/v1/organizations/${orgId}/dashboard`),
+  getAnalytics: (orgId: string) =>
+    api.get(`/api/v1/organizations/${orgId}/analytics`),
+};
+
+// Notifications API
+export const notificationsApi = {
+  list: (params?: Record<string, unknown>) =>
+    api.get('/api/v1/notifications', { params }),
+  getUnreadCount: () =>
+    api.get('/api/v1/notifications/unread-count'),
+  markRead: (notificationId: string) =>
+    api.put(`/api/v1/notifications/${notificationId}/read`),
+  markAllRead: () =>
+    api.put('/api/v1/notifications/read-all'),
 };
 
 export default api;

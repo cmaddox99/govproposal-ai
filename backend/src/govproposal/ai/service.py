@@ -281,6 +281,49 @@ Do NOT include specific dollar amounts or hourly rates — this is a narrative s
 }
 
 
+def _build_opportunity_details(**kwargs: Optional[str | float]) -> str:
+    """Format opportunity fields into a details string."""
+    labels = {
+        "agency": "Agency",
+        "solicitation_number": "Solicitation Number",
+        "naics_code": "NAICS Code",
+        "response_deadline": "Response Deadline",
+        "set_aside_type": "Set-Aside Type",
+    }
+    lines: list[str] = []
+    for key, label in labels.items():
+        val = kwargs.get(key)
+        if val:
+            lines.append(f"{label}: {val}")
+    est = kwargs.get("estimated_value")
+    if est:
+        lines.append(f"Estimated Value: ${est:,.0f}")
+    return "\n".join(lines) if lines else "No additional details available."
+
+
+def _build_section_prompt(
+    prompts: dict[str, str],
+    section_type: str,
+    title: str,
+    description: Optional[str],
+    opportunity_details: str,
+    org_context: Optional[str],
+) -> str:
+    """Assemble the user prompt for a section generation call."""
+    guidance = SECTION_SCORING_GUIDANCE.get(section_type, "")
+    desc_text = description or "No description provided."
+
+    prompt = (
+        f"{prompts['instruction']}\n{SCORING_AWARENESS_BLOCK}\n{guidance}\n\n"
+        f"Opportunity Title: {title}\n\n"
+        f"Opportunity Description:\n{desc_text}\n\n"
+        f"Opportunity Details:\n{opportunity_details}"
+    )
+    if org_context:
+        prompt += f"\n\nCompany Information:\n{org_context}"
+    return prompt
+
+
 async def generate_proposal_section(
     section_type: str,
     title: str,
@@ -293,10 +336,7 @@ async def generate_proposal_section(
     estimated_value: Optional[float] = None,
     org_context: Optional[str] = None,
 ) -> Optional[str]:
-    """Generate a single proposal section using Claude.
-
-    Returns None if API key is not configured or call fails.
-    """
+    """Generate a single proposal section using Claude."""
     client = _get_client()
     if not client:
         logger.info("Anthropic API key not configured, skipping AI generation")
@@ -307,67 +347,34 @@ async def generate_proposal_section(
         logger.warning(f"Unknown section type: {section_type}")
         return None
 
-    # Build opportunity context
-    details = []
-    if agency:
-        details.append(f"Agency: {agency}")
-    if solicitation_number:
-        details.append(f"Solicitation Number: {solicitation_number}")
-    if naics_code:
-        details.append(f"NAICS Code: {naics_code}")
-    if response_deadline:
-        details.append(f"Response Deadline: {response_deadline}")
-    if set_aside_type:
-        details.append(f"Set-Aside Type: {set_aside_type}")
-    if estimated_value:
-        details.append(f"Estimated Value: ${estimated_value:,.0f}")
-
-    opportunity_details = "\n".join(details) if details else "No additional details available."
-    description_text = description or "No description provided."
-
-    section_guidance = SECTION_SCORING_GUIDANCE.get(section_type, "")
-
-    user_prompt = f"""{prompts['instruction']}
-{SCORING_AWARENESS_BLOCK}
-{section_guidance}
-
-Opportunity Title: {title}
-
-Opportunity Description:
-{description_text}
-
-Opportunity Details:
-{opportunity_details}"""
-
-    if org_context:
-        user_prompt += f"""
-
-Company Information:
-{org_context}"""
+    opp_details = _build_opportunity_details(
+        agency=agency, solicitation_number=solicitation_number,
+        naics_code=naics_code, response_deadline=response_deadline,
+        set_aside_type=set_aside_type, estimated_value=estimated_value,
+    )
+    user_prompt = _build_section_prompt(
+        prompts, section_type, title, description, opp_details, org_context,
+    )
 
     try:
-        print(f"[AI] Calling Claude for section: {section_type}, model: {settings.anthropic_model}")
+        logger.info("Calling Claude for section: %s", section_type)
         message = await client.messages.create(
             model=settings.anthropic_model,
             max_tokens=4096,
-            messages=[
-                {"role": "user", "content": user_prompt}
-            ],
+            messages=[{"role": "user", "content": user_prompt}],
             system=prompts["system"],
         )
-
         result_text = message.content[0].text
-        print(f"[AI] Claude returned {len(result_text)} chars for {section_type}")
+        logger.info("Claude returned %d chars for %s", len(result_text), section_type)
         return result_text
-
-    except anthropic.AuthenticationError as e:
-        print(f"[AI] ERROR: Invalid Anthropic API key: {e}")
+    except anthropic.AuthenticationError:
+        logger.error("Invalid Anthropic API key")
         return None
-    except anthropic.RateLimitError as e:
-        print(f"[AI] ERROR: Anthropic rate limit reached: {e}")
+    except anthropic.RateLimitError:
+        logger.warning("Anthropic rate limit reached")
         return None
     except Exception as e:
-        print(f"[AI] ERROR generating {section_type}: {type(e).__name__}: {e}")
+        logger.error("Error generating %s: %s", section_type, e)
         return None
 
 
@@ -415,6 +422,112 @@ async def generate_all_sections(
         )
 
     return results
+
+
+async def improve_proposal_section(
+    section_type: str,
+    current_content: str,
+    score_feedback: list[dict],
+    title: str,
+    description: Optional[str] = None,
+    agency: Optional[str] = None,
+    solicitation_number: Optional[str] = None,
+    naics_code: Optional[str] = None,
+    org_context: Optional[str] = None,
+) -> Optional[str]:
+    """Regenerate a proposal section using current score feedback to target 95+.
+
+    Args:
+        section_type: One of the 5 section types.
+        current_content: The existing section text.
+        score_feedback: List of dicts with keys: factor_type, raw_score,
+            evidence_summary, improvement_suggestions.
+        title: Proposal/opportunity title.
+        description: Proposal/opportunity description.
+        agency: Contracting agency.
+        solicitation_number: Solicitation number.
+        naics_code: NAICS code.
+        org_context: Organization context string.
+
+    Returns:
+        Improved section content, or None on failure.
+    """
+    client = _get_client()
+    if not client:
+        logger.info("Anthropic API key not configured, skipping AI improvement")
+        return None
+
+    prompts = SECTION_PROMPTS.get(section_type)
+    if not prompts:
+        logger.warning(f"Unknown section type for improvement: {section_type}")
+        return None
+
+    # Build score feedback block
+    feedback_parts: list[str] = []
+    for fb in score_feedback:
+        factor = fb.get("factor_type", "unknown")
+        raw = fb.get("raw_score", "?")
+        evidence = fb.get("evidence_summary", "")
+        feedback_parts.append(f"- **{factor}**: {raw}/100 — {evidence}")
+
+        suggestions = fb.get("improvement_suggestions")
+        if isinstance(suggestions, list):
+            for s in suggestions:
+                action = s.get("action", "")
+                details = s.get("details", "")
+                if action:
+                    feedback_parts.append(f"  - Action: {action} — {details}")
+        elif isinstance(suggestions, dict) and suggestions.get("items"):
+            for s in suggestions["items"]:
+                action = s.get("action", "")
+                details = s.get("details", "")
+                if action:
+                    feedback_parts.append(f"  - Action: {action} — {details}")
+
+    feedback_block = "\n".join(feedback_parts) if feedback_parts else "No specific feedback available."
+
+    guidance = SECTION_SCORING_GUIDANCE.get(section_type, "")
+
+    user_prompt = (
+        f"You are improving an existing proposal section. Your goal is to rewrite "
+        f"it so it scores 95+ on ALL four scoring factors.\n\n"
+        f"## Current Score Feedback\n{feedback_block}\n\n"
+        f"## Instructions\n"
+        f"Rewrite this section to score 95+ on ALL factors. Keep what works, fix what doesn't. "
+        f"Include ALL content — produce the complete rewritten section, not just changes.\n\n"
+        f"{SCORING_AWARENESS_BLOCK}\n{guidance}\n\n"
+        f"## Proposal Context\n"
+        f"Title: {title}\n"
+        f"Description: {description or 'N/A'}\n"
+        f"Agency: {agency or 'N/A'}\n"
+        f"Solicitation: {solicitation_number or 'N/A'}\n"
+        f"NAICS: {naics_code or 'N/A'}\n"
+    )
+    if org_context:
+        user_prompt += f"\n## Company Information\n{org_context}\n"
+
+    user_prompt += f"\n## Current Section Content\n{current_content}\n"
+
+    try:
+        logger.info("Calling Claude to improve section: %s", section_type)
+        message = await client.messages.create(
+            model=settings.anthropic_model,
+            max_tokens=4096,
+            messages=[{"role": "user", "content": user_prompt}],
+            system=prompts["system"],
+        )
+        result_text = message.content[0].text
+        logger.info("Claude returned %d chars for improved %s", len(result_text), section_type)
+        return result_text
+    except anthropic.AuthenticationError:
+        logger.error("Invalid Anthropic API key")
+        return None
+    except anthropic.RateLimitError:
+        logger.warning("Anthropic rate limit reached")
+        return None
+    except Exception as e:
+        logger.error("Error improving %s: %s", section_type, e)
+        return None
 
 
 # Keep backward-compatible standalone function
