@@ -57,6 +57,12 @@ async def assistant_chat(
     request: Request,
 ) -> ChatResponse:
     """Chat with the context-aware AI assistant."""
+    if not data.context.org_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Organization ID is required. Please select an organization first.",
+        )
+
     # Art. I 1.3: Verify org membership
     org_repo = OrganizationRepository(session)
     member = await org_repo.get_member(data.context.org_id, current_user.id)

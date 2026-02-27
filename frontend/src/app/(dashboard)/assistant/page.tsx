@@ -334,6 +334,11 @@ export default function AssistantPage() {
     const messageText = text || input.trim();
     if (!messageText || isLoading) return;
 
+    if (!orgId) {
+      setError('No organization selected. Please create or join an organization first.');
+      return;
+    }
+
     setError(null);
     setInput('');
 
