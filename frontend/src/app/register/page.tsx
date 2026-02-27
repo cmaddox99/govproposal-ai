@@ -52,7 +52,14 @@ export default function RegisterPage() {
       localStorage.setItem('refreshToken', tokens.refresh_token);
       router.push('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.detail?.message || 'Registration failed. Please try again.');
+      const detail = err.response?.data?.detail;
+      if (typeof detail === 'string') {
+        setError(detail);
+      } else if (detail?.message) {
+        setError(detail.message);
+      } else {
+        setError('Registration failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
