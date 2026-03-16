@@ -106,7 +106,6 @@ export default function DashboardLayout({
 
     try {
       const token = localStorage.getItem('token');
-      console.log('Creating org with token:', token ? 'exists' : 'missing');
 
       // Use local API route to bypass CORS
       const response = await fetch('/api/organizations', {
@@ -118,14 +117,11 @@ export default function DashboardLayout({
         body: JSON.stringify({ name: newOrgName, slug: newOrgSlug }),
       });
 
-      console.log('Response status:', response.status);
-
       const text = await response.text();
       let data;
       try {
         data = JSON.parse(text);
       } catch {
-        console.error('Non-JSON response:', text);
         throw new Error(text || 'Invalid server response');
       }
 
@@ -134,7 +130,6 @@ export default function DashboardLayout({
       }
 
       const org = data;
-      console.log('Org created:', org);
 
       localStorage.setItem('currentOrgId', org.id);
       localStorage.setItem('currentOrgName', org.name);

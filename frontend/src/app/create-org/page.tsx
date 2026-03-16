@@ -69,12 +69,7 @@ export default function CreateOrgPage() {
     setError('');
 
     try {
-      const token = localStorage.getItem('token');
-      console.log('Token exists:', !!token);
-      console.log('Creating org with:', { name, slug });
-
       const response = await organizationsApi.create(name, slug);
-      console.log('Response:', response);
       const org = response.data;
 
       // Store the organization ID
