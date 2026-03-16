@@ -5,7 +5,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from govproposal.identity.dependencies import CurrentUser, DbSession, require_org_member
-from govproposal.analytics.schemas import AnalyticsOverviewResponse, DashboardResponse
+from govproposal.analytics.schemas import AnalyticsOverviewResponse, DashboardResponse, TrendsResponse
 from govproposal.analytics.service import AnalyticsService
 
 router = APIRouter(prefix="/api/v1/organizations/{org_id}", tags=["analytics"])
@@ -48,3 +48,16 @@ async def get_analytics(
     await require_org_member(org_id, current_user, session)
     data = await service.get_analytics_overview(org_id)
     return AnalyticsOverviewResponse(**data)
+
+
+@router.get("/analytics/trends", response_model=TrendsResponse)
+async def get_trends(
+    org_id: str,
+    current_user: CurrentUser,
+    session: DbSession,
+    service: AnalyticsSvc,
+) -> TrendsResponse:
+    """Get performance trends for organization."""
+    await require_org_member(org_id, current_user, session)
+    data = await service.get_trends(org_id)
+    return TrendsResponse(**data)

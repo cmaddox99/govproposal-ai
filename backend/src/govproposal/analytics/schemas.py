@@ -37,3 +37,23 @@ class AnalyticsOverviewResponse(BaseModel):
     total_contract_value: float
     total_submitted: int
     average_score: float
+
+
+class TrendPoint(BaseModel):
+    month: str
+    proposals_created: int
+    proposals_submitted: int
+    proposals_awarded: int
+    avg_score: float | None
+
+
+class ScoreTrend(BaseModel):
+    proposal_id: str
+    title: str
+    scores: list[dict]
+
+
+class TrendsResponse(BaseModel):
+    monthly_activity: list[TrendPoint]
+    score_trends: list[ScoreTrend]
+    top_agencies: list[dict]

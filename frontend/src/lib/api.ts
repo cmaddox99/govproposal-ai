@@ -211,12 +211,30 @@ export const complianceApi = {
     api.post(`/api/v1/organizations/${orgId}/compliance/cmmc`, data),
 };
 
+// Security Incidents & POAM API
+export const securityApi = {
+  listIncidents: (orgId: string, params?: Record<string, unknown>) =>
+    api.get(`/api/v1/organizations/${orgId}/incidents`, { params }),
+  createIncident: (orgId: string, data: Record<string, any>) =>
+    api.post(`/api/v1/organizations/${orgId}/incidents`, data),
+  updateIncident: (orgId: string, incidentId: string, data: Record<string, any>) =>
+    api.put(`/api/v1/organizations/${orgId}/incidents/${incidentId}`, data),
+  listPOAM: (orgId: string, params?: Record<string, unknown>) =>
+    api.get(`/api/v1/organizations/${orgId}/poam`, { params }),
+  createPOAM: (orgId: string, data: Record<string, any>) =>
+    api.post(`/api/v1/organizations/${orgId}/poam`, data),
+  updatePOAM: (orgId: string, poamId: string, data: Record<string, any>) =>
+    api.put(`/api/v1/organizations/${orgId}/poam/${poamId}`, data),
+};
+
 // Dashboard API
 export const dashboardApi = {
   getDashboard: (orgId: string) =>
     api.get(`/api/v1/organizations/${orgId}/dashboard`),
   getAnalytics: (orgId: string) =>
     api.get(`/api/v1/organizations/${orgId}/analytics`),
+  getTrends: (orgId: string) =>
+    api.get(`/api/v1/organizations/${orgId}/analytics/trends`),
 };
 
 // Notifications API
