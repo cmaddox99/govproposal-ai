@@ -151,7 +151,7 @@ export default function DashboardLayout({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
         <div className="text-gray-400">Loading...</div>
       </div>
     );
@@ -160,12 +160,12 @@ export default function DashboardLayout({
   // Show create organization form if no org exists
   if (showCreateOrg) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
         <div className="w-full max-w-md">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-8">
+          <div className="bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] rounded-xl p-8">
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600/20 rounded-full mb-4">
-                <Building2 className="w-8 h-8 text-blue-500" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 rounded-full mb-4">
+                <Building2 className="w-8 h-8 text-emerald-400" />
               </div>
               <h1 className="text-2xl font-bold text-white">Create Your Organization</h1>
               <p className="text-gray-400 mt-1">Set up your team workspace to get started</p>
@@ -182,7 +182,7 @@ export default function DashboardLayout({
                   onChange={(e) => handleOrgNameChange(e.target.value)}
                   placeholder="Acme Government Solutions"
                   required
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 />
               </div>
 
@@ -196,7 +196,7 @@ export default function DashboardLayout({
                   onChange={(e) => setNewOrgSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
                   placeholder="acme-gov"
                   required
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   This will be used in URLs and cannot be changed later
@@ -204,7 +204,7 @@ export default function DashboardLayout({
               </div>
 
               {createError && (
-                <div className="flex items-center gap-2 text-red-400 text-sm bg-red-900/20 border border-red-800 p-3 rounded-lg">
+                <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/20 p-3 rounded-lg">
                   <AlertCircle className="w-4 h-4 flex-shrink-0" />
                   {createError}
                 </div>
@@ -213,7 +213,7 @@ export default function DashboardLayout({
               <button
                 type="submit"
                 disabled={creating || !newOrgName || !newOrgSlug}
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 text-white py-3 px-4 rounded-lg hover:from-emerald-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
               >
                 {creating ? 'Creating...' : 'Create Organization'}
               </button>
@@ -233,13 +233,13 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 flex">
+    <div className="min-h-screen bg-[#0a0a0f] flex">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-900 border-r border-gray-800 flex flex-col">
+      <div className="w-64 bg-white/[0.03] backdrop-blur-sm border-r border-white/[0.08] flex flex-col">
         {/* Logo */}
-        <div className="p-6 border-b border-gray-800">
+        <div className="p-6 border-b border-white/[0.08]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-blue-500 rounded-lg flex items-center justify-center">
               <FileText className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -259,11 +259,11 @@ export default function DashboardLayout({
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    ? 'bg-gradient-to-r from-emerald-500/20 to-blue-500/20 text-white border border-white/[0.08]'
+                    : 'text-gray-400 hover:bg-white/[0.05] hover:text-white'
                 }`}
               >
-                <item.icon className="w-5 h-5" />
+                <item.icon className={`w-5 h-5 ${isActive ? 'text-emerald-400' : ''}`} />
                 {item.name}
               </Link>
             );
@@ -271,7 +271,7 @@ export default function DashboardLayout({
         </nav>
 
         {/* Bottom Navigation */}
-        <div className="p-4 border-t border-gray-800 space-y-1">
+        <div className="p-4 border-t border-white/[0.08] space-y-1">
           {bottomNavigation.map((item) => {
             const isActive = pathname?.startsWith(item.href);
             return (
@@ -280,8 +280,8 @@ export default function DashboardLayout({
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-gray-800 text-white'
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    ? 'bg-white/[0.05] text-white'
+                    : 'text-gray-400 hover:bg-white/[0.05] hover:text-white'
                 }`}
               >
                 <item.icon className="w-5 h-5" />
@@ -291,7 +291,7 @@ export default function DashboardLayout({
           })}
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:bg-white/[0.05] hover:text-white transition-colors"
           >
             <LogOut className="w-5 h-5" />
             Logout
@@ -300,9 +300,9 @@ export default function DashboardLayout({
 
         {/* Organization Info */}
         {orgName && (
-          <div className="p-4 border-t border-gray-800">
-            <div className="flex items-center gap-3 px-4 py-3 bg-gray-800 rounded-lg">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+          <div className="p-4 border-t border-white/[0.08]">
+            <div className="flex items-center gap-3 px-4 py-3 bg-white/[0.05] rounded-lg">
+              <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-blue-500 rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-medium">
                   {orgName.charAt(0).toUpperCase()}
                 </span>

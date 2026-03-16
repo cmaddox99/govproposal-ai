@@ -32,7 +32,7 @@ const sectionConfig: { key: SectionKey; label: string; placeholder: string; rows
 
 const statusColors: Record<ProposalStatus, string> = {
   draft: 'bg-gray-600/20 text-gray-400',
-  in_progress: 'bg-blue-600/20 text-blue-400',
+  in_progress: 'bg-blue-600/20 text-blue-300',
   review: 'bg-purple-600/20 text-purple-400',
   submitted: 'bg-green-600/20 text-green-400',
   awarded: 'bg-emerald-600/20 text-emerald-400',
@@ -408,7 +408,7 @@ export default function ProposalDetailPage() {
         <div className="flex items-start gap-4">
           <Link
             href="/proposals"
-            className="mt-1 p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+            className="mt-1 p-2 text-gray-400 hover:text-white hover:bg-white/[0.05] rounded-lg transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
@@ -438,7 +438,7 @@ export default function ProposalDetailPage() {
           <select
             value={proposal.status}
             onChange={(e) => handleStatusChange(e.target.value as ProposalStatus)}
-            className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-gray-300 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           >
             {allStatuses.map((s) => (
               <option key={s} value={s}>
@@ -462,7 +462,7 @@ export default function ProposalDetailPage() {
 
           <Link
             href={`/proposals/${proposalId}/scoring`}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700"
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white text-sm rounded-lg hover:from-emerald-600 hover:to-blue-600"
           >
             <BarChart3 className="w-4 h-4" />
             Scoring
@@ -495,13 +495,13 @@ export default function ProposalDetailPage() {
       )}
 
       {/* Tabs */}
-      <div className="border-b border-gray-800">
+      <div className="border-b border-white/[0.08]">
         <div className="flex gap-1">
           <button
             onClick={() => setActiveTab('overview')}
             className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
               activeTab === 'overview'
-                ? 'border-blue-500 text-blue-400'
+                ? 'border-emerald-500 text-emerald-300'
                 : 'border-transparent text-gray-400 hover:text-white'
             }`}
           >
@@ -512,7 +512,7 @@ export default function ProposalDetailPage() {
             onClick={() => setActiveTab('content')}
             className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
               activeTab === 'content'
-                ? 'border-blue-500 text-blue-400'
+                ? 'border-emerald-500 text-emerald-300'
                 : 'border-transparent text-gray-400 hover:text-white'
             }`}
           >
@@ -524,7 +524,7 @@ export default function ProposalDetailPage() {
 
       {/* Overview Tab */}
       {activeTab === 'overview' && (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-6">
+        <div className="bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] rounded-xl p-6 space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Title
@@ -533,7 +533,7 @@ export default function ProposalDetailPage() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             />
           </div>
 
@@ -545,7 +545,7 @@ export default function ProposalDetailPage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             />
           </div>
 
@@ -558,7 +558,7 @@ export default function ProposalDetailPage() {
                 type="text"
                 value={agency}
                 onChange={(e) => setAgency(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
 
@@ -570,7 +570,7 @@ export default function ProposalDetailPage() {
                 type="text"
                 value={solicitationNumber}
                 onChange={(e) => setSolicitationNumber(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
 
@@ -582,7 +582,7 @@ export default function ProposalDetailPage() {
                 type="text"
                 value={naicsCode}
                 onChange={(e) => setNaicsCode(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
 
@@ -594,7 +594,7 @@ export default function ProposalDetailPage() {
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
 
@@ -608,7 +608,7 @@ export default function ProposalDetailPage() {
                 onChange={(e) => setEstimatedValue(e.target.value)}
                 min="0"
                 step="1000"
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
 
@@ -622,7 +622,7 @@ export default function ProposalDetailPage() {
                 onChange={(e) => setProposedValue(e.target.value)}
                 min="0"
                 step="1000"
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -631,7 +631,7 @@ export default function ProposalDetailPage() {
             <button
               onClick={handleSaveOverview}
               disabled={saving || !title}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-lg hover:from-emerald-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Saving...' : 'Save Details'}
@@ -671,7 +671,7 @@ export default function ProposalDetailPage() {
             const isAiGenerated = proposal?.ai_generated_content?.[section.key];
 
             return (
-              <div key={section.key} className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+              <div key={section.key} className="bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] rounded-xl p-6">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <label className="block text-sm font-medium text-gray-300">
@@ -702,7 +702,7 @@ export default function ProposalDetailPage() {
                   rows={section.rows}
                   placeholder={section.placeholder}
                   disabled={isGenerating}
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm disabled:opacity-50"
+                  className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-mono text-sm disabled:opacity-50"
                 />
               </div>
             );
@@ -712,7 +712,7 @@ export default function ProposalDetailPage() {
             <button
               onClick={handleSaveContent}
               disabled={saving || generatingAll || generatingSection !== null}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-lg hover:from-emerald-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Saving...' : 'Save Content'}

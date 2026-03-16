@@ -2,7 +2,7 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, Request, status
 
 from govproposal.identity.dependencies import (
     CurrentUser,
@@ -11,6 +11,7 @@ from govproposal.identity.dependencies import (
     require_org_admin,
     require_org_member,
 )
+from govproposal.security.service import AuditService
 from govproposal.identity.schemas import (
     MessageResponse,
     OrganizationCreate,
@@ -29,14 +30,31 @@ router = APIRouter(prefix="/api/v1/organizations", tags=["organizations"])
 async def create_organization(
     data: OrganizationCreate,
     current_user: CurrentUser,
+    session: DbSession,
     service: OrgSvc,
+    request: Request,
 ) -> OrganizationResponse:
     """Create a new organization with current user as owner."""
-    return await service.create_organization(
+    result = await service.create_organization(
         name=data.name,
         slug=data.slug,
         owner_id=current_user.id,
     )
+
+    audit = AuditService(session)
+    await audit.log_event(
+        event_type="organization_created",
+        action="Organization created",
+        actor_id=current_user.id,
+        actor_email=current_user.email,
+        organization_id=result.id,
+        resource_type="organization",
+        resource_id=result.id,
+        ip_address=request.client.host if request.client else None,
+        details={"name": data.name, "slug": data.slug},
+    )
+
+    return result
 
 
 @router.get("", response_model=list[OrganizationResponse])
@@ -82,6 +100,7 @@ async def update_organization(
     data: OrganizationUpdate,
     current_user: CurrentUser,
     session: DbSession,
+    request: Request,
 ) -> OrganizationResponse:
     """Update organization details (admin/owner only)."""
     # Verify admin/owner role
@@ -110,6 +129,19 @@ async def update_organization(
 
     await session.commit()
     await session.refresh(org)
+
+    audit = AuditService(session)
+    await audit.log_event(
+        event_type="organization_updated",
+        action="Organization updated",
+        actor_id=current_user.id,
+        actor_email=current_user.email,
+        organization_id=org_id,
+        resource_type="organization",
+        resource_id=org_id,
+        ip_address=request.client.host if request.client else None,
+        details={"updated_fields": list(update_data.keys())},
+    )
 
     # Parse naics_codes back to list for response
     response_data = {

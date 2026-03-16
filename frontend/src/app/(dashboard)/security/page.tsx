@@ -11,18 +11,18 @@ export default function SecurityPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] rounded-xl p-6">
           <div className="flex items-center gap-3 mb-6">
-            <Shield className="w-6 h-6 text-blue-500" />
+            <Shield className="w-6 h-6 text-emerald-400" />
             <h2 className="text-lg font-semibold text-white">Two-Factor Authentication</h2>
           </div>
           <p className="text-gray-400 mb-4">Add an extra layer of security to your account</p>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+          <button className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-lg hover:from-emerald-600 hover:to-blue-600">
             Enable 2FA
           </button>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] rounded-xl p-6">
           <div className="flex items-center gap-3 mb-6">
             <Key className="w-6 h-6 text-purple-500" />
             <h2 className="text-lg font-semibold text-white">API Keys</h2>
@@ -33,7 +33,7 @@ export default function SecurityPage() {
           </button>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] rounded-xl p-6">
           <div className="flex items-center gap-3 mb-6">
             <UserCheck className="w-6 h-6 text-green-500" />
             <h2 className="text-lg font-semibold text-white">Active Sessions</h2>
@@ -42,7 +42,7 @@ export default function SecurityPage() {
           <div className="text-sm text-gray-500">1 active session</div>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] rounded-xl p-6">
           <div className="flex items-center gap-3 mb-6">
             <Clock className="w-6 h-6 text-orange-500" />
             <h2 className="text-lg font-semibold text-white">Login History</h2>

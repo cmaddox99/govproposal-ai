@@ -101,7 +101,7 @@ export default function ScoringPage() {
     <div className="p-6 max-w-6xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <BarChart3 className="w-6 h-6 text-blue-400" />
+          <BarChart3 className="w-6 h-6 text-emerald-300" />
           <div>
             <h1 className="text-2xl font-semibold text-white">Proposal Scoring</h1>
             <p className="text-sm text-gray-400">
@@ -112,7 +112,7 @@ export default function ScoringPage() {
         <button
           onClick={handleCalculateScore}
           disabled={calculating}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+          className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white px-4 py-2 rounded-lg hover:from-emerald-600 hover:to-blue-600 disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 ${calculating ? 'animate-spin' : ''}`} />
           {calculating ? 'Calculating...' : 'Calculate Score'}
@@ -126,12 +126,12 @@ export default function ScoringPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex border-b border-gray-700 mb-6">
+      <div className="flex border-b border-white/[0.08] mb-6">
         <button
           onClick={() => setActiveTab('score')}
           className={`px-4 py-2 text-sm font-medium border-b-2 ${
             activeTab === 'score'
-              ? 'border-blue-500 text-blue-400'
+              ? 'border-emerald-500 text-emerald-300'
               : 'border-transparent text-gray-400 hover:text-gray-200'
           }`}
         >
@@ -142,7 +142,7 @@ export default function ScoringPage() {
           onClick={() => setActiveTab('improvements')}
           className={`px-4 py-2 text-sm font-medium border-b-2 ${
             activeTab === 'improvements'
-              ? 'border-blue-500 text-blue-400'
+              ? 'border-emerald-500 text-emerald-300'
               : 'border-transparent text-gray-400 hover:text-gray-200'
           }`}
         >
@@ -153,7 +153,7 @@ export default function ScoringPage() {
           onClick={() => setActiveTab('readiness')}
           className={`px-4 py-2 text-sm font-medium border-b-2 ${
             activeTab === 'readiness'
-              ? 'border-blue-500 text-blue-400'
+              ? 'border-emerald-500 text-emerald-300'
               : 'border-transparent text-gray-400 hover:text-gray-200'
           }`}
         >
@@ -170,7 +170,7 @@ export default function ScoringPage() {
           {activeTab === 'score' && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Score Gauge */}
-              <div className="bg-gray-800 rounded-lg border border-gray-700 p-6 flex flex-col items-center">
+              <div className="bg-white/[0.05] rounded-lg border border-white/[0.08] p-6 flex flex-col items-center">
                 {score ? (
                   <ScoreGauge
                     score={score.overall_score}
@@ -182,7 +182,7 @@ export default function ScoringPage() {
                     <p>No score calculated yet</p>
                     <button
                       onClick={handleCalculateScore}
-                      className="mt-2 text-blue-400 hover:underline"
+                      className="mt-2 text-emerald-300 hover:underline"
                     >
                       Calculate now
                     </button>
@@ -196,7 +196,7 @@ export default function ScoringPage() {
               </div>
 
               {/* Factor Breakdown */}
-              <div className="bg-gray-800 rounded-lg border border-gray-700 p-6">
+              <div className="bg-white/[0.05] rounded-lg border border-white/[0.08] p-6">
                 {score ? (
                   <FactorBreakdown factors={score.factors} />
                 ) : (
@@ -211,7 +211,7 @@ export default function ScoringPage() {
                 {goNoGo ? (
                   <GoNoGoCard summary={goNoGo} />
                 ) : (
-                  <div className="bg-gray-800 rounded-lg border border-gray-700 p-6 text-center text-gray-400">
+                  <div className="bg-white/[0.05] rounded-lg border border-white/[0.08] p-6 text-center text-gray-400">
                     <p>No go/no-go summary available</p>
                     <p className="text-sm">Calculate a score first</p>
                   </div>
@@ -222,7 +222,7 @@ export default function ScoringPage() {
 
           {/* Improvements Tab */}
           {activeTab === 'improvements' && (
-            <div className="bg-gray-800 rounded-lg border border-gray-700 p-6">
+            <div className="bg-white/[0.05] rounded-lg border border-white/[0.08] p-6">
               {improvements ? (
                 <ImprovementListComponent
                   improvements={improvements.improvements}
@@ -242,7 +242,7 @@ export default function ScoringPage() {
               {colorTeams.map((team) => (
                 <div
                   key={team}
-                  className="bg-gray-800 rounded-lg border border-gray-700 p-4 flex items-center justify-between"
+                  className="bg-white/[0.05] rounded-lg border border-white/[0.08] p-4 flex items-center justify-between"
                 >
                   <div className="flex items-center gap-4">
                     <span className="font-medium text-white w-32">
@@ -256,7 +256,7 @@ export default function ScoringPage() {
                   </div>
                   <button
                     onClick={() => handleCheckReadiness(team)}
-                    className="px-4 py-2 text-sm border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700"
+                    className="px-4 py-2 text-sm border border-white/[0.08] text-gray-300 rounded-lg hover:bg-white/[0.05]"
                   >
                     Check Readiness
                   </button>

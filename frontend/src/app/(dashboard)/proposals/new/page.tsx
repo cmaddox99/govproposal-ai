@@ -65,7 +65,7 @@ export default function NewProposalPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/proposals"
-          className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+          className="p-2 text-gray-400 hover:text-white hover:bg-white/[0.05] rounded-lg transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -83,7 +83,7 @@ export default function NewProposalPage() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-6">
+        <div className="bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] rounded-xl p-6 space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Title <span className="text-red-400">*</span>
@@ -94,7 +94,7 @@ export default function NewProposalPage() {
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter proposal title"
               required
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             />
           </div>
 
@@ -107,7 +107,7 @@ export default function NewProposalPage() {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of the proposal"
               rows={3}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             />
           </div>
 
@@ -121,7 +121,7 @@ export default function NewProposalPage() {
                 value={agency}
                 onChange={(e) => setAgency(e.target.value)}
                 placeholder="e.g., Department of Defense"
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
 
@@ -134,7 +134,7 @@ export default function NewProposalPage() {
                 value={solicitationNumber}
                 onChange={(e) => setSolicitationNumber(e.target.value)}
                 placeholder="e.g., W911NF-24-R-0001"
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
 
@@ -147,7 +147,7 @@ export default function NewProposalPage() {
                 value={naicsCode}
                 onChange={(e) => setNaicsCode(e.target.value)}
                 placeholder="e.g., 541512"
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
 
@@ -159,7 +159,7 @@ export default function NewProposalPage() {
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -175,7 +175,7 @@ export default function NewProposalPage() {
               placeholder="0"
               min="0"
               step="1000"
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -184,14 +184,14 @@ export default function NewProposalPage() {
           <button
             type="submit"
             disabled={saving || !title}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-lg hover:from-emerald-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Creating...' : 'Create Proposal'}
           </button>
           <Link
             href="/proposals"
-            className="px-6 py-3 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 font-medium"
+            className="px-6 py-3 bg-white/[0.05] text-gray-300 rounded-lg hover:bg-white/[0.08] font-medium"
           >
             Cancel
           </Link>

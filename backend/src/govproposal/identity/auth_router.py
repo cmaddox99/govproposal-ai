@@ -4,6 +4,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Header, Request, status
 
+from govproposal.middleware.rate_limit import limiter
 from govproposal.identity.dependencies import (
     AuthSvc,
     CurrentUser,
@@ -12,6 +13,7 @@ from govproposal.identity.dependencies import (
     get_auth_service,
     get_mfa_service,
 )
+from govproposal.security.service import AuditService
 from govproposal.identity.schemas import (
     LoginRequest,
     MFAChallengeRequest,
@@ -48,15 +50,32 @@ def _get_user_agent(request: Request) -> str | None:
 
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@limiter.limit("5/minute")
 async def register(
     data: UserCreate,
     service: AuthSvc,
+    session: DbSession,
+    request: Request,
 ) -> UserResponse:
     """Register a new user account."""
-    return await service.register(data)
+    result = await service.register(data)
+
+    audit = AuditService(session)
+    await audit.log_event(
+        event_type="user_registered",
+        action="New user registered",
+        actor_id=result.id,
+        actor_email=result.email,
+        resource_type="user",
+        resource_id=result.id,
+        ip_address=_get_client_ip(request),
+    )
+
+    return result
 
 
 @router.post("/login", response_model=TokenResponse)
+@limiter.limit("10/minute")
 async def login(
     data: LoginRequest,
     service: AuthSvc,
@@ -99,9 +118,11 @@ async def refresh_tokens(
 
 
 @router.post("/password-reset/request", response_model=MessageResponse)
+@limiter.limit("3/minute")
 async def request_password_reset(
     data: PasswordResetRequest,
     service: AuthSvc,
+    request: Request,
 ) -> MessageResponse:
     """Request a password reset email."""
     await service.request_password_reset(data.email)
@@ -125,6 +146,8 @@ async def change_password(
     data: PasswordChangeRequest,
     service: AuthSvc,
     current_user: CurrentUser,
+    session: DbSession,
+    request: Request,
 ) -> MessageResponse:
     """Change current user's password."""
     await service.change_password(
@@ -132,6 +155,18 @@ async def change_password(
         current_password=data.current_password,
         new_password=data.new_password,
     )
+
+    audit = AuditService(session)
+    await audit.log_event(
+        event_type="password_changed",
+        action="User password changed",
+        actor_id=current_user.id,
+        actor_email=current_user.email,
+        resource_type="user",
+        resource_id=current_user.id,
+        ip_address=_get_client_ip(request),
+    )
+
     return MessageResponse(message="Password changed successfully")
 
 
@@ -213,7 +248,21 @@ async def disable_mfa(
     data: MFADisableRequest,
     current_user: CurrentUser,
     service: MFASvc,
+    session: DbSession,
+    request: Request,
 ) -> MessageResponse:
     """Disable MFA for current user."""
     await service.disable_mfa(current_user, data.password)
+
+    audit = AuditService(session)
+    await audit.log_event(
+        event_type="mfa_disabled",
+        action="MFA disabled",
+        actor_id=current_user.id,
+        actor_email=current_user.email,
+        resource_type="user",
+        resource_id=current_user.id,
+        ip_address=_get_client_ip(request),
+    )
+
     return MessageResponse(message="MFA disabled successfully")

@@ -31,6 +31,8 @@ from govproposal.scoring.models import (
     ScoreFactor,
 )
 from govproposal.security.models import AuditLog, POAMItem, SecurityIncident
+from govproposal.compliance.models import CMMCAssessment, Certification, ComplianceItem
+from govproposal.notifications.models import Notification
 
 config = context.config
 

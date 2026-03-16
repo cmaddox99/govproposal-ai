@@ -19,7 +19,7 @@ import { Proposal, ProposalStatus } from '@/types';
 
 const statusColors: Record<ProposalStatus, string> = {
   draft: 'bg-gray-600/20 text-gray-400',
-  in_progress: 'bg-blue-600/20 text-blue-400',
+  in_progress: 'bg-blue-600/20 text-blue-300',
   review: 'bg-purple-600/20 text-purple-400',
   submitted: 'bg-green-600/20 text-green-400',
   awarded: 'bg-emerald-600/20 text-emerald-400',
@@ -129,7 +129,7 @@ export default function ProposalsPage() {
         </div>
         <Link
           href="/proposals/new"
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-lg hover:from-emerald-600 hover:to-blue-600"
         >
           <Plus className="w-4 h-4" />
           New Proposal
@@ -143,7 +143,7 @@ export default function ProposalsPage() {
         </div>
       )}
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] rounded-xl p-6">
         <div className="flex gap-4 mb-6">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -152,7 +152,7 @@ export default function ProposalsPage() {
               placeholder="Search by title, agency, or solicitation number..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             />
           </div>
           <select
@@ -161,7 +161,7 @@ export default function ProposalsPage() {
               setStatusFilter(e.target.value);
               setOffset(0);
             }}
-            className="px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           >
             <option value="">All Statuses</option>
             <option value="draft">Draft</option>
@@ -194,7 +194,7 @@ export default function ProposalsPage() {
               <div className="flex items-center justify-center gap-4">
                 <Link
                   href="/proposals/new"
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-lg hover:from-emerald-600 hover:to-blue-600"
                 >
                   <Plus className="w-4 h-4" />
                   New Proposal
@@ -215,7 +215,7 @@ export default function ProposalsPage() {
                 <Link
                   key={proposal.id}
                   href={`/proposals/${proposal.id}`}
-                  className="block bg-gray-800/50 border border-gray-700 rounded-lg p-5 hover:border-gray-600 transition-colors"
+                  className="block bg-white/[0.03] border border-white/[0.08] rounded-lg p-5 hover:border-gray-600 transition-colors"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
@@ -272,7 +272,7 @@ export default function ProposalsPage() {
             </div>
 
             {total > LIMIT && (
-              <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-800">
+              <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/[0.08]">
                 <p className="text-sm text-gray-400">
                   Showing {pageStart}&ndash;{pageEnd} of {total}
                 </p>
@@ -280,7 +280,7 @@ export default function ProposalsPage() {
                   <button
                     onClick={() => setOffset(Math.max(0, offset - LIMIT))}
                     disabled={offset === 0}
-                    className="flex items-center gap-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-1 px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-gray-300 hover:bg-white/[0.08] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ChevronLeft className="w-4 h-4" />
                     Previous
@@ -288,7 +288,7 @@ export default function ProposalsPage() {
                   <button
                     onClick={() => setOffset(offset + LIMIT)}
                     disabled={offset + LIMIT >= total}
-                    className="flex items-center gap-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-1 px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-gray-300 hover:bg-white/[0.08] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                     <ChevronRight className="w-4 h-4" />

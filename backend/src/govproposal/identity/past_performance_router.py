@@ -1,6 +1,6 @@
 """Past Performance API router."""
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Request, status
 from sqlalchemy import select
 
 from govproposal.identity.dependencies import (
@@ -10,6 +10,7 @@ from govproposal.identity.dependencies import (
     require_org_member,
 )
 from govproposal.identity.models import OrgPastPerformance
+from govproposal.security.service import AuditService
 from govproposal.identity.schemas import (
     PastPerformanceCreate,
     PastPerformanceResponse,
@@ -28,6 +29,7 @@ async def create_past_performance(
     data: PastPerformanceCreate,
     current_user: CurrentUser,
     session: DbSession,
+    request: Request,
 ) -> PastPerformanceResponse:
     """Create a past performance record."""
     await require_org_member(org_id, current_user, session)
@@ -39,6 +41,19 @@ async def create_past_performance(
     session.add(record)
     await session.commit()
     await session.refresh(record)
+
+    audit = AuditService(session)
+    await audit.log_event(
+        event_type="past_performance_created",
+        action="Past performance record created",
+        actor_id=current_user.id,
+        actor_email=current_user.email,
+        organization_id=org_id,
+        resource_type="past_performance",
+        resource_id=record.id,
+        ip_address=request.client.host if request.client else None,
+        details={"contract_name": data.contract_name},
+    )
 
     return PastPerformanceResponse.model_validate(record)
 
@@ -93,6 +108,7 @@ async def update_past_performance(
     data: PastPerformanceUpdate,
     current_user: CurrentUser,
     session: DbSession,
+    request: Request,
 ) -> PastPerformanceResponse:
     """Update a past performance record."""
     await require_org_admin(org_id, current_user, session)
@@ -114,6 +130,19 @@ async def update_past_performance(
     await session.commit()
     await session.refresh(record)
 
+    audit = AuditService(session)
+    await audit.log_event(
+        event_type="past_performance_updated",
+        action="Past performance record updated",
+        actor_id=current_user.id,
+        actor_email=current_user.email,
+        organization_id=org_id,
+        resource_type="past_performance",
+        resource_id=pp_id,
+        ip_address=request.client.host if request.client else None,
+        details={"updated_fields": list(update_data.keys())},
+    )
+
     return PastPerformanceResponse.model_validate(record)
 
 
@@ -123,6 +152,7 @@ async def delete_past_performance(
     pp_id: str,
     current_user: CurrentUser,
     session: DbSession,
+    request: Request,
 ) -> None:
     """Delete a past performance record."""
     await require_org_admin(org_id, current_user, session)
@@ -137,5 +167,19 @@ async def delete_past_performance(
     if not record:
         raise HTTPException(status_code=404, detail="Past performance record not found")
 
+    contract_name = record.contract_name
     await session.delete(record)
     await session.commit()
+
+    audit = AuditService(session)
+    await audit.log_event(
+        event_type="past_performance_deleted",
+        action="Past performance record deleted",
+        actor_id=current_user.id,
+        actor_email=current_user.email,
+        organization_id=org_id,
+        resource_type="past_performance",
+        resource_id=pp_id,
+        ip_address=request.client.host if request.client else None,
+        details={"contract_name": contract_name},
+    )

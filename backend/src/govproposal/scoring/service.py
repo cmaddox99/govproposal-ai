@@ -141,6 +141,32 @@ READINESS_CRITERIA: dict[ColorTeamType, list[dict]] = {
 }
 
 
+def _score_to_response(score: ProposalScore) -> ProposalScoreResponse:
+    """Convert a ProposalScore model to its API response schema."""
+    return ProposalScoreResponse(
+        id=score.id,
+        proposal_id=score.proposal_id,
+        score_date=score.score_date,
+        overall_score=score.overall_score,
+        confidence_level=score.confidence_level,
+        ai_model_used=score.ai_model_used,
+        created_by=score.created_by,
+        created_at=score.created_at,
+        factors=[
+            ScoreFactorResponse(
+                id=f.id,
+                factor_type=f.factor_type,
+                factor_weight=f.factor_weight,
+                raw_score=f.raw_score,
+                weighted_score=f.weighted_score,
+                evidence_summary=f.evidence_summary,
+                improvement_suggestions=f.improvement_suggestions,
+            )
+            for f in score.factors
+        ],
+    )
+
+
 class ScoringService:
     """Multi-factor proposal scoring service."""
 
@@ -154,41 +180,11 @@ class ScoringService:
         user_id: str,
         proposal_data: dict | None = None,
     ) -> ProposalScoreResponse:
-        """Calculate comprehensive relevance score for a proposal.
-
-        Args:
-            proposal_id: ID of the proposal to score
-            user_id: ID of the user requesting the score
-            proposal_data: Optional proposal data (sections, content) for scoring
-
-        Returns:
-            ProposalScoreResponse with overall score and factor breakdown
-        """
-        # Calculate each factor
-        factors: list[ScoreFactor] = []
-
-        for factor_type, weight in DEFAULT_SCORE_WEIGHTS.items():
-            factor_result = await self._calculate_factor(
-                proposal_id, factor_type, proposal_data
-            )
-            factors.append(
-                ScoreFactor(
-                    factor_type=factor_type.value,
-                    factor_weight=weight,
-                    raw_score=factor_result.raw_score,
-                    weighted_score=factor_result.raw_score * weight,
-                    evidence_summary=factor_result.evidence,
-                    improvement_suggestions=factor_result.improvements,
-                )
-            )
-
-        # Calculate overall score
+        """Calculate comprehensive relevance score for a proposal."""
+        factors = await self._score_all_factors(proposal_data, proposal_id)
         overall = sum(f.weighted_score for f in factors)
-
-        # Determine confidence based on data completeness
         confidence = self._determine_confidence(proposal_data, factors)
 
-        # Create and save score
         score = ProposalScore(
             proposal_id=proposal_id,
             overall_score=int(overall),
@@ -197,32 +193,27 @@ class ScoringService:
             created_by=user_id,
             factors=factors,
         )
+        saved = await self._repo.create_score(score)
+        return _score_to_response(saved)
 
-        saved_score = await self._repo.create_score(score)
-
-        # Convert to response
-        return ProposalScoreResponse(
-            id=saved_score.id,
-            proposal_id=saved_score.proposal_id,
-            score_date=saved_score.score_date,
-            overall_score=saved_score.overall_score,
-            confidence_level=saved_score.confidence_level,
-            ai_model_used=saved_score.ai_model_used,
-            created_by=saved_score.created_by,
-            created_at=saved_score.created_at,
-            factors=[
-                ScoreFactorResponse(
-                    id=f.id,
-                    factor_type=f.factor_type,
-                    factor_weight=f.factor_weight,
-                    raw_score=f.raw_score,
-                    weighted_score=f.weighted_score,
-                    evidence_summary=f.evidence_summary,
-                    improvement_suggestions=f.improvement_suggestions,
-                )
-                for f in saved_score.factors
-            ],
-        )
+    async def _score_all_factors(
+        self, proposal_data: dict | None, proposal_id: str,
+    ) -> list[ScoreFactor]:
+        """Calculate all scoring factors and return ScoreFactor list."""
+        factors: list[ScoreFactor] = []
+        for factor_type, weight in DEFAULT_SCORE_WEIGHTS.items():
+            result = await self._calculate_factor(
+                proposal_id, factor_type, proposal_data
+            )
+            factors.append(ScoreFactor(
+                factor_type=factor_type.value,
+                factor_weight=weight,
+                raw_score=result.raw_score,
+                weighted_score=result.raw_score * weight,
+                evidence_summary=result.evidence,
+                improvement_suggestions=result.improvements,
+            ))
+        return factors
 
     async def _calculate_factor(
         self,
@@ -325,60 +316,49 @@ class ScoringService:
         if not proposal_data:
             return FactorResult(
                 raw_score=50,
-                evidence="No proposal content available for analysis. Add content to get an accurate score.",
-                improvements=[
-                    {"action": "Add proposal content", "details": "Fill in proposal sections for AI-powered scoring", "priority": "high"}
-                ],
+                evidence="No proposal content available for analysis.",
+                improvements=[{"action": "Add proposal content", "details": "Fill in proposal sections for AI-powered scoring", "priority": "high"}],
             )
 
-        # Check which sections have content
         section_fields = ["executive_summary", "technical_approach", "management_approach",
                           "past_performance", "pricing_summary"]
         present = [f for f in section_fields if proposal_data.get(f)]
         missing = [f for f in section_fields if not proposal_data.get(f)]
 
-        if factor_type == ScoreFactorType.COMPLETENESS:
-            score = int((len(present) / len(section_fields)) * 100)
-            improvements = [
-                {"action": f"Add {s.replace('_', ' ').title()}", "details": "This section is missing", "priority": "high"}
-                for s in missing
-            ]
-            return FactorResult(
-                raw_score=score,
-                evidence=f"{len(present)} of {len(section_fields)} sections completed",
-                improvements=improvements,
-            )
+        dispatch = {
+            ScoreFactorType.COMPLETENESS: self._fb_completeness,
+            ScoreFactorType.TECHNICAL_DEPTH: self._fb_technical_depth,
+            ScoreFactorType.SECTION_L_COMPLIANCE: self._fb_compliance,
+            ScoreFactorType.SECTION_M_ALIGNMENT: self._fb_alignment,
+        }
+        handler = dispatch.get(factor_type, self._fb_alignment)
+        return handler(proposal_data, present, missing)
 
-        elif factor_type == ScoreFactorType.TECHNICAL_DEPTH:
-            tech = proposal_data.get("technical_approach", "")
-            score = min(85, 40 + len(tech) // 50) if tech else 30
-            return FactorResult(
-                raw_score=score,
-                evidence=f"Technical approach has {len(tech)} characters" if tech else "No technical approach provided",
-                improvements=[
-                    {"action": "Add specific methodologies", "details": "Include concrete tools, processes, and technical details", "priority": "medium"},
-                ] if score < 80 else [],
-            )
+    def _fb_completeness(self, data: dict, present: list, missing: list) -> FactorResult:
+        total = len(present) + len(missing)
+        score = int((len(present) / total) * 100)
+        improvements = [
+            {"action": f"Add {s.replace('_', ' ').title()}", "details": "This section is missing", "priority": "high"}
+            for s in missing
+        ]
+        return FactorResult(raw_score=score, evidence=f"{len(present)} of {total} sections completed", improvements=improvements)
 
-        elif factor_type == ScoreFactorType.SECTION_L_COMPLIANCE:
-            score = 60 + len(present) * 6
-            return FactorResult(
-                raw_score=min(90, score),
-                evidence=f"Basic compliance check: {len(present)} sections present",
-                improvements=[
-                    {"action": "Verify format requirements", "details": "Confirm page limits, fonts, and margins meet solicitation requirements", "priority": "high"},
-                ] if score < 80 else [],
-            )
+    def _fb_technical_depth(self, data: dict, present: list, missing: list) -> FactorResult:
+        tech = data.get("technical_approach", "")
+        score = min(85, 40 + len(tech) // 50) if tech else 30
+        evidence = f"Technical approach has {len(tech)} characters" if tech else "No technical approach provided"
+        improvements = [{"action": "Add specific methodologies", "details": "Include concrete tools, processes, and technical details", "priority": "medium"}] if score < 80 else []
+        return FactorResult(raw_score=score, evidence=evidence, improvements=improvements)
 
-        else:  # SECTION_M_ALIGNMENT
-            score = 55 + len(present) * 7
-            return FactorResult(
-                raw_score=min(85, score),
-                evidence=f"Alignment check: {len(present)} sections available for evaluation",
-                improvements=[
-                    {"action": "Align content with evaluation criteria", "details": "Reorganize to directly address each evaluation factor", "priority": "high"},
-                ] if score < 80 else [],
-            )
+    def _fb_compliance(self, data: dict, present: list, missing: list) -> FactorResult:
+        score = min(90, 60 + len(present) * 6)
+        improvements = [{"action": "Verify format requirements", "details": "Confirm page limits, fonts, and margins", "priority": "high"}] if score < 80 else []
+        return FactorResult(raw_score=score, evidence=f"Basic compliance check: {len(present)} sections present", improvements=improvements)
+
+    def _fb_alignment(self, data: dict, present: list, missing: list) -> FactorResult:
+        score = min(85, 55 + len(present) * 7)
+        improvements = [{"action": "Align content with evaluation criteria", "details": "Reorganize to directly address each evaluation factor", "priority": "high"}] if score < 80 else []
+        return FactorResult(raw_score=score, evidence=f"Alignment check: {len(present)} sections available", improvements=improvements)
 
     def _determine_confidence(
         self, proposal_data: dict | None, factors: list[ScoreFactor]
@@ -403,29 +383,7 @@ class ScoringService:
         score = await self._repo.get_latest_score(proposal_id)
         if not score:
             return None
-
-        return ProposalScoreResponse(
-            id=score.id,
-            proposal_id=score.proposal_id,
-            score_date=score.score_date,
-            overall_score=score.overall_score,
-            confidence_level=score.confidence_level,
-            ai_model_used=score.ai_model_used,
-            created_by=score.created_by,
-            created_at=score.created_at,
-            factors=[
-                ScoreFactorResponse(
-                    id=f.id,
-                    factor_type=f.factor_type,
-                    factor_weight=f.factor_weight,
-                    raw_score=f.raw_score,
-                    weighted_score=f.weighted_score,
-                    evidence_summary=f.evidence_summary,
-                    improvement_suggestions=f.improvement_suggestions,
-                )
-                for f in score.factors
-            ],
-        )
+        return _score_to_response(score)
 
     async def get_score_history(
         self, proposal_id: str, limit: int = 10
@@ -514,54 +472,49 @@ class BenchmarkService:
         self._readiness_repo = ReadinessRepository(session)
         self._scoring_repo = ScoringRepository(session)
 
+    def _extract_factor_scores(self, score: ProposalScore | None) -> tuple[int, int, int]:
+        """Extract completeness, technical_depth, compliance from score factors."""
+        completeness, technical_depth, compliance = 70, 70, 70
+        if not score:
+            return completeness, technical_depth, compliance
+        for f in score.factors:
+            if f.factor_type == ScoreFactorType.COMPLETENESS.value:
+                completeness = f.raw_score
+            elif f.factor_type == ScoreFactorType.TECHNICAL_DEPTH.value:
+                technical_depth = f.raw_score
+            elif f.factor_type == ScoreFactorType.SECTION_L_COMPLIANCE.value:
+                compliance = f.raw_score
+        return completeness, technical_depth, compliance
+
+    async def _calc_org_percentile(
+        self, score: ProposalScore, proposal_ids: list[str],
+    ) -> tuple[int | None, float | None]:
+        """Calculate org percentile and average from peer proposals."""
+        stats = await self._scoring_repo.get_org_score_stats("", proposal_ids)
+        if stats["count"] == 0:
+            return None, None
+        avg = stats["avg_score"]
+        if score.overall_score >= stats["max_score"]:
+            return 100, avg
+        if score.overall_score <= stats["min_score"]:
+            return 0, avg
+        rng = stats["max_score"] - stats["min_score"]
+        pct = int(((score.overall_score - stats["min_score"]) / rng) * 100) if rng > 0 else 50
+        return pct, avg
+
     async def calculate_benchmark(
         self, proposal_id: str, organization_proposal_ids: list[str] | None = None
     ) -> BenchmarkResponse:
         """Calculate benchmark metrics for proposal."""
-        # Get latest score
         score = await self._scoring_repo.get_latest_score(proposal_id)
+        completeness, technical_depth, compliance = self._extract_factor_scores(score)
 
-        # Extract factor scores
-        completeness = 70
-        technical_depth = 70
-        compliance = 70
-
-        if score:
-            for factor in score.factors:
-                if factor.factor_type == ScoreFactorType.COMPLETENESS.value:
-                    completeness = factor.raw_score
-                elif factor.factor_type == ScoreFactorType.TECHNICAL_DEPTH.value:
-                    technical_depth = factor.raw_score
-                elif factor.factor_type == ScoreFactorType.SECTION_L_COMPLIANCE.value:
-                    compliance = factor.raw_score
-
-        # Calculate org comparison if we have other proposals
-        org_percentile = None
-        org_avg = None
-
+        org_percentile, org_avg = None, None
         if organization_proposal_ids and score:
-            stats = await self._scoring_repo.get_org_score_stats(
-                "", organization_proposal_ids
+            org_percentile, org_avg = await self._calc_org_percentile(
+                score, organization_proposal_ids,
             )
-            if stats["count"] > 0:
-                org_avg = stats["avg_score"]
-                # Simple percentile calculation
-                if score.overall_score >= stats["max_score"]:
-                    org_percentile = 100
-                elif score.overall_score <= stats["min_score"]:
-                    org_percentile = 0
-                else:
-                    range_size = stats["max_score"] - stats["min_score"]
-                    if range_size > 0:
-                        org_percentile = int(
-                            (
-                                (score.overall_score - stats["min_score"])
-                                / range_size
-                            )
-                            * 100
-                        )
 
-        # Create benchmark
         benchmark = ProposalBenchmark(
             proposal_id=proposal_id,
             completeness_score=completeness,
@@ -570,12 +523,9 @@ class BenchmarkService:
             org_percentile=org_percentile,
             org_avg_at_stage=org_avg,
         )
-
         saved = await self._benchmark_repo.create_benchmark(benchmark)
-
         return BenchmarkResponse(
-            id=saved.id,
-            proposal_id=saved.proposal_id,
+            id=saved.id, proposal_id=saved.proposal_id,
             benchmark_date=saved.benchmark_date,
             completeness_score=saved.completeness_score,
             technical_depth_score=saved.technical_depth_score,
@@ -679,39 +629,65 @@ class BenchmarkService:
             checked_by=indicator.checked_by,
         )
 
+    def _aggregate_indicators(
+        self, indicators: list[ReadinessIndicator],
+    ) -> tuple[str, list[str], list[str]]:
+        """Aggregate readiness level, blockers, and warnings from indicators."""
+        blockers: list[str] = []
+        warnings: list[str] = []
+        for ind in indicators:
+            blockers.extend(b.get("description", "") for b in (ind.blockers or []))
+            warnings.extend(w.get("description", "") for w in (ind.warnings or []))
+
+        if not indicators:
+            return "not_ready", blockers, warnings
+
+        levels = [i.readiness_level for i in indicators]
+        if "not_ready" in levels:
+            level = "not_ready"
+        elif "needs_work" in levels:
+            level = "needs_work"
+        else:
+            level = "ready"
+        return level, blockers, warnings
+
+    def _build_go_nogo_points(
+        self, score: ProposalScore | None, blockers: list[str],
+        warnings: list[str], recommendation: str,
+    ) -> tuple[list[str], list[str], list[str]]:
+        """Build strengths, risks, and next steps lists."""
+        strengths: list[str] = []
+        risks: list[str] = []
+        next_steps: list[str] = []
+
+        if score:
+            for f in score.factors:
+                label = f.factor_type.replace("_", " ")
+                if f.raw_score >= 80:
+                    strengths.append(f"Strong {label}: {f.raw_score}/100")
+                elif f.raw_score < 60:
+                    risks.append(f"Weak {label}: {f.raw_score}/100")
+
+        if blockers:
+            risks.extend(blockers[:3])
+            next_steps.append("Address all blocking issues before proceeding")
+        if warnings:
+            next_steps.append(f"Review and address {len(warnings)} warnings")
+        if not next_steps:
+            if recommendation == "Proceed":
+                next_steps.append("Submit proposal as planned")
+            else:
+                next_steps.append("Review detailed scoring report for improvements")
+        return strengths[:5], risks[:5], next_steps[:5]
+
     async def get_go_nogo_summary(self, proposal_id: str) -> GoNoGoSummary:
         """Generate go/no-go decision summary."""
-        # Get score
         score = await self._scoring_repo.get_latest_score(proposal_id)
-
-        # Get readiness indicators
         indicators = await self._readiness_repo.get_all_for_proposal(proposal_id)
 
-        # Determine overall readiness
         overall_score = score.overall_score if score else 0
-        readiness_level = "not_ready"
-        all_blockers: list[str] = []
-        all_warnings: list[str] = []
+        readiness_level, blockers, warnings = self._aggregate_indicators(indicators)
 
-        for indicator in indicators:
-            if indicator.blockers:
-                for b in indicator.blockers:
-                    all_blockers.append(b.get("description", ""))
-            if indicator.warnings:
-                for w in indicator.warnings:
-                    all_warnings.append(w.get("description", ""))
-
-        if indicators:
-            # Use the most restrictive readiness level
-            levels = [i.readiness_level for i in indicators]
-            if "not_ready" in levels:
-                readiness_level = "not_ready"
-            elif "needs_work" in levels:
-                readiness_level = "needs_work"
-            else:
-                readiness_level = "ready"
-
-        # Determine recommendation
         if overall_score >= 70 and readiness_level == "ready":
             recommendation = "Proceed"
         elif overall_score >= 50 and readiness_level != "not_ready":
@@ -719,41 +695,12 @@ class BenchmarkService:
         else:
             recommendation = "Do not proceed"
 
-        # Generate key points
-        strengths: list[str] = []
-        risks: list[str] = []
-        next_steps: list[str] = []
-
-        if score:
-            for factor in score.factors:
-                if factor.raw_score >= 80:
-                    strengths.append(
-                        f"Strong {factor.factor_type.replace('_', ' ')}: {factor.raw_score}/100"
-                    )
-                elif factor.raw_score < 60:
-                    risks.append(
-                        f"Weak {factor.factor_type.replace('_', ' ')}: {factor.raw_score}/100"
-                    )
-
-        if all_blockers:
-            risks.extend(all_blockers[:3])
-            next_steps.append("Address all blocking issues before proceeding")
-
-        if all_warnings:
-            next_steps.append(f"Review and address {len(all_warnings)} warnings")
-
-        if not next_steps:
-            if recommendation == "Proceed":
-                next_steps.append("Submit proposal as planned")
-            else:
-                next_steps.append("Review detailed scoring report for improvements")
+        strengths, risks, next_steps = self._build_go_nogo_points(
+            score, blockers, warnings, recommendation,
+        )
 
         return GoNoGoSummary(
-            proposal_id=proposal_id,
-            overall_score=overall_score,
-            readiness_level=readiness_level,
-            recommendation=recommendation,
-            key_strengths=strengths[:5],
-            key_risks=risks[:5],
-            next_steps=next_steps[:5],
+            proposal_id=proposal_id, overall_score=overall_score,
+            readiness_level=readiness_level, recommendation=recommendation,
+            key_strengths=strengths, key_risks=risks, next_steps=next_steps,
         )
