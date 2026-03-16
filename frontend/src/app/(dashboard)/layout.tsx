@@ -18,6 +18,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { organizationsApi } from '@/lib/api';
+import { NotificationBell } from '@/components/notifications/notification-bell';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -319,6 +320,10 @@ export default function DashboardLayout({
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
+        {/* Top Bar */}
+        <div className="flex items-center justify-end px-8 py-4 border-b border-white/[0.05]">
+          <NotificationBell />
+        </div>
         <main className="p-8">{children}</main>
       </div>
     </div>

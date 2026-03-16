@@ -15,6 +15,8 @@ from govproposal.opportunities.models import Opportunity
 from govproposal.opportunities.sam_service import SAMGovService
 from govproposal.opportunities.ebuy_service import EBuyOpenService
 from govproposal.config import settings
+from govproposal.events.bus import Event, event_bus
+from govproposal.events.types import EventTypes
 
 router = APIRouter(prefix="/api/v1/opportunities", tags=["opportunities"])
 
@@ -352,6 +354,17 @@ async def sync_opportunities(
             detail=f"Failed to sync from SAM.gov: {str(e)}",
         )
 
+    await event_bus.publish(Event(
+        type=EventTypes.OPPORTUNITY_SYNCED,
+        data={
+            "actor_id": current_user.id,
+            "organization_id": org_id,
+            "count": synced,
+            "new_count": synced,
+            "source": "sam_gov",
+        },
+    ))
+
     return SyncResponse(
         synced=synced,
         errors=errors,
@@ -418,6 +431,17 @@ async def sync_ebuy_opportunities(
             status_code=503,
             detail=f"Failed to sync from GSA eBuy: {str(e)}",
         )
+
+    await event_bus.publish(Event(
+        type=EventTypes.OPPORTUNITY_SYNCED,
+        data={
+            "actor_id": current_user.id,
+            "organization_id": org_id,
+            "count": synced,
+            "new_count": synced,
+            "source": "gsa_ebuy",
+        },
+    ))
 
     return SyncResponse(
         synced=synced,

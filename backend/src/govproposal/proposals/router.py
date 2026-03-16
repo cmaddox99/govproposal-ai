@@ -337,6 +337,18 @@ async def update_proposal(
         details={"updated_fields": list(update_data.keys())},
     )
 
+    # Publish submission event if status changed to submitted
+    if update_data.get("status") == "submitted":
+        await event_bus.publish(Event(
+            type=EventTypes.PROPOSAL_SUBMITTED,
+            data={
+                "proposal_id": proposal.id,
+                "title": proposal.title,
+                "organization_id": proposal.organization_id,
+                "actor_id": current_user.id,
+            },
+        ))
+
     return ProposalResponse.model_validate(proposal)
 
 
