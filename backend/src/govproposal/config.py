@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     api_port: int = 8000
 
     # CORS - raw string from env, parsed in property
-    cors_origins_str: str = '["http://localhost:3000", "http://127.0.0.1:3000"]'
+    cors_origins_str: str = '["http://localhost:3000", "http://127.0.0.1:3000", "https://govproposal-ai-bay.vercel.app"]'
 
     @property
     def cors_origins(self) -> List[str]:
