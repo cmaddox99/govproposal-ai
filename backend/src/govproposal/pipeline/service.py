@@ -22,6 +22,24 @@ YELLOW_THRESHOLD = 50
 
 
 @dataclass
+class Improvement:
+    """An actionable step the user can take to lift the match score."""
+
+    factor: str  # "naics" | "past_performance" | "set_aside" | "value_fit"
+    action: str
+    potential_gain: int
+    effort: str  # "low" | "medium" | "high"
+
+    def to_dict(self) -> dict:
+        return {
+            "factor": self.factor,
+            "action": self.action,
+            "potential_gain": self.potential_gain,
+            "effort": self.effort,
+        }
+
+
+@dataclass
 class MatchBreakdown:
     naics_score: int = 0
     past_performance_score: int = 0
@@ -30,6 +48,7 @@ class MatchBreakdown:
     total: int = 0
     tier: str = "red"
     notes: list[str] = field(default_factory=list)
+    improvements: list[Improvement] = field(default_factory=list)
 
     def to_json(self) -> str:
         return json.dumps(
@@ -41,6 +60,10 @@ class MatchBreakdown:
                 "total": self.total,
                 "tier": self.tier,
                 "notes": self.notes,
+                "improvements": [i.to_dict() for i in self.improvements],
+                "potential_total": min(
+                    100, self.total + sum(i.potential_gain for i in self.improvements)
+                ),
             }
         )
 
@@ -59,59 +82,225 @@ def _parse_naics_list(raw) -> list[str]:
     return []
 
 
-def _set_aside_fit(opp_set_aside: Optional[str], org_set_asides: list[str]) -> tuple[int, str]:
+def _set_aside_fit(
+    opp_set_aside: Optional[str], org_set_asides: list[str]
+) -> tuple[int, str, list[Improvement]]:
     """Score set-aside fit. Max 15."""
     if not opp_set_aside or opp_set_aside.lower() == "none":
-        return 15, "No set-aside requirement (open to all)"
+        return 15, "No set-aside requirement (open to all)", []
     if not org_set_asides:
-        return 5, "Set-aside required but org has no certifications listed"
+        return (
+            5,
+            "Set-aside required but org has no certifications listed",
+            [
+                Improvement(
+                    factor="set_aside",
+                    action=(
+                        f"Add the {opp_set_aside.upper()} certification to your "
+                        "organization profile if your business qualifies."
+                    ),
+                    potential_gain=10,
+                    effort="medium",
+                )
+            ],
+        )
     normalized = opp_set_aside.lower()
     for sa in org_set_asides:
         if sa.lower() == normalized:
-            return 15, f"Org holds matching {sa.upper()} certification"
-    return 0, f"Set-aside {opp_set_aside.upper()} required, org lacks certification"
+            return 15, f"Org holds matching {sa.upper()} certification", []
+    return (
+        0,
+        f"Set-aside {opp_set_aside.upper()} required, org lacks certification",
+        [
+            Improvement(
+                factor="set_aside",
+                action=(
+                    f"This opportunity requires {opp_set_aside.upper()}. "
+                    "Pursue this certification, or filter to non-set-aside work."
+                ),
+                potential_gain=15,
+                effort="high",
+            )
+        ],
+    )
 
 
-def _value_fit(estimated_value: Optional[float], past_values: list[float]) -> tuple[int, str]:
+def _value_fit(
+    estimated_value: Optional[float], past_values: list[float]
+) -> tuple[int, str, list[Improvement]]:
     """Score value-range fit. Max 15."""
     if not estimated_value:
-        return 10, "Opportunity value unknown (neutral)"
+        return 10, "Opportunity value unknown (neutral)", []
     if not past_values:
-        return 5, "No past performance values to compare"
+        return (
+            5,
+            "No past performance values to compare",
+            [
+                Improvement(
+                    factor="value_fit",
+                    action=(
+                        "Add contract values to your past performance records so we "
+                        "can judge whether this opportunity fits your delivery scale."
+                    ),
+                    potential_gain=10,
+                    effort="low",
+                )
+            ],
+        )
     max_past = max(past_values)
     avg_past = sum(past_values) / len(past_values)
     if estimated_value <= max_past * 1.5:
-        return 15, f"Value fits within 1.5x of largest past contract (${max_past:,.0f})"
+        return (
+            15,
+            f"Value fits within 1.5x of largest past contract (${max_past:,.0f})",
+            [],
+        )
     if estimated_value <= max_past * 3:
-        return 10, f"Value is 1.5-3x largest past contract — stretch goal"
+        return (
+            10,
+            "Value is 1.5-3x largest past contract — stretch goal",
+            [
+                Improvement(
+                    factor="value_fit",
+                    action=(
+                        f"Document past work at or above ${estimated_value/2:,.0f} "
+                        "(teaming or subcontract experience counts) to close the gap."
+                    ),
+                    potential_gain=5,
+                    effort="medium",
+                )
+            ],
+        )
     if estimated_value <= avg_past * 10:
-        return 5, "Value significantly larger than typical past contracts"
-    return 0, "Value far exceeds prior performance scale"
+        return (
+            5,
+            "Value significantly larger than typical past contracts",
+            [
+                Improvement(
+                    factor="value_fit",
+                    action=(
+                        "Consider teaming with a larger prime, or pursue smaller "
+                        "set-aside vehicles in this space first."
+                    ),
+                    potential_gain=10,
+                    effort="high",
+                )
+            ],
+        )
+    return (
+        0,
+        "Value far exceeds prior performance scale",
+        [
+            Improvement(
+                factor="value_fit",
+                action=(
+                    "Opportunity is far above your historical delivery scale. "
+                    "Team with a larger prime or no-bid."
+                ),
+                potential_gain=15,
+                effort="high",
+            )
+        ],
+    )
 
 
-def _naics_score(opp_naics: Optional[str], org_naics: list[str]) -> tuple[int, str]:
+def _naics_score(
+    opp_naics: Optional[str], org_naics: list[str]
+) -> tuple[int, str, list[Improvement]]:
     """Score NAICS match. Max 30."""
     if not opp_naics:
-        return 10, "Opportunity has no NAICS code (neutral)"
+        return 10, "Opportunity has no NAICS code (neutral)", []
     if not org_naics:
-        return 0, "Org has no NAICS codes configured"
+        return (
+            0,
+            "Org has no NAICS codes configured",
+            [
+                Improvement(
+                    factor="naics",
+                    action=(
+                        f"Add NAICS code {opp_naics} to your organization profile "
+                        "for an exact match on this and similar opportunities."
+                    ),
+                    potential_gain=30,
+                    effort="low",
+                )
+            ],
+        )
     if opp_naics in org_naics:
-        return 30, f"Exact NAICS match on {opp_naics}"
+        return 30, f"Exact NAICS match on {opp_naics}", []
     # Partial match: same 4-digit industry group
     for code in org_naics:
         if code[:4] == opp_naics[:4]:
-            return 20, f"Industry-group match ({opp_naics[:4]}xx)"
+            return (
+                20,
+                f"Industry-group match ({opp_naics[:4]}xx)",
+                [
+                    Improvement(
+                        factor="naics",
+                        action=(
+                            f"Add NAICS {opp_naics} to your profile — you already "
+                            f"hold the related code {code}, so qualifying is straightforward."
+                        ),
+                        potential_gain=10,
+                        effort="low",
+                    )
+                ],
+            )
         if code[:2] == opp_naics[:2]:
-            return 10, f"Sector match ({opp_naics[:2]}xxxx)"
-    return 0, f"No NAICS overlap (opp: {opp_naics})"
+            return (
+                10,
+                f"Sector match ({opp_naics[:2]}xxxx)",
+                [
+                    Improvement(
+                        factor="naics",
+                        action=(
+                            f"Add NAICS {opp_naics} to your profile to lift this from "
+                            "a sector match to an exact match."
+                        ),
+                        potential_gain=20,
+                        effort="low",
+                    )
+                ],
+            )
+    return (
+        0,
+        f"No NAICS overlap (opp: {opp_naics})",
+        [
+            Improvement(
+                factor="naics",
+                action=(
+                    f"Add NAICS {opp_naics} to your organization profile if your "
+                    "business performs work in this industry."
+                ),
+                potential_gain=30,
+                effort="medium",
+            )
+        ],
+    )
 
 
 def _past_performance_score(
     opp: Opportunity, past_perf: list[OrgPastPerformance]
-) -> tuple[int, str, list[float]]:
+) -> tuple[int, str, list[float], list[Improvement]]:
     """Score past-performance relevance. Max 40."""
     if not past_perf:
-        return 0, "No past performance records on file", []
+        return (
+            0,
+            "No past performance records on file",
+            [],
+            [
+                Improvement(
+                    factor="past_performance",
+                    action=(
+                        "Upload at least one past performance record on the "
+                        "Organization page. The smart-upload feature will extract "
+                        "fields from a contract or CPARS document automatically."
+                    ),
+                    potential_gain=40,
+                    effort="low",
+                )
+            ],
+        )
 
     title_lower = (opp.title or "").lower()
     desc_lower = (opp.description or "").lower()
@@ -124,6 +313,7 @@ def _past_performance_score(
     best_score = 0
     best_match = ""
     values: list[float] = []
+    has_agency_match = False
 
     for pp in past_perf:
         if pp.contract_value:
@@ -136,6 +326,7 @@ def _past_performance_score(
         # Same agency is worth a lot
         if agency_lower and pp.agency and agency_lower in pp.agency.lower():
             pp_score += 20
+            has_agency_match = True
 
         # Keyword overlap
         if overlap >= 5:
@@ -162,7 +353,48 @@ def _past_performance_score(
         note = f"{len(past_perf)} past-performance record(s) found, none relevant"
     else:
         note = f"Best match: {best_match} ({score}/40)"
-    return score, note, values
+
+    improvements: list[Improvement] = []
+    if score < 40:
+        keywords = sorted(opp_words)[:5]
+        kw_hint = f" (keywords: {', '.join(keywords)})" if keywords else ""
+        if not has_agency_match and opp.agency:
+            improvements.append(
+                Improvement(
+                    factor="past_performance",
+                    action=(
+                        f"Add past performance with {opp.agency} as the agency. "
+                        "Same-agency relationships are weighted heavily."
+                    ),
+                    potential_gain=20,
+                    effort="medium",
+                )
+            )
+        if score < 20:
+            improvements.append(
+                Improvement(
+                    factor="past_performance",
+                    action=(
+                        f"Add detailed descriptions to your past performance records that "
+                        f"mention the work area for this opportunity{kw_hint}."
+                    ),
+                    potential_gain=min(20, 40 - score),
+                    effort="low",
+                )
+            )
+        if score < 30:
+            improvements.append(
+                Improvement(
+                    factor="past_performance",
+                    action=(
+                        "Tag your past performance records with relevance tags that match "
+                        "this opportunity's scope (e.g. cybersecurity, medical, logistics)."
+                    ),
+                    potential_gain=5,
+                    effort="low",
+                )
+            )
+    return score, note, values, improvements
 
 
 async def compute_match_score(
@@ -191,10 +423,10 @@ async def compute_match_score(
     org_naics = _parse_naics_list(org.naics_codes)
     org_set_asides = _parse_naics_list(getattr(org, "set_asides", None))
 
-    naics_pts, naics_note = _naics_score(opp.naics_code, org_naics)
-    pp_pts, pp_note, pp_values = _past_performance_score(opp, past_perf)
-    sa_pts, sa_note = _set_aside_fit(opp.set_aside_type, org_set_asides)
-    val_pts, val_note = _value_fit(
+    naics_pts, naics_note, naics_imps = _naics_score(opp.naics_code, org_naics)
+    pp_pts, pp_note, pp_values, pp_imps = _past_performance_score(opp, past_perf)
+    sa_pts, sa_note, sa_imps = _set_aside_fit(opp.set_aside_type, org_set_asides)
+    val_pts, val_note, val_imps = _value_fit(
         float(opp.estimated_value) if opp.estimated_value else None, pp_values
     )
 
@@ -206,6 +438,10 @@ async def compute_match_score(
     else:
         tier = "red"
 
+    # Sort improvements by potential gain (biggest impact first)
+    improvements = naics_imps + pp_imps + sa_imps + val_imps
+    improvements.sort(key=lambda i: i.potential_gain, reverse=True)
+
     return MatchBreakdown(
         naics_score=naics_pts,
         past_performance_score=pp_pts,
@@ -214,6 +450,7 @@ async def compute_match_score(
         total=total,
         tier=tier,
         notes=[naics_note, pp_note, sa_note, val_note],
+        improvements=improvements,
     )
 
 

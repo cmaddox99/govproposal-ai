@@ -28,6 +28,7 @@ from govproposal.compliance.router import router as compliance_router
 from govproposal.analytics.router import router as analytics_router
 from govproposal.notifications.router import router as notifications_router
 from govproposal.pipeline.router import router as pipeline_router
+from govproposal.documents.router import router as documents_router
 
 
 # --- Security Headers Middleware ---
@@ -98,6 +99,7 @@ app.include_router(compliance_router)
 app.include_router(analytics_router)
 app.include_router(notifications_router)
 app.include_router(pipeline_router)
+app.include_router(documents_router)
 
 
 @app.get("/health")

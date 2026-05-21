@@ -76,6 +76,10 @@ class Settings(BaseSettings):
     anthropic_model: str = "claude-sonnet-4-20250514"
     sam_api_key: str = ""
 
+    # File uploads (Railway volume mounted at /data in production)
+    upload_dir: str = "./uploads"
+    upload_max_bytes: int = 25 * 1024 * 1024  # 25 MB
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
 
