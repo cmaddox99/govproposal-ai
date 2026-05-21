@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Building2, Users, Settings, Mail, Phone, MapPin, Save, Plus, X, AlertCircle, CheckCircle, Briefcase, Award, Trash2, Edit3 } from 'lucide-react';
 import { pastPerformanceApi } from '@/lib/api';
+import { useOrgId } from '@/lib/useOrgId';
 
 interface Organization {
   id: string;
@@ -54,6 +55,7 @@ const EMPTY_PP: Omit<PastPerformanceRecord, 'id' | 'organization_id' | 'created_
 };
 
 export default function OrganizationPage() {
+  const orgId = useOrgId();
   const [org, setOrg] = useState<Organization | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -85,17 +87,12 @@ export default function OrganizationPage() {
 
   useEffect(() => {
     fetchOrganization();
-  }, []);
+  }, [orgId]);
 
   const fetchOrganization = async () => {
+    if (!orgId) return;
     try {
       const token = localStorage.getItem('token');
-      const orgId = localStorage.getItem('currentOrgId');
-
-      if (!orgId) {
-        setError('No organization selected');
-        return;
-      }
 
       const response = await fetch(`/api/organizations/${orgId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -144,7 +141,6 @@ export default function OrganizationPage() {
 
     try {
       const token = localStorage.getItem('token');
-      const orgId = localStorage.getItem('currentOrgId');
 
       const response = await fetch(`/api/organizations/${orgId}`, {
         method: 'PUT',
@@ -210,7 +206,6 @@ export default function OrganizationPage() {
 
   // Past Performance handlers
   const handleSavePp = async () => {
-    const orgId = localStorage.getItem('currentOrgId');
     if (!orgId || !ppForm.contract_name) return;
 
     try {
@@ -257,7 +252,6 @@ export default function OrganizationPage() {
 
   const handleDeletePp = async (ppId: string) => {
     if (!window.confirm('Delete this past performance record?')) return;
-    const orgId = localStorage.getItem('currentOrgId');
     if (!orgId) return;
 
     try {

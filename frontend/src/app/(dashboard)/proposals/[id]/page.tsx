@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { proposalsApi } from '@/lib/api';
 import { Proposal, ProposalStatus } from '@/types';
+import { AssistantPanel } from '@/components/assistant/AssistantPanel';
 
 type SectionKey = 'executive_summary' | 'technical_approach' | 'management_approach' | 'past_performance' | 'pricing_summary';
 
@@ -94,6 +95,9 @@ export default function ProposalDetailPage() {
   const [generatingAll, setGeneratingAll] = useState(false);
   const [generatingSection, setGeneratingSection] = useState<SectionKey | null>(null);
   const [exportingDocx, setExportingDocx] = useState(false);
+
+  // Assistant panel state
+  const [assistantCollapsed, setAssistantCollapsed] = useState(false);
 
   const sectionSetters: Record<SectionKey, (v: string) => void> = {
     executive_summary: setExecutiveSummary,
@@ -402,7 +406,8 @@ export default function ProposalDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex gap-6 items-start">
+      <div className="flex-1 min-w-0 space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-4">
@@ -720,6 +725,14 @@ export default function ProposalDetailPage() {
           </div>
         </div>
       )}
+      </div>
+
+      <AssistantPanel
+        proposalId={proposalId}
+        collapsed={assistantCollapsed}
+        onToggle={() => setAssistantCollapsed((v) => !v)}
+        onFieldsApplied={fetchProposal}
+      />
     </div>
   );
 }

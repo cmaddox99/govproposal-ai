@@ -27,6 +27,7 @@ from govproposal.assistant.router import router as assistant_router
 from govproposal.compliance.router import router as compliance_router
 from govproposal.analytics.router import router as analytics_router
 from govproposal.notifications.router import router as notifications_router
+from govproposal.pipeline.router import router as pipeline_router
 
 
 # --- Security Headers Middleware ---
@@ -76,6 +77,7 @@ app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
+    allow_origin_regex=r"https://[a-z0-9-]+(\.[a-z0-9-]+)*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -95,6 +97,7 @@ app.include_router(assistant_router)
 app.include_router(compliance_router)
 app.include_router(analytics_router)
 app.include_router(notifications_router)
+app.include_router(pipeline_router)
 
 
 @app.get("/health")

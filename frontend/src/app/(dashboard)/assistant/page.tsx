@@ -11,6 +11,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Send, Bot, User, Sparkles, ChevronDown, Loader2, FileText, Search, Info, Check, Zap } from 'lucide-react';
 import { assistantApi, proposalsApi, opportunitiesApi } from '@/lib/api';
+import { useOrgId } from '@/lib/useOrgId';
 import type { Proposal, Opportunity } from '@/types';
 
 interface ContextUsed {
@@ -299,21 +300,11 @@ export default function AssistantPage() {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [selectedProposal, setSelectedProposal] = useState<string | null>(null);
   const [selectedOpportunity, setSelectedOpportunity] = useState<string | null>(null);
-  const [orgId, setOrgId] = useState<string>('');
+  const orgId = useOrgId() || '';
   const [isImproving, setIsImproving] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const storedOrg = localStorage.getItem('selectedOrganization');
-    if (storedOrg) {
-      try {
-        const org = JSON.parse(storedOrg);
-        setOrgId(org.id);
-      } catch { /* ignore */ }
-    }
-  }, []);
 
   useEffect(() => {
     if (!orgId) return;

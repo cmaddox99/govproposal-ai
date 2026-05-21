@@ -15,6 +15,7 @@ import {
   Building2,
 } from 'lucide-react';
 import { proposalsApi } from '@/lib/api';
+import { useOrgId } from '@/lib/useOrgId';
 import { Proposal, ProposalStatus } from '@/types';
 
 const statusColors: Record<ProposalStatus, string> = {
@@ -47,6 +48,7 @@ export default function ProposalsPage() {
   const [statusFilter, setStatusFilter] = useState('');
   const [total, setTotal] = useState(0);
   const [offset, setOffset] = useState(0);
+  const orgId = useOrgId();
 
   const extractError = (detail: any, fallback: string): string => {
     if (!detail) return fallback;
@@ -56,16 +58,11 @@ export default function ProposalsPage() {
   };
 
   const fetchProposals = async () => {
+    if (!orgId) return;
     setLoading(true);
     setError('');
 
     try {
-      const orgId = localStorage.getItem('currentOrgId');
-      if (!orgId) {
-        setError('No organization selected');
-        return;
-      }
-
       const response = await proposalsApi.list({
         org_id: orgId,
         status_filter: statusFilter || undefined,
@@ -86,7 +83,7 @@ export default function ProposalsPage() {
 
   useEffect(() => {
     fetchProposals();
-  }, [statusFilter, offset]);
+  }, [orgId, statusFilter, offset]);
 
   const filteredProposals = proposals.filter(
     (p) =>
