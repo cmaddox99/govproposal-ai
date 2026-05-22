@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Building2, Users, Settings, Mail, Phone, MapPin, Save, Plus, X, AlertCircle, CheckCircle, Briefcase, Award, Trash2, Edit3 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Building2, Users, Settings, Mail, Phone, MapPin, Save, Plus, X, AlertCircle, CheckCircle, Briefcase, Award, Trash2, Edit3, Sparkles, Upload, Loader2, FileText } from 'lucide-react';
 import { pastPerformanceApi } from '@/lib/api';
 import { useOrgId } from '@/lib/useOrgId';
 
@@ -39,7 +39,25 @@ interface PastPerformanceRecord {
   updated_at: string;
 }
 
-const EMPTY_PP: Omit<PastPerformanceRecord, 'id' | 'organization_id' | 'created_at' | 'updated_at'> = {
+interface PpFormState {
+  contract_name: string;
+  agency: string;
+  contract_number: string;
+  contract_value: number | null;
+  period_of_performance_start: string | null;
+  period_of_performance_end: string | null;
+  description: string;
+  relevance_tags: string[];
+  contact_name: string;
+  contact_email: string;
+  contact_phone: string;
+  performance_rating: string;
+  source_document_path: string | null;
+  source_document_filename: string | null;
+  source_document_content_type: string | null;
+}
+
+const EMPTY_PP: PpFormState = {
   contract_name: '',
   agency: '',
   contract_number: '',
@@ -52,6 +70,9 @@ const EMPTY_PP: Omit<PastPerformanceRecord, 'id' | 'organization_id' | 'created_
   contact_email: '',
   contact_phone: '',
   performance_rating: '',
+  source_document_path: null,
+  source_document_filename: null,
+  source_document_content_type: null,
 };
 
 export default function OrganizationPage() {
@@ -82,8 +103,11 @@ export default function OrganizationPage() {
   const [ppLoading, setPpLoading] = useState(false);
   const [showPpForm, setShowPpForm] = useState(false);
   const [editingPpId, setEditingPpId] = useState<string | null>(null);
-  const [ppForm, setPpForm] = useState(EMPTY_PP);
+  const [ppForm, setPpForm] = useState<PpFormState>(EMPTY_PP);
   const [newTag, setNewTag] = useState('');
+  const [extractingPp, setExtractingPp] = useState(false);
+  const [extractionBanner, setExtractionBanner] = useState<string | null>(null);
+  const ppFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchOrganization();
@@ -224,6 +248,7 @@ export default function OrganizationPage() {
       setShowPpForm(false);
       setEditingPpId(null);
       setPpForm(EMPTY_PP);
+      setExtractionBanner(null);
       fetchPastPerformance(orgId);
       setSuccessMessage(editingPpId ? 'Past performance updated' : 'Past performance added');
     } catch (err: any) {
@@ -233,6 +258,7 @@ export default function OrganizationPage() {
 
   const handleEditPp = (record: PastPerformanceRecord) => {
     setEditingPpId(record.id);
+    setExtractionBanner(null);
     setPpForm({
       contract_name: record.contract_name,
       agency: record.agency || '',
@@ -246,8 +272,65 @@ export default function OrganizationPage() {
       contact_email: record.contact_email || '',
       contact_phone: record.contact_phone || '',
       performance_rating: record.performance_rating || '',
+      source_document_path: null,
+      source_document_filename: null,
+      source_document_content_type: null,
     });
     setShowPpForm(true);
+  };
+
+  const handleSmartUploadFile = async (file: File | null) => {
+    if (!file || !orgId) return;
+    if (file.size > 25 * 1024 * 1024) {
+      setError('File exceeds 25 MB limit');
+      return;
+    }
+    setError('');
+    setExtractingPp(true);
+    setExtractionBanner(null);
+    try {
+      const res = await pastPerformanceApi.extract(orgId, file);
+      const data = res.data;
+      const extracted = data.extracted || {};
+      const toIsoDate = (value: string | null | undefined): string | null => {
+        if (!value) return null;
+        try {
+          return new Date(value).toISOString().split('T')[0];
+        } catch {
+          return null;
+        }
+      };
+
+      setEditingPpId(null);
+      setPpForm({
+        contract_name: extracted.contract_name || '',
+        agency: extracted.agency || '',
+        contract_number: extracted.contract_number || '',
+        contract_value: typeof extracted.contract_value === 'number' ? extracted.contract_value : null,
+        period_of_performance_start: toIsoDate(extracted.period_of_performance_start),
+        period_of_performance_end: toIsoDate(extracted.period_of_performance_end),
+        description: extracted.description || '',
+        relevance_tags: [],
+        contact_name: extracted.contact_name || '',
+        contact_email: extracted.contact_email || '',
+        contact_phone: extracted.contact_phone || '',
+        performance_rating: extracted.performance_rating || '',
+        source_document_path: data.source_document_path,
+        source_document_filename: data.source_document_filename,
+        source_document_content_type: data.source_document_content_type,
+      });
+      setShowPpForm(true);
+      setExtractionBanner(
+        data.extraction_available
+          ? `Extracted fields from ${data.source_document_filename}. Review and edit before saving.`
+          : `${data.source_document_filename} attached. AI extraction unavailable — fill in the fields manually.`
+      );
+    } catch (err: any) {
+      setError(err.response?.data?.detail || 'Failed to extract from document');
+    } finally {
+      setExtractingPp(false);
+      if (ppFileInputRef.current) ppFileInputRef.current.value = '';
+    }
   };
 
   const handleDeletePp = async (ppId: string) => {
@@ -494,16 +577,65 @@ export default function OrganizationPage() {
               <p className="text-gray-400 text-sm">Track your contract history for AI-powered proposal generation</p>
             </div>
           </div>
-          <button onClick={() => { setShowPpForm(true); setEditingPpId(null); setPpForm(EMPTY_PP); }}
-            className="flex items-center gap-2 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm">
-            <Plus className="w-4 h-4" /> Add Record
-          </button>
+          <div className="flex items-center gap-2">
+            <input
+              ref={ppFileInputRef}
+              type="file"
+              accept=".pdf,.doc,.docx,.txt,.csv"
+              className="hidden"
+              onChange={(e) => handleSmartUploadFile(e.target.files?.[0] ?? null)}
+            />
+            <button
+              onClick={() => ppFileInputRef.current?.click()}
+              disabled={extractingPp}
+              title="Upload a contract or CPARS doc — AI will pre-fill the form"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 text-sm disabled:opacity-50"
+            >
+              {extractingPp ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Sparkles className="w-4 h-4" />
+              )}
+              {extractingPp ? 'Extracting…' : 'Smart Upload'}
+            </button>
+            <button onClick={() => { setShowPpForm(true); setEditingPpId(null); setPpForm(EMPTY_PP); setExtractionBanner(null); }}
+              className="flex items-center gap-2 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm">
+              <Plus className="w-4 h-4" /> Add Record
+            </button>
+          </div>
         </div>
 
         {/* PP Form */}
         {showPpForm && (
           <div className="mb-6 p-4 bg-white/[0.05] border border-white/[0.08] rounded-lg space-y-4">
             <h3 className="text-white font-medium">{editingPpId ? 'Edit' : 'New'} Past Performance Record</h3>
+            {extractionBanner && (
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-purple-500/10 border border-purple-500/30 text-xs text-purple-100">
+                <Sparkles className="w-4 h-4 text-purple-300 flex-shrink-0 mt-0.5" />
+                <span>{extractionBanner}</span>
+              </div>
+            )}
+            {ppForm.source_document_filename && (
+              <div className="flex items-center gap-2 p-2 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-gray-300">
+                <FileText className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                <span className="truncate flex-1" title={ppForm.source_document_filename}>
+                  Source document: {ppForm.source_document_filename}
+                </span>
+                <button
+                  type="button"
+                  className="text-gray-500 hover:text-gray-200"
+                  onClick={() => setPpForm({
+                    ...ppForm,
+                    source_document_path: null,
+                    source_document_filename: null,
+                    source_document_content_type: null,
+                  })}
+                  title="Detach source document"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm text-gray-400 mb-1">Contract Name *</label>

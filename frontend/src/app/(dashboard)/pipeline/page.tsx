@@ -22,7 +22,9 @@ import {
   Check,
   Square,
   X,
+  Paperclip,
 } from 'lucide-react';
+import OpportunityDocumentsModal from '@/components/pipeline/OpportunityDocumentsModal';
 import { useOrgId } from '@/lib/useOrgId';
 
 type PipelineStatus = 'active' | 'archived' | 'no_bid';
@@ -126,6 +128,7 @@ export default function PipelinePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [creatingProposalFor, setCreatingProposalFor] = useState<string | null>(null);
   const [showBreakdownFor, setShowBreakdownFor] = useState<string | null>(null);
+  const [documentsModalFor, setDocumentsModalFor] = useState<PipelineItem | null>(null);
 
   const fetchPipeline = useCallback(async () => {
     if (!orgId) return;
@@ -527,6 +530,13 @@ export default function PipelinePage() {
                         {showBreakdownFor === item.id ? 'Hide' : 'Why this score'}
                       </button>
                       <button
+                        onClick={() => setDocumentsModalFor(item)}
+                        className="flex items-center justify-center gap-2 px-3 py-2 bg-white/[0.05] text-gray-300 text-sm rounded-lg hover:bg-white/[0.08]"
+                      >
+                        <Paperclip className="w-4 h-4" />
+                        Documents
+                      </button>
+                      <button
                         onClick={() => rescore(item.id)}
                         className="flex items-center justify-center gap-2 px-3 py-2 bg-white/[0.05] text-gray-300 text-xs rounded-lg hover:bg-white/[0.08]"
                       >
@@ -574,9 +584,38 @@ export default function PipelinePage() {
           </div>
         )}
       </div>
+
+      {documentsModalFor && documentsModalFor.opportunity && (
+        <OpportunityDocumentsModal
+          orgId={documentsModalFor.organization_id}
+          opportunityId={documentsModalFor.opportunity_id}
+          opportunityTitle={documentsModalFor.opportunity.title}
+          onClose={() => setDocumentsModalFor(null)}
+        />
+      )}
     </div>
   );
 }
+
+interface ScoreImprovement {
+  factor: string;
+  action: string;
+  potential_gain: number;
+  effort: 'low' | 'medium' | 'high';
+}
+
+const EFFORT_STYLE: Record<string, { bg: string; text: string }> = {
+  low: { bg: 'bg-emerald-500/15', text: 'text-emerald-300' },
+  medium: { bg: 'bg-yellow-500/15', text: 'text-yellow-300' },
+  high: { bg: 'bg-red-500/15', text: 'text-red-300' },
+};
+
+const FACTOR_LABEL: Record<string, string> = {
+  naics: 'NAICS',
+  past_performance: 'Past performance',
+  set_aside: 'Set-aside',
+  value_fit: 'Value fit',
+};
 
 function MatchBreakdownPanel({ raw }: { raw: string }) {
   let parsed: any;
@@ -591,6 +630,13 @@ function MatchBreakdownPanel({ raw }: { raw: string }) {
     { label: 'Set-aside fit', score: parsed.set_aside_score ?? 0, max: 15 },
     { label: 'Value fit', score: parsed.value_fit_score ?? 0, max: 15 },
   ];
+  const improvements: ScoreImprovement[] = Array.isArray(parsed.improvements)
+    ? parsed.improvements
+    : [];
+  const total: number = parsed.total ?? 0;
+  const potential: number = parsed.potential_total ?? total;
+  const gain = Math.max(0, potential - total);
+
   return (
     <div className="mt-3 p-3 bg-white/[0.03] border border-white/[0.06] rounded-lg">
       <div className="text-xs text-gray-400 mb-2 font-medium">Score breakdown</div>
@@ -619,6 +665,46 @@ function MatchBreakdownPanel({ raw }: { raw: string }) {
             </li>
           ))}
         </ul>
+      )}
+      {improvements.length > 0 && (
+        <div className="mt-4 pt-3 border-t border-white/[0.06]">
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-xs text-gray-400 font-medium">
+              How to improve this score
+            </div>
+            {gain > 0 && (
+              <div className="text-xs text-emerald-300">
+                +{gain} pts possible · could reach {potential}/100
+              </div>
+            )}
+          </div>
+          <ul className="space-y-2">
+            {improvements.map((imp, i) => {
+              const effort = EFFORT_STYLE[imp.effort] || EFFORT_STYLE.medium;
+              return (
+                <li
+                  key={i}
+                  className="flex items-start gap-3 text-xs bg-white/[0.02] border border-white/[0.05] rounded p-2.5"
+                >
+                  <div className="flex flex-col items-center gap-1 flex-shrink-0 w-14">
+                    <span className="text-emerald-300 font-semibold text-sm">
+                      +{imp.potential_gain}
+                    </span>
+                    <span className={`px-1.5 py-0.5 rounded ${effort.bg} ${effort.text} uppercase tracking-wide`}>
+                      {imp.effort}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-gray-500 text-[10px] uppercase tracking-wide mb-0.5">
+                      {FACTOR_LABEL[imp.factor] || imp.factor}
+                    </div>
+                    <div className="text-gray-200 leading-relaxed">{imp.action}</div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       )}
     </div>
   );

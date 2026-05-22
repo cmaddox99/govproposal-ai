@@ -169,6 +169,45 @@ export const pastPerformanceApi = {
     api.put(`/api/v1/organizations/${orgId}/past-performance/${ppId}`, data),
   delete: (orgId: string, ppId: string) =>
     api.delete(`/api/v1/organizations/${orgId}/past-performance/${ppId}`),
+  extract: (orgId: string, file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post(
+      `/api/v1/organizations/${orgId}/past-performance/extract`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 120000,
+      }
+    );
+  },
+};
+
+// Opportunity Documents API
+export const opportunityDocumentsApi = {
+  list: (orgId: string, opportunityId: string) =>
+    api.get(
+      `/api/v1/organizations/${orgId}/opportunities/${opportunityId}/documents`
+    ),
+  upload: (orgId: string, opportunityId: string, file: File, description?: string) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (description) formData.append('description', description);
+    return api.post(
+      `/api/v1/organizations/${orgId}/opportunities/${opportunityId}/documents`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 120000,
+      }
+    );
+  },
+  downloadUrl: (orgId: string, opportunityId: string, docId: string) =>
+    `${API_BASE_URL}/api/v1/organizations/${orgId}/opportunities/${opportunityId}/documents/${docId}/download`,
+  remove: (orgId: string, opportunityId: string, docId: string) =>
+    api.delete(
+      `/api/v1/organizations/${orgId}/opportunities/${opportunityId}/documents/${docId}`
+    ),
 };
 
 // Opportunities API
