@@ -40,6 +40,7 @@ export default function UsersPage() {
   }, [orgId]);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
+    if (!orgId) return;
     try {
       await orgAdminApi.changeRole(orgId, userId, newRole);
       await fetchUsers();
@@ -50,6 +51,7 @@ export default function UsersPage() {
   };
 
   const handleRemoveUser = async (userId: string) => {
+    if (!orgId) return;
     if (!confirm('Are you sure you want to remove this user?')) return;
 
     try {
@@ -206,7 +208,7 @@ export default function UsersPage() {
         </div>
       )}
 
-      {showInvite && (
+      {showInvite && orgId && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <UserInviteForm
             orgId={orgId}
