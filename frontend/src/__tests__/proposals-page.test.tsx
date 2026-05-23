@@ -78,14 +78,14 @@ describe('ProposalsPage', () => {
     expect(screen.getByText('Test Proposal Beta')).toBeInTheDocument();
   });
 
-  it('shows error when no organization is selected', async () => {
+  it('skips the API call when no organization is selected', () => {
     Storage.prototype.getItem = jest.fn(() => null);
 
     render(<ProposalsPage />);
 
-    await waitFor(() => {
-      expect(screen.getByText(/no organization selected/i)).toBeInTheDocument();
-    });
+    // useOrgId returns null when nothing is stored; the page must not try to fetch.
+    expect(proposalsApi.list).not.toHaveBeenCalled();
+    expect(screen.getByText(/loading proposals/i)).toBeInTheDocument();
   });
 
   it('displays correct status labels', async () => {

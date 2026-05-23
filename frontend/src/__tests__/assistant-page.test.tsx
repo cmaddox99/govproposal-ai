@@ -34,7 +34,8 @@ const mockOpportunities = [
 function setupMocks(withOrg = true) {
   jest.clearAllMocks();
   Storage.prototype.getItem = jest.fn((key) => {
-    if (withOrg && key === 'selectedOrganization') return JSON.stringify({ id: 'org-1', name: 'Acme' });
+    if (withOrg && key === 'currentOrgId') return 'org-1';
+    if (key === 'token') return 'fake-token';
     return null;
   });
   (proposalsApi.list as jest.Mock).mockResolvedValue({ data: { proposals: mockProposals } });
