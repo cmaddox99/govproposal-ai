@@ -16,6 +16,7 @@ import {
   LogOut,
   ChevronDown,
   AlertCircle,
+  Target,
 } from 'lucide-react';
 import { organizationsApi } from '@/lib/api';
 import { NotificationBell } from '@/components/notifications/notification-bell';
@@ -23,6 +24,7 @@ import { NotificationBell } from '@/components/notifications/notification-bell';
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Opportunities', href: '/opportunities', icon: Search },
+  { name: 'Pipeline', href: '/pipeline', icon: Target },
   { name: 'Proposals', href: '/proposals', icon: FileText },
   { name: 'Compliance', href: '/compliance', icon: Shield },
   { name: 'Security', href: '/security', icon: Lock },

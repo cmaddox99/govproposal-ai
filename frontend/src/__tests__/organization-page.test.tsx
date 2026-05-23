@@ -90,13 +90,13 @@ describe('OrganizationPage', () => {
     expect(screen.getByDisplayValue('IT solutions provider')).toBeInTheDocument();
   });
 
-  it('shows error when no org selected', async () => {
+  it('skips the fetch when no org is selected', () => {
     Storage.prototype.getItem = jest.fn(() => null);
     render(<OrganizationPage />);
 
-    await waitFor(() => {
-      expect(screen.getByText('No organization selected')).toBeInTheDocument();
-    });
+    // useOrgId returns null when nothing is stored; the page must not try to fetch.
+    expect(global.fetch).not.toHaveBeenCalled();
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
   it('renders save button', async () => {

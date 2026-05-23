@@ -169,6 +169,45 @@ export const pastPerformanceApi = {
     api.put(`/api/v1/organizations/${orgId}/past-performance/${ppId}`, data),
   delete: (orgId: string, ppId: string) =>
     api.delete(`/api/v1/organizations/${orgId}/past-performance/${ppId}`),
+  extract: (orgId: string, file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post(
+      `/api/v1/organizations/${orgId}/past-performance/extract`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 120000,
+      }
+    );
+  },
+};
+
+// Opportunity Documents API
+export const opportunityDocumentsApi = {
+  list: (orgId: string, opportunityId: string) =>
+    api.get(
+      `/api/v1/organizations/${orgId}/opportunities/${opportunityId}/documents`
+    ),
+  upload: (orgId: string, opportunityId: string, file: File, description?: string) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (description) formData.append('description', description);
+    return api.post(
+      `/api/v1/organizations/${orgId}/opportunities/${opportunityId}/documents`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 120000,
+      }
+    );
+  },
+  downloadUrl: (orgId: string, opportunityId: string, docId: string) =>
+    `${API_BASE_URL}/api/v1/organizations/${orgId}/opportunities/${opportunityId}/documents/${docId}/download`,
+  remove: (orgId: string, opportunityId: string, docId: string) =>
+    api.delete(
+      `/api/v1/organizations/${orgId}/opportunities/${opportunityId}/documents/${docId}`
+    ),
 };
 
 // Opportunities API
@@ -183,6 +222,30 @@ export const assistantApi = {
     api.post('/api/v1/assistant/chat', { messages, context }, { timeout: 120000 }),
   applySection: (proposalId: string, sectionName: string, content: string) =>
     api.post('/api/v1/assistant/apply-section', { proposal_id: proposalId, section_name: sectionName, content }),
+  extract: (proposalId: string, content: string, instruction?: string) =>
+    api.post('/api/v1/assistant/extract', { proposal_id: proposalId, content, instruction }, { timeout: 120000 }),
+  applyExtract: (proposalId: string, fieldUpdates: Array<{ field: string; value: string; note?: string | null }>, newPastPerformance: Array<Record<string, any>>) =>
+    api.post('/api/v1/assistant/apply-extract', {
+      proposal_id: proposalId,
+      field_updates: fieldUpdates,
+      new_past_performance: newPastPerformance,
+    }),
+};
+
+// Pipeline API
+export const pipelineApi = {
+  list: (params: { org_id: string; status?: string }) =>
+    api.get('/api/v1/pipeline', { params }),
+  add: (data: { organization_id: string; opportunity_id: string; dollar_value_text?: string; questions_due_date?: string; notes?: string }) =>
+    api.post('/api/v1/pipeline', data),
+  update: (id: string, data: Record<string, any>) =>
+    api.patch(`/api/v1/pipeline/${id}`, data),
+  remove: (id: string) =>
+    api.delete(`/api/v1/pipeline/${id}`),
+  rescore: (id: string) =>
+    api.post(`/api/v1/pipeline/${id}/rescore`),
+  createProposal: (id: string) =>
+    api.post(`/api/v1/pipeline/${id}/create-proposal`),
 };
 
 // Compliance API

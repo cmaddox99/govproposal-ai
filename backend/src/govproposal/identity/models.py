@@ -169,6 +169,10 @@ class OrgPastPerformance(Base):
     contact_email: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     contact_phone: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     performance_rating: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    # Optional source document the record was created from (smart-upload flow)
+    source_document_path: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    source_document_filename: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    source_document_content_type: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_utc_now, nullable=False
     )

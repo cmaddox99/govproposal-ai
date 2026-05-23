@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, AlertCircle } from 'lucide-react';
 import { proposalsApi } from '@/lib/api';
+import { useOrgId } from '@/lib/useOrgId';
 
 export default function NewProposalPage() {
   const router = useRouter();
+  const orgId = useOrgId();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -32,7 +34,6 @@ export default function NewProposalPage() {
     setError('');
 
     try {
-      const orgId = localStorage.getItem('currentOrgId');
       if (!orgId) {
         setError('No organization selected');
         return;

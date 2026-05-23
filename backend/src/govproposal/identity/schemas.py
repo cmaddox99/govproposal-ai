@@ -305,6 +305,10 @@ class PastPerformanceCreate(BaseModel):
     contact_email: str | None = None
     contact_phone: str | None = None
     performance_rating: str | None = None
+    # Reference to a previously-uploaded source document (from the extract flow)
+    source_document_path: str | None = None
+    source_document_filename: str | None = None
+    source_document_content_type: str | None = None
 
 
 class PastPerformanceUpdate(BaseModel):
@@ -341,10 +345,45 @@ class PastPerformanceResponse(BaseModel):
     contact_email: str | None = None
     contact_phone: str | None = None
     performance_rating: str | None = None
+    source_document_path: str | None = None
+    source_document_filename: str | None = None
+    source_document_content_type: str | None = None
     created_at: datetime
     updated_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class PastPerformanceExtractedFields(BaseModel):
+    """Suggested past-performance fields parsed from an uploaded document."""
+
+    contract_name: str | None = None
+    agency: str | None = None
+    contract_number: str | None = None
+    contract_value: float | None = None
+    period_of_performance_start: datetime | None = None
+    period_of_performance_end: datetime | None = None
+    description: str | None = None
+    contact_name: str | None = None
+    contact_email: str | None = None
+    contact_phone: str | None = None
+    performance_rating: str | None = None
+    confidence: dict[str, float] = Field(default_factory=dict)
+
+
+class PastPerformanceExtractResponse(BaseModel):
+    """Response from the upload-and-extract endpoint.
+
+    The file is stored under source_document_path; pass that path back when
+    calling POST /past-performance to attach the file to the new record.
+    """
+
+    extracted: PastPerformanceExtractedFields
+    source_document_path: str
+    source_document_filename: str
+    source_document_content_type: str | None = None
+    size_bytes: int
+    extraction_available: bool  # False when Claude not configured / parse failed
 
 
 # Generic response

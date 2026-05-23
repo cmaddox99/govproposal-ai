@@ -138,6 +138,10 @@ class SAMGovService:
         Returns:
             Dictionary formatted for our Opportunity model
         """
+        from govproposal.pipeline.service import normalize_set_aside
+
+        raw_set_aside = data.get("typeOfSetAside") or data.get("typeOfSetAsideDescription")
+
         # SAM.gov API response structure may vary, this is a common format
         return {
             "notice_id": data.get("noticeId", ""),
@@ -151,8 +155,8 @@ class SAMGovService:
             "naics_code": data.get("naicsCode"),
             "naics_description": data.get("naicsDescription"),
             "psc_code": data.get("classificationCode"),
-            "set_aside_type": data.get("typeOfSetAside"),
-            "set_aside_description": data.get("typeOfSetAsideDescription"),
+            "set_aside_type": normalize_set_aside(raw_set_aside),
+            "set_aside_description": data.get("typeOfSetAsideDescription") or raw_set_aside,
             "posted_date": self._parse_date(data.get("postedDate")),
             "response_deadline": self._parse_date(data.get("responseDeadLine")),
             "archive_date": self._parse_date(data.get("archiveDate")),

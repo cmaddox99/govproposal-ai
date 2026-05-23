@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { useOrgId } from '@/lib/useOrgId';
 import {
   Search,
   Filter,
@@ -13,7 +14,9 @@ import {
   FileText,
   AlertCircle,
   CheckCircle,
-  X
+  X,
+  Target,
+  Check,
 } from 'lucide-react';
 
 interface Opportunity {
@@ -48,6 +51,7 @@ const SET_ASIDE_OPTIONS = [
 
 export default function OpportunitiesPage() {
   const router = useRouter();
+  const orgId = useOrgId();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
@@ -57,6 +61,8 @@ export default function OpportunitiesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOpp, setSelectedOpp] = useState<Opportunity | null>(null);
   const [creatingProposal, setCreatingProposal] = useState(false);
+  const [addingToPipelineId, setAddingToPipelineId] = useState<string | null>(null);
+  const [inPipelineIds, setInPipelineIds] = useState<Set<string>>(new Set());
 
   // Filter state
   const [showFilters, setShowFilters] = useState(false);
@@ -86,18 +92,13 @@ export default function OpportunitiesPage() {
   };
 
   const fetchOpportunities = async (currentFilters?: typeof filters) => {
+    if (!orgId) return;
     const f = currentFilters ?? filters;
     setLoading(true);
     setError('');
 
     try {
       const token = localStorage.getItem('token');
-      const orgId = localStorage.getItem('currentOrgId');
-
-      if (!orgId) {
-        setError('No organization selected');
-        return;
-      }
 
       const params = new URLSearchParams({ org_id: orgId });
 
@@ -136,18 +137,13 @@ export default function OpportunitiesPage() {
   };
 
   const syncOpportunities = async () => {
+    if (!orgId) return;
     setSyncing(true);
     setError('');
     setSuccessMessage('');
 
     try {
       const token = localStorage.getItem('token');
-      const orgId = localStorage.getItem('currentOrgId');
-
-      if (!orgId) {
-        setError('No organization selected');
-        return;
-      }
 
       const response = await fetch(`/api/opportunities/sync?org_id=${orgId}`, {
         method: 'POST',
@@ -178,18 +174,13 @@ export default function OpportunitiesPage() {
   };
 
   const syncEbuyOpportunities = async () => {
+    if (!orgId) return;
     setSyncingEbuy(true);
     setError('');
     setSuccessMessage('');
 
     try {
       const token = localStorage.getItem('token');
-      const orgId = localStorage.getItem('currentOrgId');
-
-      if (!orgId) {
-        setError('No organization selected');
-        return;
-      }
 
       const response = await fetch(`/api/opportunities/sync-ebuy?org_id=${orgId}`, {
         method: 'POST',
@@ -219,42 +210,57 @@ export default function OpportunitiesPage() {
     }
   };
 
-  const createProposalFromOpportunity = async (opportunity: Opportunity) => {
-    setCreatingProposal(true);
+  const addToPipeline = async (opportunity: Opportunity) => {
+    if (!orgId) return;
+    setAddingToPipelineId(opportunity.id);
     setError('');
+    setSuccessMessage('');
 
     try {
       const token = localStorage.getItem('token');
-      const orgId = localStorage.getItem('currentOrgId');
-
-      if (!orgId) {
-        setError('No organization selected');
-        return;
-      }
-
-      const response = await fetch('/api/proposals/from-opportunity', {
+      const response = await fetch('/api/pipeline', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          opportunity_id: opportunity.id,
           organization_id: orgId,
+          opportunity_id: opportunity.id,
         }),
       });
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(extractError(data.detail, 'Failed to create proposal'));
+        throw new Error(extractError(data.detail, 'Failed to add to pipeline'));
       }
 
-      const data = await response.json();
-      router.push(`/proposals/${data.id}/scoring`);
+      setInPipelineIds((prev) => new Set(prev).add(opportunity.id));
+      setSuccessMessage(`Added "${opportunity.title.slice(0, 60)}..." to pipeline`);
+      setTimeout(() => setSuccessMessage(''), 4000);
     } catch (err: any) {
       setError(err.message);
     } finally {
-      setCreatingProposal(false);
+      setAddingToPipelineId(null);
+    }
+  };
+
+  const loadPipelineIds = async () => {
+    if (!orgId) return;
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`/api/pipeline?org_id=${orgId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const ids = new Set<string>(
+          (data.items || []).map((it: any) => it.opportunity_id as string)
+        );
+        setInPipelineIds(ids);
+      }
+    } catch {
+      /* non-blocking */
     }
   };
 
@@ -278,12 +284,13 @@ export default function OpportunitiesPage() {
     }));
   };
 
-  // Initial fetch
+  // Initial fetch (re-runs when orgId becomes available)
   const isFirstRender = useRef(true);
   useEffect(() => {
     fetchOpportunities();
+    loadPipelineIds();
     isFirstRender.current = false;
-  }, []);
+  }, [orgId]);
 
   // Refetch when filters change (skip initial render)
   useEffect(() => {
@@ -599,14 +606,28 @@ export default function OpportunitiesPage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <button
-                        onClick={() => createProposalFromOpportunity(opp)}
-                        disabled={creatingProposal}
-                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white text-sm rounded-lg hover:from-emerald-600 hover:to-blue-600 disabled:opacity-50 whitespace-nowrap"
-                      >
-                        <FileText className="w-4 h-4" />
-                        Create Proposal
-                      </button>
+                      {inPipelineIds.has(opp.id) ? (
+                        <button
+                          onClick={() => router.push('/pipeline')}
+                          className="flex items-center gap-2 px-4 py-2 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-sm rounded-lg hover:bg-emerald-500/25 whitespace-nowrap"
+                        >
+                          <Check className="w-4 h-4" />
+                          In Pipeline
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => addToPipeline(opp)}
+                          disabled={addingToPipelineId === opp.id}
+                          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white text-sm rounded-lg hover:from-emerald-600 hover:to-blue-600 disabled:opacity-50 whitespace-nowrap"
+                        >
+                          {addingToPipelineId === opp.id ? (
+                            <RefreshCw className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Target className="w-4 h-4" />
+                          )}
+                          Add to Pipeline
+                        </button>
+                      )}
                       {opp.sam_url && (
                         <a
                           href={opp.sam_url}
