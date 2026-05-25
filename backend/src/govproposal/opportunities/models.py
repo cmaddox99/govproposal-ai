@@ -100,6 +100,11 @@ class Opportunity(Base):
         String(50), nullable=False, default="sam_gov", server_default="sam_gov", index=True
     )
 
+    # Source document (for manually-uploaded opportunities, e.g. RFP PDFs)
+    source_document_path: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    source_document_filename: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    source_document_content_type: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+
     # Raw data from SAM.gov
     raw_data: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
 
