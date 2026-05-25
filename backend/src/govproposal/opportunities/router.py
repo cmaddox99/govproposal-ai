@@ -16,6 +16,7 @@ from govproposal.opportunities.extraction import extract_opportunity, extract_te
 from govproposal.opportunities.models import Opportunity
 from govproposal.opportunities.sam_service import SAMGovService
 from govproposal.opportunities.ebuy_service import EBuyOpenService
+from govproposal.opportunities.txsmartbuy_service import TxSmartBuyService
 from govproposal.config import settings
 from govproposal.events.bus import Event, event_bus
 from govproposal.events.types import EventTypes
@@ -50,6 +51,7 @@ class OpportunityResponse(BaseModel):
     sam_url: Optional[str] = None
     estimated_value: Optional[float] = None
     source: str = "sam_gov"
+    market: str = "federal"
 
     class Config:
         from_attributes = True
@@ -73,6 +75,7 @@ class SyncResponse(BaseModel):
 class OpportunityCreate(BaseModel):
     """Schema for manually creating an opportunity."""
     organization_id: str
+    market: str = Field(default="federal", pattern=r"^(federal|sled)$")
     title: str = Field(..., min_length=1, max_length=500)
     solicitation_number: Optional[str] = None
     description: Optional[str] = None
@@ -162,7 +165,8 @@ async def list_opportunities(
     deadline_to: Annotated[Optional[str], Query(description="Response deadline to date (YYYY-MM-DD)")] = None,
     date_from: Annotated[Optional[str], Query(description="Date from - matches posted date OR deadline (YYYY-MM-DD)")] = None,
     date_to: Annotated[Optional[str], Query(description="Date to - matches posted date OR deadline (YYYY-MM-DD)")] = None,
-    source: Annotated[Optional[str], Query(description="Source filter (sam_gov, gsa_ebuy)")] = None,
+    source: Annotated[Optional[str], Query(description="Source filter (sam_gov, gsa_ebuy, txsmartbuy, manual)")] = None,
+    market: Annotated[Optional[str], Query(description="Market filter: 'federal' or 'sled'")] = None,
     active_only: Annotated[bool, Query(description="Only show opportunities with future deadlines")] = True,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
@@ -293,6 +297,9 @@ async def list_opportunities(
     if source:
         conditions.append(Opportunity.source == source)
 
+    if market:
+        conditions.append(Opportunity.market == market)
+
     if conditions:
         query = query.where(and_(*conditions))
 
@@ -377,6 +384,7 @@ async def create_opportunity(
             )
 
     payload = data.model_dump(exclude={"organization_id"})
+    # market is already in payload; source is set explicitly here
     opp = Opportunity(
         notice_id=f"manual-{uuid4().hex}",
         source="manual",
@@ -677,6 +685,79 @@ async def sync_ebuy_opportunities(
         synced=synced,
         errors=errors,
         message=f"Successfully synced {synced} opportunities from GSA eBuy"
+        + (f" with {errors} errors" if errors else ""),
+    )
+
+
+@router.post("/sync-txsmartbuy", response_model=SyncResponse)
+async def sync_txsmartbuy_opportunities(
+    current_user: CurrentUser,
+    session: DbSession,
+    org_id: Annotated[str, Query(description="Organization ID")],
+    pages: Annotated[int, Query(ge=1, le=5, description="ESBD list pages to walk (~25 results each)")] = 1,
+    keywords: Annotated[Optional[str], Query(description="Optional keyword filter")] = None,
+) -> SyncResponse:
+    """Sync SLED opportunities from txsmartbuy.gov (Texas ESBD).
+
+    Walks the public Electronic State Business Daily list pages, parses each
+    solicitation, and upserts them tagged as source='txsmartbuy', market='sled'.
+    """
+    await _verify_org_member(session, current_user.id, org_id)
+
+    synced = 0
+    errors = 0
+
+    try:
+        service = TxSmartBuyService()
+        opportunities_data = await service.search_opportunities(
+            pages=pages,
+            keywords=keywords,
+        )
+
+        for parsed in opportunities_data:
+            try:
+                existing_query = select(Opportunity).where(
+                    Opportunity.notice_id == parsed["notice_id"]
+                )
+                existing = (await session.execute(existing_query)).scalar_one_or_none()
+
+                if existing:
+                    for key, value in parsed.items():
+                        if value is not None:
+                            setattr(existing, key, value)
+                    existing.last_synced_at = datetime.now(timezone.utc)
+                else:
+                    new_opp = Opportunity(**parsed)
+                    session.add(new_opp)
+
+                synced += 1
+            except Exception:
+                errors += 1
+                continue
+
+        await session.commit()
+
+    except Exception as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Failed to sync from txsmartbuy.gov: {str(exc)}",
+        )
+
+    await event_bus.publish(Event(
+        type=EventTypes.OPPORTUNITY_SYNCED,
+        data={
+            "actor_id": current_user.id,
+            "organization_id": org_id,
+            "count": synced,
+            "new_count": synced,
+            "source": "txsmartbuy",
+        },
+    ))
+
+    return SyncResponse(
+        synced=synced,
+        errors=errors,
+        message=f"Successfully synced {synced} opportunities from txsmartbuy.gov"
         + (f" with {errors} errors" if errors else ""),
     )
 

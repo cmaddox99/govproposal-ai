@@ -100,6 +100,12 @@ class Opportunity(Base):
         String(50), nullable=False, default="sam_gov", server_default="sam_gov", index=True
     )
 
+    # Market: 'federal' (SAM.gov / eBuy / federal-manual) or 'sled' (state/local/education,
+    # currently sourced from txsmartbuy.gov). Drives the global Federal / SLED view switcher.
+    market: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="federal", server_default="federal", index=True
+    )
+
     # Source document (for manually-uploaded opportunities, e.g. RFP PDFs)
     source_document_path: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     source_document_filename: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)

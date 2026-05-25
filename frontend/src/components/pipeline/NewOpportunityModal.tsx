@@ -15,6 +15,7 @@ import { opportunitiesApi, pipelineApi } from '@/lib/api';
 
 interface Props {
   orgId: string;
+  market: 'federal' | 'sled';
   mode: 'manual' | 'smart';
   onClose: () => void;
   onCreated: () => void; // refresh callback for the parent list
@@ -98,7 +99,7 @@ const NOTICE_TYPE_OPTIONS = [
   { value: 'special_notice', label: 'Special Notice' },
 ];
 
-export default function NewOpportunityModal({ orgId, mode, onClose, onCreated }: Props) {
+export default function NewOpportunityModal({ orgId, market, mode, onClose, onCreated }: Props) {
   const [form, setForm] = useState<FormState>(EMPTY);
   const [extracting, setExtracting] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -176,6 +177,7 @@ export default function NewOpportunityModal({ orgId, mode, onClose, onCreated }:
     try {
       const payload: Record<string, any> = {
         organization_id: orgId,
+        market,
         title: form.title.trim(),
         notice_type: form.notice_type || 'solicitation',
       };
