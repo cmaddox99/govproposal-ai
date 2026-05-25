@@ -214,6 +214,20 @@ export const opportunityDocumentsApi = {
 export const opportunitiesApi = {
   list: (params: { org_id?: string; limit?: number }) =>
     api.get('/api/v1/opportunities', { params }),
+  create: (data: Record<string, any>) =>
+    api.post('/api/v1/opportunities', data),
+  extract: (orgId: string, file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post(
+      `/api/v1/opportunities/extract?org_id=${encodeURIComponent(orgId)}`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 120000,
+      }
+    );
+  },
 };
 
 // Assistant API

@@ -23,8 +23,11 @@ import {
   Square,
   X,
   Paperclip,
+  Sparkles,
+  Plus,
 } from 'lucide-react';
 import OpportunityDocumentsModal from '@/components/pipeline/OpportunityDocumentsModal';
+import NewOpportunityModal from '@/components/pipeline/NewOpportunityModal';
 import { useOrgId } from '@/lib/useOrgId';
 
 type PipelineStatus = 'active' | 'archived' | 'no_bid';
@@ -129,6 +132,7 @@ export default function PipelinePage() {
   const [creatingProposalFor, setCreatingProposalFor] = useState<string | null>(null);
   const [showBreakdownFor, setShowBreakdownFor] = useState<string | null>(null);
   const [documentsModalFor, setDocumentsModalFor] = useState<PipelineItem | null>(null);
+  const [newOpportunityMode, setNewOpportunityMode] = useState<'manual' | 'smart' | null>(null);
 
   const fetchPipeline = useCallback(async () => {
     if (!orgId) return;
@@ -278,7 +282,7 @@ export default function PipelinePage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-3">
             <Target className="w-7 h-7 text-emerald-400" />
@@ -287,6 +291,23 @@ export default function PipelinePage() {
           <p className="text-gray-400 mt-1">
             Opportunities you&apos;re actively pursuing — scored by past-performance fit
           </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setNewOpportunityMode('smart')}
+            title="Upload an RFP — AI will extract opportunity fields"
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 text-sm"
+          >
+            <Sparkles className="w-4 h-4" />
+            Smart Upload
+          </button>
+          <button
+            onClick={() => setNewOpportunityMode('manual')}
+            className="flex items-center gap-2 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm"
+          >
+            <Plus className="w-4 h-4" />
+            Add Manually
+          </button>
         </div>
       </div>
 
@@ -591,6 +612,18 @@ export default function PipelinePage() {
           opportunityId={documentsModalFor.opportunity_id}
           opportunityTitle={documentsModalFor.opportunity.title}
           onClose={() => setDocumentsModalFor(null)}
+        />
+      )}
+
+      {newOpportunityMode && orgId && (
+        <NewOpportunityModal
+          orgId={orgId}
+          mode={newOpportunityMode}
+          onClose={() => setNewOpportunityMode(null)}
+          onCreated={() => {
+            setSuccessMessage('Opportunity added to pipeline.');
+            fetchPipeline();
+          }}
         />
       )}
     </div>

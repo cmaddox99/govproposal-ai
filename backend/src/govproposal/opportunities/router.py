@@ -2,8 +2,9 @@
 
 from datetime import datetime, timedelta, timezone
 from typing import Annotated, Optional, List
+from uuid import uuid4
 
-from fastapi import APIRouter, Depends, Query, HTTPException, status
+from fastapi import APIRouter, Depends, File, Query, HTTPException, UploadFile, status
 from pydantic import BaseModel, Field
 from sqlalchemy import select, or_, and_
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,12 +12,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from govproposal.db.base import get_db
 from govproposal.identity.dependencies import CurrentUser
 from govproposal.identity.models import Organization, OrganizationMember
+from govproposal.opportunities.extraction import extract_opportunity, extract_text
 from govproposal.opportunities.models import Opportunity
 from govproposal.opportunities.sam_service import SAMGovService
 from govproposal.opportunities.ebuy_service import EBuyOpenService
 from govproposal.config import settings
 from govproposal.events.bus import Event, event_bus
 from govproposal.events.types import EventTypes
+from govproposal.storage import get_storage
 
 router = APIRouter(prefix="/api/v1/opportunities", tags=["opportunities"])
 
@@ -65,6 +68,81 @@ class SyncResponse(BaseModel):
     synced: int
     errors: int
     message: str
+
+
+class OpportunityCreate(BaseModel):
+    """Schema for manually creating an opportunity."""
+    organization_id: str
+    title: str = Field(..., min_length=1, max_length=500)
+    solicitation_number: Optional[str] = None
+    description: Optional[str] = None
+    department: Optional[str] = None
+    agency: Optional[str] = None
+    office: Optional[str] = None
+    notice_type: str = "solicitation"
+    naics_code: Optional[str] = None
+    naics_description: Optional[str] = None
+    set_aside_type: Optional[str] = None
+    posted_date: Optional[datetime] = None
+    response_deadline: Optional[datetime] = None
+    estimated_value: Optional[float] = None
+    place_of_performance_city: Optional[str] = None
+    place_of_performance_state: Optional[str] = None
+    primary_contact_name: Optional[str] = None
+    primary_contact_email: Optional[str] = None
+    primary_contact_phone: Optional[str] = None
+    sam_url: Optional[str] = None
+    # Reference to a previously-uploaded source document (from /extract)
+    source_document_path: Optional[str] = None
+    source_document_filename: Optional[str] = None
+    source_document_content_type: Optional[str] = None
+
+
+class OpportunityExtractedFields(BaseModel):
+    """Suggested opportunity fields parsed from an uploaded document."""
+    title: Optional[str] = None
+    solicitation_number: Optional[str] = None
+    agency: Optional[str] = None
+    department: Optional[str] = None
+    office: Optional[str] = None
+    naics_code: Optional[str] = None
+    naics_description: Optional[str] = None
+    set_aside_type: Optional[str] = None
+    notice_type: Optional[str] = None
+    response_deadline: Optional[datetime] = None
+    posted_date: Optional[datetime] = None
+    estimated_value: Optional[float] = None
+    place_of_performance_city: Optional[str] = None
+    place_of_performance_state: Optional[str] = None
+    primary_contact_name: Optional[str] = None
+    primary_contact_email: Optional[str] = None
+    primary_contact_phone: Optional[str] = None
+    description: Optional[str] = None
+    sam_url: Optional[str] = None
+    confidence: dict[str, float] = Field(default_factory=dict)
+
+
+class OpportunityExtractResponse(BaseModel):
+    """Response from the upload-and-extract endpoint.
+
+    The file is stored under source_document_path; pass that path back when
+    calling POST /opportunities to attach the file to the new record.
+    """
+    extracted: OpportunityExtractedFields
+    source_document_path: str
+    source_document_filename: str
+    source_document_content_type: Optional[str] = None
+    size_bytes: int
+    extraction_available: bool
+
+
+ALLOWED_EXTRACT_TYPES = {
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+    "text/csv",
+}
 
 
 @router.get("", response_model=OpportunityListResponse)
@@ -255,6 +333,158 @@ async def get_opportunity(
         raise HTTPException(status_code=404, detail="Opportunity not found")
 
     return OpportunityResponse.model_validate(opportunity)
+
+
+async def _verify_org_member(
+    session: AsyncSession, user_id: str, organization_id: str
+) -> None:
+    member = (
+        await session.execute(
+            select(OrganizationMember).where(
+                and_(
+                    OrganizationMember.organization_id == organization_id,
+                    OrganizationMember.user_id == user_id,
+                )
+            )
+        )
+    ).scalar_one_or_none()
+    if not member:
+        raise HTTPException(status_code=403, detail="Not a member of this organization")
+
+
+@router.post("", response_model=OpportunityResponse, status_code=status.HTTP_201_CREATED)
+async def create_opportunity(
+    data: OpportunityCreate,
+    current_user: CurrentUser,
+    session: DbSession,
+) -> OpportunityResponse:
+    """Manually create an opportunity (source='manual').
+
+    Use this for solicitations not surfaced by SAM.gov / eBuy sync, e.g.
+    direct agency outreach or paper RFPs that have been digitized.
+
+    If source_document_path is provided, it must belong to this org's
+    opportunity_uploads namespace (matches what /extract writes).
+    """
+    await _verify_org_member(session, current_user.id, data.organization_id)
+
+    if data.source_document_path:
+        expected_prefix = f"opportunity_uploads/{data.organization_id}/"
+        if not data.source_document_path.startswith(expected_prefix):
+            raise HTTPException(
+                status_code=400,
+                detail="source_document_path does not belong to this organization",
+            )
+
+    payload = data.model_dump(exclude={"organization_id"})
+    opp = Opportunity(
+        notice_id=f"manual-{uuid4().hex}",
+        source="manual",
+        is_active=True,
+        last_synced_at=datetime.now(timezone.utc),
+        **payload,
+    )
+    session.add(opp)
+    await session.commit()
+    await session.refresh(opp)
+    return OpportunityResponse.model_validate(opp)
+
+
+@router.post(
+    "/extract",
+    response_model=OpportunityExtractResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def extract_from_solicitation(
+    current_user: CurrentUser,
+    session: DbSession,
+    org_id: Annotated[str, Query(description="Organization ID")],
+    file: Annotated[UploadFile, File(...)],
+) -> OpportunityExtractResponse:
+    """Upload a solicitation document and get suggested opportunity field values.
+
+    The file is saved to storage. The returned source_document_path can be
+    passed to POST /opportunities to attach the file to the new record.
+    Nothing in the database is persisted by this endpoint.
+    """
+    await _verify_org_member(session, current_user.id, org_id)
+
+    if file.content_type and file.content_type not in ALLOWED_EXTRACT_TYPES:
+        raise HTTPException(
+            status_code=415,
+            detail=f"Unsupported file type for extraction: {file.content_type}",
+        )
+
+    storage = get_storage()
+    try:
+        stored = storage.write(
+            namespace="opportunity_uploads",
+            owner_id=org_id,
+            source=file.file,
+            original_filename=file.filename or "opportunity",
+            content_type=file.content_type,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=413, detail=str(exc)) from exc
+
+    text = extract_text(stored.absolute_path, stored.content_type, stored.original_filename)
+    raw = await extract_opportunity(text) if text else None
+
+    if not raw:
+        return OpportunityExtractResponse(
+            extracted=OpportunityExtractedFields(),
+            source_document_path=stored.relative_path,
+            source_document_filename=stored.original_filename,
+            source_document_content_type=stored.content_type,
+            size_bytes=stored.size_bytes,
+            extraction_available=False,
+        )
+
+    def _parse_date(value):
+        if not value:
+            return None
+        if isinstance(value, datetime):
+            return value
+        try:
+            return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        except (TypeError, ValueError):
+            return None
+
+    fields = OpportunityExtractedFields(
+        title=raw.get("title"),
+        solicitation_number=raw.get("solicitation_number"),
+        agency=raw.get("agency"),
+        department=raw.get("department"),
+        office=raw.get("office"),
+        naics_code=raw.get("naics_code"),
+        naics_description=raw.get("naics_description"),
+        set_aside_type=raw.get("set_aside_type"),
+        notice_type=raw.get("notice_type"),
+        response_deadline=_parse_date(raw.get("response_deadline")),
+        posted_date=_parse_date(raw.get("posted_date")),
+        estimated_value=raw.get("estimated_value"),
+        place_of_performance_city=raw.get("place_of_performance_city"),
+        place_of_performance_state=raw.get("place_of_performance_state"),
+        primary_contact_name=raw.get("primary_contact_name"),
+        primary_contact_email=raw.get("primary_contact_email"),
+        primary_contact_phone=raw.get("primary_contact_phone"),
+        description=raw.get("description"),
+        sam_url=raw.get("sam_url"),
+        confidence={
+            k: float(v)
+            for k, v in (raw.get("confidence") or {}).items()
+            if isinstance(v, (int, float))
+        },
+    )
+
+    return OpportunityExtractResponse(
+        extracted=fields,
+        source_document_path=stored.relative_path,
+        source_document_filename=stored.original_filename,
+        source_document_content_type=stored.content_type,
+        size_bytes=stored.size_bytes,
+        extraction_available=True,
+    )
 
 
 @router.post("/sync", response_model=SyncResponse)
