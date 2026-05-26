@@ -29,6 +29,7 @@ import {
 import OpportunityDocumentsModal from '@/components/pipeline/OpportunityDocumentsModal';
 import NewOpportunityModal from '@/components/pipeline/NewOpportunityModal';
 import { useOrgId } from '@/lib/useOrgId';
+import { useMarket } from '@/lib/useMarket';
 
 type PipelineStatus = 'active' | 'archived' | 'no_bid';
 type MatchTier = 'red' | 'yellow' | 'green';
@@ -46,6 +47,7 @@ interface OpportunitySummary {
   primary_contact_email: string | null;
   sam_url: string | null;
   source: string;
+  market: string;
 }
 
 interface PipelineItem {
@@ -123,6 +125,7 @@ function tierStyle(tier: MatchTier | null) {
 export default function PipelinePage() {
   const router = useRouter();
   const orgId = useOrgId();
+  const [market] = useMarket();
   const [items, setItems] = useState<PipelineItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -263,7 +266,9 @@ export default function PipelinePage() {
     }
   };
 
-  const filteredItems = items.filter((it) => {
+  const marketItems = items.filter((it) => (it.opportunity?.market ?? 'federal') === market);
+
+  const filteredItems = marketItems.filter((it) => {
     if (!searchQuery) return true;
     const q = searchQuery.toLowerCase();
     const opp = it.opportunity;
@@ -275,9 +280,9 @@ export default function PipelinePage() {
   });
 
   const counts = {
-    active: items.filter((i) => i.status === 'active').length,
-    archived: items.filter((i) => i.status === 'archived').length,
-    no_bid: items.filter((i) => i.status === 'no_bid').length,
+    active: marketItems.filter((i) => i.status === 'active').length,
+    archived: marketItems.filter((i) => i.status === 'archived').length,
+    no_bid: marketItems.filter((i) => i.status === 'no_bid').length,
   };
 
   return (
@@ -618,6 +623,7 @@ export default function PipelinePage() {
       {newOpportunityMode && orgId && (
         <NewOpportunityModal
           orgId={orgId}
+          market={market}
           mode={newOpportunityMode}
           onClose={() => setNewOpportunityMode(null)}
           onCreated={() => {

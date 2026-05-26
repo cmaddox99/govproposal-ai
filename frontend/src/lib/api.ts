@@ -212,7 +212,7 @@ export const opportunityDocumentsApi = {
 
 // Opportunities API
 export const opportunitiesApi = {
-  list: (params: { org_id?: string; limit?: number }) =>
+  list: (params: { org_id?: string; limit?: number; market?: string }) =>
     api.get('/api/v1/opportunities', { params }),
   create: (data: Record<string, any>) =>
     api.post('/api/v1/opportunities', data),
@@ -228,6 +228,20 @@ export const opportunitiesApi = {
       }
     );
   },
+  syncSam: (orgId: string) =>
+    api.post(`/api/v1/opportunities/sync?org_id=${encodeURIComponent(orgId)}`, null, {
+      timeout: 120000,
+    }),
+  syncEbuy: (orgId: string) =>
+    api.post(`/api/v1/opportunities/sync-ebuy?org_id=${encodeURIComponent(orgId)}`, null, {
+      timeout: 120000,
+    }),
+  syncTxSmartBuy: (orgId: string, pages = 1) =>
+    api.post(
+      `/api/v1/opportunities/sync-txsmartbuy?org_id=${encodeURIComponent(orgId)}&pages=${pages}`,
+      null,
+      { timeout: 300000 },
+    ),
 };
 
 // Assistant API

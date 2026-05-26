@@ -38,6 +38,7 @@ class OpportunitySummary(BaseModel):
     primary_contact_email: Optional[str] = None
     sam_url: Optional[str] = None
     source: str = "sam_gov"
+    market: str = "federal"
 
     class Config:
         from_attributes = True

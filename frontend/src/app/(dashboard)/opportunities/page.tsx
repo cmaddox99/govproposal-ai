@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useOrgId } from '@/lib/useOrgId';
+import { useMarket } from '@/lib/useMarket';
 import {
   Search,
   Filter,
@@ -52,10 +53,12 @@ const SET_ASIDE_OPTIONS = [
 export default function OpportunitiesPage() {
   const router = useRouter();
   const orgId = useOrgId();
+  const [market] = useMarket();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const [syncingEbuy, setSyncingEbuy] = useState(false);
+  const [syncingTxSmartBuy, setSyncingTxSmartBuy] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -100,7 +103,7 @@ export default function OpportunitiesPage() {
     try {
       const token = localStorage.getItem('token');
 
-      const params = new URLSearchParams({ org_id: orgId });
+      const params = new URLSearchParams({ org_id: orgId, market });
 
       if (f.set_aside_type.length > 0) {
         params.set('set_aside_type', f.set_aside_type.join(','));
@@ -210,6 +213,42 @@ export default function OpportunitiesPage() {
     }
   };
 
+  const syncTxSmartBuyOpportunities = async () => {
+    if (!orgId) return;
+    setSyncingTxSmartBuy(true);
+    setError('');
+    setSuccessMessage('');
+
+    try {
+      const token = localStorage.getItem('token');
+
+      const response = await fetch(
+        `/api/opportunities/sync-txsmartbuy?org_id=${orgId}&pages=1`,
+        {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(extractError(data.detail, 'Failed to sync txsmartbuy.gov opportunities'));
+      }
+
+      const data = await response.json();
+      if (data.synced === 0) {
+        setSuccessMessage('txsmartbuy.gov sync completed — no new solicitations parsed from the first page.');
+      } else {
+        setSuccessMessage(data.message);
+      }
+      await fetchOpportunities();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setSyncingTxSmartBuy(false);
+    }
+  };
+
   const addToPipeline = async (opportunity: Opportunity) => {
     if (!orgId) return;
     setAddingToPipelineId(opportunity.id);
@@ -284,13 +323,14 @@ export default function OpportunitiesPage() {
     }));
   };
 
-  // Initial fetch (re-runs when orgId becomes available)
+  // Initial fetch (re-runs when orgId or market changes)
   const isFirstRender = useRef(true);
   useEffect(() => {
     fetchOpportunities();
     loadPipelineIds();
     isFirstRender.current = false;
-  }, [orgId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orgId, market]);
 
   // Refetch when filters change (skip initial render)
   useEffect(() => {
@@ -357,25 +397,42 @@ export default function OpportunitiesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Opportunities</h1>
-          <p className="text-gray-400 mt-1">Discover and track government contract opportunities from SAM.gov and GSA eBuy</p>
+          <p className="text-gray-400 mt-1">
+            {market === 'federal'
+              ? 'Discover and track federal contract opportunities from SAM.gov and GSA eBuy'
+              : 'Discover and track state, local, and education opportunities from txsmartbuy.gov'}
+          </p>
         </div>
         <div className="flex items-center gap-3">
-          <button
-            onClick={syncOpportunities}
-            disabled={syncing}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-lg hover:from-emerald-600 hover:to-blue-600 disabled:opacity-50"
-          >
-            <RefreshCw className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
-            {syncing ? 'Syncing...' : 'Sync from SAM.gov'}
-          </button>
-          <button
-            onClick={syncEbuyOpportunities}
-            disabled={syncingEbuy}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 disabled:opacity-50"
-          >
-            <RefreshCw className={`w-4 h-4 ${syncingEbuy ? 'animate-spin' : ''}`} />
-            {syncingEbuy ? 'Syncing...' : 'Sync from GSA eBuy'}
-          </button>
+          {market === 'federal' ? (
+            <>
+              <button
+                onClick={syncOpportunities}
+                disabled={syncing}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-lg hover:from-emerald-600 hover:to-blue-600 disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
+                {syncing ? 'Syncing...' : 'Sync from SAM.gov'}
+              </button>
+              <button
+                onClick={syncEbuyOpportunities}
+                disabled={syncingEbuy}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${syncingEbuy ? 'animate-spin' : ''}`} />
+                {syncingEbuy ? 'Syncing...' : 'Sync from GSA eBuy'}
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={syncTxSmartBuyOpportunities}
+              disabled={syncingTxSmartBuy}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-lg hover:from-emerald-600 hover:to-blue-600 disabled:opacity-50"
+            >
+              <RefreshCw className={`w-4 h-4 ${syncingTxSmartBuy ? 'animate-spin' : ''}`} />
+              {syncingTxSmartBuy ? 'Syncing...' : 'Sync from txsmartbuy.gov'}
+            </button>
+          )}
         </div>
       </div>
 
