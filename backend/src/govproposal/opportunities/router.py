@@ -184,11 +184,14 @@ async def list_opportunities(
     if not member:
         raise HTTPException(status_code=403, detail="Not a member of this organization")
 
-    # Only apply org NAICS codes when no other filters are active
+    # Only apply org NAICS codes when no other filters are active.
+    # Note: 'market' counts as a filter — federal NAICS codes don't apply to
+    # SLED opportunities (which carry Texas NIGP codes in naics_code), so
+    # auto-filtering by the org's NAICS would hide every SLED result.
     has_filters = any([
         set_aside_type, value_min is not None, value_max is not None,
         posted_from, posted_to, deadline_from, deadline_to,
-        date_from, date_to, source, keywords,
+        date_from, date_to, source, keywords, market,
     ])
     if not naics_codes and not has_filters:
         org_query = select(Organization).where(Organization.id == org_id)
