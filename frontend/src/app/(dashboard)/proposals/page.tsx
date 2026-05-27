@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { proposalsApi } from '@/lib/api';
 import { useOrgId } from '@/lib/useOrgId';
+import { useMarket } from '@/lib/useMarket';
 import { Proposal, ProposalStatus } from '@/types';
 
 const statusColors: Record<ProposalStatus, string> = {
@@ -49,6 +50,7 @@ export default function ProposalsPage() {
   const [total, setTotal] = useState(0);
   const [offset, setOffset] = useState(0);
   const orgId = useOrgId();
+  const [market] = useMarket();
 
   const extractError = (detail: any, fallback: string): string => {
     if (!detail) return fallback;
@@ -66,6 +68,7 @@ export default function ProposalsPage() {
       const response = await proposalsApi.list({
         org_id: orgId,
         status_filter: statusFilter || undefined,
+        market,
         limit: LIMIT,
         offset,
       });
@@ -83,7 +86,8 @@ export default function ProposalsPage() {
 
   useEffect(() => {
     fetchProposals();
-  }, [orgId, statusFilter, offset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orgId, statusFilter, offset, market]);
 
   const filteredProposals = proposals.filter(
     (p) =>

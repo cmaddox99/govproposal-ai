@@ -40,6 +40,7 @@ class ProposalCreate(BaseModel):
     title: str
     description: Optional[str] = None
     opportunity_id: Optional[str] = None
+    market: str = Field(default="federal", pattern=r"^(federal|sled)$")
     solicitation_number: Optional[str] = None
     agency: Optional[str] = None
     naics_code: Optional[str] = None
@@ -73,6 +74,7 @@ class ProposalResponse(BaseModel):
     title: str
     description: Optional[str] = None
     status: str
+    market: str = "federal"
     solicitation_number: Optional[str] = None
     agency: Optional[str] = None
     naics_code: Optional[str] = None
@@ -148,7 +150,8 @@ async def create_proposal(
     if not member:
         raise HTTPException(status_code=403, detail="Not a member of this organization")
 
-    # If opportunity_id provided, copy data from opportunity
+    # If opportunity_id provided, copy data from opportunity (including market)
+    market = data.market
     if data.opportunity_id:
         opp_query = select(Opportunity).where(Opportunity.id == data.opportunity_id)
         opportunity = (await session.execute(opp_query)).scalar_one_or_none()
@@ -165,6 +168,9 @@ async def create_proposal(
                 data.due_date = opportunity.response_deadline
             if not data.estimated_value and opportunity.estimated_value:
                 data.estimated_value = float(opportunity.estimated_value)
+            # Always inherit market from the linked opportunity — a proposal
+            # for a SLED opportunity is itself a SLED proposal.
+            market = opportunity.market
 
     proposal = Proposal(
         organization_id=data.organization_id,
@@ -176,6 +182,7 @@ async def create_proposal(
         naics_code=data.naics_code,
         due_date=data.due_date,
         estimated_value=data.estimated_value,
+        market=market,
         created_by=current_user.id,
     )
 
@@ -215,6 +222,7 @@ async def list_proposals(
     session: DbSession,
     org_id: Annotated[str, Query(description="Organization ID")],
     status_filter: Annotated[Optional[str], Query(description="Status filter")] = None,
+    market: Annotated[Optional[str], Query(description="Market filter: 'federal' or 'sled'")] = None,
     limit: Annotated[int, Query(ge=1, le=100)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> ProposalListResponse:
@@ -236,11 +244,15 @@ async def list_proposals(
 
     if status_filter:
         query = query.where(Proposal.status == status_filter)
+    if market:
+        query = query.where(Proposal.market == market)
 
     # Get total count
     count_query = select(Proposal.id).where(Proposal.organization_id == org_id)
     if status_filter:
         count_query = count_query.where(Proposal.status == status_filter)
+    if market:
+        count_query = count_query.where(Proposal.market == market)
     total_result = await session.execute(count_query)
     total = len(total_result.all())
 
@@ -794,6 +806,7 @@ async def create_proposal_from_opportunity(
         solicitation_number=opportunity.solicitation_number, agency=opportunity.agency,
         naics_code=opportunity.naics_code, due_date=opportunity.response_deadline,
         estimated_value=float(opportunity.estimated_value) if opportunity.estimated_value else None,
+        market=opportunity.market,
         created_by=current_user.id,
     )
 

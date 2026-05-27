@@ -65,6 +65,13 @@ class Proposal(Base):
     agency: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     naics_code: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)
 
+    # Market: 'federal' or 'sled'. Inherited from the linked opportunity when
+    # created via /from-opportunity; otherwise set on manual create (default
+    # federal). Drives the global Federal / SLED view switcher.
+    market: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="federal", server_default="federal", index=True
+    )
+
     # Dates
     due_date: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     submitted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)

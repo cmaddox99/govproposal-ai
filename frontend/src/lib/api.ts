@@ -131,7 +131,7 @@ export const scoringApi = {
 
 // Proposals API
 export const proposalsApi = {
-  list: (params?: { org_id?: string; status_filter?: string; limit?: number; offset?: number }) =>
+  list: (params?: { org_id?: string; status_filter?: string; market?: string; limit?: number; offset?: number }) =>
     api.get('/api/v1/proposals', { params }),
   get: (proposalId: string) =>
     api.get(`/api/v1/proposals/${proposalId}`),
