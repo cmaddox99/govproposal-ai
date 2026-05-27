@@ -125,33 +125,48 @@ def _extract_list_entries(html: str) -> list[_ListEntry]:
 
 
 def _parse_detail(solicitation_id: str, html: str, detail_url: str) -> Optional[dict[str, Any]]:
-    """Parse a /esbd/{id} detail page into an Opportunity-shaped dict."""
+    """Parse a /esbd/{id} detail page into an Opportunity-shaped dict.
+
+    ESBD pages use a fixed structure:
+      - <h1> is always the site banner ("Electronic State Business Daily")
+      - The first <h2> is the solicitation title
+      - Fields are key/value pairs with these exact labels:
+          "Solicitation ID:", "Status:", "Contact Name:",
+          "Contact Number:", "Contact Email:",
+          "Response Due Date:", "Response Due Time:",
+          "Agency/Texas SmartBuy Member Number:",
+          "Solicitation Posting Date:", "Last Modified:",
+          "Class/Item Code:", "Highway Districts:"
+    """
     soup = BeautifulSoup(html, "html.parser")
 
-    # Title — try h1 / h2, fall back to a "Title:" label
+    # Title — the first <h2> (the only <h1> is the site banner)
     title = ""
-    for tag in ["h1", "h2"]:
-        h = soup.find(tag)
-        if h:
-            title = _clean(h.get_text())
-            if title:
-                break
+    h2 = soup.find("h2")
+    if h2:
+        title = _clean(h2.get_text())
     if not title:
         title = _label_value(soup, re.compile(r"^title", re.I))
 
     if not title:
-        # Without a title we don't store the record
         logger.info("txsmartbuy: skipping %s — no title parsed", solicitation_id)
         return None
 
-    agency = _label_value(soup, re.compile(r"agency", re.I))
-    posted = _label_value(soup, re.compile(r"posted\s*date", re.I))
-    deadline = _label_value(soup, re.compile(r"response\s*deadline|due\s*date|closing", re.I))
+    # Agency label includes the number, but the visible value is the agency
+    # name + number; we keep whatever the page renders.
+    agency = _label_value(soup, re.compile(r"^agency", re.I))
+    posted = _label_value(soup, re.compile(r"posting\s*date|solicitation\s*posting", re.I))
+    due_date = _label_value(soup, re.compile(r"response\s*due\s*date", re.I))
+    due_time = _label_value(soup, re.compile(r"response\s*due\s*time", re.I))
     contact_name = _label_value(soup, re.compile(r"contact\s*name", re.I))
-    contact_phone = _label_value(soup, re.compile(r"contact\s*phone|phone", re.I))
-    contact_email = _label_value(soup, re.compile(r"contact\s*email|email", re.I))
-    description = _label_value(soup, re.compile(r"description|scope", re.I))
-    nigp_text = _label_value(soup, re.compile(r"nigp|class\s*code|commodity\s*code", re.I))
+    # ESBD uses "Contact Number:" for the phone field
+    contact_phone = _label_value(soup, re.compile(r"contact\s*(number|phone)", re.I))
+    contact_email = _label_value(soup, re.compile(r"contact\s*email", re.I))
+    nigp_text = _label_value(soup, re.compile(r"class.?item|nigp|commodity\s*code", re.I))
+    status = _label_value(soup, re.compile(r"^status", re.I))
+
+    # Combine date + time into a single deadline string before parsing
+    deadline = " ".join(p for p in (due_date, due_time) if p) or None
 
     # First NIGP code (5 digits)
     nigp_code: Optional[str] = None
@@ -160,24 +175,42 @@ def _parse_detail(solicitation_id: str, html: str, detail_url: str) -> Optional[
         if match:
             nigp_code = match.group(1)
 
+    # Description: ESBD doesn't label this with "Description:" — the body
+    # copy lives in the main content area. Best-effort grab: the longest
+    # paragraph after the title, up to 5000 chars.
+    description: Optional[str] = None
+    longest_p = ""
+    for p in soup.find_all("p"):
+        text = _clean(p.get_text())
+        if len(text) > len(longest_p):
+            longest_p = text
+    if len(longest_p) > 60:
+        description = longest_p[:5000]
+
+    # Map ESBD status to is_active. Posted / Active = live; everything else
+    # (Awarded, Closed, No Award, Posting Cancelled) is not.
+    is_active = True
+    if status and status.lower() not in {"posted", "active", "open"}:
+        is_active = False
+
     return {
         "notice_id": f"txsmartbuy-{solicitation_id}",
         "solicitation_number": solicitation_id,
         "title": title[:500],
-        "description": description[:5000] if description else None,
+        "description": description,
         "agency": agency or None,
         "notice_type": "solicitation",
         "naics_code": nigp_code,
         "naics_description": nigp_text or None,
         "posted_date": _parse_date(posted),
-        "response_deadline": _parse_date(deadline),
+        "response_deadline": _parse_date(deadline) if deadline else None,
         "primary_contact_name": contact_name or None,
         "primary_contact_email": contact_email or None,
         "primary_contact_phone": contact_phone or None,
         "sam_url": detail_url,
         "source": "txsmartbuy",
         "market": "sled",
-        "is_active": True,
+        "is_active": is_active,
         "last_synced_at": datetime.now(timezone.utc),
     }
 

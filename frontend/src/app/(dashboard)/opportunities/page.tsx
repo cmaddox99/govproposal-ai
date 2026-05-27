@@ -693,7 +693,13 @@ export default function OpportunitiesPage() {
                           className="flex items-center gap-2 px-4 py-2 bg-white/[0.08] text-gray-300 text-sm rounded-lg hover:bg-white/[0.12] whitespace-nowrap"
                         >
                           <ExternalLink className="w-4 h-4" />
-                          {opp.source === 'gsa_ebuy' ? 'View on eBuy' : 'View on SAM.gov'}
+                          {opp.source === 'gsa_ebuy'
+                            ? 'View on eBuy'
+                            : opp.source === 'txsmartbuy'
+                              ? 'View on txsmartbuy.gov'
+                              : opp.source === 'manual'
+                                ? 'View Source'
+                                : 'View on SAM.gov'}
                         </a>
                       )}
                     </div>
