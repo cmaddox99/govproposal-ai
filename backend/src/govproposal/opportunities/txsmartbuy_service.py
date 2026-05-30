@@ -24,6 +24,7 @@ the opportunity's market.
 from __future__ import annotations
 
 import asyncio
+import codecs
 import logging
 import re
 from dataclasses import dataclass
@@ -34,6 +35,27 @@ import httpx
 from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
+
+
+def _cp1252_fallback(err: UnicodeDecodeError) -> tuple[str, int]:
+    """Decode stray cp1252 bytes that are invalid in UTF-8.
+
+    ESBD pages are served as charset=utf-8 but contain occasional
+    Windows-1252 punctuation (smart quotes, em dashes) that is not valid
+    UTF-8. Plain decoding turns those into U+FFFD (mojibake). This handler
+    decodes just the offending bytes as cp1252, recovering the original
+    character while leaving valid UTF-8 untouched.
+    """
+    bad = err.object[err.start:err.end]
+    return bad.decode("cp1252", errors="replace"), err.end
+
+
+codecs.register_error("cp1252_fallback", _cp1252_fallback)
+
+
+def _decode(resp: httpx.Response) -> str:
+    """Decode an ESBD response, recovering stray cp1252 punctuation."""
+    return resp.content.decode("utf-8", errors="cp1252_fallback")
 
 
 BASE_URL = "https://www.txsmartbuy.gov"
@@ -48,6 +70,7 @@ INTER_REQUEST_DELAY_SECONDS = 0.25
 class _ListEntry:
     solicitation_id: str
     url: str
+    title: str = ""
 
 
 def _abs_url(href: str) -> str:
@@ -120,11 +143,28 @@ def _extract_list_entries(html: str) -> list[_ListEntry]:
         if solicitation_id in seen:
             continue
         seen.add(solicitation_id)
-        entries.append(_ListEntry(solicitation_id=solicitation_id, url=_abs_url(a["href"])))
+        # The link text on the list row is the real solicitation title.
+        # Detail pages don't reliably expose it (some have no <h2>, others
+        # put a sub-section heading there), so capture it here. Strip a
+        # leading "{id} - " prefix some rows carry.
+        title = _clean(a.get_text())
+        title = re.sub(rf"^{re.escape(solicitation_id)}\s*[-–]\s*", "", title)
+        entries.append(
+            _ListEntry(
+                solicitation_id=solicitation_id,
+                url=_abs_url(a["href"]),
+                title=title,
+            )
+        )
     return entries
 
 
-def _parse_detail(solicitation_id: str, html: str, detail_url: str) -> Optional[dict[str, Any]]:
+def _parse_detail(
+    solicitation_id: str,
+    html: str,
+    detail_url: str,
+    list_title: str = "",
+) -> Optional[dict[str, Any]]:
     """Parse a /esbd/{id} detail page into an Opportunity-shaped dict.
 
     ESBD pages use a fixed structure:
@@ -140,11 +180,16 @@ def _parse_detail(solicitation_id: str, html: str, detail_url: str) -> Optional[
     """
     soup = BeautifulSoup(html, "html.parser")
 
-    # Title — the first <h2> (the only <h1> is the site banner)
-    title = ""
-    h2 = soup.find("h2")
-    if h2:
-        title = _clean(h2.get_text())
+    # Title — prefer the list-row link text, which is the actual
+    # solicitation title. Detail pages are unreliable: some have no <h2>
+    # (opportunity would be dropped), others put a sub-section heading in
+    # the first <h2>. Fall back to <h2>/label only when the list title is
+    # unavailable.
+    title = _clean(list_title)
+    if not title:
+        h2 = soup.find("h2")
+        if h2:
+            title = _clean(h2.get_text())
     if not title:
         title = _label_value(soup, re.compile(r"^title", re.I))
 
@@ -260,7 +305,7 @@ class TxSmartBuyService:
                     logger.warning("txsmartbuy list fetch failed (page %d): %s", page, exc)
                     continue
 
-                entries = _extract_list_entries(resp.text)
+                entries = _extract_list_entries(_decode(resp))
                 if not entries:
                     logger.info("txsmartbuy: page %d returned no entries", page)
                     break
@@ -283,7 +328,12 @@ class TxSmartBuyService:
                         )
                         continue
 
-                    parsed = _parse_detail(entry.solicitation_id, detail_resp.text, entry.url)
+                    parsed = _parse_detail(
+                        entry.solicitation_id,
+                        _decode(detail_resp),
+                        entry.url,
+                        list_title=entry.title,
+                    )
                     if parsed is None:
                         continue
 
