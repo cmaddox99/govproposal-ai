@@ -56,3 +56,10 @@ htmlcov/
 .cache/
 .vercel
 .env*.local
+
+# Local deploy/auth experiments and generated docs (not part of the app)
+fix-dns.js
+vercel-auth.js
+backend/fly.toml
+docs/convert_status.py
+docs/*.docx
