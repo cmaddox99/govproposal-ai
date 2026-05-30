@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 1 — Identify | BFF TS Avatar Clinic</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; color: #1a1a2e; margin: 0; padding: 24px; }
+  h1 { font-size: 1.6rem; font-weight: 700; }
+  h2 { font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; border-bottom: 2px solid #e0e0e0; padding-bottom: 6px; }
+  .header { background: linear-gradient(135deg, #4527a0, #311b92); color: white; border-radius: 10px; padding: 24px 28px; margin-bottom: 28px; }
+  .header .meta { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .header .meta span { background: rgba(255,255,255,0.18); border-radius: 6px; padding: 4px 12px; font-size: 0.82rem; }
+  .section { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+  th { background: #f0f4f8; font-weight: 600; text-align: left; padding: 8px 10px; border-bottom: 2px solid #dde; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; }
+  .found { background: #e8f5e9; color: #2e7d32; }
+  .warn { background: #fff8e1; color: #e65100; }
+  .blocking { background: #fce4ec; color: #880e4f; }
+  .verdict { padding: 14px 18px; border-radius: 8px; font-weight: 600; margin-top: 16px; }
+  .verdict.green { background: #e8f5e9; color: #1b5e20; border-left: 5px solid #43a047; }
+  .verdict.amber { background: #fff8e1; color: #e65100; border-left: 5px solid #ffb300; }
+  code { font-size: 0.82rem; background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+  footer { text-align: center; color: #aaa; font-size: 0.78rem; margin-top: 32px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🔎 Phase 1 — Identify</h1>
+  <p>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF TypeScript Session</p>
+  <div class="meta"><span>📅 2026-04-27</span><span>3 target avatars</span><span>All found in registry</span></div>
+</div>
+
+<div class="section">
+  <h2>Target Avatar Registry Check</h2>
+  <table>
+    <thead><tr><th>Avatar ID</th><th>Path</th><th>Version</th><th>In Registry</th><th>Manifest ID Match</th></tr></thead>
+    <tbody>
+      <tr><td><code>avatar-nodejs-typescript</code></td><td><code>technology/nodejs-typescript/</code></td><td>2.0.0</td><td><span class="badge found">✅ Found</span></td><td><span class="badge found">✅ Match</span></td></tr>
+      <tr><td><code>avatar-check-in-travel</code></td><td><code>product-type/check-in-travel/</code></td><td>1.3.0</td><td><span class="badge found">✅ Found</span></td><td><span class="badge found">✅ Match</span></td></tr>
+      <tr><td><code>avatar-passenger-booking</code></td><td><code>product-type/passenger-booking/</code></td><td>1.3.0</td><td><span class="badge found">✅ Found</span></td><td><span class="badge found">✅ Match</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>nodejs-typescript Manifest Pre-scan</h2>
+  <table>
+    <thead><tr><th>Check</th><th>Finding</th><th>Severity</th></tr></thead>
+    <tbody>
+      <tr><td>Avatar ID</td><td><code>avatar-nodejs-typescript</code> — correct</td><td><span class="badge found">✅ OK</span></td></tr>
+      <tr><td>Version</td><td>2.0.0</td><td><span class="badge found">✅ OK</span></td></tr>
+      <tr><td>skill- prefix in activates.skills</td><td><code>skill-06-atomic-tdd</code>, <code>skill-07-vertical-slice-dev</code>, <code>skill-08-code-review</code>, <code>skill-04-business-domain-modeling</code> — all have incorrect prefix</td><td><span class="badge warn">⚠️ ADVISORY</span></td></tr>
+      <tr><td>ENG-10.1 + ENG-11.1 in specializes_laws</td><td>Neither present</td><td><span class="badge warn">⚠️ ADVISORY</span></td></tr>
+      <tr><td>No use-cases/ directory</td><td>No use cases exist — enrichment opportunity</td><td><span class="badge warn">⚠️ ADVISORY</span></td></tr>
+      <tr><td>Skill file resolution (after prefix fix)</td><td>All 4 skill files resolve on disk</td><td><span class="badge found">✅ OK</span></td></tr>
+    </tbody>
+  </table>
+  <div class="verdict amber">⚠️ 3 advisories in manifest — no BLOCKING manifest issues. Token budget scan will surface file BLOCKINGs.</div>
+</div>
+
+<footer>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF TypeScript Session · 2026-04-27</footer>
+</body>
+</html>

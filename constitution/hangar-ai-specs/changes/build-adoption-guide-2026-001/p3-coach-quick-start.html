@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en"
+  data-page-id="P3-TC"
+  data-registry-version="2.0.0"
+  data-render-timestamp="2026-05-06T20:22:00Z">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technical Coach Quick Start — Hangar AI Constitution</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   ADOPTION GUIDE DESIGN SYSTEM v2 — ENG-13.1 ⛔ COMPLIANT
+   Zero external deps. System fonts only. Inner pages.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── RESET & TOKENS ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #132033;
+  background:
+    radial-gradient(circle at top right, rgba(199,155,44,0.12), transparent 30%),
+    radial-gradient(circle at left 20%, rgba(0,51,102,0.06), transparent 25%),
+    linear-gradient(180deg, #fdfcf8 0%, #f2f5fa 50%, #f8f2ea 100%);
+  min-height: 100vh;
+}
+a { color: inherit; }
+h1,h2,h3,h4 {
+  margin: 0;
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-weight: 700;
+  line-height: 1.08;
+}
+p { margin: 0 0 1rem; }
+ul, ol { margin: 0 0 1rem; padding-left: 1.4rem; }
+li { margin-bottom: 0.4rem; }
+code {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88em;
+  background: rgba(0,51,102,0.07);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+pre {
+  background: #0f1f3d;
+  color: #e8f0f8;
+  padding: 20px;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────────────── */
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+main { padding-bottom: 72px; }
+section { margin-top: 56px; }
+.section-head { margin-bottom: 28px; }
+.section-label {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #cc0000;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.section-head h2 {
+  font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+  letter-spacing: -0.03em;
+  color: #132033;
+}
+.section-head p {
+  margin: 12px 0 0;
+  max-width: 680px;
+  color: #566579;
+  font-size: 1rem;
+}
+
+/* ── STICKY NAV ──────────────────────────────────────────────────── */
+.site-nav {
+  background: #001a40;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+  gap: 16px;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.88);
+  text-decoration: none;
+}
+.nav-brand-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fff, #f7ca66);
+  flex-shrink: 0;
+}
+.nav-links { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.nav-link {
+  color: rgba(255,255,255,0.68);
+  text-decoration: none;
+  font-size: 0.83rem;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+.nav-link:hover { color: #fff; }
+.btn-nav-home {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: #fff;
+  font-size: 0.80rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btn-nav-home:hover { background: rgba(255,255,255,0.18); }
+
+/* ── PAGE HERO ───────────────────────────────────────────────────── */
+.page-hero-wrap { padding: 36px 0 28px; }
+.page-hero {
+  padding: 44px 44px 40px;
+  border-radius: 30px;
+  background: linear-gradient(140deg, #001a40 0%, #003366 58%, #0d4080 100%);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 20px 60px rgba(0,26,64,0.22);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: auto -8% -40% 55%;
+  height: 280px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+  transform: rotate(-8deg);
+}
+.page-hero::after {
+  content: "";
+  position: absolute;
+  right: -50px; top: -50px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.07);
+  pointer-events: none;
+}
+.eyebrow {
+  display: inline-block;
+  color: #ffd880;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.page-hero h1 {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-top: 14px;
+  text-shadow: 0 2px 20px rgba(0,26,64,0.30);
+}
+.page-hero .subtitle {
+  margin: 16px 0 0;
+  max-width: 680px;
+  color: rgba(255,255,255,0.80);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+.persona-routing { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.routing-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* ── CONTENT CARDS ───────────────────────────────────────────────── */
+.card {
+  padding: 28px 26px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  box-shadow: 0 14px 36px rgba(0,26,64,0.09);
+  margin-bottom: 16px;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 48px rgba(0,26,64,0.14);
+}
+.card h3 {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: #132033;
+  margin-bottom: 10px;
+}
+
+/* ── CALLOUTS ────────────────────────────────────────────────────── */
+.callout-warning, .callout-amber {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(255,215,0,0.08); border-left: 4px solid #c79b2c;
+  margin: 12px 0;
+}
+.callout-danger, .callout-red {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(204,0,0,0.06); border-left: 4px solid #cc0000;
+  margin: 12px 0;
+}
+.callout-info, .callout-blue {
+  padding: 16px 20px; border-radius: 14px;
+  background: #eaf0f7; border-left: 4px solid #0066cc;
+  margin: 12px 0;
+}
+.callout-success, .callout-green {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(0,153,76,0.07); border-left: 4px solid #009934;
+  margin: 12px 0;
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: #003366;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-primary:hover { background: #001a40; transform: translateY(-1px); }
+
+.btn-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: rgba(0,51,102,0.08);
+  border: 1px solid rgba(0,51,102,0.14);
+  color: #003366;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.btn-copy:hover { background: rgba(0,51,102,0.14); }
+.btn-copy.copied { background: rgba(0,153,76,0.12); border-color: rgba(0,153,76,0.20); color: #007a2e; }
+
+/* ── ACCORDIONS ──────────────────────────────────────────────────── */
+details {
+  border-radius: 14px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+details[open] { box-shadow: 0 8px 24px rgba(0,26,64,0.09); }
+summary {
+  padding: 18px 20px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #132033;
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  gap: 12px;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after {
+  content: "▾";
+  color: #566579;
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+  font-family: sans-serif;
+  flex-shrink: 0;
+}
+details[open] summary::after { transform: rotate(180deg); }
+.details-body { padding: 4px 20px 20px; }
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+th {
+  background: #003366;
+  color: #fff;
+  padding: 12px 14px;
+  font-size: 0.83rem;
+  text-align: left;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0,51,102,0.09);
+  vertical-align: top;
+  font-size: 0.92rem;
+  color: #132033;
+}
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: rgba(0,51,102,0.03); }
+
+/* ── TAGS / PILLS ────────────────────────────────────────────────── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #eaf0f7;
+  color: #003366;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.tag-gold { background: rgba(199,155,44,0.15); color: #7a5800; }
+.tag-red { background: rgba(204,0,0,0.08); color: #cc0000; }
+.tag-green { background: rgba(0,153,76,0.10); color: #007a2e; }
+.tag-navy { background: rgba(0,51,102,0.12); color: #003366; }
+
+/* ── PHASE STEPS (workflow pages) ────────────────────────────────── */
+.phase-step {
+  padding: 28px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  box-shadow: 0 14px 36px rgba(0,26,64,0.08);
+  margin-bottom: 20px;
+}
+.phase-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: #003366;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0,26,64,0.20);
+}
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.phase-header h3 {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: #132033;
+}
+
+/* ── GRID HELPERS ────────────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 820px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* ── FOOTER ──────────────────────────────────────────────────────── */
+footer {
+  background: #003366;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.82rem;
+  padding: 36px 24px;
+  text-align: center;
+  line-height: 2;
+  border-top: 2px solid #001a40;
+}
+.footer-inner { max-width: 1180px; margin: 0 auto; }
+.footer-title {
+  color: rgba(255,255,255,0.82);
+  font-weight: 700;
+  font-size: 0.92rem;
+  margin-bottom: 4px;
+}
+footer a { color: rgba(106,171,221,0.90); text-decoration: none; font-weight: 600; }
+footer a:hover { text-decoration: underline; color: #fff; }
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin-top: 12px;
+}
+.footer-sep { color: rgba(255,255,255,0.20); }
+
+/* ── PAGE-SPECIFIC TOKENS ────────────────────────────────────────── */
+:root {
+  --aa-navy: #003366;
+  --aa-red: #cc0000;
+  --aa-silver: #d0d6de;
+  --aa-blue: #0066cc;
+  --aa-light: #f0f4f8;
+  --eng: #1a6b3a;
+  --prd: #7b3f8c;
+  --bus: #b85c00;
+  --sprint-bg: #fffbea;
+  --sprint-border: #e6b800;
+  --agent-bg: #eef4ff;
+  --agent-border: #0066cc;
+  --agency-bg: #f0f7f0;
+  --agency-border: #1a6b3a;
+  --card-shadow: 0 2px 10px rgba(0,0,0,0.09);
+  --radius: 10px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ── PAGE LAYOUT ─────────────────────────────────────────────────── */
+.page { max-width: 960px; margin: 0 auto; padding: 32px 24px 72px; }
+
+/* ── ACCOMPLISH CHECKLIST ── */
+.accomplish-bar {
+  background: #fff; border-radius: var(--radius); box-shadow: var(--card-shadow);
+  border: 1px solid #e4eaf2; padding: 18px 24px; margin-bottom: 28px;
+  display: flex; gap: 32px; flex-wrap: wrap; align-items: center;
+}
+.accomplish-bar .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #666; white-space: nowrap; }
+.accomplish-items { display: flex; gap: 20px; flex-wrap: wrap; }
+.accomplish-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #2a3a50; }
+.accomplish-item .check { color: var(--aa-blue); font-size: 15px; }
+
+/* ── SECTION TITLES ── */
+.section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase;
+  color: #666; margin: 36px 0 14px; padding-bottom: 8px;
+  border-bottom: 1px solid #dde3ea;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title::before { content: ''; width: 3px; height: 14px; border-radius: 2px; background: var(--aa-blue); display: inline-block; }
+.section-title.sprint::before { background: var(--sprint-border); }
+.section-title.agent::before { background: var(--agent-border); }
+.section-title.agency::before { background: var(--agency-border); }
+.section-title.steps::before { background: var(--aa-red); }
+
+/* ── ⚡ 15-MINUTE SPRINT (DC-04) ── */
+.sprint-band {
+  background: var(--sprint-bg); border: 2px solid var(--sprint-border);
+  border-radius: var(--radius); padding: 24px 28px; margin-bottom: 8px;
+}
+.sprint-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.sprint-header h2 { font-size: 17px; font-weight: 700; color: #7a5500; }
+.sprint-badge { background: var(--sprint-border); color: #fff; border-radius: 12px; padding: 2px 10px; font-size: 11px; font-weight: 700; }
+.sprint-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 640px) { .sprint-steps { grid-template-columns: 1fr; } }
+.sprint-step {
+  background: #fff; border-radius: 8px; border: 1px solid #f0d060;
+  padding: 16px; display: flex; flex-direction: column; gap: 6px;
+}
+.sprint-step-num { font-size: 11px; font-weight: 700; color: #aa8800; text-transform: uppercase; letter-spacing: 0.8px; }
+.sprint-step-title { font-size: 14px; font-weight: 700; color: #4a3000; }
+.sprint-step-desc { font-size: 12px; color: #665500; line-height: 1.5; }
+.copy-btn {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 8px;
+  background: var(--aa-blue); color: #fff; border: none; border-radius: 5px;
+  padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: background 0.15s; font-family: var(--font);
+}
+.copy-btn:hover { background: #0055aa; }
+.copy-btn.copied { background: var(--eng); }
+
+/* ── 🤖 AGENT ROLE EXPLAINER (DC-03) ── */
+.agent-section {
+  background: var(--agent-bg); border: 1px solid #b8d0f0;
+  border-radius: var(--radius); padding: 24px 28px; margin-bottom: 8px;
+}
+.agent-section h2 { font-size: 16px; font-weight: 700; color: #003080; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.agent-section .dc-tag { font-size: 10px; font-weight: 600; background: #003366; color: #fff; border-radius: 4px; padding: 2px 7px; }
+.agent-section .sub { font-size: 13px; color: #2244aa; margin-bottom: 18px; }
+.agent-steps { display: flex; flex-direction: column; gap: 2px; }
+.agent-step {
+  display: grid; grid-template-columns: 32px 1fr;
+  gap: 12px; align-items: start; padding: 12px 0;
+  border-bottom: 1px solid #ccd8f0;
+}
+.agent-step:last-child { border-bottom: none; }
+.agent-step-icon { font-size: 20px; padding-top: 1px; }
+.agent-step-body {}
+.agent-step-trigger { font-size: 13px; font-weight: 700; color: #001a60; margin-bottom: 3px; }
+.agent-step-what { font-size: 13px; color: #2a3a70; line-height: 1.55; }
+.agent-step-why { font-size: 11px; color: #5566aa; margin-top: 4px; font-style: italic; }
+
+/* ── 🧭 HUMAN AGENCY (DC-07) ── */
+.agency-section {
+  background: var(--agency-bg); border: 2px solid var(--agency-border);
+  border-radius: var(--radius); padding: 24px 28px; margin-bottom: 8px;
+}
+.agency-section h2 { font-size: 16px; font-weight: 700; color: #0a4020; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.agency-section .dc-tag { font-size: 10px; font-weight: 600; background: var(--eng); color: #fff; border-radius: 4px; padding: 2px 7px; }
+.agency-section .sub { font-size: 13px; color: #1a5030; margin-bottom: 20px; font-weight: 600; }
+.agency-points { display: flex; flex-direction: column; gap: 14px; }
+.agency-point { display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: start; }
+.agency-point-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--eng); color: #fff; font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.agency-point-body {}
+.agency-point-title { font-size: 13px; font-weight: 700; color: #0a3820; margin-bottom: 3px; }
+.agency-point-desc { font-size: 13px; color: #1a4028; line-height: 1.6; }
+.agency-point-desc code { background: rgba(26,107,58,0.12); border-radius: 3px; padding: 1px 5px; font-family: monospace; font-size: 12px; color: #0a3820; }
+.sonar-callout {
+  background: #fff; border-left: 3px solid var(--eng); border-radius: 4px;
+  padding: 8px 14px; margin-top: 6px; font-size: 12px; color: #1a4028;
+}
+.sonar-callout strong { color: #0a3820; }
+
+/* ── FULL ADOPTION PATH (DC-01) ── */
+.steps-list { display: flex; flex-direction: column; gap: 4px; }
+.step-card {
+  background: #fff; border-radius: var(--radius); box-shadow: var(--card-shadow);
+  border: 1px solid #e4eaf2; overflow: hidden;
+}
+.step-header {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 22px; cursor: pointer;
+  transition: background 0.12s;
+  /* button reset for keyboard accessibility (R-14) */
+  background: none; border: none; width: 100%; text-align: left; font: inherit;
+}
+.step-header:hover { background: #f8fafc; }
+.step-num {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  background: var(--aa-navy); color: #fff; font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.step-title-block { flex: 1; }
+.step-title { font-size: 15px; font-weight: 700; color: var(--aa-navy); }
+.step-subtitle { font-size: 12px; color: #667; margin-top: 1px; }
+.step-chevron { color: #99a; font-size: 14px; transition: transform 0.18s; }
+.step-card.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 20px 68px; }
+.step-card.open .step-body { display: block; }
+.step-body p { font-size: 13px; color: #2a3a50; line-height: 1.7; margin-bottom: 10px; }
+.step-body p:last-child { margin-bottom: 0; }
+
+/* Q&A blocks */
+.qa-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.qa-item { background: var(--aa-light); border-radius: 6px; padding: 12px 16px; }
+.qa-q { font-size: 13px; font-weight: 700; color: var(--aa-navy); margin-bottom: 4px; }
+.qa-q::before { content: 'Q: '; color: var(--aa-blue); }
+.qa-a { font-size: 13px; color: #2a3a50; line-height: 1.6; }
+.qa-a a { color: var(--aa-blue); }
+
+/* What's Next */
+.whats-next {
+  background: #fff; border-radius: var(--radius); box-shadow: var(--card-shadow);
+  border: 1px solid #e4eaf2; border-top: 3px solid var(--aa-blue);
+  padding: 22px 26px;
+}
+.whats-next h3 { font-size: 15px; font-weight: 700; color: var(--aa-navy); margin-bottom: 14px; }
+.next-items { display: flex; flex-direction: column; gap: 10px; }
+.next-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #2a3a50; line-height: 1.6; }
+.next-item .icon { flex-shrink: 0; font-size: 16px; }
+.next-item a { color: var(--aa-blue); }
+
+/* ── PROMPT TEMPLATES (DC-05) ── */
+.templates-card {
+  background: #fff; border-radius: var(--radius); box-shadow: var(--card-shadow);
+  border: 1px solid #e4eaf2; border-left: 4px solid var(--prd);
+  padding: 20px 24px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+}
+.templates-card-text { flex: 1; min-width: 200px; }
+.templates-card-text h3 { font-size: 15px; font-weight: 700; color: var(--aa-navy); margin-bottom: 4px; }
+.templates-card-text p { font-size: 13px; color: #4a5a70; line-height: 1.6; }
+.btn-templates {
+  display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  background: var(--prd); color: #fff; border-radius: 6px; padding: 10px 18px;
+  text-decoration: none; font-size: 13px; font-weight: 600; transition: background 0.15s;
+}
+.btn-templates:hover { background: #632d75; }
+
+/* ── COACHING NOTES (DC-06, collapsed) ── */
+.coaching-notes {
+  background: #fdf8ff; border: 1px solid #d8c8e8; border-radius: var(--radius);
+  overflow: hidden; margin-bottom: 8px;
+}
+.coaching-notes summary {
+  padding: 14px 20px; cursor: pointer; font-size: 12px; font-weight: 700;
+  color: var(--prd); background: #f6eeff; border-bottom: 1px solid #d8c8e8;
+  list-style: none; display: flex; align-items: center; gap: 8px;
+}
+.coaching-notes summary::-webkit-details-marker { display: none; }
+.coaching-notes summary::before { content: '▶'; font-size: 9px; color: var(--prd); }
+.coaching-notes summary::after { display: none; }
+.coaching-notes[open] summary::before { content: '▼'; }
+.coaching-notes summary span.opt { margin-left: auto; font-size: 10px; font-weight: 400; color: #8866aa; }
+.coaching-notes-body { padding: 20px 24px; }
+.coaching-notes-body ol { padding-left: 18px; display: flex; flex-direction: column; gap: 12px; }
+.coaching-notes-body li { font-size: 13px; color: #2a1a40; line-height: 1.7; }
+.coaching-notes-body li strong { color: var(--prd); }
+
+/* ── PROMPT DISPLAY ── */
+.prompt-box {
+  background: #1a2332; color: #c8daf0; border-radius: 6px;
+  padding: 14px 16px; font-family: monospace; font-size: 12px;
+  line-height: 1.7; white-space: pre-wrap; margin-top: 12px; margin-bottom: 4px;
+  border: 1px solid #2a3a50;
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Site navigation">
+  <div class="nav-inner">
+    <a href="p1-landing.html" class="nav-brand" aria-label="Adoption Guide Home">
+      <div class="nav-brand-dot" aria-hidden="true"></div>
+      Hangar AI · Adoption Guide
+    </a>
+    <div class="nav-links">
+      <a href="workflows/index.html" class="nav-link">Workflows</a>
+      <a href="phase-gate-guide.html" class="nav-link">Phase Gate Guide</a>
+      <a href="p1-landing.html" class="btn-nav-home">← Guide Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="page-hero-wrap">
+    <div class="page-hero">
+      <div class="eyebrow">TECHNICAL COACH · QUICK START</div>
+      <h1>Coach Quick Start</h1>
+      <p class="subtitle">Your first governed session in under 60 minutes — from discovery to phase gate evidence on file.</p>
+      <div class="persona-routing" aria-label="Intended audiences">
+        <span class="routing-chip">🎓 Coach ✅</span>
+        <span class="routing-chip">🏗️ Architect — see Architect Quick Start</span>
+        <span class="routing-chip">⚙️ Engineer — see Engineer Quick Start</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ACCOMPLISH BAR -->
+  <div class="accomplish-bar">
+    <div class="label">You will accomplish</div>
+    <div class="accomplish-items">
+      <div class="accomplish-item"><span class="check">☐</span> Share a single URL with the team</div>
+      <div class="accomplish-item"><span class="check">☐</span> Run the first constitutional prompt</div>
+      <div class="accomplish-item"><span class="check">☐</span> Answer "what is the agent doing?"</div>
+      <div class="accomplish-item"><span class="check">☐</span> Understand your control at every gate</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- DC-04: ⚡ 15-MINUTE SPRINT PATH                        -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section-title sprint">⚡ 15-Minute Sprint Path <span style="margin-left:8px;font-weight:400;color:#999;text-transform:none;letter-spacing:0;">(DC-04 — for teams with no available time)</span></div>
+  <div class="sprint-band">
+    <div class="sprint-header">
+      <span style="font-size:24px">⚡</span>
+      <h2>Minimum viable constitutional demonstration</h2>
+      <span class="sprint-badge">15 MIN</span>
+    </div>
+    <div class="sprint-steps">
+      <div class="sprint-step">
+        <div class="sprint-step-num">Step 1</div>
+        <div class="sprint-step-title">Open this page with the team</div>
+        <div class="sprint-step-desc">Share this URL in the Teams channel. Everyone opens it — this becomes the reference for the session.</div>
+      </div>
+      <div class="sprint-step">
+        <div class="sprint-step-num">Step 2</div>
+        <div class="sprint-step-title">Copy the adoption prompt</div>
+        <div class="sprint-step-desc">Copy the Phase 1 prompt below and paste it directly into GitHub Copilot (or your AI assistant) inside their project repo.</div>
+        <button class="copy-btn" onclick="copyPrompt(this,'sprint-prompt')" aria-label="Copy 15-minute sprint adoption prompt">📋 Copy Prompt</button>
+        <div id="sprint-prompt" style="display:none">Clone the hangar-ai-constitution from github.com/AAInternal/hangar-ai-constitution.git to the parent directory of this project (i.e., ./../). If the folder already exists, pull latest from the server.
+
+Read hangar-ai-constitution/workflows/adoption-workflow and follow the guidance to fully adopt the AI constitution into this repo. Once complete, commit.</div>
+      </div>
+      <div class="sprint-step">
+        <div class="sprint-step-num">Step 3</div>
+        <div class="sprint-step-title">Run the agent — watch together</div>
+        <div class="sprint-step-desc">Let the agent run with the team watching. Don't intervene yet. The proposal it generates IS the conversation starter. See "What is the agent doing?" below.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- DC-03: 🤖 AGENT ROLE EXPLAINER                         -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section-title agent">🤖 What is the agent doing? <span class="dc-tag" style="font-size:10px;font-weight:600;background:#003366;color:#fff;border-radius:4px;padding:2px 6px;margin-left:6px;text-transform:none;letter-spacing:0;">DC-03</span></div>
+  <div class="agent-section">
+    <h2>🤖 Agent Role Explainer <span class="dc-tag">DC-03</span></h2>
+    <div class="sub">This is the #1 time sink in every session — answer it before they ask.</div>
+    <div class="agent-steps">
+      <div class="agent-step">
+        <div class="agent-step-icon">📖</div>
+        <div class="agent-step-body">
+          <div class="agent-step-trigger">When you run the adoption prompt…</div>
+          <div class="agent-step-what">The agent reads the constitution (all 168 laws, skills, and avatars in the RAG model) and analyses your project's code, structure, and existing tooling. It is building a PROPOSAL — a governed plan for adoption that it will show you before doing anything permanent.</div>
+          <div class="agent-step-why">Why a proposal? Because every action the AI takes must be reviewed and approved by a human first (BUS-1.1 ⛔ Human Oversight Law). The proposal IS the governance artifact.</div>
+        </div>
+      </div>
+      <div class="agent-step">
+        <div class="agent-step-icon">📋</div>
+        <div class="agent-step-body">
+          <div class="agent-step-trigger">When the proposal appears…</div>
+          <div class="agent-step-what">The agent has STOPPED and is waiting for your decision. You will see a structured document: problem statement, proposed changes, law citations, and an APPROVE / OBJECT gate. Nothing has been changed in the codebase yet.</div>
+          <div class="agent-step-why">APPROVE means: "proceed with this proposal." OBJECT means: "I have a concern — here is my objection." You can reduce scope, change direction, or ask clarifying questions at this gate.</div>
+        </div>
+      </div>
+      <div class="agent-step">
+        <div class="agent-step-icon">🔨</div>
+        <div class="agent-step-body">
+          <div class="agent-step-trigger">When you APPROVE…</div>
+          <div class="agent-step-what">The agent begins the IMPLEMENT phase — making the actual changes to the repo: creating AGENTS.md, updating configuration, adding initial tooling. It will commit with a message referencing the proposal.</div>
+          <div class="agent-step-why">The commit is traceable back to the proposal — that traceability IS the constitutional audit trail (ENG-11.2).</div>
+        </div>
+      </div>
+      <div class="agent-step">
+        <div class="agent-step-icon">📁</div>
+        <div class="agent-step-body">
+          <div class="agent-step-trigger">When IMPLEMENT finishes…</div>
+          <div class="agent-step-what">The agent ARCHIVES the proposal — moving it from active to the archive, closing the constitutional loop. Your repo now has a governed history: proposal → implementation → archive.</div>
+          <div class="agent-step-why">This is the SDD cycle: PROPOSE → IMPLEMENT → ARCHIVE. Every future change follows the same loop. The team now has a repeatable, auditable process.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- DC-07: 🧭 HUMAN AGENCY & ADAPTIVE SCOPE               -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section-title agency">🧭 How agentic workflows work <span class="dc-tag" style="font-size:10px;font-weight:600;background:#1a6b3a;color:#fff;border-radius:4px;padding:2px 6px;margin-left:6px;text-transform:none;letter-spacing:0;">DC-07</span></div>
+  <div class="agency-section">
+    <h2>🧭 Human Agency &amp; Adaptive Scope <span class="dc-tag">DC-07</span></h2>
+    <div class="sub">These are not scripts. You are in charge at every gate.</div>
+    <div class="agency-points">
+
+      <div class="agency-point">
+        <div class="agency-point-num">1</div>
+        <div class="agency-point-body">
+          <div class="agency-point-title">These workflows are non-deterministic</div>
+          <div class="agency-point-desc">Constitutional workflows (adoption, legacy rescue, greenfield) are <strong>probabilistic guidance systems, not deterministic scripts</strong>. The same prompt run twice may produce different proposals — that is by design. The agent reads the constitution and your context and proposes a path. <strong>Always review before approving.</strong></div>
+        </div>
+      </div>
+
+      <div class="agency-point">
+        <div class="agency-point-num">2</div>
+        <div class="agency-point-body">
+          <div class="agency-point-title">You control batch size</div>
+          <div class="agency-point-desc">The AI will always propose the full scope it can see. <strong>You are not obligated to accept the full proposal.</strong> At every APPROVE / OBJECT gate, you can reduce scope, split the proposal into chunks, or defer sections to a later session. The constitution expects iteration — a smaller approved change done well is better than a large one done poorly.</div>
+        </div>
+      </div>
+
+      <div class="agency-point">
+        <div class="agency-point-num">3</div>
+        <div class="agency-point-body">
+          <div class="agency-point-title">Adoption is compositional</div>
+          <div class="agency-point-desc">You can adopt the constitution in parts, in any order, across multiple sessions. Each of these is a <strong>complete, valid adoption outcome</strong> on its own:</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;font-size:12px;">
+            <div style="background:#fff;border:1px solid #b8d8c0;border-radius:5px;padding:8px 12px;color:#1a4028;">✅ Setup + AGENTS.md only → commit → stop</div>
+            <div style="background:#fff;border:1px solid #b8d8c0;border-radius:5px;padding:8px 12px;color:#1a4028;">✅ Code analysis + recommendations → review → stop</div>
+            <div style="background:#fff;border:1px solid #b8d8c0;border-radius:5px;padding:8px 12px;color:#1a4028;">✅ SonarQube adoption → separate session</div>
+            <div style="background:#fff;border:1px solid #b8d8c0;border-radius:5px;padding:8px 12px;color:#1a4028;">✅ Product avatar creation → when the team is ready</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="agency-point">
+        <div class="agency-point-num">4</div>
+        <div class="agency-point-body">
+          <div class="agency-point-title">SonarQube gate = no new debt, not zero debt</div>
+          <div class="agency-point-desc">The constitutional SonarQube gate enforces one rule: <strong>new code introduced in this changeset must not add new issues</strong>. It does NOT require fixing all pre-existing violations before adoption can succeed.</div>
+          <div class="sonar-callout">
+            <strong>✅ Gate passes when:</strong> your changeset introduces zero new SonarQube issues.<br>
+            <strong>❌ Gate fails when:</strong> your changeset introduces new issues above the baseline.<br>
+            <strong>Large codebases</strong> with existing technical debt can adopt constitutionally without first resolving every prior violation.
+          </div>
+        </div>
+      </div>
+
+      <div class="agency-point">
+        <div class="agency-point-num">5</div>
+        <div class="agency-point-body">
+          <div class="agency-point-title">Scope to a bounded context</div>
+          <div class="agency-point-desc">You can scope any constitutional workflow to <strong>a single module, package, or bounded context</strong>. Running legacy rescue on <code>com.aa.loyalty.mileage</code> is a constitutionally valid, complete outcome — not a partial failure. Work iteratively: one package, commit, verify, continue.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- DC-01: FULL ADOPTION PATH                              -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section-title steps">📋 Full Adoption Path <span style="margin-left:8px;font-weight:400;color:#999;text-transform:none;letter-spacing:0;">(DC-01 — direct steps)</span></div>
+  <div class="steps-list">
+
+    <!-- Step 1 -->
+    <div class="step-card open">
+      <button class="step-header" onclick="toggleStep(this)" aria-expanded="true" aria-controls="step-body-1">
+        <div class="step-num">1</div>
+        <div class="step-title-block">
+          <div class="step-title">Share this URL with the team</div>
+          <div class="step-subtitle">Give everyone a single entry point before the session starts</div>
+        </div>
+        <div class="step-chevron" aria-hidden="true">▶</div>
+      </button>
+      <div class="step-body" id="step-body-1">
+        <p>Before your session, share the URL of this page in the team's Microsoft Teams channel. Ask them to open it before you meet — having the guide visible during the session means you can reference sections together rather than explaining from scratch.</p>
+        <p><strong>If they ask "what is this?"</strong> — point them to the intro on <a href="p1-landing.html">the landing page</a>: 2–3 sentences, no jargon. Or say: <em>"It's a set of rules for how our AI assistant should write and review code. We're about to run the setup — it takes about 15 minutes."</em></p>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-card">
+      <button class="step-header" onclick="toggleStep(this)" aria-expanded="false" aria-controls="step-body-2">
+        <div class="step-num">2</div>
+        <div class="step-title-block">
+          <div class="step-title">Run the adoption prompt</div>
+          <div class="step-subtitle">Copy, paste into Copilot, and run inside their project repo</div>
+        </div>
+        <div class="step-chevron" aria-hidden="true">▶</div>
+      </button>
+      <div class="step-body" id="step-body-2">
+        <p>Have the team open GitHub Copilot (or the AI assistant your org uses) inside their project repository. Copy the prompt below and paste it directly into the chat.</p>
+        <div class="prompt-box">Clone the hangar-ai-constitution from github.com/AAInternal/hangar-ai-constitution.git to the parent directory of this project (i.e., ./../). If the folder already exists, pull latest from the server.
+
+Read hangar-ai-constitution/workflows/adoption-workflow and follow the guidance to fully adopt the AI constitution into this repo. Once complete, commit.</div>
+        <button class="copy-btn" onclick="copyPrompt(this,'full-adoption-prompt')" aria-label="Copy full adoption path prompt">📋 Copy Prompt</button>
+        <div id="full-adoption-prompt" style="display:none">Clone the hangar-ai-constitution from github.com/AAInternal/hangar-ai-constitution.git to the parent directory of this project (i.e., ./../). If the folder already exists, pull latest from the server.
+
+Read hangar-ai-constitution/workflows/adoption-workflow and follow the guidance to fully adopt the AI constitution into this repo. Once complete, commit.</div>
+        <p style="margin-top:12px;"><strong>Tip:</strong> Run this with the team watching — don't do it in advance. The agent running in front of them IS the demonstration. Use the "What is the agent doing?" section above to narrate what they're seeing in real time.</p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-card">
+      <button class="step-header" onclick="toggleStep(this)" aria-expanded="false" aria-controls="step-body-3">
+        <div class="step-num">3</div>
+        <div class="step-title-block">
+          <div class="step-title">Review the proposal together</div>
+          <div class="step-subtitle">The proposal is the conversation — review it before approving</div>
+        </div>
+        <div class="step-chevron" aria-hidden="true">▶</div>
+      </button>
+      <div class="step-body" id="step-body-3">
+        <p>The agent will produce a PROPOSAL document. <strong>Stop before approving.</strong> Walk the team through it together:</p>
+        <div class="qa-list" style="margin-top:0;margin-bottom:12px;">
+          <div class="qa-item" style="background:#f8faff;border:1px solid #c8d8f0;">
+            <div style="font-size:12px;font-weight:700;color:#003366;margin-bottom:4px;">What to look for in the proposal</div>
+            <ul style="padding-left:16px;font-size:13px;color:#2a3a50;line-height:2;">
+              <li>Problem statement — does it correctly describe the adoption goal?</li>
+              <li>Law citations — are the referenced laws relevant to this project?</li>
+              <li>Scope — is the batch size appropriate, or is it proposing too much at once?</li>
+              <li>Kill-if conditions — understand what would cause the agent to stop</li>
+            </ul>
+          </div>
+        </div>
+        <p>Remember: you can OBJECT to reduce scope. Tell the agent: <em>"Scope this adoption to setup and AGENTS.md only — defer SonarQube and avatar creation to a later session."</em> The agent will revise the proposal.</p>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-card">
+      <button class="step-header" onclick="toggleStep(this)" aria-expanded="false" aria-controls="step-body-4">
+        <div class="step-num">4</div>
+        <div class="step-title-block">
+          <div class="step-title">Answer their questions</div>
+          <div class="step-subtitle">The four questions every team asks — answered</div>
+        </div>
+        <div class="step-chevron" aria-hidden="true">▶</div>
+      </button>
+      <div class="step-body" id="step-body-4">
+        <div class="qa-list">
+          <div class="qa-item">
+            <div class="qa-q">How do we get the latest constitution updates?</div>
+            <div class="qa-a">Re-run the adoption prompt at any time. It checks if the constitution is already cloned and pulls the latest if so. The agent will propose only what has changed since your last adoption.</div>
+          </div>
+          <div class="qa-item">
+            <div class="qa-q">How do we handle multiple repos that all change together?</div>
+            <div class="qa-a">Run the adoption workflow in each repo separately. Each repo gets its own AGENTS.md, its own proposal history, and its own governed commit trail. Cross-repo coordination is handled at the proposal scope level — propose changes that span repos as separate linked proposals.</div>
+          </div>
+          <div class="qa-item">
+            <div class="qa-q">How do we know the agent is actually using all the laws?</div>
+            <div class="qa-a">The constitution is in the parent directory (<code>./../hangar-ai-constitution/</code>). The adoption workflow reads it directly. Every proposal cites the specific law IDs it is governed by — if a law applies to your change, you will see its ID in the proposal. If a citation is missing, you can OBJECT and ask the agent to re-examine.</div>
+          </div>
+          <div class="qa-item">
+            <div class="qa-q">What is the process to amend or override a law?</div>
+            <div class="qa-a">The amendment process is documented in the constitution itself. You can propose a local law override for your project (added to your repo's <code>local-laws/</code> directory) or submit a formal amendment proposal to the constitution maintainer. See P10 — Amendment Process (coming next in the guide).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5 — What's Next -->
+    <div class="step-card">
+      <button class="step-header" onclick="toggleStep(this)" aria-expanded="false" aria-controls="step-body-5">
+        <div class="step-num">5</div>
+        <div class="step-title-block">
+          <div class="step-title">What's Next</div>
+          <div class="step-subtitle">Leave the team with one clear action before you part</div>
+        </div>
+        <div class="step-chevron" aria-hidden="true">▶</div>
+      </button>
+      <div class="step-body" id="step-body-5">
+        <div class="whats-next">
+          <h3>Leave the session with these three actions confirmed</h3>
+          <div class="next-items">
+            <div class="next-item">
+              <span class="icon">✅</span>
+              <div><strong>Ask the team to complete their first governed task.</strong> Give them a specific ticket or story to run through the full PROPOSE → IMPLEMENT → ARCHIVE cycle before your next check-in. Make it small — one class, one endpoint, one service.</div>
+            </div>
+            <div class="next-item">
+              <span class="icon">📋</span>
+              <div><strong>Share the compliance checklist</strong> (coming next in the guide — <em>P8 Compliance Checklist</em>). Until it's live, tell them: after the first governed task is committed, check that the SonarQube gate passed and the proposal is archived.</div>
+            </div>
+            <div class="next-item">
+              <span class="icon">📅</span>
+              <div><strong>Schedule a follow-up in one week.</strong> The biggest drop-off happens between the first session and the first independent run. A 30-minute check-in after their first self-directed task closes this gap.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /steps-list -->
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- DC-05: TEAMS PROMPT TEMPLATES                          -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section-title">📋 Teams Prompt Templates <span class="dc-tag" style="font-size:10px;font-weight:600;background:#7b3f8c;color:#fff;border-radius:4px;padding:2px 6px;margin-left:6px;text-transform:none;letter-spacing:0;">DC-05</span></div>
+  <div class="templates-card">
+    <div class="templates-card-text">
+      <h3>Ready-to-paste prompts for every phase</h3>
+      <p>Phase 1 Initial Adoption · Phase 2 First Governed Task · Phase 3 Follow-up Coaching. Open a template, copy the prompt, paste into Teams or directly into Copilot.</p>
+    </div>
+    <a href="prompt-templates/index.html" class="btn-templates">Open Prompt Library →</a>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- DC-06: COACHING NOTES (COLLAPSED)                      -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section-title" style="margin-top:32px;">Coaching Notes</div>
+  <details class="coaching-notes">
+    <summary>
+      <span style="margin-left:8px;">🎓 Socratic Coaching Prompts — Advanced coaches only</span>
+      <span class="opt">Optional · DC-06 · Expand after the direct path is complete</span>
+    </summary>
+    <div class="coaching-notes-body">
+      <p style="font-size:12px;color:#8855aa;margin-bottom:14px;font-style:italic;">Use these open-ended questions after your team has completed the direct adoption steps. These are for experienced coaches applying a Socratic layer — not for first-session use.</p>
+      <ol>
+        <li><strong>On constitutional purpose:</strong> Now that the agent has produced a proposal, what do you think it was trying to protect by requiring a review gate before making any changes?</li>
+        <li><strong>On batch size decisions:</strong> Looking at the proposal scope the agent suggested, what would happen to team confidence if you tried to approve everything at once vs. approving it in three sessions? What's the right batch size for this team right now?</li>
+        <li><strong>On law applicability:</strong> The agent cited specific laws in this proposal. Pick one citation you're unsure about — can you find the law in the constitution and explain why it applies here?</li>
+        <li><strong>On process sustainability:</strong> How would you explain the PROPOSE → IMPLEMENT → ARCHIVE cycle to a new engineer joining this team in six months who has never seen a constitutionally-governed PR?</li>
+        <li><strong>On resistance:</strong> What's the most likely objection your team will have after their first independent run — and what evidence from the proposal process could you use to address it?</li>
+      </ol>
+    </div>
+  </details>
+
+</div><!-- /page -->
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-title">Hangar AI Constitution — Adoption Guide</div>
+    <div>American Airlines · Hangar AI Program · Adoption Guide v1.0.0</div>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="p1-landing.html">Guide Home</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="p3-architect-quick-start.html">Architect Quick Start</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="p3-engineer-quick-start.html">Engineer Quick Start</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="workflows/index.html">Workflows Hub</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="phase-gate-guide.html">Phase Gate Guide</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+function toggleStep(header) {
+  const card = header.parentElement;
+  card.classList.toggle('open');
+  header.setAttribute('aria-expanded', card.classList.contains('open'));
+}
+
+function copyPrompt(btn, sourceId) {
+  const text = document.getElementById(sourceId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const original = btn.innerHTML;
+    btn.innerHTML = '✅ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => {
+    btn.innerHTML = '⚠️ Select + copy manually';
+    setTimeout(() => { btn.innerHTML = '📋 Copy Prompt'; }, 3000);
+  });
+}
+</script>
+
+</body>
+</html>

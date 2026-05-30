@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phase 2 — Scan | Avatar Enrichment: Mobile iOS</title>
+  <style>
+    :root {
+      --aa-red:#c8102e; --aa-dark:#0a0d14; --aa-blue:#0f3460;
+      --aa-teal:#0d9488; --aa-green:#22c55e; --aa-gold:#f5a623; --aa-surface:#f4f6fa;
+      --aa-border:#dde3ee; --aa-text:#1e293b; --aa-muted:#64748b; --r:9px;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--aa-surface); color:var(--aa-text); font-size:14px; line-height:1.6; }
+    header { background:linear-gradient(140deg,#070a12 0%,#0f3460 65%,#0d9488 100%); color:#fff; padding:32px 44px 26px; }
+    .h-eyebrow { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:6px; }
+    .h-title { font-size:26px; font-weight:800; letter-spacing:-.4px; }
+    .h-sub { font-size:13px; color:rgba(255,255,255,.6); margin-top:4px; }
+    .badges { display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
+    .badge { padding:3px 11px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; }
+    .b-phase { background:var(--aa-teal); color:#fff; }
+    .b-blocking { background:rgba(220,38,38,.3); color:#fca5a5; border:1px solid rgba(220,38,38,.5); }
+    .b-warn { background:rgba(245,166,35,.25); color:#fde68a; border:1px solid rgba(245,166,35,.4); }
+    .b-ok { background:rgba(34,197,94,.25); color:#86efac; border:1px solid rgba(34,197,94,.4); }
+    main { max-width:960px; margin:32px auto; padding:0 24px 60px; }
+    .section { background:#fff; border:1px solid var(--aa-border); border-radius:var(--r); padding:24px 28px; margin-bottom:22px; }
+    .section-title { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--aa-muted); margin-bottom:16px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { background:#f8f9fc; font-weight:600; text-align:left; padding:9px 12px; border-bottom:2px solid var(--aa-border); color:var(--aa-muted); font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
+    td { padding:9px 12px; border-bottom:1px solid var(--aa-border); vertical-align:top; }
+    tr:last-child td { border-bottom:none; }
+    .pass { color:#16a34a; font-weight:700; }
+    .blocking { color:#dc2626; font-weight:700; }
+    .warn { color:#d97706; font-weight:700; }
+    .tag { display:inline-block; padding:2px 9px; border-radius:12px; font-size:11px; font-weight:600; margin:2px 2px 2px 0; }
+    .tag-product { background:#ede9fe; color:#5b21b6; }
+    .tag-tech { background:#e0f2fe; color:#0369a1; }
+    .tag-block { background:#fee2e2; color:#991b1b; }
+    .tag-adv { background:#fef9c3; color:#92400e; }
+    .tag-ok { background:#dcfce7; color:#15803d; }
+    .summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:22px; }
+    .stat-card { background:#fff; border:1px solid var(--aa-border); border-radius:var(--r); padding:20px; text-align:center; }
+    .stat-num { font-size:36px; font-weight:800; line-height:1; }
+    .stat-num.red { color:#dc2626; }
+    .stat-num.amber { color:#d97706; }
+    .stat-num.green { color:#16a34a; }
+    .stat-label { font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--aa-muted); margin-top:6px; }
+    .verdict-box { background:linear-gradient(135deg,#7f1d1d,#991b1b); color:#fff; border-radius:var(--r); padding:20px 28px; margin-bottom:22px; }
+    .verdict-label { font-size:10px; text-transform:uppercase; letter-spacing:2px; color:rgba(255,255,255,.5); margin-bottom:4px; }
+    .verdict-text { font-size:18px; font-weight:800; }
+    .verdict-sub { font-size:13px; color:rgba(255,255,255,.7); margin-top:6px; }
+    code { background:#f1f5f9; padding:1px 6px; border-radius:4px; font-size:12px; color:#0369a1; }
+    .over { color:#dc2626; font-weight:600; }
+    footer { text-align:center; font-size:11px; color:var(--aa-muted); padding:20px; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="h-eyebrow">Hangar AI Constitution — Avatar Workflow</div>
+  <div class="h-title">Phase 2 — Scan: Gap Report</div>
+  <div class="h-sub">Codebase: hangar-w4-dp-mobile &nbsp;·&nbsp; Run date: 2026-04-27 &nbsp;·&nbsp; Clinic: Wave 4 Mobile</div>
+  <div class="badges">
+    <span class="badge b-phase">Phase 2 Complete</span>
+    <span class="badge b-blocking">14 Blocking Violations</span>
+    <span class="badge b-warn">3 Advisory</span>
+    <span class="badge b-ok">✓ No Shadow Governance</span>
+  </div>
+</header>
+<main>
+
+  <div class="summary-grid">
+    <div class="stat-card"><div class="stat-num red">14</div><div class="stat-label">Blocking — must resolve before Phase 5</div></div>
+    <div class="stat-card"><div class="stat-num amber">3</div><div class="stat-label">Advisory — address before commit</div></div>
+    <div class="stat-card"><div class="stat-num green">0</div><div class="stat-label">Shadow Governance Detections</div></div>
+  </div>
+
+  <div class="verdict-box">
+    <div class="verdict-label">Phase 2 Verdict</div>
+    <div class="verdict-text">BLOCKED — 14 violations must be resolved in Phase 4 before RAG validation</div>
+    <div class="verdict-sub">All 5 avatars have at least one blocking violation. These are pre-existing gaps — not caused by enrichment. Phase 4 will correct them.</div>
+  </div>
+
+  <!-- STRUCTURAL COMPLETENESS -->
+  <div class="section">
+    <div class="section-title">Structural Completeness</div>
+    <table>
+      <tr><th>Avatar</th><th>manifest.yaml</th><th>guidance.md</th><th>examples/</th><th>use-cases/</th><th>journeys/</th></tr>
+      <tr>
+        <td><span class="tag tag-product">passenger-booking</span></td>
+        <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓ 5 files</td>
+        <td class="blocking">✗ MISSING <span class="tag tag-block">BLOCKING</span></td>
+        <td class="blocking">✗ MISSING <span class="tag tag-block">BLOCKING</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-product">check-in-travel</span></td>
+        <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓ 10 files</td>
+        <td class="pass">✓ 3 use-cases</td>
+        <td class="blocking">✗ MISSING <span class="tag tag-block">BLOCKING</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-product">schedule-change-self-serve</span></td>
+        <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓ 10 files</td>
+        <td class="pass">✓ 3 use-cases</td>
+        <td class="blocking">✗ MISSING <span class="tag tag-block">BLOCKING</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-product">customer-relations-ops</span></td>
+        <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓ 6 files</td>
+        <td class="blocking">✗ Only 1 (needs ≥ 2) <span class="tag tag-block">BLOCKING</span></td>
+        <td class="blocking">✗ MISSING <span class="tag tag-block">BLOCKING</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-tech">ios-swift</span></td>
+        <td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓ 8 files</td>
+        <td class="blocking">✗ MISSING <span class="tag tag-block">BLOCKING</span></td>
+        <td>N/A — tech avatar</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- TOKEN BUDGETS -->
+  <div class="section">
+    <div class="section-title">Token Budget Violations</div>
+    <table>
+      <tr><th>Avatar / File</th><th>Type</th><th>Budget</th><th>Actual (est.)</th><th>Status</th></tr>
+      <tr><td><code>passenger-booking/guidance.md</code></td><td>guidance</td><td>≤ 450 tok</td><td class="over">~833 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>check-in-travel/guidance.md</code></td><td>guidance</td><td>≤ 450 tok</td><td class="over">~4,448 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>schedule-change-self-serve/guidance.md</code></td><td>guidance</td><td>≤ 450 tok</td><td class="over">~1,417 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>customer-relations-ops/guidance.md</code></td><td>guidance</td><td>≤ 450 tok</td><td class="over">~1,883 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>ios-swift/guidance.md</code></td><td>guidance</td><td>≤ 450 tok</td><td class="over">~2,952 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>check-in-travel/examples/personas.md</code></td><td>example</td><td>≤ 850 tok</td><td class="over">~2,572 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>check-in-travel/examples/PRD-2.1-journey.md</code></td><td>example</td><td>≤ 850 tok</td><td class="over">~2,659 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>check-in-travel/examples/PRD-5.1-metrics.md</code></td><td>example</td><td>≤ 850 tok</td><td class="over">~2,368 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>check-in-travel/examples/PRD-3.1-roadmap.md</code></td><td>example</td><td>≤ 850 tok</td><td class="over">~2,129 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>check-in-travel/examples/PRD-1.1-discovery.md</code></td><td>example</td><td>≤ 850 tok</td><td class="over">~1,903 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>check-in-travel/examples/PRD-4.1-mvp.md</code></td><td>example</td><td>≤ 850 tok</td><td class="over">~1,820 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>ios-swift/examples/ENG-4.2-test-pyramid.md</code></td><td>example</td><td>≤ 850 tok</td><td class="over">~2,437 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>ios-swift/examples/ENG-2.2-layers.md</code></td><td>example</td><td>≤ 850 tok</td><td class="over">~1,169 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>ios-swift/examples/ENG-4.1-atomic-tdd.md</code></td><td>example</td><td>≤ 850 tok</td><td class="over">~1,140 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>ios-swift/examples/ENG-6.7-audit-trail.md</code></td><td>example</td><td>≤ 850 tok</td><td class="over">~1,097 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>ios-swift/examples/ENG-6.4-data-protection.md</code></td><td>example</td><td>≤ 850 tok</td><td class="over">~1,109 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>check-in-travel/use-cases/digital-check-in</code></td><td>use-case</td><td>≤ 1,500 tok</td><td class="over">~2,748 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>check-in-travel/use-cases/gate-operations</code></td><td>use-case</td><td>≤ 1,500 tok</td><td class="over">~3,715 tok</td><td class="blocking">BLOCKING</td></tr>
+      <tr><td><code>check-in-travel/use-cases/mobile-check-in</code></td><td>use-case</td><td>≤ 1,500 tok</td><td class="over">~3,764 tok</td><td class="blocking">BLOCKING</td></tr>
+    </table>
+  </div>
+
+  <!-- LAW DOMAIN BOUNDARY -->
+  <div class="section">
+    <div class="section-title">Law Domain Boundary Check</div>
+    <table>
+      <tr><th>Avatar</th><th>Law ID</th><th>Permitted?</th><th>Action</th></tr>
+      <tr><td><span class="tag tag-product">passenger-booking</span></td><td>ENG-6.1, ENG-6.4, ENG-6.7</td><td class="warn">⚠ Conditional</td><td>Acceptable with justification in manifest</td></tr>
+      <tr><td><span class="tag tag-product">check-in-travel</span></td><td>ENG-6.4, ENG-6.7</td><td class="warn">⚠ Conditional</td><td>Acceptable with justification</td></tr>
+      <tr><td rowspan="2"><span class="tag tag-product">schedule-change-self-serve</span></td><td><code>ENG-2.3</code> (Vertical Slice)</td><td class="blocking">✗ FORBIDDEN <span class="tag tag-block">BLOCKING</span></td><td>Route to nearest tech avatar; remove from product avatar</td></tr>
+      <tr><td><code>ENG-9.4</code></td><td class="blocking">✗ FORBIDDEN <span class="tag tag-block">BLOCKING</span></td><td>Route to nearest tech avatar; remove from product avatar</td></tr>
+      <tr><td><span class="tag tag-product">customer-relations-ops</span></td><td>ENG-6.4, ENG-6.7</td><td class="warn">⚠ Conditional</td><td>Acceptable with justification</td></tr>
+      <tr><td><span class="tag tag-tech">ios-swift</span></td><td>ENG-* only</td><td class="pass">✓ Clean</td><td>No violations</td></tr>
+    </table>
+  </div>
+
+  <!-- ACTIVATES.SKILLS -->
+  <div class="section">
+    <div class="section-title">Activates.Skills — Broken References (Systemic)</div>
+    <p style="font-size:13px;color:var(--aa-muted);margin-bottom:14px;">All 5 avatars reference skills with a <code>skill-</code> prefix (e.g. <code>skill-06-atomic-tdd</code>) but actual files are named without it (e.g. <code>06-atomic-tdd.md</code>). This is a systemic naming mismatch. Additionally, 3 skill files are entirely absent.</p>
+    <table>
+      <tr><th>Referenced ID</th><th>Actual File</th><th>Status</th></tr>
+      <tr><td><code>skill-06-atomic-tdd</code></td><td><code>06-atomic-tdd.md</code> ✓ exists</td><td class="blocking">BLOCKING — prefix mismatch</td></tr>
+      <tr><td><code>skill-spec-governance</code></td><td><code>spec-governance.md</code> ✓ exists</td><td class="blocking">BLOCKING — prefix mismatch</td></tr>
+      <tr><td><code>skill-04-business-domain-modeling</code></td><td><code>04-business-domain-modeling.md</code> ✓ exists</td><td class="blocking">BLOCKING — prefix mismatch</td></tr>
+      <tr><td><code>skill-01-customer-discovery</code></td><td>— not found</td><td class="blocking">BLOCKING — file absent</td></tr>
+      <tr><td><code>skill-02-research-synthesis</code></td><td>— not found</td><td class="blocking">BLOCKING — file absent</td></tr>
+      <tr><td><code>skill-07-operational-excellence</code></td><td>— not found</td><td class="blocking">BLOCKING — file absent</td></tr>
+      <tr><td colspan="2"><em>All other skill-XX references follow same pattern — prefix mismatch only, files exist</em></td><td class="warn">BLOCKING (prefix)</td></tr>
+    </table>
+  </div>
+
+  <!-- ADVISORY -->
+  <div class="section">
+    <div class="section-title">Advisory Findings</div>
+    <table>
+      <tr><th>Finding</th><th>Avatars Affected</th><th>Recommendation</th></tr>
+      <tr><td>Manifest ID doesn't match index.yaml entry</td><td><span class="tag tag-adv">4/5 product avatars</span></td><td>Align manifest <code>id</code> fields to index.yaml during Phase 4</td></tr>
+      <tr><td>No PRD-* laws in specializes_laws</td><td><span class="tag tag-adv">passenger-booking</span> <span class="tag tag-adv">customer-relations-ops</span></td><td>Add applicable PRD-* laws during Phase 4 enrichment</td></tr>
+      <tr><td>Shadow governance</td><td>None</td><td class="pass">✓ Clean — no governance_overrides, no self-scoring systems</td></tr>
+    </table>
+  </div>
+
+  <!-- PHASE 4 WORK PLAN -->
+  <div class="section">
+    <div class="section-title">Phase 4 Work Plan — What Gets Fixed</div>
+    <table>
+      <tr><th>#</th><th>Fix</th><th>Applies To</th></tr>
+      <tr><td>1</td><td>Create <code>journeys/</code> with ≥1 core journey grounded in iOS codebase</td><td>All 4 product avatars</td></tr>
+      <tr><td>2</td><td>Create <code>use-cases/</code> with ≥2 use cases</td><td>passenger-booking, ios-swift</td></tr>
+      <tr><td>3</td><td>Add a second use case</td><td>customer-relations-ops</td></tr>
+      <tr><td>4</td><td>Trim <code>guidance.md</code> to ≤ 450 tokens; extract overflow to new example files</td><td>All 5 avatars</td></tr>
+      <tr><td>5</td><td>Split over-budget example files into separate focused files</td><td>check-in-travel (6 files), ios-swift (5 files)</td></tr>
+      <tr><td>6</td><td>Split over-budget use-case files</td><td>check-in-travel (3 use-cases)</td></tr>
+      <tr><td>7</td><td>Remove <code>ENG-2.3</code> and <code>ENG-9.4</code> from product avatar; route to ios-swift</td><td>schedule-change-self-serve</td></tr>
+      <tr><td>8</td><td>Fix <code>skill-</code> prefix in all manifests' <code>activates.skills</code></td><td>All 5 avatars</td></tr>
+    </table>
+  </div>
+
+</main>
+<footer>Hangar AI Constitution · Avatar Workflow v1.0.0 · Phase 2 of 6 · skill-avatar-workflow</footer>
+</body>
+</html>

@@ -1,0 +1,47 @@
+---
+# BDD test registry fixture
+# Contains laws needed for Phase 3 §4.1–§4.5 BDD scenarios.
+# ENG-3.5: PASS scenarios (non_negotiable: false)
+# ENG-4.6: NON-NEGOTIABLE; test coverage law
+# ENG-10.1: Title mismatch tests (non_negotiable: false)
+# ENG-12.1: Phase 0 fix scenario (non_negotiable: true)
+# BUS-7.1: STATUS_MISMATCH tests (non_negotiable: true)
+
+domains:
+  engineering:
+    files:
+      - laws/engineering/naming.md
+      - laws/engineering/testing.md
+      - laws/engineering/metrics.md
+      - laws/engineering/agentic-feedback.md
+    articles:
+      III: naming
+      IV: testing
+      X: metrics
+      XII: agentic-feedback
+  business:
+    files:
+      - laws/business/audit-trail.md
+    articles:
+      VII: audit-trail
+
+law_ids:
+  engineering:
+    - ENG-3.5
+    - ENG-4.6
+    - ENG-10.1
+    - ENG-12.1
+  business:
+    - BUS-7.1
+
+non_negotiable:
+  engineering:
+    - ENG-4.6
+    - ENG-12.1
+  business:
+    - BUS-7.1
+
+law_counts:
+  engineering: 4
+  business: 1
+  total: 5

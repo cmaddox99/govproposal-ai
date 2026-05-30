@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constitutional AI — Concept Exploration · Tech Talk · May 2026</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --aa-blue:    #0078D2;
+    --aa-navy:    #003057;
+    --aa-red:     #C8102E;
+    --aa-sky:     #e8f4fd;
+    --aa-gold:    #F0A500;
+    --white:      #ffffff;
+    --gray-50:    #f8f9fa;
+    --gray-100:   #f0f2f5;
+    --gray-200:   #e0e4ea;
+    --gray-600:   #555e6e;
+    --gray-800:   #1a2332;
+    --green:      #1b7a3e;
+    --green-bg:   #e8f5ee;
+    --yellow:     #b45309;
+    --yellow-bg:  #fef9e7;
+    --red-bg:     #fce8ec;
+    --slide-w:    960px;
+  }
+
+  html, body { height: 100vh; overflow: hidden; }
+  html { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: #1a1a2a; }
+
+  #nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(0,48,87,0.96); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 24px; gap: 12px;
+  }
+  #nav .brand { color: #fff; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+  #nav .controls { display: flex; align-items: center; gap: 8px; }
+  #nav button {
+    background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 6px;
+    padding: 5px 14px; font-size: 0.8rem; cursor: pointer; transition: background 0.15s;
+  }
+  #nav button:hover { background: rgba(255,255,255,0.28); }
+  #nav button:disabled { opacity: 0.3; cursor: default; }
+  #slide-counter { color: rgba(255,255,255,0.65); font-size: 0.78rem; min-width: 52px; text-align: center; }
+  #progress-bar { position: fixed; top: 42px; left: 0; height: 3px; background: var(--aa-gold); transition: width 0.3s; z-index: 999; }
+
+  #deck {
+    position: fixed; top: 45px; left: 0; right: 0; bottom: 36px;
+    display: flex; align-items: flex-start; justify-content: center;
+    overflow: hidden; padding: 8px 16px 0;
+  }
+  .slide {
+    display: none; width: var(--slide-w); flex-shrink: 0;
+    background: var(--white); border-radius: 14px; overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.45); transform-origin: top center;
+  }
+  .slide.active { display: block; }
+
+  .slide-header {
+    padding: 32px 44px 28px;
+    background: linear-gradient(135deg, var(--aa-navy) 0%, #005b9f 100%);
+    color: #fff;
+  }
+  .slide-header.dark  { background: linear-gradient(135deg, #0d1b2a 0%, var(--aa-navy) 100%); }
+  .slide-header.red   { background: linear-gradient(135deg, var(--aa-red) 0%, #8b0d1e 100%); }
+  .slide-header.gold  { background: linear-gradient(135deg, #7c4d00 0%, #c47d00 100%); }
+  .slide-header.teal  { background: linear-gradient(135deg, #005f6b 0%, #0097a7 100%); }
+  .slide-header.green { background: linear-gradient(135deg, #0f4c25 0%, #1b7a3e 100%); }
+  .slide-header.rescue { background: linear-gradient(135deg, #7c0d0d 0%, #b91c1c 60%, #c8102e 100%); }
+  .slide-header .eyebrow { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.75; margin-bottom: 6px; }
+  .slide-header h1 { font-size: 2rem; font-weight: 800; line-height: 1.15; }
+  .slide-header h2 { font-size: 1.35rem; font-weight: 700; line-height: 1.2; }
+  .slide-header .sub { margin-top: 10px; opacity: 0.88; font-size: 0.92rem; line-height: 1.55; }
+
+  .slide-body { padding: 28px 44px 32px; }
+
+  h3  { font-size: 1.05rem; font-weight: 700; color: var(--aa-navy); margin: 18px 0 8px; }
+  h4  { font-size: 0.9rem; font-weight: 700; color: var(--aa-navy); margin: 12px 0 6px; }
+  p   { font-size: 0.9rem; color: var(--gray-600); line-height: 1.6; margin-bottom: 10px; }
+  ul  { padding-left: 20px; }
+  li  { font-size: 0.88rem; color: inherit; line-height: 1.6; margin-bottom: 4px; }
+  .card li, .slide-body > ul li { color: var(--gray-600); }
+
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em;
+  }
+  .badge.blue   { background: #dbeafe; color: #1e40af; }
+  .badge.green  { background: var(--green-bg); color: var(--green); }
+  .badge.yellow { background: var(--yellow-bg); color: var(--yellow); }
+  .badge.red    { background: var(--red-bg); color: #b91c1c; }
+  .badge.gray   { background: var(--gray-100); color: var(--gray-600); }
+  .badge.navy   { background: #dbeafe; color: var(--aa-navy); }
+  .badge.gold   { background: #fef3c7; color: #92400e; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+
+  .card {
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+    border-radius: 10px; padding: 16px 18px;
+  }
+  .card.blue-border  { border-left: 4px solid var(--aa-blue); }
+  .card.navy-border  { border-left: 4px solid var(--aa-navy); }
+  .card.green-border { border-left: 4px solid var(--green); }
+  .card.red-border   { border-left: 4px solid var(--aa-red); }
+  .card.gold-border  { border-left: 4px solid var(--aa-gold); }
+  .card h4 { margin-top: 0; }
+
+  .stat-row { display: flex; gap: 14px; flex-wrap: wrap; margin: 16px 0; }
+  .stat-box {
+    flex: 1; min-width: 100px;
+    background: var(--aa-sky); border-radius: 10px;
+    padding: 14px 12px; text-align: center;
+  }
+  .stat-box .num  { font-size: 1.9rem; font-weight: 800; color: var(--aa-navy); line-height: 1; }
+  .stat-box .lbl  { font-size: 0.7rem; color: var(--gray-600); margin-top: 5px; line-height: 1.3; }
+  .stat-box.warn  { background: var(--red-bg); }
+  .stat-box.warn .num { color: #b91c1c; }
+  .stat-box.ok    { background: var(--green-bg); }
+  .stat-box.ok .num { color: var(--green); }
+  .stat-box.gold  { background: #fef3c7; }
+  .stat-box.gold .num { color: #92400e; }
+
+  .phase-row { display: flex; gap: 0; margin: 18px 0; align-items: stretch; }
+  .phase-pill {
+    flex: 1; text-align: center; padding: 12px 6px;
+    background: var(--gray-100); border: 1px solid var(--gray-200);
+    font-size: 0.73rem; font-weight: 600; line-height: 1.3; color: var(--gray-600);
+  }
+  .phase-pill:first-child { border-radius: 8px 0 0 8px; }
+  .phase-pill:last-child  { border-radius: 0 8px 8px 0; }
+  .phase-pill.active { background: #dbeafe; color: var(--aa-blue); border-color: #93c5fd; }
+  .phase-pill.done   { background: var(--green-bg); color: var(--green); border-color: #a7d7b8; }
+  .phase-pill.locked { background: var(--gray-100); color: #aaa; }
+  .phase-pill .icon  { font-size: 1.1rem; display: block; margin-bottom: 3px; }
+
+  .flow-row { display: flex; align-items: center; gap: 0; margin: 16px 0; flex-wrap: wrap; }
+  .flow-step {
+    flex: 1; min-width: 80px; background: var(--aa-sky); border-radius: 8px;
+    padding: 10px 8px; text-align: center; font-size: 0.76rem; font-weight: 700;
+    color: var(--aa-navy); line-height: 1.3;
+  }
+  .flow-step.highlight { background: var(--aa-navy); color: #fff; }
+  .flow-step.active    { background: var(--aa-blue); color: #fff; }
+  .flow-step .icon { font-size: 1.2rem; display: block; margin-bottom: 3px; }
+  .flow-arrow { font-size: 1.1rem; color: var(--gray-600); padding: 0 3px; flex-shrink: 0; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.83rem; margin: 12px 0; }
+  th { background: var(--aa-navy); color: #fff; padding: 8px 12px; text-align: left; font-size: 0.78rem; }
+  td { padding: 7px 12px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--gray-50); }
+
+  .highlight-block {
+    background: linear-gradient(135deg, #003057 0%, #005b9f 100%);
+    color: #fff; border-radius: 10px; padding: 16px 22px; margin: 16px 0;
+  }
+  .highlight-block p { color: rgba(255,255,255,0.88); margin: 0; }
+  .highlight-block strong { color: #fff; }
+
+  .quote {
+    border-left: 4px solid var(--aa-gold); padding: 12px 18px;
+    background: var(--yellow-bg); border-radius: 0 8px 8px 0; margin: 12px 0;
+  }
+  .quote p { color: #78350f; font-style: italic; margin: 0; font-size: 0.88rem; line-height: 1.55; }
+  .quote .src { font-style: normal; font-size: 0.72rem; color: var(--yellow); margin-top: 6px; display: block; }
+
+  .law-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--aa-navy); color: #fff; border-radius: 6px;
+    padding: 3px 10px; font-size: 0.75rem; font-weight: 700; margin: 2px 3px 2px 0;
+  }
+  .law-tag.non-neg { background: var(--aa-red); }
+  .law-tag.prd     { background: #1e40af; }
+  .law-tag.bus     { background: #065f46; }
+  .law-tag.eng     { background: #4c1d95; }
+
+  .dim-card {
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+    border-radius: 10px; padding: 14px 16px;
+  }
+  .dim-card .dim-num {
+    display: inline-block; background: var(--aa-navy); color: #fff;
+    border-radius: 50%; width: 26px; height: 26px; line-height: 26px;
+    text-align: center; font-size: 0.78rem; font-weight: 800; margin-right: 8px; flex-shrink: 0;
+  }
+  .dim-card .dim-title {
+    font-size: 0.88rem; font-weight: 700; color: var(--aa-navy);
+    display: flex; align-items: center; margin-bottom: 6px;
+  }
+  .dim-card p { font-size: 0.82rem; margin: 0; }
+
+  .noneg-banner {
+    background: var(--red-bg); border: 1px solid #fca5a5; border-radius: 8px;
+    padding: 10px 16px; display: flex; align-items: center; gap: 10px; margin: 12px 0;
+  }
+  .noneg-banner .icon { font-size: 1.3rem; flex-shrink: 0; }
+  .noneg-banner p { color: #b91c1c; font-size: 0.82rem; margin: 0; }
+
+  .slide-footer {
+    background: var(--gray-50); border-top: 1px solid var(--gray-200);
+    padding: 8px 44px; display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.72rem; color: var(--gray-600);
+  }
+
+  .title-slide .slide-header {
+    background: linear-gradient(145deg, #003057 0%, #00509e 60%, #0078D2 100%);
+    padding: 52px 44px 44px; min-height: 360px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .title-slide .slide-header h1 { font-size: 2.4rem; line-height: 1.1; }
+  .title-slide .slide-header .tag { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .title-slide .slide-header .tag span {
+    background: rgba(255,255,255,0.18); border-radius: 20px;
+    padding: 5px 16px; font-size: 0.78rem; font-weight: 600; color: #fff;
+  }
+  .title-slide .slide-body { background: var(--aa-navy); padding: 22px 44px; }
+
+  .closing-slide .slide-header {
+    background: linear-gradient(145deg, #0d1b2a 0%, #003057 100%);
+    padding: 52px 44px; min-height: 380px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .closing-slide .slide-header h1 { font-size: 2.2rem; line-height: 1.15; }
+
+  .demo-slide .slide-header {
+    background: linear-gradient(145deg, #1a0a00 0%, #7c3000 60%, #c8102e 100%);
+    padding: 48px 44px; min-height: 340px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  }
+
+  #keyboard-hint {
+    position: fixed; bottom: 4px; left: 0; right: 0;
+    text-align: center; color: rgba(255,255,255,0.4); font-size: 0.72rem;
+  }
+
+  /* ── Keyboard hint bar at bottom ── */
+  #disclaimer-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 1001;
+    background: rgba(0,48,87,0.97);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 4px 16px;
+    font-size: 0.68rem; color: rgba(255,255,255,0.7); text-align: center;
+  }
+  #disclaimer-bar strong { color: #fff; }
+  #disclaimer-bar .dot { color: rgba(255,255,255,0.35); }
+
+  .code-block {
+    background: #0d1b2a; border-radius: 8px; padding: 12px 16px; margin: 10px 0;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 0.78rem;
+    color: #a8d8f0; line-height: 1.6; overflow-x: auto;
+  }
+  .code-block .kw { color: #f97316; }
+  .code-block .str { color: #86efac; }
+  .code-block .cm { color: #6b7280; font-style: italic; }
+  .code-block .law { color: #fbbf24; font-weight: 700; }
+
+  .rag-component {
+    background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 10px;
+    padding: 13px 15px; display: flex; align-items: flex-start; gap: 12px;
+  }
+  .rag-component .num {
+    background: var(--aa-navy); color: #fff; border-radius: 50%;
+    width: 28px; height: 28px; min-width: 28px; line-height: 28px;
+    text-align: center; font-size: 0.82rem; font-weight: 800;
+  }
+  .rag-component .body { flex: 1; }
+  .rag-component .body strong { font-size: 0.88rem; color: var(--aa-navy); display: block; margin-bottom: 3px; }
+  .rag-component .body span { font-size: 0.78rem; color: var(--gray-600); }
+
+  .metric-delta {
+    display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+    background: var(--gray-50); border-radius: 8px; margin-bottom: 8px;
+    border: 1px solid var(--gray-200);
+  }
+  .metric-delta .label { flex: 1; font-size: 0.83rem; font-weight: 600; color: var(--aa-navy); }
+  .metric-delta .before { font-size: 0.82rem; color: #b91c1c; font-weight: 700; min-width: 60px; text-align: right; }
+  .metric-delta .arrow { color: var(--gray-600); font-size: 0.9rem; }
+  .metric-delta .after { font-size: 0.82rem; color: var(--green); font-weight: 700; min-width: 60px; }
+
+  @media (max-width: 680px) {
+    .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; }
+    .slide-header, .slide-body, .slide-footer { padding-left: 22px; padding-right: 22px; }
+    .flow-row { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    .phase-row { flex-direction: column; }
+    .phase-pill:first-child { border-radius: 8px 8px 0 0; }
+    .phase-pill:last-child  { border-radius: 0 0 8px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="nav">
+  <div class="brand">⚖️ Constitutional AI · Concept Exploration · Tech Talk · May 2026</div>
+  <div class="controls">
+    <button id="btn-prev" onclick="changeSlide(-1)">← Prev</button>
+    <span id="slide-counter">1 / 22</span>
+    <button id="btn-next" onclick="changeSlide(1)">Next →</button>
+  </div>
+</div>
+<div id="progress-bar"></div>
+
+<!-- Disclaimer bar -->
+<div id="disclaimer-bar">
+  <span>Use ← → arrow keys or buttons to navigate</span>
+</div>
+
+<div id="deck">
+
+<!-- ══════════════════════════════════════════════════════ SLIDE 1 — TITLE ══ -->
+<div class="slide active title-slide" id="slide-1">
+  <div class="slide-header">
+    <div class="eyebrow">Tech Talk · American Airlines · Monday 3:05–4:00pm</div>
+    <h1>Constitutional AI<br>at the Hangar</h1>
+    <div class="sub" style="font-size:1rem; opacity:0.9; margin-top:12px;">Exploring Governed, Teaching AI Development — A Concept in Progress</div>
+    <div class="tag">
+      <span>🤖 Concept Exploration</span>
+      <span>⚖️ Hangar AI Constitution</span>
+      <span>🚑 Legacy Rescue · Demo</span>
+      <span>Work in Progress · May 2026</span>
+    </div>
+  </div>
+  <div class="slide-body">
+    <p style="color:rgba(255,255,255,0.75); font-size:0.88rem;">Presenter: Adeel Ali · AI &amp; Technical Coach · Hangar Engineering Practice</p>
+    <p style="color:rgba(255,255,255,0.55); font-size:0.8rem; margin-top:4px;">
+      Session for Developers · Architects · Managers ·
+      <strong style="color:rgba(255,255,255,0.7);">What is Constitutional AI? How might it work? What are we learning?</strong>
+    </p>
+    <div style="margin-top:14px; background:rgba(255,255,255,0.08); border-radius:8px; padding:10px 16px; font-size:0.78rem; color:rgba(255,255,255,0.6); border-left:3px solid rgba(255,255,255,0.25);">
+      ⚠️ The ideas presented here are being explored and tested — not final, not permanent. We're sharing what we're learning and inviting discussion.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ SLIDE 2 — ANTHROPIC ORIGIN ══ -->
+<div class="slide" id="slide-2">
+  <div class="slide-header">
+    <div class="eyebrow">Origin · Anthropic, December 2022</div>
+    <h2>Constitutional AI — The Concept</h2>
+    <div class="sub">Anthropic asked: what if an AI aligned itself to a written constitution of principles — instead of only relying on human feedback?</div>
+  </div>
+  <div class="slide-body">
+    <!-- Core mechanism row -->
+    <div style="display:flex; gap:10px; align-items:center; justify-content:center; margin-bottom:18px;">
+      <div style="background:linear-gradient(145deg,#0d1b2a,#003057); border-radius:10px; padding:14px 18px; color:#fff; text-align:center; flex:1;">
+        <div style="font-size:1.5rem; margin-bottom:6px;">📜</div>
+        <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.08em; color:#93c5fd; margin-bottom:4px;">THE CONSTITUTION</div>
+        <div style="font-size:0.82rem; color:rgba(255,255,255,0.85);">A small set of written principles — human rights, ethics, usage policies — given to the AI as its moral compass</div>
+      </div>
+      <div style="font-size:1.4rem; color:var(--gray-400); flex-shrink:0;">→</div>
+      <div style="background:linear-gradient(145deg,#1e3a8a,#1e40af); border-radius:10px; padding:14px 18px; color:#fff; text-align:center; flex:1;">
+        <div style="font-size:1.5rem; margin-bottom:6px;">🔁</div>
+        <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.08em; color:#bfdbfe; margin-bottom:4px;">SELF-CRITIQUE LOOP</div>
+        <div style="font-size:0.82rem; color:rgba(255,255,255,0.85);">AI generates a response, then critiques it against each principle and revises — without human review of every output</div>
+      </div>
+      <div style="font-size:1.4rem; color:var(--gray-400); flex-shrink:0;">→</div>
+      <div style="background:linear-gradient(145deg,#064e3b,#065f46); border-radius:10px; padding:14px 18px; color:#fff; text-align:center; flex:1;">
+        <div style="font-size:1.5rem; margin-bottom:6px;">🤖</div>
+        <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.08em; color:#6ee7b7; margin-bottom:4px;">ALIGNED AI (CLAUDE)</div>
+        <div style="font-size:0.82rem; color:rgba(255,255,255,0.85);">An AI that reasons about its own outputs using principles — helpful, harmless, and honest — at scale</div>
+      </div>
+    </div>
+    <!-- 3 core principles -->
+    <div style="font-size:0.72rem; font-weight:700; letter-spacing:0.1em; color:var(--gray-500); text-align:center; margin-bottom:10px;">ANTHROPIC'S THREE CORE PRINCIPLES</div>
+    <div class="grid-3" style="gap:14px; margin-bottom:16px;">
+      <div style="background:var(--gray-50); border:1px solid #e5e7eb; border-top:3px solid var(--aa-blue); border-radius:8px; padding:12px 14px;">
+        <div style="font-size:1.1rem; margin-bottom:6px;">🙌</div>
+        <div style="font-size:0.8rem; font-weight:800; color:var(--aa-blue); margin-bottom:4px;">HELPFUL</div>
+        <div style="font-size:0.78rem; color:var(--gray-600);">Genuinely serve the user's goals. Provide accurate, complete, and useful responses.</div>
+      </div>
+      <div style="background:var(--gray-50); border:1px solid #e5e7eb; border-top:3px solid var(--aa-red); border-radius:8px; padding:12px 14px;">
+        <div style="font-size:1.1rem; margin-bottom:6px;">🛡️</div>
+        <div style="font-size:0.8rem; font-weight:800; color:var(--aa-red); margin-bottom:4px;">HARMLESS</div>
+        <div style="font-size:0.78rem; color:var(--gray-600);">Avoid outputs that could harm people, society, or rights. Grounded in the UN Declaration of Human Rights.</div>
+      </div>
+      <div style="background:var(--gray-50); border:1px solid #e5e7eb; border-top:3px solid #059669; border-radius:8px; padding:12px 14px;">
+        <div style="font-size:1.1rem; margin-bottom:6px;">✅</div>
+        <div style="font-size:0.8rem; font-weight:800; color:#059669; margin-bottom:4px;">HONEST</div>
+        <div style="font-size:0.78rem; color:var(--gray-600);">Never deceive. Acknowledge uncertainty. Don't manipulate. Reason transparently.</div>
+      </div>
+    </div>
+    <div class="highlight-block">
+      <p><strong>The breakthrough:</strong> Instead of humans labeling millions of outputs, the AI reads the constitution and labels itself. You write the principles once — and the AI scales them. <em>This is the idea we borrowed from.</em></p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>2 / 22</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ SLIDE 3 — HANGAR MODEL ══ -->
+<div class="slide" id="slide-3">
+  <div class="slide-header">
+    <div class="eyebrow">The Model · Adoption-Testing at the Hangar</div>
+    <h2>The Hangar AI Constitution</h2>
+    <div class="sub">Four interconnected pillars — Laws, Skills, Avatars, and Workflows — that together make AI agents constitutionally governed across the full SDLC.</div>
+  </div>
+  <div class="slide-body" style="display:flex; flex-direction:column; gap:10px;">
+
+    <!-- ── ROW 1: LAWS ── -->
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+      <!-- Eng -->
+      <div style="background:linear-gradient(135deg,#0d1b2a 0%,#003087 100%); border-radius:10px; padding:12px 14px; color:#fff; display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:0.68rem; font-weight:800; letter-spacing:0.1em; color:#93c5fd; text-transform:uppercase;">⚙️ Engineering Laws · ENG-1–14</div>
+        <div style="font-weight:800; font-size:0.95rem;">HOW we build</div>
+        <div style="font-size:0.75rem; color:rgba(255,255,255,0.82); line-height:1.55;">TDD · architecture · test coverage gates · complexity limits · security · domain separation</div>
+        <div style="margin-top:4px; display:flex; gap:6px; flex-wrap:wrap;">
+          <span style="background:rgba(255,255,255,0.14); border-radius:4px; padding:2px 7px; font-size:0.68rem; color:#bfdbfe; font-weight:700;">~70 laws</span>
+          <span style="background:rgba(200,16,46,0.35); border-radius:4px; padding:2px 7px; font-size:0.68rem; color:#fca5a5; font-weight:700;">12 ⛔ non-negotiable</span>
+        </div>
+      </div>
+      <!-- Product -->
+      <div style="background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%); border-radius:10px; padding:12px 14px; color:#fff; display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:0.68rem; font-weight:800; letter-spacing:0.1em; color:#bfdbfe; text-transform:uppercase;">📋 Product Laws · PRD-1–8</div>
+        <div style="font-weight:800; font-size:0.95rem;">WHAT we build</div>
+        <div style="font-size:0.75rem; color:rgba(255,255,255,0.82); line-height:1.55;">Problem validation · discovery stages A–F · evidence-backed decisions · roadmap governance</div>
+        <div style="margin-top:4px; display:flex; gap:6px; flex-wrap:wrap;">
+          <span style="background:rgba(255,255,255,0.14); border-radius:4px; padding:2px 7px; font-size:0.68rem; color:#bfdbfe; font-weight:700;">~60 laws</span>
+          <span style="background:rgba(200,16,46,0.35); border-radius:4px; padding:2px 7px; font-size:0.68rem; color:#fca5a5; font-weight:700;">7 ⛔ non-negotiable</span>
+        </div>
+      </div>
+      <!-- Business -->
+      <div style="background:linear-gradient(135deg,#064e3b 0%,#059669 100%); border-radius:10px; padding:12px 14px; color:#fff; display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:0.68rem; font-weight:800; letter-spacing:0.1em; color:#6ee7b7; text-transform:uppercase;">🏢 Business Laws · BUS-1–6</div>
+        <div style="font-weight:800; font-size:0.95rem;">WHY &amp; under what constraints</div>
+        <div style="font-size:0.75rem; color:rgba(255,255,255,0.82); line-height:1.55;">Value alignment · risk &amp; compliance · stakeholder governance · constitutional amendment</div>
+        <div style="margin-top:4px; display:flex; gap:6px; flex-wrap:wrap;">
+          <span style="background:rgba(255,255,255,0.14); border-radius:4px; padding:2px 7px; font-size:0.68rem; color:#6ee7b7; font-weight:700;">~38 laws</span>
+          <span style="background:rgba(200,16,46,0.35); border-radius:4px; padding:2px 7px; font-size:0.68rem; color:#fca5a5; font-weight:700;">4 ⛔ non-negotiable</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ROW 2: SKILLS + AVATARS ── -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <!-- Skills -->
+      <div style="background:#fafafa; border:1.5px solid #e5e7eb; border-top:3px solid var(--aa-blue); border-radius:10px; padding:11px 14px;">
+        <div style="font-size:0.68rem; font-weight:800; letter-spacing:0.1em; color:var(--aa-blue); margin-bottom:6px; text-transform:uppercase;">🎯 Skills — 29+ Agent Capabilities</div>
+        <div style="font-size:0.76rem; color:var(--gray-700); margin-bottom:7px; line-height:1.5;">Natural-language trigger phrases activate constitutional workflows. The agent reads the relevant laws, executes the skill, and cites every decision.</div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <code style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:5px; padding:2px 8px; font-size:0.72rem; color:#1e40af;">"run discovery"</code>
+          <code style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:5px; padding:2px 8px; font-size:0.72rem; color:#1e40af;">"rescue this codebase"</code>
+          <code style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:5px; padding:2px 8px; font-size:0.72rem; color:#1e40af;">"create avatar"</code>
+          <code style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:5px; padding:2px 8px; font-size:0.72rem; color:#1e40af;">"greenfield build"</code>
+          <span style="background:var(--gray-100); border:1px solid #d1d5db; border-radius:5px; padding:2px 8px; font-size:0.72rem; color:var(--gray-500);">+ 25 more…</span>
+        </div>
+      </div>
+      <!-- Avatars -->
+      <div style="background:#fafafa; border:1.5px solid #e5e7eb; border-top:3px solid #7c3aed; border-radius:10px; padding:11px 14px;">
+        <div style="font-size:0.68rem; font-weight:800; letter-spacing:0.1em; color:#7c3aed; margin-bottom:6px; text-transform:uppercase;">🤖 Avatars — Specialized AI Personas</div>
+        <div style="font-size:0.76rem; color:var(--gray-700); margin-bottom:7px; line-height:1.5;">Domain-specific AI personas that load a full context window of laws, examples, and domain knowledge. Configured by type, then activated for a team.</div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <span style="background:#fdf4ff; border:1px solid #e9d5ff; border-radius:5px; padding:2px 9px; font-size:0.72rem; color:#6b21a8; font-weight:600;">🏭 Industry</span>
+          <span style="background:#fdf4ff; border:1px solid #e9d5ff; border-radius:5px; padding:2px 9px; font-size:0.72rem; color:#6b21a8; font-weight:600;">📦 Product Type</span>
+          <span style="background:#fdf4ff; border:1px solid #e9d5ff; border-radius:5px; padding:2px 9px; font-size:0.72rem; color:#6b21a8; font-weight:600;">💻 Technology</span>
+          <span style="background:var(--gray-100); border:1px solid #d1d5db; border-radius:5px; padding:2px 9px; font-size:0.72rem; color:var(--gray-500);">e.g. Loyalty · React · FastAPI</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ROW 3: WORKFLOWS ── -->
+    <div style="background:linear-gradient(135deg,#0f172a,#1e293b); border-radius:10px; padding:11px 16px;">
+      <div style="font-size:0.68rem; font-weight:800; letter-spacing:0.1em; color:#94a3b8; margin-bottom:9px; text-transform:uppercase;">⚡ Workflows — Constitutional Execution Paths</div>
+      <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:8px;">
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px 10px; text-align:center;">
+          <div style="font-size:1.1rem; margin-bottom:3px;">🏛️</div>
+          <div style="font-size:0.72rem; font-weight:800; color:#e2e8f0; line-height:1.3;">Constitutional<br>Adoption</div>
+          <div style="font-size:0.64rem; color:#94a3b8; margin-top:3px; line-height:1.3;">Onboard a team to the constitution</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px 10px; text-align:center;">
+          <div style="font-size:1.1rem; margin-bottom:3px;">🤖</div>
+          <div style="font-size:0.72rem; font-weight:800; color:#e2e8f0; line-height:1.3;">Avatar<br>Workflow</div>
+          <div style="font-size:0.64rem; color:#94a3b8; margin-top:3px; line-height:1.3;">Six-mode AI persona lifecycle</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px 10px; text-align:center;">
+          <div style="font-size:1.1rem; margin-bottom:3px;">🔍</div>
+          <div style="font-size:0.72rem; font-weight:800; color:#e2e8f0; line-height:1.3;">Product<br>Discovery</div>
+          <div style="font-size:0.64rem; color:#94a3b8; margin-top:3px; line-height:1.3;">Stage A–F evidence-based discovery</div>
+        </div>
+        <div style="background:rgba(200,16,46,0.25); border:1.5px solid rgba(200,16,46,0.6); border-radius:8px; padding:8px 10px; text-align:center; position:relative;">
+          <div style="font-size:1.1rem; margin-bottom:3px;">🚑</div>
+          <div style="font-size:0.72rem; font-weight:800; color:#fca5a5; line-height:1.3;">Legacy<br>Rescue</div>
+          <div style="font-size:0.64rem; color:#fca5a5; margin-top:3px; line-height:1.3;">6-phase constitutional refactor</div>
+          <div style="position:absolute; top:-7px; left:50%; transform:translateX(-50%); background:#C8102E; color:#fff; font-size:0.58rem; font-weight:800; padding:1px 6px; border-radius:3px; white-space:nowrap;">TODAY'S DEMO</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px 10px; text-align:center;">
+          <div style="font-size:1.1rem; margin-bottom:3px;">🌱</div>
+          <div style="font-size:0.72rem; font-weight:800; color:#e2e8f0; line-height:1.3;">Greenfield<br>Development</div>
+          <div style="font-size:0.64rem; color:#94a3b8; margin-top:3px; line-height:1.3;">8-phase constitutional new build</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>3 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 8 — DEMO INTRO ══ -->
+<div class="slide" id="slide-4">
+  <div class="slide-header rescue">
+    <div class="eyebrow">Demo · Work in Progress</div>
+    <h2>Legacy Rescue — Workflow Demo</h2>
+    <div class="sub">We'll walk through the Legacy Rescue workflow applied to a demo codebase — illustrating the concept, not a verified standard.</div>
+  </div>
+  <div class="slide-body">
+    <div style="background:#fef3c7; border:2px solid #f59e0b; border-radius:10px; padding:12px 18px; margin-bottom:16px; display:flex; gap:12px; align-items:flex-start;">
+      <span style="font-size:1.3rem;">⚠️</span>
+      <div>
+        <strong style="color:#92400e; font-size:0.88rem;">DEMO REPO — AI-Generated · Not Production Code</strong>
+        <p style="margin:4px 0 0; font-size:0.82rem; color:#78350f;">The <code>aa-loyalty-legacy</code> codebase used in this demo is <strong>entirely AI-generated</strong> for illustration purposes. It is not real AA production code, not connected to any AA system, and does not represent the actual state of any AA codebase. All metrics and violations are synthetic.</p>
+      </div>
+    </div>
+    <div class="grid-2" style="gap:20px; margin-bottom:16px;">
+      <div class="card red-border">
+        <h4>🎯 Demo Codebase</h4>
+        <p style="margin-bottom:6px;"><strong>aa-loyalty-legacy</strong> <span style="font-size:0.75rem; color:#b91c1c; font-weight:700;">(AI-Generated Demo)</span></p>
+        <ul>
+          <li>Java 8 Spring Boot 2.3 monolith</li>
+          <li>1,865 lines across 27 Java files</li>
+          <li>6 bounded contexts, minimal separation</li>
+          <li>Real violations, AI-generated code</li>
+        </ul>
+      </div>
+      <div class="card red-border">
+        <h4>🔴 The Problem (Baseline)</h4>
+        <div class="stat-row" style="margin:8px 0; gap:8px;">
+          <div class="stat-box warn" style="min-width:0; padding:8px 6px;">
+            <div class="num" style="font-size:1.4rem;">12%</div>
+            <div class="lbl">Coverage</div>
+          </div>
+          <div class="stat-box warn" style="min-width:0; padding:8px 6px;">
+            <div class="num" style="font-size:1.4rem;">47</div>
+            <div class="lbl">Bugs</div>
+          </div>
+          <div class="stat-box warn" style="min-width:0; padding:8px 6px;">
+            <div class="num" style="font-size:1.4rem;">8</div>
+            <div class="lbl">Vulns</div>
+          </div>
+          <div class="stat-box warn" style="min-width:0; padding:8px 6px;">
+            <div class="num" style="font-size:1.4rem;">28</div>
+            <div class="lbl">Avg Cmplx</div>
+          </div>
+        </div>
+        <p style="font-size:0.8rem; margin:0;">Security Rating: <strong style="color:#b91c1c;">D</strong> · Tech Debt: <strong style="color:#b91c1c;">142 days</strong></p>
+      </div>
+    </div>
+    <div class="highlight-block">
+      <p><strong>The goal of this demo:</strong> Illustrate how the Legacy Rescue workflow could work — phase by phase, each with a SonarQube gate, no phase advancing without human approval. <em>This is a proposed pattern we're testing and refining.</em></p>
+    </div>
+    <div class="noneg-banner" style="margin-top:10px;">
+      <span class="icon">⛔</span>
+      <p><strong>ENG-4.10 (NON-NEGOTIABLE):</strong> Write characterization tests before touching any legacy code. Violating this law means changes are unconstitutional and must be reverted.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>4 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 9 — 6 PHASES ══ -->
+<div class="slide" id="slide-5">
+  <div class="slide-header">
+    <div class="eyebrow">Legacy Rescue Workflow</div>
+    <h2>The 6 Phases of Legacy Rescue</h2>
+    <div class="sub">Sequential, gated, constitutional. SonarQube is the referee at every phase boundary.</div>
+  </div>
+  <div class="slide-body">
+    <div class="phase-row" style="margin-bottom:18px;">
+      <div class="phase-pill active"><span class="icon">📊</span><strong>1</strong><div>Assess</div></div>
+      <div class="phase-pill locked"><span class="icon">⚖️</span><strong>2</strong><div>Govern</div></div>
+      <div class="phase-pill locked"><span class="icon">🔒</span><strong>3</strong><div>Characterize</div></div>
+      <div class="phase-pill locked"><span class="icon">🛡️</span><strong>4</strong><div>Remediate</div></div>
+      <div class="phase-pill locked"><span class="icon">✂️</span><strong>5</strong><div>Refactor</div></div>
+      <div class="phase-pill locked"><span class="icon">✅</span><strong>6</strong><div>Certify</div></div>
+    </div>
+    <table>
+      <tr><th>Phase</th><th>Key Activity</th><th>Constitutional Gate (SonarQube)</th><th>Laws</th></tr>
+      <tr>
+        <td><strong>1 — Assess</strong></td>
+        <td>SonarQube baseline · Inventory violations · Map bounded contexts</td>
+        <td>Baseline report committed · violations documented</td>
+        <td><span class="law-tag eng">ENG-3.1</span><span class="law-tag eng">ENG-10.1</span></td>
+      </tr>
+      <tr>
+        <td><strong>2 — Govern</strong></td>
+        <td>Constitutional mandate · Priority matrix · Team AGENT.md setup</td>
+        <td>Mandate approved by architect · AGENT.md committed</td>
+        <td><span class="law-tag eng">ENG-13.1</span><span class="law-tag bus">BUS-1.1</span></td>
+      </tr>
+      <tr>
+        <td><strong>3 — Characterize</strong></td>
+        <td>Write tests describing current behavior · Lock all behavior before changes</td>
+        <td>Coverage ≥ 95% characterizing existing behavior before any change begins</td>
+        <td><span class="law-tag non-neg">ENG-4.3 ⛔</span><span class="law-tag eng">ENG-4.1</span></td>
+      </tr>
+      <tr>
+        <td><strong>4 — Remediate</strong></td>
+        <td>Security vulns → 0 · Bugs prioritized by risk · One violation per commit</td>
+        <td>HARD_BLOCK: vulnerabilities = 0, security_rating = A</td>
+        <td><span class="law-tag non-neg">ENG-6.1 ⛔</span><span class="law-tag non-neg">ENG-6.7 ⛔</span></td>
+      </tr>
+      <tr>
+        <td><strong>5 — Refactor</strong></td>
+        <td>Boy Scout Rule · Extract domain objects · Reduce complexity</td>
+        <td>Complexity avg &lt; 10 · No new violations introduced</td>
+        <td><span class="law-tag eng">ENG-1.3</span><span class="law-tag eng">ENG-2.1</span></td>
+      </tr>
+      <tr>
+        <td><strong>6 — Certify</strong></td>
+        <td>Final SonarQube gate · Delta report · Architectural sign-off</td>
+        <td>Coverage ≥ 80% · Bugs ≤ 5 · Security A · Tech Debt &lt; 30d</td>
+        <td><span class="law-tag non-neg">ENG-12.1 ⛔</span><span class="law-tag eng">ENG-10.2</span></td>
+      </tr>
+    </table>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>5 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 10 — PHASE 1 ASSESS ══ -->
+<div class="slide" id="slide-6">
+  <div class="slide-header">
+    <div class="eyebrow">Phase 1</div>
+    <h2>Assess — The Constitutional Baseline</h2>
+    <div class="sub">The agent doesn't guess — it reads the constitution, runs SonarQube, and cites the law.</div>
+  </div>
+  <div class="slide-body">
+    <h3>SonarQube Baseline Dashboard <span style="font-size:0.8rem; font-weight:600; color:#b91c1c;">(AI-Generated Demo Codebase)</span></h3>
+    <div class="stat-row" style="margin-bottom:18px;">
+      <div class="stat-box warn"><div class="num">12%</div><div class="lbl">🔴 Coverage<br>Target: ≥80%</div></div>
+      <div class="stat-box warn"><div class="num">47</div><div class="lbl">🔴 Bugs<br>Target: ≤5</div></div>
+      <div class="stat-box warn"><div class="num">8</div><div class="lbl">🔴 Vulnerabilities<br>Target: 0</div></div>
+      <div class="stat-box warn"><div class="num">28</div><div class="lbl">🔴 Avg Complexity<br>Target: &lt;10</div></div>
+      <div class="stat-box warn"><div class="num">D</div><div class="lbl">🔴 Security Rating<br>Target: A</div></div>
+    </div>
+    <p style="margin-bottom:8px;"><strong>Constitutional violations found:</strong> 6 law violations across 4 bounded contexts</p>
+    <div class="code-block">
+<span class="cm">// Agent output — Phase 1 Assessment · aa-loyalty-legacy (AI-GENERATED DEMO REPO)</span>
+
+<span class="law">ENG-4.1 ⛔ VIOLATED</span>: MilesCalculationService — 0 unit tests detected.
+  Action required: Write characterization tests BEFORE any code changes.
+  Citing: ENG-4.3 (Test-First Brownfield Law) — violation blocks Phase 3 entry.
+
+<span class="law">ENG-6.7 ⛔ VIOLATED</span>: RedemptionController.java:142 — SQL concatenation detected.
+  SQL injection vector: String query = <span class="str">"SELECT * FROM miles WHERE id=" + userId</span>;
+  Action required: Replace with PreparedStatement before Phase 4 entry.
+
+<span class="law">ENG-10.1 WARNING</span>: 312 code smells · Technical debt: 142 developer-days.
+  Bounded contexts with highest debt: Miles · Redemption · Tier · Partner.
+</div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>6 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 11 — LIVE DEMO ══ -->
+<div class="slide demo-slide" id="slide-7">
+  <div class="slide-header">
+    <div style="font-size:4rem; margin-bottom:16px;">🎬</div>
+    <h1 style="font-size:2.8rem; font-weight:900; letter-spacing:-0.01em;">DEMO</h1>
+    <div class="sub" style="font-size:1.1rem; margin-top:14px; opacity:0.9;">
+      Let's open Phase 1 and walk through it together
+    </div>
+    <div style="margin-top:16px; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.5); border-radius:10px; padding:10px 20px; font-size:0.82rem; color:#fef3c7; font-weight:600;">
+      ⚠️ AI-generated demo codebase — illustrative only, not production AA code
+    </div>
+    <div style="margin-top:20px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <span style="background:rgba(255,255,255,0.15); border-radius:20px; padding:6px 18px; font-size:0.82rem; font-weight:600;">phase-1-assess.html</span>
+      <span style="background:rgba(255,255,255,0.15); border-radius:20px; padding:6px 18px; font-size:0.82rem; font-weight:600;">SonarQube Dashboard</span>
+      <span style="background:rgba(255,255,255,0.15); border-radius:20px; padding:6px 18px; font-size:0.82rem; font-weight:600;">Agent in Cursor / VS Code</span>
+    </div>
+  </div>
+  <div class="slide-body" style="background:var(--aa-navy); padding:24px 44px;">
+    <div class="grid-3" style="gap:16px;">
+      <div style="background:rgba(255,255,255,0.07); border-radius:10px; padding:16px; text-align:center;">
+        <div style="font-size:1.6rem; margin-bottom:8px;">1️⃣</div>
+        <div style="color:#fff; font-weight:700; font-size:0.85rem; margin-bottom:6px;">Open the workflow</div>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.78rem; margin:0;">workflows/legacy-rescue-refactor.md → Phase 1</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.07); border-radius:10px; padding:16px; text-align:center;">
+        <div style="font-size:1.6rem; margin-bottom:8px;">2️⃣</div>
+        <div style="color:#fff; font-weight:700; font-size:0.85rem; margin-bottom:6px;">Trigger the assessment skill</div>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.78rem; margin:0;">"assess this codebase" → skill-27 activates</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.07); border-radius:10px; padding:16px; text-align:center;">
+        <div style="font-size:1.6rem; margin-bottom:8px;">3️⃣</div>
+        <div style="color:#fff; font-weight:700; font-size:0.85rem; margin-bottom:6px;">Read the law citations</div>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.78rem; margin:0;">Every violation cites its law — no guessing</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 12 — THE GATE ══ -->
+<div class="slide" id="slide-8">
+  <div class="slide-header">
+    <div class="eyebrow">The Human-in-the-Loop Gate</div>
+    <h2>ENG-12.1 ⛔ — The Constitutional Gate</h2>
+    <div class="sub">The agent CANNOT advance without a human reviewing the SonarQube dashboard. API pass ≠ gate pass.</div>
+  </div>
+  <div class="slide-body">
+    <div class="noneg-banner" style="margin-bottom:16px;">
+      <span class="icon">⛔</span>
+      <p><strong>ENG-12.1 (NON-NEGOTIABLE):</strong> Phase advancement requires human review of the SonarQube Quality Gate dashboard. No automated bypass. No exception without executive approval.</p>
+    </div>
+    <h3>What the gate requires in practice</h3>
+    <div class="flow-row" style="margin-bottom:16px; gap:6px;">
+      <div class="flow-step highlight"><span class="icon">🤖</span>Agent proposes<br>phase advance</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step active"><span class="icon">📊</span>Human opens<br>SonarQube</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step active"><span class="icon">👁️</span>Reviews dashboard<br>against gate criteria</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="background:#dbeafe; color:#1e3a8a;"><span class="icon">✍️</span>APPROVE /<br>REJECT / ENHANCE</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="background:var(--green-bg); color:var(--green);"><span class="icon">✅</span>Phase<br>advances</div>
+    </div>
+    <div class="grid-2" style="gap:18px;">
+      <div class="card green-border">
+        <h4>✅ What APPROVE looks like</h4>
+        <ul>
+          <li>SonarQube gate passes all phase criteria</li>
+          <li>Human confirms: "I've reviewed the dashboard"</li>
+          <li>Agent commits the phase transition artifact</li>
+          <li>Git log records the constitutional advancement</li>
+        </ul>
+      </div>
+      <div class="card red-border">
+        <h4>🚫 What REJECT looks like</h4>
+        <ul>
+          <li>Gate criteria not met — agent cannot advance</li>
+          <li>Human documents the blocker in the artifact</li>
+          <li>Agent proposes remediation actions with law citations</li>
+          <li>Phase stays open until gate is satisfied</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>8 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 13 — PHASE 3 CHARACTERIZE ══ -->
+<div class="slide" id="slide-9">
+  <div class="slide-header">
+    <div class="eyebrow">Phase 3</div>
+    <h2>Characterize — Lock Behavior First</h2>
+    <div class="sub">ENG-4.3 (Test-First Brownfield Law) — Write tests that describe what the code DOES, not what it SHOULD do.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:20px; margin-bottom:14px;">
+      <div>
+        <div style="background:#dbeafe; border-radius:10px; padding:14px 16px; margin-bottom:12px;">
+          <div style="font-size:0.72rem; font-weight:700; color:#1e40af; letter-spacing:0.07em; margin-bottom:6px;">ENG-4.3 — TEST-FIRST BROWNFIELD LAW ⛔</div>
+          <p style="color:#1e3a8a; font-size:0.85rem; margin:0; font-style:italic;">"Write characterization tests before modifying any legacy code. The tests lock current behavior — they describe what the code does, not what it should do."</p>
+        </div>
+        <div class="card green-border">
+          <h4>✅ Why this law exists</h4>
+          <ul>
+            <li>Legacy code has <strong>undocumented behavior</strong> that matters</li>
+            <li>Without tests, refactoring silently breaks production</li>
+            <li>Tests become the <strong>safety net</strong> for everything that follows</li>
+            <li>Coverage becomes a <strong>constitutional proof</strong></li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-top:0;">Characterization: OBSERVE → ASSERT → LOCK</h3>
+        <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:8px; padding:8px 12px; margin-bottom:10px; font-size:0.78rem; color:#92400e;">
+          ⚠️ <strong>Not standard TDD.</strong> There is no deliberate RED phase. The code already exists — you're capturing what it <em>does</em>, not what it <em>should</em> do.
+        </div>
+        <div class="flow-row" style="gap:6px;">
+          <div class="flow-step" style="background:#f0f9ff; color:#0369a1; border:1px solid #bae6fd;"><span class="icon">🔍</span>Observe<br><span style="font-size:0.7rem; font-weight:400;">Run existing code.<br>Capture actual outputs.</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" style="background:#faf5ff; color:#6d28d9; border:1px solid #ddd6fe;"><span class="icon">📋</span>Assert<br><span style="font-size:0.7rem; font-weight:400;">Write test locking<br>observed behavior.</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" style="background:var(--green-bg); color:var(--green);"><span class="icon">🟢</span>Lock<br><span style="font-size:0.7rem; font-weight:400;">Goes GREEN now.<br>Behavior is frozen.</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight"><span class="icon">📝</span>Commit<br><span style="font-size:0.7rem; font-weight:400;">ENG-4.10 citation.<br>One class per commit.</span></div>
+        </div>
+        <div class="stat-row" style="margin-top:16px;">
+          <div class="stat-box warn"><div class="num">0%</div><div class="lbl">Coverage<br>before Phase 3</div></div>
+          <div class="stat-box ok"><div class="num">~95%</div><div class="lbl">Characterization coverage<br>target before any change</div></div>
+          <div class="stat-box" style="background:#f3e8ff;"><div class="num" style="color:#5b21b6;">63</div><div class="lbl">Characterization tests<br>written in 5 hours</div></div>
+        </div>
+        <div class="noneg-banner" style="margin-top:10px;">
+          <span class="icon">⚠️</span>
+          <p><strong>No refactoring begins until Phase 3 gate passes.</strong> Characterization tests must cover existing behavior to ~95% — locking behavior before any line of code changes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>9 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 14 — PHASE 4 REMEDIATE ══ -->
+<div class="slide" id="slide-10">
+  <div class="slide-header red">
+    <div class="eyebrow">Phase 4</div>
+    <h2>Remediate — Security First, Always</h2>
+    <div class="sub">ENG-6.1 ⛔ + ENG-6.7 ⛔ enforced. One violation per commit. The git log IS the audit trail.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:18px; margin-bottom:14px;">
+      <div>
+        <div style="background:var(--red-bg); border:1px solid #fca5a5; border-radius:10px; padding:14px 16px; margin-bottom:12px;">
+          <div style="font-size:0.72rem; font-weight:700; color:#b91c1c; letter-spacing:0.07em; margin-bottom:8px;">CONSTITUTIONAL PRIORITY ORDER (IMMUTABLE)</div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="background:#fff; border-left:4px solid #b91c1c; border-radius:4px; padding:6px 10px; font-size:0.82rem; font-weight:700; color:#b91c1c;">1. Security (ENG-6.1 ⛔)</div>
+            <div style="background:#fff; border-left:4px solid #f97316; border-radius:4px; padding:6px 10px; font-size:0.82rem; font-weight:700; color:#c2410c;">2. Correctness (ENG-4.1)</div>
+            <div style="background:#fff; border-left:4px solid var(--aa-gold); border-radius:4px; padding:6px 10px; font-size:0.82rem; font-weight:700; color:#92400e;">3. Reliability (ENG-5.1)</div>
+            <div style="background:#fff; border-left:4px solid var(--green); border-radius:4px; padding:6px 10px; font-size:0.82rem; font-weight:700; color:var(--green);">4. Performance (ENG-7.1)</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-top:0;">Example: SQL Injection Fix</h3>
+        <div class="code-block" style="margin-bottom:8px; font-size:0.74rem;">
+<span class="cm">// BEFORE — ENG-6.7 ⛔ VIOLATED</span>
+String query = <span class="str">"SELECT * FROM miles WHERE id="</span> + userId;
+Statement stmt = conn.createStatement();
+ResultSet rs = stmt.executeQuery(query);
+</div>
+        <div class="code-block" style="font-size:0.74rem;">
+<span class="cm">// AFTER — ENG-6.7 ⛔ SATISFIED · commit: fix(security): ENG-6.7</span>
+PreparedStatement stmt = conn.prepareStatement(
+  <span class="str">"SELECT * FROM miles WHERE id = ?"</span>
+);
+stmt.setLong(1, userId);
+ResultSet rs = stmt.executeQuery();
+</div>
+      </div>
+    </div>
+    <div class="noneg-banner">
+      <span class="icon">📋</span>
+      <p><strong>Phase 4 HARD_BLOCK rule:</strong> SonarQube gate requires vulnerabilities = 0 and security_rating = A before ANY Phase 5 refactoring begins. No exceptions.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>10 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 15 — PHASE 5 REFACTOR ══ -->
+<div class="slide" id="slide-11">
+  <div class="slide-header green">
+    <div class="eyebrow">Phase 5</div>
+    <h2>Refactor — The Boy Scout Rule</h2>
+    <div class="sub">ENG-1.3 (Continuous Refactoring Law) — Always leave the code better than you found it.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:20px; margin-bottom:14px;">
+      <div>
+        <div style="background:var(--green-bg); border:1px solid #a7d7b8; border-radius:10px; padding:14px 16px; margin-bottom:12px;">
+          <div style="font-size:0.72rem; font-weight:700; color:var(--green); letter-spacing:0.07em; margin-bottom:6px;">ENG-1.3 — CONTINUOUS REFACTORING LAW</div>
+          <p style="color:#0f4c25; font-size:0.85rem; margin:0; font-style:italic;">"Always leave the code better than you found it. Each commit must improve at least one quality dimension without introducing new violations."</p>
+        </div>
+        <div class="card green-border">
+          <h4>MilesCalculationService — The Rescue</h4>
+          <ul>
+            <li>Complexity: <strong>67 → 9</strong> (extracted 7 domain objects)</li>
+            <li>Length: <strong>847 lines → 3 focused classes</strong></li>
+            <li>Methods: <strong>avg 68 LOC → avg 11 LOC</strong></li>
+            <li>Every extraction: <strong>commits cite ENG-2.1</strong></li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-top:0;">Domain Objects Extracted</h3>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="background:var(--gray-50); border:1px solid var(--gray-200); border-radius:8px; padding:9px 12px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.82rem; font-weight:700; color:var(--aa-navy);">MilesBalance</span>
+            <span class="badge green">ENG-2.1</span>
+          </div>
+          <div style="background:var(--gray-50); border:1px solid var(--gray-200); border-radius:8px; padding:9px 12px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.82rem; font-weight:700; color:var(--aa-navy);">TierMultiplier</span>
+            <span class="badge green">ENG-2.1</span>
+          </div>
+          <div style="background:var(--gray-50); border:1px solid var(--gray-200); border-radius:8px; padding:9px 12px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.82rem; font-weight:700; color:var(--aa-navy);">AwardCalculator</span>
+            <span class="badge green">ENG-2.1</span>
+          </div>
+          <div style="background:var(--gray-50); border:1px solid var(--gray-200); border-radius:8px; padding:9px 12px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.82rem; font-weight:700; color:var(--aa-navy);">PartnerRedemptionPolicy</span>
+            <span class="badge green">ENG-2.1</span>
+          </div>
+          <div style="background:var(--gray-50); border:1px solid var(--gray-200); border-radius:8px; padding:9px 12px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.82rem; font-weight:700; color:var(--aa-navy);">ExpirationPolicy + 2 more</span>
+            <span class="badge green">ENG-2.1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>11 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 16 — PHASE 6 CERTIFY ══ -->
+<div class="slide" id="slide-12">
+  <div class="slide-header green">
+    <div class="eyebrow">Phase 6</div>
+    <h2>Certify — The Constitutional Delta</h2>
+    <div class="sub">"The constitution made this possible in 8 sprints, not 18 months."</div>
+  </div>
+  <div class="slide-body">
+    <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+      <div class="metric-delta">
+        <span class="label">📊 Test Coverage</span>
+        <span class="before">12% 🔴</span>
+        <span class="arrow">→</span>
+        <span class="after">88% ✅</span>
+        <span class="badge green">+76 pts</span>
+      </div>
+      <div class="metric-delta">
+        <span class="label">🐛 Bugs</span>
+        <span class="before">47 🔴</span>
+        <span class="arrow">→</span>
+        <span class="after">3 ✅</span>
+        <span class="badge green">−94%</span>
+      </div>
+      <div class="metric-delta">
+        <span class="label">🛡️ Vulnerabilities</span>
+        <span class="before">8 🔴</span>
+        <span class="arrow">→</span>
+        <span class="after">0 ✅</span>
+        <span class="badge green">Eliminated</span>
+      </div>
+      <div class="metric-delta">
+        <span class="label">🌫️ Code Smells</span>
+        <span class="before">312 🔴</span>
+        <span class="arrow">→</span>
+        <span class="after">89 ✅</span>
+        <span class="badge green">−71%</span>
+      </div>
+      <div class="metric-delta">
+        <span class="label">📅 Technical Debt</span>
+        <span class="before">142d 🔴</span>
+        <span class="arrow">→</span>
+        <span class="after">21d ✅</span>
+        <span class="badge green">−85%</span>
+      </div>
+      <div class="metric-delta">
+        <span class="label">🔐 Security Rating</span>
+        <span class="before">D 🔴</span>
+        <span class="arrow">→</span>
+        <span class="after">A ✅</span>
+        <span class="badge green">Top grade</span>
+      </div>
+    </div>
+    <div class="highlight-block">
+      <p>Every improvement above is traceable to a law. Every commit cites the constitutional law it satisfies. The SonarQube dashboard is the <strong>constitutional proof</strong> — not a slide, not a report, a live dashboard.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>12 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════════ SLIDE 4 — WHO IS IT FOR ══ -->
+<div class="slide" id="slide-13">
+  <div class="slide-header">
+    <div class="eyebrow">Audience &amp; Personas</div>
+    <h2>Who Is the Constitution For?</h2>
+    <div class="sub">Three personas — each with a distinct constitutional role and entry point.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-3" style="gap:20px; margin-bottom:18px;">
+      <div style="background:linear-gradient(145deg,#003057,#005b9f); border-radius:12px; padding:22px 18px; color:#fff;">
+        <div style="font-size:2rem; margin-bottom:10px;">🎓</div>
+        <div style="font-size:0.85rem; font-weight:700; letter-spacing:0.07em; color:#93c5fd; margin-bottom:6px;">TECHNICAL COACH</div>
+        <div style="font-weight:800; font-size:1.1rem; margin-bottom:12px;">AI Coach / Advisor</div>
+        <ul style="padding-left:16px; color:rgba(255,255,255,0.95); font-size:0.88rem; margin-bottom:12px;">
+          <li>Facilitate team onboarding</li>
+          <li>Apply Socratic guidance laws</li>
+          <li>Run workshops using workflows</li>
+          <li>Manage the amendment process</li>
+        </ul>
+        <div style="background:rgba(255,255,255,0.15); border-radius:6px; padding:8px 10px; font-size:0.82rem; color:rgba(255,255,255,0.95);">
+          <strong>Entry:</strong> AGENT.md + Adoption workflow
+        </div>
+      </div>
+      <div style="background:linear-gradient(145deg,#4c1d95,#5b21b6); border-radius:12px; padding:22px 18px; color:#fff;">
+        <div style="font-size:2rem; margin-bottom:10px;">🏗️</div>
+        <div style="font-size:0.85rem; font-weight:700; letter-spacing:0.07em; color:#c4b5fd; margin-bottom:6px;">SENIOR ARCHITECT</div>
+        <div style="font-weight:800; font-size:1.1rem; margin-bottom:12px;">Architect / Principal</div>
+        <ul style="padding-left:16px; color:rgba(255,255,255,0.95); font-size:0.88rem; margin-bottom:12px;">
+          <li>Evaluate architectural alignment</li>
+          <li>Map DDD patterns to laws</li>
+          <li>Review constitutional gate results</li>
+          <li>Approve non-negotiable exceptions</li>
+        </ul>
+        <div style="background:rgba(255,255,255,0.15); border-radius:6px; padding:8px 10px; font-size:0.82rem; color:rgba(255,255,255,0.95);">
+          <strong>Entry:</strong> Phase 2 Govern + ENG-12.1
+        </div>
+      </div>
+      <div style="background:linear-gradient(145deg,#065f46,#047857); border-radius:12px; padding:22px 18px; color:#fff;">
+        <div style="font-size:2rem; margin-bottom:10px;">⚙️</div>
+        <div style="font-size:0.85rem; font-weight:700; letter-spacing:0.07em; color:#6ee7b7; margin-bottom:6px;">ENGINEER</div>
+        <div style="font-weight:800; font-size:1.1rem; margin-bottom:12px;">Developer / SDE</div>
+        <ul style="padding-left:16px; color:rgba(255,255,255,0.95); font-size:0.88rem; margin-bottom:12px;">
+          <li>Implement constitutionally</li>
+          <li>Quick start on TDD cycle (skill-06)</li>
+          <li>Trigger skills by phrase</li>
+          <li>SDD workflow from day one</li>
+        </ul>
+        <div style="background:rgba(255,255,255,0.15); border-radius:6px; padding:8px 10px; font-size:0.82rem; color:rgba(255,255,255,0.95);">
+          <strong>Entry:</strong> hangar-ai-specs/ init + AGENTS.md
+        </div>
+      </div>
+    </div>
+    <div class="noneg-banner">
+      <span class="icon">💡</span>
+      <p>The constitution is <strong>not a style guide</strong> — it's a governance system. The agent reads it at runtime and cites laws in every response, every commit, every gate.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>13 / 22</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ SLIDE 5 — VALUE PROP ══ -->
+<div class="slide" id="slide-14">
+  <div class="slide-header">
+    <div class="eyebrow">Early Signals · Work in Progress</div>
+    <h2>Why This Approach Is Promising</h2>
+    <div class="sub">These numbers come from Wave 2 Cargo — a real legacy Java system, not a demo.</div>
+  </div>
+  <div class="slide-body">
+    <div class="stat-row" style="margin-bottom:18px;">
+      <div class="stat-box ok">
+        <div class="num">63+</div>
+        <div class="lbl">Characterization tests<br>written in 5 hours</div>
+      </div>
+      <div class="stat-box warn" style="background:#fef3c7;">
+        <div class="num" style="color:#92400e;">2</div>
+        <div class="lbl">Unit tests in the<br>codebase before rescue</div>
+      </div>
+      <div class="stat-box ok">
+        <div class="num">91%</div>
+        <div class="lbl">Coverage achieved<br>(from 30% baseline)</div>
+      </div>
+      <div class="stat-box" style="background:#f3e8ff;">
+        <div class="num" style="color:#5b21b6;">8</div>
+        <div class="lbl">Sprints to rescue<br>(was projected 18 months)</div>
+      </div>
+    </div>
+    <div class="grid-2" style="gap:18px; margin-bottom:14px;">
+      <div class="card navy-border">
+        <h4>📈 What the Constitution Delivered</h4>
+        <ul>
+          <li>Tech debt measured: <strong>142 developer-days → 21 days</strong></li>
+          <li>Complexity avg: <strong>28 → 8</strong> across rescued classes</li>
+          <li>Security rating: <strong>D → A</strong> in 3 sprints</li>
+          <li>Every fix <strong>cites a law</strong> — the git log is an audit trail</li>
+        </ul>
+      </div>
+      <div class="card gold-border">
+        <h4>🏢 What Management Got</h4>
+        <ul>
+          <li>SonarQube dashboard as <strong>constitutional proof</strong></li>
+          <li>Predictable rescue phases — no surprises</li>
+          <li>Every architectural decision documented by law</li>
+          <li>Teams can <strong>replicate the pattern</strong> independently</li>
+        </ul>
+      </div>
+    </div>
+    <div class="quote">
+      <p>"The constitution transforms AI from a code generator into a teaching partner — one that cites its reasoning, enforces its own gates, and leaves the team smarter."</p>
+      <span class="src">— Hangar AI Constitution · Wave 2 Retrospective</span>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>14 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 6 — RAG MODEL ══ -->
+<div class="slide" id="slide-15">
+  <div class="slide-header">
+    <div class="eyebrow">Architecture</div>
+    <h2>The Constitutional AI Model (RAG)</h2>
+    <div class="sub">5 components that together form a governed, teaching AI agent.</div>
+  </div>
+  <div class="slide-body">
+    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+      <div class="rag-component">
+        <div class="num">1</div>
+        <div class="body">
+          <strong>Base Constitutions — 3 domains, 168 laws</strong>
+          <span>Engineering · Product · Business. The agent reads these before every response. Laws are cited inline (e.g., ENG-4.1 ⛔).</span>
+        </div>
+        <div style="display:flex; gap:5px; align-items:center;">
+          <span class="law-tag eng">ENG</span><span class="law-tag prd">PRD</span><span class="law-tag bus">BUS</span>
+        </div>
+      </div>
+      <div class="rag-component">
+        <div class="num">2</div>
+        <div class="body">
+          <strong>Agent Skills — 29+ skills with trigger phrases</strong>
+          <span>Discrete, reusable behaviors. Triggered by natural language. Each skill cites its governing laws automatically.</span>
+        </div>
+        <span class="badge blue">skill-06-atomic-tdd · skill-09-refactoring · skill-27-compliance</span>
+      </div>
+      <div class="rag-component">
+        <div class="num">3</div>
+        <div class="body">
+          <strong>Avatars — tech stack + industry + product-type</strong>
+          <span>Configure the agent's domain intelligence. Java-Spring + Loyalty + Airline loads the right laws into context automatically.</span>
+        </div>
+        <span class="badge gold">java-spring · loyalty · cargo · airline</span>
+      </div>
+      <div class="rag-component">
+        <div class="num">4</div>
+        <div class="body">
+          <strong>AGENT.md — Teaching Loop, Guardrails, Operating Modes</strong>
+          <span>The agent's runtime constitution. Declares Socratic mode, teaching behaviors, and which workflows are active for this repo.</span>
+        </div>
+        <span class="badge navy">Teaching · Guardrail · Workflow Declaration</span>
+      </div>
+      <div class="rag-component" style="border:2px solid var(--aa-red); background:var(--red-bg);">
+        <div class="num" style="background:var(--aa-red);">5</div>
+        <div class="body">
+          <strong>Human-in-the-Loop Gate — SonarQube + ENG-12.1 ⛔</strong>
+          <span>The agent CANNOT advance a phase without human review of the SonarQube dashboard. API pass ≠ gate pass.</span>
+        </div>
+        <span class="law-tag non-neg">ENG-12.1 ⛔</span>
+      </div>
+    </div>
+    <div class="noneg-banner">
+      <span class="icon">⚖️</span>
+      <p>These 5 components together form the constitutional AI agent — remove any one of them and the governance collapses.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>15 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 7 — 5 WORKFLOWS ══ -->
+<div class="slide" id="slide-16">
+  <div class="slide-header">
+    <div class="eyebrow">The Governed Workflows</div>
+    <h2>The 5 Constitutional Workflows</h2>
+    <div class="sub">All workflows are governed — every phase has a constitutional gate. No phase skipping.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-5" style="margin-bottom:16px;">
+      <div style="background:linear-gradient(145deg,#1e3a8a,#1e40af); border-radius:10px; padding:14px 12px; color:#fff; text-align:center;">
+        <div style="font-size:1.6rem; margin-bottom:6px;">🔍</div>
+        <div style="font-weight:800; font-size:0.88rem; margin-bottom:6px;">Exploratory</div>
+        <div style="font-size:0.72rem; color:#bfdbfe; margin-bottom:8px;">Stage A→F exploratory discovery with jury deliberation before every advance</div>
+        <span class="law-tag prd" style="font-size:0.65rem;">PRD-2.1</span><span class="law-tag non-neg" style="font-size:0.65rem;">PRD-2.5 ⛔</span>
+      </div>
+      <div style="background:linear-gradient(145deg,#0f4c25,#1b7a3e); border-radius:10px; padding:14px 12px; color:#fff; text-align:center;">
+        <div style="font-size:1.6rem; margin-bottom:6px;">🏗️</div>
+        <div style="font-weight:800; font-size:0.88rem; margin-bottom:6px;">Greenfield</div>
+        <div style="font-size:0.72rem; color:#6ee7b7; margin-bottom:8px;">Constitution-first new product development with TDD from commit zero</div>
+        <span class="law-tag eng" style="font-size:0.65rem;">ENG-4.1</span><span class="law-tag non-neg" style="font-size:0.65rem;">ENG-12.1 ⛔</span>
+      </div>
+      <div style="background:linear-gradient(145deg,#7c0d0d,#b91c1c); border-radius:10px; padding:14px 12px; color:#fff; text-align:center;">
+        <div style="font-size:1.6rem; margin-bottom:6px;">🚑</div>
+        <div style="font-weight:800; font-size:0.88rem; margin-bottom:6px;">Legacy Rescue</div>
+        <div style="font-size:0.72rem; color:#fca5a5; margin-bottom:8px;">6-phase rescue: Assess → Govern → Characterize → Remediate → Refactor → Certify</div>
+        <span class="law-tag non-neg" style="font-size:0.65rem;">ENG-4.3 ⛔</span><span class="law-tag non-neg" style="font-size:0.65rem;">ENG-6.1 ⛔</span>
+      </div>
+      <div style="background:linear-gradient(145deg,#7c4d00,#b45309); border-radius:10px; padding:14px 12px; color:#fff; text-align:center;">
+        <div style="font-size:1.6rem; margin-bottom:6px;">🛫</div>
+        <div style="font-weight:800; font-size:0.88rem; margin-bottom:6px;">Adoption</div>
+        <div style="font-size:0.72rem; color:#fde68a; margin-bottom:8px;">Governed path to onboard a new team or repo to the constitution</div>
+        <span class="law-tag bus" style="font-size:0.65rem;">BUS-1.1</span><span class="law-tag eng" style="font-size:0.65rem;">ENG-13.1</span>
+      </div>
+      <div style="background:linear-gradient(145deg,#4c1d95,#6d28d9); border-radius:10px; padding:14px 12px; color:#fff; text-align:center;">
+        <div style="font-size:1.6rem; margin-bottom:6px;">🤖</div>
+        <div style="font-weight:800; font-size:0.88rem; margin-bottom:6px;">Avatar</div>
+        <div style="font-size:0.72rem; color:#c4b5fd; margin-bottom:8px;">Tech stack + industry + product-type configuration for the AI agent</div>
+        <span class="law-tag prd" style="font-size:0.65rem;">PRD-1.2</span><span class="law-tag eng" style="font-size:0.65rem;">ENG-2.1</span>
+      </div>
+    </div>
+    <div class="highlight-block">
+      <p>Every workflow produces <strong>rendered HTML artifacts</strong> reviewed by a human before advancement. The git log becomes an audit trail of constitutional decisions. No workflow advances on AI text alone.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>16 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 17 — OTHER WORKFLOWS ══ -->
+<div class="slide" id="slide-17">
+  <div class="slide-header dark">
+    <div class="eyebrow">Quick Tour</div>
+    <h2>The Other 4 Workflows</h2>
+    <div class="sub">Legacy Rescue is one of five. Each workflow is constitutional from day one.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:18px;">
+      <div style="background:linear-gradient(145deg,#1e3a8a,#1e40af); border-radius:12px; padding:20px 18px; color:#fff;">
+        <div style="font-size:1.8rem; margin-bottom:8px;">🔍</div>
+        <div style="font-size:0.72rem; font-weight:700; letter-spacing:0.08em; color:#bfdbfe; margin-bottom:4px;">EXPLORATORY WORKFLOW</div>
+        <div style="font-weight:800; font-size:1rem; margin-bottom:10px;">Stage A → F Exploratory Discovery</div>
+        <ul style="padding-left:16px; color:rgba(255,255,255,0.8); font-size:0.8rem; margin-bottom:10px;">
+          <li>6 stages · rendered HTML artifact per stage</li>
+          <li>Jury deliberation before every advance</li>
+          <li>Problem validated before any build begins</li>
+          <li>Director+ stakeholder approval required at Stage A</li>
+        </ul>
+        <span class="law-tag non-neg" style="font-size:0.68rem;">PRD-2.5 ⛔</span><span class="law-tag prd" style="font-size:0.68rem;">PRD-2.1</span>
+      </div>
+      <div style="background:linear-gradient(145deg,#0f4c25,#1b7a3e); border-radius:12px; padding:20px 18px; color:#fff;">
+        <div style="font-size:1.8rem; margin-bottom:8px;">🏗️</div>
+        <div style="font-size:0.72rem; font-weight:700; letter-spacing:0.08em; color:#6ee7b7; margin-bottom:4px;">GREENFIELD WORKFLOW</div>
+        <div style="font-weight:800; font-size:1rem; margin-bottom:10px;">Constitution-First New Development</div>
+        <ul style="padding-left:16px; color:rgba(255,255,255,0.8); font-size:0.8rem; margin-bottom:10px;">
+          <li>TDD from the very first commit</li>
+          <li>Domain model before any code is written</li>
+          <li>AGENT.md initialized before sprint zero</li>
+          <li>SonarQube gate configured at project bootstrap</li>
+        </ul>
+        <span class="law-tag non-neg" style="font-size:0.68rem;">ENG-4.1 ⛔</span><span class="law-tag eng" style="font-size:0.68rem;">ENG-2.1</span>
+      </div>
+      <div style="background:linear-gradient(145deg,#7c4d00,#b45309); border-radius:12px; padding:20px 18px; color:#fff;">
+        <div style="font-size:1.8rem; margin-bottom:8px;">🛫</div>
+        <div style="font-size:0.72rem; font-weight:700; letter-spacing:0.08em; color:#fde68a; margin-bottom:4px;">ADOPTION WORKFLOW</div>
+        <div style="font-weight:800; font-size:1rem; margin-bottom:10px;">Governed Team Onboarding</div>
+        <ul style="padding-left:16px; color:rgba(255,255,255,0.8); font-size:0.8rem; margin-bottom:10px;">
+          <li>30-minute quick start for any repo</li>
+          <li>hangar-ai-specs/ scaffolded automatically</li>
+          <li>Avatar selection guides team context</li>
+          <li>AGENT.md activated and committed</li>
+        </ul>
+        <span class="law-tag bus" style="font-size:0.68rem;">BUS-1.1</span><span class="law-tag eng" style="font-size:0.68rem;">ENG-13.1</span>
+      </div>
+      <div style="background:linear-gradient(145deg,#4c1d95,#6d28d9); border-radius:12px; padding:20px 18px; color:#fff;">
+        <div style="font-size:1.8rem; margin-bottom:8px;">🤖</div>
+        <div style="font-size:0.72rem; font-weight:700; letter-spacing:0.08em; color:#c4b5fd; margin-bottom:4px;">AVATAR WORKFLOW</div>
+        <div style="font-weight:800; font-size:1rem; margin-bottom:10px;">Agent Intelligence Configuration</div>
+        <ul style="padding-left:16px; color:rgba(255,255,255,0.8); font-size:0.8rem; margin-bottom:10px;">
+          <li>Tech stack (Java, Node, Python, .NET…)</li>
+          <li>Industry domain (airline, cargo, loyalty…)</li>
+          <li>Product type (API, monolith, microservice…)</li>
+          <li>Loads the right laws into agent context</li>
+        </ul>
+        <span class="law-tag prd" style="font-size:0.68rem;">PRD-1.2</span><span class="law-tag eng" style="font-size:0.68rem;">ENG-2.1</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>17 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 18 — SKILLS ══ -->
+<div class="slide" id="slide-18">
+  <div class="slide-header">
+    <div class="eyebrow">Agent Capabilities</div>
+    <h2>Skills — The Agent's Constitutional Toolkit</h2>
+    <div class="sub">You don't need to know the laws — you trigger the skill with natural language.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:14px; margin-bottom:16px;">
+      <div class="card navy-border">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <h4 style="margin:0;">skill-06-atomic-tdd</h4>
+          <span class="law-tag eng" style="font-size:0.68rem;">ENG-4.1</span>
+        </div>
+        <p style="margin-bottom:6px; font-size:0.82rem;">Executes the full TDD RED→GREEN→REFACTOR cycle. Writes the test first, never the implementation.</p>
+        <div style="font-size:0.75rem; color:var(--gray-600);">Triggers: <strong>"write tests for this"</strong> · <strong>"TDD cycle"</strong></div>
+      </div>
+      <div class="card navy-border">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <h4 style="margin:0;">skill-09-refactoring</h4>
+          <span class="law-tag eng" style="font-size:0.68rem;">ENG-1.3</span>
+        </div>
+        <p style="margin-bottom:6px; font-size:0.82rem;">Reduces complexity, extracts domain objects, applies Boy Scout Rule. One commit per refactoring.</p>
+        <div style="font-size:0.75rem; color:var(--gray-600);">Triggers: <strong>"refactor this"</strong> · <strong>"reduce complexity"</strong></div>
+      </div>
+      <div class="card red-border">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <h4 style="margin:0;">skill-sonarqube-compliance-gate</h4>
+          <span class="law-tag non-neg" style="font-size:0.68rem;">ENG-12.1 ⛔</span>
+        </div>
+        <p style="margin-bottom:6px; font-size:0.82rem;">Validates all SonarQube gate criteria, renders pass/fail report, blocks advancement on failure.</p>
+        <div style="font-size:0.75rem; color:var(--gray-600);">Triggers: <strong>"run gate"</strong> · <strong>"constitutional gate"</strong></div>
+      </div>
+      <div class="card navy-border">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <h4 style="margin:0;">skill-04-business-domain-modeling</h4>
+          <span class="law-tag eng" style="font-size:0.68rem;">ENG-2.1</span>
+        </div>
+        <p style="margin-bottom:6px; font-size:0.82rem;">Extracts bounded contexts, aggregates, and domain events from code or description using DDD.</p>
+        <div style="font-size:0.75rem; color:var(--gray-600);">Triggers: <strong>"model this domain"</strong> · <strong>"find bounded contexts"</strong></div>
+      </div>
+      <div class="card gold-border">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <h4 style="margin:0;">skill-14-technical-debt</h4>
+          <span class="law-tag eng" style="font-size:0.68rem;">ENG-10.1</span>
+        </div>
+        <p style="margin-bottom:6px; font-size:0.82rem;">Inventories tech debt, prioritizes by constitutional law, produces developer-day estimates.</p>
+        <div style="font-size:0.75rem; color:var(--gray-600);">Triggers: <strong>"assess tech debt"</strong> · <strong>"inventory this codebase"</strong></div>
+      </div>
+      <div class="card blue-border">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <h4 style="margin:0;">skill-27-constitution-compliance</h4>
+          <span class="law-tag eng" style="font-size:0.68rem;">ENG-13.1</span>
+        </div>
+        <p style="margin-bottom:6px; font-size:0.82rem;">Full constitutional compliance scan. Cites every law violated, ordered by severity. HARD_BLOCK or WARNING.</p>
+        <div style="font-size:0.75rem; color:var(--gray-600);">Triggers: <strong>"compliance check"</strong> · <strong>"is this constitutional?"</strong></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>18 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 19 — HOW TO ADOPT ══ -->
+<div class="slide" id="slide-19">
+  <div class="slide-header gold">
+    <div class="eyebrow">Getting Started</div>
+    <h2>How To Adopt the Constitution</h2>
+    <div class="sub">Three steps. One clone. One prompt. You get everything.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-3" style="gap:16px; margin-bottom:18px;">
+      <div style="background:linear-gradient(145deg,#003057,#005b9f); border-radius:12px; padding:20px 16px; color:#fff; text-align:center;">
+        <div style="font-size:2.5rem; font-weight:900; color:rgba(255,255,255,0.3); margin-bottom:4px;">01</div>
+        <div style="font-weight:800; font-size:0.95rem; margin-bottom:10px;">Clone the Constitution</div>
+        <div class="code-block" style="text-align:left; font-size:0.68rem; margin:0; background:rgba(0,0,0,0.3); line-height:1.7;">
+git clone<br>
+<span class="str">git@github.com:AAInternal/<br>hangar-ai-constitution.git</span>
+        </div>
+        <p style="color:rgba(255,255,255,0.65); font-size:0.75rem; margin-top:8px; margin-bottom:0;">168 laws · 29+ skills · 5 workflows — all locally available to your AI agent</p>
+      </div>
+      <div style="background:linear-gradient(145deg,#4c1d95,#6d28d9); border-radius:12px; padding:20px 16px; color:#fff; text-align:center;">
+        <div style="font-size:2.5rem; font-weight:900; color:rgba(255,255,255,0.3); margin-bottom:4px;">02</div>
+        <div style="font-weight:800; font-size:0.95rem; margin-bottom:10px;">Open Your Repo in AI Agent</div>
+        <div style="font-size:3rem; margin:8px 0;">🤖</div>
+        <p style="color:rgba(255,255,255,0.65); font-size:0.75rem; margin-top:8px; margin-bottom:0;">GitHub Copilot · Cursor · or any AI agent that can read your filesystem</p>
+      </div>
+      <div style="background:linear-gradient(145deg,#065f46,#047857); border-radius:12px; padding:20px 16px; color:#fff; text-align:center;">
+        <div style="font-size:2.5rem; font-weight:900; color:rgba(255,255,255,0.3); margin-bottom:4px;">03</div>
+        <div style="font-weight:800; font-size:0.95rem; margin-bottom:10px;">Run This Prompt</div>
+        <div class="code-block" style="text-align:left; font-size:0.68rem; margin:0; background:rgba(0,0,0,0.3); line-height:1.7;">
+<span class="str">"I've cloned the<br>hangar-ai-constitution to<br>~/hangar-ai-constitution.<br>Run the adoption workflow<br>for this repo."</span>
+        </div>
+        <p style="color:rgba(255,255,255,0.65); font-size:0.75rem; margin-top:8px; margin-bottom:0;">Agent scaffolds AGENTS.md, SonarQube gate, avatars &amp; full setup</p>
+      </div>
+    </div>
+    <div class="highlight-block">
+      <p><strong>You get:</strong> 168 laws · 29+ skills · Avatar configuration · SonarQube gate setup · AGENTS.md with Teaching Loop activated · All 5 workflows available immediately.</p>
+    </div>
+    <div class="quote" style="margin-top:12px;">
+      <p>"The clone is the constitution. The prompt is the contract. The agent does the rest."</p>
+      <span class="src">— Hangar AI Constitution · Adoption Workflow</span>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>19 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 20 — AMENDMENT PROCESS ══ -->
+<div class="slide" id="slide-20">
+  <div class="slide-header dark">
+    <div class="eyebrow">Constitutional Evolution</div>
+    <h2>The Amendment Process</h2>
+    <div class="sub">Laws evolve through evidence — not opinion, not seniority, not urgency.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:20px; margin-bottom:16px;">
+      <div>
+        <h3 style="margin-top:0;">Law Precedence Hierarchy</h3>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
+          <div style="background:var(--red-bg); border:1px solid #fca5a5; border-radius:8px; padding:10px 14px; display:flex; align-items:center; gap:10px;">
+            <span style="font-size:1.2rem;">📋</span>
+            <div>
+              <div style="font-weight:700; font-size:0.85rem; color:#b91c1c;">PRD (Product)</div>
+              <div style="font-size:0.75rem; color:#b91c1c;">Highest precedence — what we build</div>
+            </div>
+          </div>
+          <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:8px; padding:10px 14px; display:flex; align-items:center; gap:10px;">
+            <span style="font-size:1.2rem;">🏢</span>
+            <div>
+              <div style="font-weight:700; font-size:0.85rem; color:#92400e;">BUS (Business)</div>
+              <div style="font-size:0.75rem; color:#92400e;">Constraints and governance</div>
+            </div>
+          </div>
+          <div style="background:#f3e8ff; border:1px solid #d8b4fe; border-radius:8px; padding:10px 14px; display:flex; align-items:center; gap:10px;">
+            <span style="font-size:1.2rem;">⚙️</span>
+            <div>
+              <div style="font-weight:700; font-size:0.85rem; color:#5b21b6;">ENG (Engineering)</div>
+              <div style="font-size:0.75rem; color:#5b21b6;">How we implement — governed by PRD + BUS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-top:0;">Amendment Flow</h3>
+        <div class="flow-row" style="flex-direction:column; gap:6px;">
+          <div class="flow-step" style="text-align:left; padding:10px 14px; font-size:0.8rem; max-width:100%;">1. Evidence collected (team retrospective, SonarQube data, incident report)</div>
+          <div class="flow-arrow" style="transform:rotate(90deg); text-align:center;">↓</div>
+          <div class="flow-step" style="text-align:left; padding:10px 14px; font-size:0.8rem; max-width:100%;">2. Amendment proposal drafted with evidence citations</div>
+          <div class="flow-arrow" style="transform:rotate(90deg); text-align:center;">↓</div>
+          <div class="flow-step active" style="text-align:left; padding:10px 14px; font-size:0.8rem; max-width:100%;">3. Constitutional review — Hangar team deliberation</div>
+          <div class="flow-arrow" style="transform:rotate(90deg); text-align:center;">↓</div>
+          <div class="flow-step" style="background:var(--green-bg); color:var(--green); text-align:left; padding:10px 14px; font-size:0.8rem; max-width:100%;">4. Law updated, versioned, committed — teams notified</div>
+        </div>
+      </div>
+    </div>
+    <div class="noneg-banner">
+      <span class="icon">⛔</span>
+      <p><strong>Non-negotiable laws require executive approval to amend.</strong> These 23 laws form the constitution's bedrock. Removing or weakening one requires VP+ sign-off with a documented risk assessment.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>20 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 21 — QUESTIONS ══ -->
+<div class="slide" id="slide-21">
+  <div class="slide-header teal">
+    <div class="eyebrow">Socratic Session</div>
+    <h2>Questions to Explore Together</h2>
+    <div class="sub">These aren't rhetorical — they're the questions the constitution is designed to help you answer.</div>
+  </div>
+  <div class="slide-body">
+    <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:16px;">
+      <div style="background:linear-gradient(135deg,#005f6b,#0097a7); border-radius:12px; padding:20px 24px; color:#fff;">
+        <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.08em; color:rgba(255,255,255,0.6); margin-bottom:8px;">QUESTION 1 · FOR ARCHITECTS &amp; ENGINEERS</div>
+        <div style="font-size:1.1rem; font-weight:800; line-height:1.4;">"What's the biggest constitutional risk in your current codebase — and what law is it violating?"</div>
+        <p style="color:rgba(255,255,255,0.7); font-size:0.82rem; margin-top:8px; margin-bottom:0;">Security? Coverage? Complexity? Domain separation? The constitution has a law for each one.</p>
+      </div>
+      <div style="background:linear-gradient(135deg,#003057,#005b9f); border-radius:12px; padding:20px 24px; color:#fff;">
+        <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.08em; color:rgba(255,255,255,0.6); margin-bottom:8px;">QUESTION 2 · FOR TEAMS &amp; MANAGERS</div>
+        <div style="font-size:1.1rem; font-weight:800; line-height:1.4;">"Which workflow would give your team the most value today — and what would the 8-sprint delta look like?"</div>
+        <p style="color:rgba(255,255,255,0.7); font-size:0.82rem; margin-top:8px; margin-bottom:0;">Discovery, Legacy Rescue, Greenfield — each workflow has a predictable shape and measurable outcome.</p>
+      </div>
+      <div style="background:linear-gradient(135deg,#4c1d95,#5b21b6); border-radius:12px; padding:20px 24px; color:#fff;">
+        <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.08em; color:rgba(255,255,255,0.6); margin-bottom:8px;">QUESTION 3 · FOR EVERYONE</div>
+        <div style="font-size:1.1rem; font-weight:800; line-height:1.4;">"What would make AI genuinely useful in your development practice — not just faster, but better?"</div>
+        <p style="color:rgba(255,255,255,0.7); font-size:0.82rem; margin-top:8px; margin-bottom:0;">The constitution's answer: governance, teaching, and citation. What's yours?</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Constitutional AI · Tech Talk</span><span>21 / 22</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 22 — RESOURCES ══ -->
+<div class="slide closing-slide" id="slide-22">
+  <div class="slide-header">
+    <div class="eyebrow">Next Steps</div>
+    <h1>Resources &amp; Next Steps</h1>
+    <div class="sub" style="margin-top:14px; font-size:0.95rem; line-height:1.6;">
+      Start with <code style="background:rgba(255,255,255,0.15); padding:2px 8px; border-radius:4px; font-size:0.88rem;">adoption.md</code> —
+      takes 30 minutes for a new repo and gives you everything.
+    </div>
+  </div>
+  <div class="slide-body" style="background:var(--aa-navy); padding:28px 44px;">
+    <div class="grid-2" style="gap:18px; margin-bottom:18px;">
+      <div>
+        <h3 style="color:#93c5fd; margin-bottom:12px;">📂 Key Files</h3>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="background:rgba(255,255,255,0.07); border-radius:8px; padding:10px 14px;">
+            <div style="color:#fff; font-size:0.82rem; font-weight:700; margin-bottom:2px;">hangar-ai-constitution</div>
+            <div style="color:rgba(255,255,255,0.55); font-size:0.75rem;">hangar-ai-constitution · main</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.07); border-radius:8px; padding:10px 14px;">
+            <div style="color:#fff; font-size:0.82rem; font-weight:700; margin-bottom:2px;">workflows/legacy-rescue-refactor.md</div>
+            <div style="color:rgba(255,255,255,0.55); font-size:0.75rem;">Full 6-phase rescue workflow with gates</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.07); border-radius:8px; padding:10px 14px;">
+            <div style="color:#fff; font-size:0.82rem; font-weight:700; margin-bottom:2px;">docs/guides/adoption/how-to-adopt-constitution.md</div>
+            <div style="color:rgba(255,255,255,0.55); font-size:0.75rem;">30-minute quick start guide for any repo</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:#93c5fd; margin-bottom:12px;">🛠️ Tools</h3>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="background:rgba(255,255,255,0.07); border-radius:8px; padding:10px 14px;">
+            <div style="color:#fff; font-size:0.82rem; font-weight:700; margin-bottom:2px;">aa-artifact-render</div>
+            <div style="color:rgba(255,255,255,0.55); font-size:0.75rem;">Renders workflow artifacts as HTML for human review</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.07); border-radius:8px; padding:10px 14px;">
+            <div style="color:#fff; font-size:0.82rem; font-weight:700; margin-bottom:2px;">sonarqube-gate/provision.sh</div>
+            <div style="color:rgba(255,255,255,0.55); font-size:0.75rem;">Provisions constitutional SonarQube gate for a repo</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.07); border-radius:8px; padding:10px 14px;">
+            <div style="color:#fff; font-size:0.82rem; font-weight:700; margin-bottom:2px;">AGENT.md template</div>
+            <div style="color:rgba(255,255,255,0.55); font-size:0.75rem;">Copy → configure avatar → activate workflows</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.06); border-radius:10px; padding:16px 20px; text-align:center;">
+      <div style="color:#fff; font-weight:800; font-size:1rem; margin-bottom:6px;">Ready to start?</div>
+      <div style="color:rgba(255,255,255,0.7); font-size:0.85rem; margin-bottom:10px;">Talk to an AI Coach · Or open adoption.md and start the workflow yourself</div>
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <span style="background:var(--aa-red); color:#fff; padding:6px 18px; border-radius:20px; font-size:0.8rem; font-weight:700;">🚑 Legacy Rescue — for existing repos</span>
+        <span style="background:var(--green); color:#fff; padding:6px 18px; border-radius:20px; font-size:0.8rem; font-weight:700;">🏗️ Greenfield — for new projects</span>
+        <span style="background:var(--aa-blue); color:#fff; padding:6px 18px; border-radius:20px; font-size:0.8rem; font-weight:700;">🛫 Adoption — for any team, any repo</span>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.08);">
+      <p style="color:rgba(255,255,255,0.4); font-size:0.75rem;">Hangar AI Constitution · May 2026</p>
+      <p style="color:rgba(255,255,255,0.3); font-size:0.72rem; margin-top:3px;">AI Coach &amp; Advisor · Hangar Engineering Practice · Tech Talk</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- #deck -->
+
+<div id="keyboard-hint" style="display:none">← → arrow keys or buttons to navigate</div>
+
+<script>
+  let current = 1;
+  const total = 22;
+
+  function showSlide(n) {
+    document.querySelector('.slide.active')?.classList.remove('active');
+    document.getElementById('slide-' + n)?.classList.add('active');
+    document.getElementById('slide-counter').textContent = n + ' / ' + total;
+    document.getElementById('btn-prev').disabled = n === 1;
+    document.getElementById('btn-next').disabled = n === total;
+    document.getElementById('progress-bar').style.width = ((n / total) * 100) + '%';
+    fitSlide();
+  }
+
+  function fitSlide() {
+    const slide = document.getElementById('slide-' + current);
+    if (!slide) return;
+    slide.style.transform = 'none';
+    const deck = document.getElementById('deck');
+    const availW = deck.clientWidth - 32;
+    const availH = deck.clientHeight - 16;
+    const slideH = slide.offsetHeight;
+    const scale = Math.min(availW / 960, availH / slideH, 1);
+    slide.style.transform = scale < 1 ? `scale(${scale})` : 'none';
+  }
+
+  function changeSlide(dir) {
+    const next = current + dir;
+    if (next >= 1 && next <= total) {
+      current = next;
+      showSlide(current);
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   changeSlide(-1);
+  });
+
+  window.addEventListener('resize', fitSlide);
+  showSlide(1);
+</script>
+</body>
+</html>

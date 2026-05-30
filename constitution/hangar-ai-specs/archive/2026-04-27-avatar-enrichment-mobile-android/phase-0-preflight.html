@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 0 — Pre-flight | Android Avatar Clinic</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 960px; margin: 40px auto; padding: 0 24px; color: #1a1a2e; background: #f8f9fa; }
+  h1 { color: #0d47a1; border-bottom: 3px solid #0d47a1; padding-bottom: 12px; }
+  h2 { color: #1565c0; margin-top: 32px; }
+  h3 { color: #283593; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78em; font-weight: 700; margin-left: 8px; }
+  .pass { background: #e8f5e9; color: #2e7d32; }
+  .fail { background: #fce4ec; color: #c62828; }
+  .reject { background: #fff3e0; color: #e65100; }
+  .ok { background: #e3f2fd; color: #1565c0; }
+  .blocking { background: #fce4ec; color: #b71c1c; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th { background: #1565c0; color: #fff; padding: 10px 14px; text-align: left; font-size: 0.88em; }
+  td { padding: 9px 14px; border-bottom: 1px solid #e0e0e0; font-size: 0.9em; }
+  tr:hover td { background: #e8eaf6; }
+  .section { background: #fff; border-radius: 8px; padding: 20px 24px; margin: 20px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .verdict { font-size: 1.05em; font-weight: 700; padding: 14px 18px; border-radius: 6px; margin: 16px 0; }
+  .verdict.green { background: #e8f5e9; border-left: 5px solid #43a047; color: #2e7d32; }
+  .verdict.blue { background: #e3f2fd; border-left: 5px solid #1e88e5; color: #0d47a1; }
+  .phase-header { background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%); color: #fff; padding: 24px; border-radius: 10px; margin-bottom: 28px; }
+  .phase-header p { margin: 6px 0 0 0; opacity: 0.88; }
+  code { background: #f1f3f4; padding: 2px 6px; border-radius: 3px; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 0.87em; }
+  .avatar-card { border: 1px solid #e0e0e0; border-radius: 6px; padding: 14px 18px; margin: 10px 0; }
+  .avatar-card.tech { border-left: 4px solid #f57c00; }
+  .avatar-card.product { border-left: 4px solid #0288d1; }
+</style>
+</head>
+<body>
+
+<div class="phase-header">
+  <h1 style="border:none;color:#fff;margin:0">Phase 0 — Pre-flight</h1>
+  <p>Avatar Clinic · Android Session · Hangar AI Constitution</p>
+  <p style="font-size:0.85em; opacity:0.75">Codebase: hangar-w4-dp-mobile / androidapps · Constitution: hangar-ai-constitution · 2026-04-27</p>
+</div>
+
+<div class="section">
+  <h2>1. Taxonomy Gate — Is "android" a Valid New Avatar Taxon?</h2>
+  <p>Five gates evaluated against the avatar taxonomy rules. "android" must pass <strong>all 5</strong> to become a new avatar; failing any one = REJECT as taxon.</p>
+  <table>
+    <thead><tr><th>Gate</th><th>Question</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Gate 1</td><td>Is this a specific named product domain with unique user journeys?</td><td><span class="badge fail">FAIL</span> "android" is a delivery platform, not a product domain</td></tr>
+      <tr><td>Gate 2</td><td>Does it map to a single cohesive user population?</td><td><span class="badge fail">FAIL</span> Android users == booking + check-in + schedule-change users</td></tr>
+      <tr><td>Gate 3</td><td>Does it own laws and compliance requirements no other avatar touches?</td><td><span class="badge fail">FAIL</span> All laws (ENG-4.1, ENG-6.1…) are cross-platform</td></tr>
+      <tr><td>Gate 4</td><td>Is this a tech stack / language / framework?</td><td><span class="badge pass">PASS</span> Yes — android-kotlin technology avatar already exists</td></tr>
+      <tr><td>Gate 5</td><td>Would a new avatar duplicate coverage of an existing registry entry?</td><td><span class="badge fail">FAIL</span> <code>avatar-android-kotlin</code> already in registry</td></tr>
+    </tbody>
+  </table>
+  <div class="verdict reject">🚫 REJECT — "android" as new avatar taxon. Map to existing technology + product avatars instead.</div>
+</div>
+
+<div class="section">
+  <h2>2. Avatar Mapping — Android Intelligence → Existing Avatars</h2>
+  <p>The androidapps codebase intelligence maps to <strong>5 existing avatars</strong>:</p>
+
+  <div class="avatar-card tech">
+    <strong>🟠 android-kotlin</strong> (technology) — <code>avatar-android-kotlin</code> v1.0.0
+    <p style="margin:6px 0 0 0; font-size:0.9em; color:#555">Receives: Mode 2 Correct (DI mismatch, skill- prefix) + Mode 4 Enrich (use-cases from real codebase, god-class evidence, state-machine patterns)</p>
+  </div>
+
+  <div class="avatar-card product">
+    <strong>🔵 passenger-booking</strong> — <code>avatar-passenger-booking</code> v1.1.0 ✓ (iOS session)
+    <p style="margin:6px 0 0 0; font-size:0.9em; color:#555">Receives: Mode 4 Enrich — Android-specific BookingViewModel god-class evidence</p>
+  </div>
+
+  <div class="avatar-card product">
+    <strong>🔵 check-in-travel</strong> — <code>avatar-check-in-travel</code> v1.1.0 ✓ (iOS session)
+    <p style="margin:6px 0 0 0; font-size:0.9em; color:#555">Receives: Mode 4 Enrich — CheckInManagerV2/V3 duplication evidence, state machine opportunity</p>
+  </div>
+
+  <div class="avatar-card product">
+    <strong>🔵 schedule-change-self-serve</strong> — <code>avatar-schedule-change-self-serve</code> v1.1.0 ✓ (iOS session)
+    <p style="margin:6px 0 0 0; font-size:0.9em; color:#555">Receives: No new enrichment needed from Android intelligence this session</p>
+  </div>
+
+  <div class="avatar-card product">
+    <strong>🔵 customer-relations-ops</strong> — <code>avatar-customer-relations-ops</code> v1.1.0 ✓ (iOS session)
+    <p style="margin:6px 0 0 0; font-size:0.9em; color:#555">Receives: No new enrichment needed from Android intelligence this session</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2>3. Codebase Intelligence Summary</h2>
+  <table>
+    <thead><tr><th>Metric</th><th>Value</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>Repository</td><td>androidapps</td><td>AA Android monolith</td></tr>
+      <tr><td>Kotlin source files</td><td>3,226</td><td>+9.1% in 90 days</td></tr>
+      <tr><td>Source LOC</td><td>289K</td><td>+11.7% in 90 days</td></tr>
+      <tr><td>Test files</td><td>910</td><td>+3.8% — lagging source growth</td></tr>
+      <tr><td>Test:Source LOC ratio</td><td>0.56</td><td>Below target of 0.8–1.0</td></tr>
+      <tr><td>Composite score</td><td>4.7 / 10</td><td>FLAT — no improvement in 90 days</td></tr>
+      <tr><td>God objects (>500 LOC)</td><td>80 files</td><td>Persist and grow unchecked</td></tr>
+      <tr><td>Confirmed bugs</td><td>8 (3 critical)</td><td>Memory leaks, race conditions, crash paths</td></tr>
+      <tr><td>DI framework</td><td>Dagger 2</td><td>⚠️ Avatar assumes Hilt — factual mismatch</td></tr>
+      <tr><td>Reactive paradigms</td><td>3 mixed</td><td>RxJava + Coroutines + Compose State</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>4. Mode Assignment</h2>
+  <table>
+    <thead><tr><th>Avatar</th><th>Mode</th><th>Reason</th></tr></thead>
+    <tbody>
+      <tr><td><code>android-kotlin</code></td><td><span class="badge fail">Mode 2 Correct</span> + <span class="badge ok">Mode 4 Enrich</span></td><td>DI mismatch + token overruns + missing use-cases; real codebase evidence to add</td></tr>
+      <tr><td><code>passenger-booking</code></td><td><span class="badge ok">Mode 4 Enrich</span></td><td>BookingViewModel god-class evidence strengthens ENG-3.1 grounding</td></tr>
+      <tr><td><code>check-in-travel</code></td><td><span class="badge ok">Mode 4 Enrich</span></td><td>CheckInManagerV2/V3 duplication is direct evidence for complexity + state machine laws</td></tr>
+      <tr><td><code>schedule-change-self-serve</code></td><td>No action</td><td>Already enriched; no new Android-specific evidence</td></tr>
+      <tr><td><code>customer-relations-ops</code></td><td>No action</td><td>Already enriched; no new Android-specific evidence</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>5. Pre-flight Verdict</h2>
+  <div class="verdict green">✅ PASS — Pre-flight complete. 5 target avatars confirmed. Mode assignments set. Ready for Phase 1 — Identify.</div>
+  <p><strong>Primary work this session:</strong> android-kotlin tech avatar (Mode 2 + Mode 4) is the main deliverable. Product avatar enrichment from Android evidence is secondary.</p>
+</div>
+
+<footer style="margin-top:40px; padding-top:16px; border-top:1px solid #e0e0e0; color:#757575; font-size:0.82em">
+  Hangar AI Constitution Avatar Clinic — Android Session · Phase 0 of 6 · Generated 2026-04-27
+</footer>
+</body>
+</html>

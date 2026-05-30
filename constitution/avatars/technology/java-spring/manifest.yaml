@@ -1,0 +1,124 @@
+# Java/Spring Boot Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-java-spring
+  type: technology
+  name: Java/Spring Boot
+  version: "2.0.0"
+
+stack:
+  language: Java 17+
+  framework: Spring Boot 2.x (AA BFF fleet current) → Spring Boot 3.x (migration target)
+  testing:
+    - JUnit 5
+    - Mockito
+    - AssertJ
+    - TestContainers
+  orm:
+    - Spring Data JPA
+    - Hibernate
+  build:
+    - Maven
+    - Gradle
+
+dependencies:
+  required:
+    - spring-boot-starter-web
+    - spring-boot-starter-data-jpa
+    - spring-boot-starter-validation
+  dev:
+    - spring-boot-starter-test
+    - testcontainers
+
+activates:
+  skills:
+    - 06-atomic-tdd
+    - 07-vertical-slice-dev
+    - 08-code-review
+    - 04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+    - greenfield-development
+    - legacy-rescue-refactor
+
+  workflow_guides:
+    legacy-rescue-refactor: legacy-rescue-java.md
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-2.1
+    title: DDD Aggregate Root
+    example_file: examples/ENG-2.1-aggregates.md
+  - id: ENG-2.2
+    title: Layered Architecture
+    example_file: examples/ENG-2.2-layers.md
+  - id: ENG-3.2
+    title: Immutability Law
+    example_file: examples/ENG-3.2-immutability.md
+  - id: ENG-3.3
+    title: Law of Demeter
+    example_file: examples/ENG-3.3-demeter.md
+  - id: ENG-3.5
+    title: Naming Conventions
+    example_file: examples/ENG-3.5-naming.md
+  - id: ENG-10.1
+    title: Constitution Metrics Collection Law
+    note: "AA BFF fleet — collect quality metrics via SonarQube; store in hangar-ai-specs/evidence/"
+  - id: ENG-11.1
+    title: Hangar SDD Law
+    note: "All new BFF features require PROPOSAL.md in hangar-ai-specs/ before implementation"
+
+conventions:
+  naming:
+    classes: PascalCase
+    methods: camelCase
+    variables: camelCase
+    constants: SCREAMING_SNAKE
+    packages: lowercase.dotted
+    test_classes: "*Test.java"
+
+  patterns:
+    entity: "@Entity class"
+    value_object: "record or @Embeddable"
+    repository: "interface extends JpaRepository"
+    service: "@Service class"
+    controller: "@RestController class"
+
+commands:
+  test:
+    all: "./mvnw test"
+    single: "./mvnw test -Dtest=OrderTest"
+    coverage: "./mvnw test jacoco:report"
+  dev:
+    start: "./mvnw spring-boot:run"
+    debug: "./mvnw spring-boot:run -Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'"
+  lint:
+    format: "./mvnw spotless:apply"
+    check: "./mvnw checkstyle:check"
+
+project_structure: |
+  src/
+  ├── main/java/com/example/
+  │   ├── Application.java
+  │   ├── config/                    # Configuration
+  │   ├── domain/                    # Domain layer
+  │   │   ├── model/                 # Aggregates, entities
+  │   │   ├── repository/            # Repository interfaces
+  │   │   └── service/               # Domain services
+  │   ├── application/               # Application layer
+  │   │   └── *Service.java          # Use cases
+  │   ├── infrastructure/            # Infrastructure layer
+  │   │   ├── persistence/           # JPA implementations
+  │   │   └── client/                # External clients
+  │   └── api/                       # Presentation layer
+  │       ├── controller/            # REST controllers
+  │       └── dto/                   # Request/Response DTOs
+  └── test/java/com/example/
+      ├── unit/
+      └── integration/

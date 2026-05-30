@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  
+
+  <title>Stage A — Initialize | disc-2026-002 | AADvantage Loyalty Platform — Member Experience Modernization</title>
+  <style>
+    :root {
+      --aa-red:#c8102e; --aa-dark:#0a0d14; --aa-navy:#131825; --aa-blue:#0f3460;
+      --aa-accent:#e94560; --aa-gold:#f5a623; --aa-green:#22c55e; --aa-green-dk:#16a34a;
+      --aa-purple:#7c3aed; --aa-surface:#f4f6fa; --aa-border:#dde3ee;
+      --aa-text:#1e293b; --aa-muted:#64748b; --r:9px; --sh:0 2px 10px rgba(0,0,0,.07);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--aa-surface);color:var(--aa-text);font-size:14px;line-height:1.6}
+    header{background:linear-gradient(140deg,#070a12 0%,#0f3460 65%,#1a4f8a 100%);color:#fff;padding:32px 44px 26px;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;right:-60px;bottom:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(200,16,46,.18) 0%,transparent 70%);border-radius:50%}
+    .h-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px}
+    .h-title{font-size:28px;font-weight:800;letter-spacing:-.5px}
+    .h-sub{font-size:14px;color:rgba(255,255,255,.6);margin-top:4px;margin-bottom:18px}
+    .h-badges{display:flex;flex-wrap:wrap;gap:7px}
+    .hb{padding:3px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+    .hb-stage{background:var(--aa-red);color:#fff}
+    .hb-mode{background:rgba(124,58,237,.35);color:#c4b5fd;border:1px solid rgba(124,58,237,.4)}
+    .hb-tier{background:rgba(245,166,35,.2);color:var(--aa-gold);border:1px solid rgba(245,166,35,.3)}
+    .hb-law{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.18)}
+    .hb-warn{background:#c8102e;color:#fff}
+    .hb-new{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .hb-ok{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .hb-cond{background:rgba(245,166,35,.25);color:var(--aa-gold);border:1px solid rgba(245,166,35,.35)}
+    .hb-fail{background:#c8102e;color:#fff}
+    nav.stages{background:var(--aa-navy);padding:0 44px;display:flex;overflow-x:auto}
+    .st{padding:13px 18px;font-size:12px;font-weight:600;color:rgba(255,255,255,.3);border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:8px}
+    .st.done{color:rgba(255,255,255,.55);border-bottom-color:var(--aa-green-dk)}
+    .st.active{color:#fff;border-bottom-color:var(--aa-red)}
+    .st.locked{color:rgba(255,255,255,.18);cursor:not-allowed}
+    .st-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;background:rgba(255,255,255,.07);flex-shrink:0}
+    .st.done .st-n{background:var(--aa-green-dk);color:#fff}
+    .st.active .st-n{background:var(--aa-red);color:#fff}
+    .body{max-width:1200px;margin:0 auto;padding:26px 20px;display:grid;grid-template-columns:1fr 320px;gap:22px}
+    @media(max-width:900px){.body{grid-template-columns:1fr}}
+    .main{display:flex;flex-direction:column;gap:18px}
+    .side{display:flex;flex-direction:column;gap:18px}
+    .card{background:#fff;border:1px solid var(--aa-border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+    .ch{padding:13px 18px 11px;border-bottom:1px solid var(--aa-border);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+    .ci{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+    .ct{font-weight:700;font-size:13px;color:var(--aa-dark);flex:1}
+    .cb{padding:18px}
+    .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--aa-muted);margin-bottom:6px}
+    .law{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle}
+    .law:hover .tt{display:block}
+    .tt{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .tt::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .lp{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .lb{background:#fffbeb;color:#b45309;border-color:#fde68a}
+    .le{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin:2px 2px 0 0}
+    .tg{background:#dcfce7;color:#166534}
+    .tr{background:#fee2e2;color:#991b1b}
+    .ty{background:#fef3c7;color:#92400e}
+    .tb{background:#dbeafe;color:#1d4ed8}
+    .tp{background:#ede9fe;color:#5b21b6}
+    .mt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:600px){.mt-grid{grid-template-columns:1fr}}
+    .mt-box{border-radius:8px;padding:14px 16px;border:2px solid}
+    .mt-selected{background:#f5f3ff;border-color:#7c3aed}
+    .mt-gold{background:#fffbeb;border-color:var(--aa-gold)}
+    .mt-inactive{background:#f8fafc;border-color:var(--aa-border);opacity:.6}
+    .mt-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--aa-muted);margin-bottom:4px}
+    .mt-value{font-size:15px;font-weight:800;color:var(--aa-dark)}
+    .mt-desc{font-size:12px;color:var(--aa-muted);margin-top:5px}
+    .rubric{width:100%;border-collapse:collapse;font-size:12px}
+    .rubric th{background:var(--aa-surface);padding:7px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .rubric td{padding:8px 12px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .rubric tr:last-child td{border-bottom:none}
+    .yes{color:var(--aa-green-dk);font-weight:700}
+    .no{color:#991b1b;font-weight:700}
+    .tbd{color:#92400e;font-weight:700}
+    .gate-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:600px){.gate-row{grid-template-columns:1fr}}
+    .gate{border-radius:8px;padding:13px 15px;display:flex;gap:10px}
+    .ge{background:#eff6ff;border:1px solid #bfdbfe}
+    .gx{background:#f0fdf4;border:1px solid #bbf7d0}
+    .gp{background:#fffbeb;border:1px solid #fde68a}
+    .gi{font-size:18px;flex-shrink:0}
+    .gl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:2px}
+    .gtt{font-size:13px;line-height:1.5}
+    .prd-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:600px){.prd-grid{grid-template-columns:1fr}}
+    .prd-box{border-radius:8px;padding:12px 14px;border:1px solid}
+    .prd-ok{background:#f0fdf4;border-color:#bbf7d0}
+    .prd-warn{background:#fffbeb;border-color:#fde68a}
+    .prd-fail{background:#fef2f2;border-color:#fecaca}
+    .prd-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:4px}
+    .prd-txt{font-size:12px;line-height:1.5;color:var(--aa-text)}
+    .dom-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:11px}
+    .dom{border-radius:8px;border:1px solid var(--aa-border);overflow:hidden}
+    .dh{padding:9px 13px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:7px}
+    .db{padding:11px 13px;background:#fff;font-size:12px;display:flex;flex-direction:column;gap:5px}
+    .dr{display:flex;justify-content:space-between;align-items:baseline}
+    .dk{color:var(--aa-muted)}
+    .dv{font-weight:600}
+    .arch{background:var(--aa-navy);border-radius:8px;padding:18px;font-family:'Cascadia Code','Fira Code','Courier New',monospace;font-size:11.5px;color:rgba(255,255,255,.82);line-height:1.9;overflow-x:auto;white-space:pre}
+    .arch .dim{color:rgba(255,255,255,.3)}
+    .arch .hi{color:var(--aa-gold);font-weight:700}
+    .arch .grn{color:#4ade80}
+    .arch .red{color:#f87171}
+    .cl{list-style:none;display:flex;flex-direction:column;gap:8px}
+    .cli{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface)}
+    .cli.done{background:#f0fdf4;border-color:#86efac}
+    .cli.pend{background:#fff;border-color:var(--aa-border)}
+    .cli.wait{background:#fffbeb;border-color:#fde68a}
+    .cbox{width:19px;height:19px;flex-shrink:0;border:2px solid var(--aa-border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:2px}
+    .cli.done .cbox{background:var(--aa-green-dk);border-color:var(--aa-green-dk);color:#fff}
+    .cli.wait .cbox{background:var(--aa-gold);border-color:var(--aa-gold);color:#fff}
+    .ctitle{font-weight:600;font-size:13px}
+    .cdesc{font-size:12px;color:var(--aa-muted);margin-top:2px}
+    .clw{font-size:11px;font-weight:700;color:var(--aa-accent);margin-top:3px}
+    .at{width:100%;border-collapse:collapse;font-size:12px}
+    .at th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .at td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .at tr:last-child td{border-bottom:none}
+    .ao{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+    .ao-ok{background:#dcfce7;color:#166534}
+    .ao-ip{background:#fef3c7;color:#92400e}
+    .ao-wait{background:#fef3c7;color:#92400e}
+    .ao-fail{background:#fee2e2;color:#991b1b}
+    .rg{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%);border-radius:9px;padding:16px 18px;color:#fff;margin-bottom:14px}
+    .rg-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c4b5fd;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+    .rg-desc{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:12px}
+    .rg-btns{display:flex;gap:8px;flex-wrap:wrap}
+    .rgb{padding:7px 16px;border-radius:7px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+    .rgb-approve{background:#22c55e;color:#fff}.rgb-approve:hover{background:#16a34a}
+    .rgb-enhance{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25)}.rgb-enhance:hover{background:rgba(255,255,255,.22)}
+    .rgb-reject{background:#ef4444;color:#fff}.rgb-reject:hover{background:#dc2626}
+    #rg-decision{font-size:12px;margin-top:10px;padding:8px 12px;border-radius:7px;display:none}
+    .rg-persist{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);color:#86efac;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    .rg-persist-pend{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);color:#fbbf24;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    .sf{display:flex;align-items:center;gap:8px;padding:8px 11px;background:var(--aa-surface);border:1px dashed var(--aa-border);border-radius:7px;font-family:'Cascadia Code','Fira Code',monospace;font-size:11.5px;color:#1d4ed8;margin-bottom:7px}
+    .ss{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap}
+    .ss-ok{background:#dcfce7;color:#166534}
+    .ss-wait{background:#fef3c7;color:#92400e}
+    .ss-pend{background:#fee2e2;color:#991b1b}
+    .av{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;background:#f0f4ff;border:1px solid #c7d2fe;font-size:12px;font-weight:600;color:#4338ca;margin-bottom:6px}
+    .ev-panel{border-radius:0}
+    .ev-header{padding:12px 18px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--aa-border)}
+    .ev-header.ok{background:#f0fdf4;color:#166534}
+    .ev-header.cond{background:#fffbeb;color:#92400e}
+    .ev-header.fail{background:#fef2f2;color:#991b1b}
+    .ev-body{padding:0}
+    .ev-row{display:flex;gap:10px;align-items:flex-start;padding:10px 18px;border-bottom:1px solid #f1f5f9}
+    .ev-row:last-child{border-bottom:none}
+    .ev-persona{font-weight:700;font-size:12px}
+    .ev-law{font-size:10px;color:var(--aa-accent);font-weight:700;margin-top:1px}
+    .ev-note{font-size:11.5px;color:var(--aa-muted);margin-top:4px;line-height:1.5}
+    .ev-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;flex-shrink:0}
+    .ev-pass{background:#dcfce7;color:#166534}
+    .ev-warn{background:#fef3c7;color:#92400e}
+    .ev-fail{background:#fee2e2;color:#991b1b}
+    code{font-family:'Cascadia Code','Fira Code',monospace;background:#f1f5f9;padding:1px 5px;border-radius:4px;font-size:11.5px;color:#0f3460}
+    hr{border:none;border-top:1px solid var(--aa-border);margin:13px 0}
+    footer{background:var(--aa-dark);color:rgba(255,255,255,.45);padding:11px 44px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;font-size:11px}
+    .ft-dot{width:7px;height:7px;border-radius:50%;background:var(--aa-gold);animation:pulse 2s infinite;flex-shrink:0}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .prose h1,.prose h2,.prose h3{margin:12px 0 8px}
+    .prose p{margin:8px 0}
+    .prose ul,.prose ol{margin:8px 0 8px 22px}
+    .prose table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+    .prose table th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:11px;font-weight:700;border-bottom:1px solid var(--aa-border)}
+    .prose table td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    /* Fix badge contrast — Exploratory/Tier readable on dark header */
+    .hb-mode{background:#5b21b6;color:#fff;border:1px solid #7c3aed}
+    .hb-tier{background:#92400e;color:#fef3c7;border:1px solid #b45309}
+    /* Law citation spans injected by citation resolver into prose body */
+    .law-cite{display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle;background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .law-cite[data-non-negotiable="false"]{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .law-tooltip{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .law-tooltip::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .law-cite:hover .law-tooltip{display:block}
+    /* Markdown checkbox items rendered by the citation resolver */
+    .task-done,.task-pending{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface);margin:4px 0}
+    .task-done{background:#f0fdf4;border-color:#86efac}
+    .task-done .cb{width:18px;height:18px;flex-shrink:0;border-radius:4px;background:var(--aa-green-dk);border:2px solid var(--aa-green-dk);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700;padding:0!important;margin-top:2px}
+    .task-done .cb::after{content:'✓'}
+    .task-pending .cb{width:18px;height:18px;flex-shrink:0;border-radius:4px;background:#fff;border:2px solid var(--aa-border);padding:0!important;margin-top:2px}
+    .task-text{font-size:12px;line-height:1.5;flex:1}
+    .prose li:has(.task-done),.prose li:has(.task-pending){list-style:none;margin-left:-22px}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="h-eye">product-discovery-stage-a-f · disc-2026-002</div>
+  <div class="h-title">Stage A &nbsp;·&nbsp; Initialize</div>
+  <div class="h-sub">AADvantage Loyalty Platform — Member Experience Modernization &nbsp;·&nbsp; Workflow v2.0.0</div>
+  <div class="h-badges">
+    <span class="hb hb-stage">Stage A of 6</span>
+    <span class="hb hb-mode">🔭 Exploratory</span>
+    <span class="hb hb-tier">⚡ Tier 2</span>
+    <span class="hb hb-law">PRD-2.1</span><span class="hb hb-law">PRD-2.5</span><span class="hb hb-law">BUS-7.1</span><span class="hb hb-law">ENG-13.1</span><span class="hb hb-law">ENG-11.1</span><span class="hb hb-law">PRD-1.1</span><span class="hb hb-law">PRD-3.1</span><span class="hb hb-law">PRD-6.1</span>
+    
+  </div>
+</header>
+
+
+<nav class="stages" aria-label="Discovery stages">
+    <div class="st active">
+      <div class="st-n">A</div>
+      Initialize
+    </div>
+    <div class="st locked">
+      <div class="st-n">B</div>
+      Field Study
+    </div>
+    <div class="st locked">
+      <div class="st-n">C</div>
+      Code Evidence
+    </div>
+    <div class="st locked">
+      <div class="st-n">D</div>
+      Validation
+    </div>
+    <div class="st locked">
+      <div class="st-n">E</div>
+      Metrics
+    </div>
+    <div class="st locked">
+      <div class="st-n">F</div>
+      Roadmap Lock
+    </div>
+</nav>
+
+
+<div class="body">
+  <div class="main">
+
+    
+    <!-- Stage Gates -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#eff6ff">🚦</div>
+        <div class="ct">Stage Gates</div>
+        <span class="law lp">PRD-2.1<span class="tt"><strong>Problem Validation Law — all 4 dimensions required before solution design</strong></span></span><span class="law lb">PRD-2.5<span class="tt"><strong>Discovery Stage-Gate Law · NON-NEGOTIABLE — stages advance only when exit criteria are fully met and filed</strong></span></span><span class="law le">BUS-7.1<span class="tt"><strong>Audit Trail Law · NON-NEGOTIABLE — every stage transition logged with who/what/when/why/outcome</strong></span></span>
+      </div>
+      <div class="cb">
+        <div class="gate-row">
+          
+          <div class="gate ge">
+            <div class="gi">📥</div>
+            <div><div class="gl">Entry Gate — ✅ Met</div>
+            <div class="gtt">Loyalty platform member experience modernisation opportunity surfaced from loyalty-aadvantage avatar. Three measurable failure modes confirmed via internal analytics and member research (Q3–Q4 2025, Feb 2026). Exploratory discovery initiated 2026-04-18.
+</div></div>
+          </div>
+          
+          
+          <div class="gate gp">
+            <div class="gi">📤</div>
+            <div><div class="gl">Exit Gate — ⏳ PENDING</div>
+            <div class="gtt">Awaiting stakeholder approval in §Stakeholder Approval from named Director+ approver. Initiator is Amal (Product Coach) — self-certification prohibited by PRD-2.5.
+</div></div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    
+    <!-- Mode & Tier -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f5f3ff">🧭</div>
+        <div class="ct">Discovery Mode &amp; Tier</div>
+        <span class="hb hb-mode" style="font-size:11px;">Exploratory</span>
+        <span class="hb hb-tier" style="font-size:11px;">Tier 2</span>
+      </div>
+      <div class="cb">
+        
+        <div class="mt-grid" style="margin-bottom:16px;">
+          
+          <div class="mt-box mt-selected">
+            <div class="mt-label">✅ Selected Mode</div>
+            <div class="mt-value">🔭 Exploratory</div>
+            <div class="mt-desc">No prior validated problem statement exists across all four PRD-2.1 dimensions. Known metrics surface pain points but fresh evidence is required. All 4 PRD-2.1 dimensions closed with avatar-grounded content.
+</div>
+          </div>
+          
+          
+          <div class="mt-box mt-gold">
+            <div class="mt-label">✅ Selected Tier</div>
+            <div class="mt-value" style="color:#92400e;">⚡ Tier 2</div>
+            <div class="mt-desc">5/5 complexity rubric Yes. Spans points engine, redemption surface, partner integration layer, elite status service, and member data platform across 2+ teams. Multi-quarter timeline. Financial loyalty regulatory surface (PCI, data retention).
+</div>
+          </div>
+          
+        </div>
+        
+        
+        <div class="lbl">Tier Complexity Rubric</div>
+        <table class="rubric">
+          <thead><tr><th>#</th><th>Question</th><th>Answer</th><th>Evidence</th></tr></thead>
+          <tbody>
+            
+            <tr>
+              <td>1</td>
+              <td>Does the discovery span 3+ services or bounded contexts?</td>
+              <td class="yes">Yes</td>
+              <td></td>
+            </tr>
+            
+            <tr>
+              <td>2</td>
+              <td>Are there 3+ stakeholder groups with distinct needs?</td>
+              <td class="yes">Yes</td>
+              <td></td>
+            </tr>
+            
+            <tr>
+              <td>3</td>
+              <td>Does the domain involve regulatory or compliance constraints?</td>
+              <td class="yes">Yes</td>
+              <td></td>
+            </tr>
+            
+            <tr>
+              <td>4</td>
+              <td>Is the expected implementation timeline &gt; 1 quarter?</td>
+              <td class="yes">Yes</td>
+              <td></td>
+            </tr>
+            
+            <tr>
+              <td>5</td>
+              <td>Does the discovery require cross-team coordination (2+ teams)?</td>
+              <td class="yes">Yes</td>
+              <td></td>
+            </tr>
+            
+          </tbody>
+        </table>
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- PRD-2.1 Problem Validation -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#fff1f2">📝</div>
+        <div class="ct">Problem Statement — PRD-2.1 Validation</div>
+        <span class="law lp">PRD-2.1<span class="tt"><strong>Problem Validation Law</strong><br>All problems MUST be validated before solution design. All 4 dimensions required.</span></span>
+      </div>
+      <div class="cb">
+        <div class="prd-grid">
+          
+            
+            
+            <div class="prd-box prd-ok">
+              <div class="prd-lbl">✅ 1. Problem Exists</div>
+              <div class="prd-txt">180M+ member base failing to convert enrollment to engagement. Three measurable failure modes: 62% redemption abandonment, 25% elite achievement rate, 82% Platinum renewal vs 95% target.</div>
+            </div>
+            
+          
+            
+            
+            <div class="prd-box prd-ok">
+              <div class="prd-lbl">✅ 2. Problem Matters</div>
+              <div class="prd-txt">$40M/year unredeemed points trust erosion, $100M/year elite advancement opportunity, $2M/year elite churn to competitors. AA is now a digital experience laggard vs United/Delta.</div>
+            </div>
+            
+          
+            
+            
+            <div class="prd-box prd-ok">
+              <div class="prd-lbl">✅ 3. Problem Is Solvable</div>
+              <div class="prd-txt">All 5 bounded contexts in production. Internal prototypes hit targets. loyalty-aadvantage avatar provides validated law library, persona set, and roadmap scoring framework.</div>
+            </div>
+            
+          
+            
+            
+            <div class="prd-box prd-ok">
+              <div class="prd-lbl">✅ 4. Users Will Exchange Value</div>
+              <div class="prd-txt">62% completion with recommendations vs 45% baseline. 48% weekly engagement on progress tracker. Elite concierge pilot: 100% 1-year retention, 9.2/10 NPS.</div>
+            </div>
+            
+          
+        </div>
+      </div>
+    </div>
+    
+
+    
+
+    
+    <!-- Findings -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#fffbeb">🔍</div>
+        <div class="ct">Discovery Findings</div>
+      </div>
+      <div class="cb">
+        <ul class="cl">
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Three failure modes confirmed with quantitative data</div>
+              <div class="cdesc">Redemption abandonment (62%), elite advancement gap (25%→35% opportunity), elite churn (82% vs 95% target) — all measured Q3-Q4 2025.</div>
+              <div class="clw">PRD-2.1</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Internal prototypes confirm solvability</div>
+              <div class="cdesc">Recommended-for-You moved casual completion 45%→62%; progress tracker hit 48% weekly engagement vs 40% target.</div>
+              <div class="clw">PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Avatar roadmap scores validated — Stage B prioritisation ready</div>
+              <div class="cdesc">loyalty-aadvantage scores: elite tracker (93), mobile redesign (88), award seat expansion (88), elite concierge (86), points gifting (83).</div>
+              
+            </div>
+          </li>
+          
+          <li class="cli wait">
+            <div class="cbox">⏳</div>
+            <div>
+              <div class="ctitle">Blocker — stakeholder approval not yet obtained</div>
+              <div class="cdesc">Director+ approval required before Stage B. Schedule Stage A review.</div>
+              <div class="clw">PRD-2.5 · BUS-7.1</div>
+            </div>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+    
+
+    
+    <!-- Prose body from markdown (catch-all) -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#eff6ff">📄</div><div class="ct">Narrative &amp;amp; Rationale</div></div>
+      <div class="cb prose"><h1>Discovery Proposal: AADvantage Loyalty Platform — Member Experience Modernization</h1>
+<hr />
+<h2>Problem Statement</h2>
+<blockquote>
+<p><strong><span class="law-cite" data-law-id="PRD-2.1" data-non-negotiable="false">PRD-2.1<span class="law-tooltip"><strong>Problem Validation Law</strong></span></span> — Problem Validation Law:</strong> All problems MUST be validated before solution design.
+Complete all four dimensions below before proceeding.</p>
+</blockquote>
+<h3>1. Problem Exists</h3>
+<p>AADvantage has 180M+ enrolled members but is failing to convert enrollment into sustained engagement and redemption. Three measurable failure modes exist today:</p>
+<ul>
+<li><strong>Redemption abandonment:</strong> 62% of casual members abandon award redemption mid-flow — unable to identify a relevant option across 12 undifferentiated search results (internal analytics, Q4 2025).</li>
+<li><strong>Elite advancement gap:</strong> Only 25% of frequent travelers achieve elite status; 30% drop out at Month 7 unaware they are within reach (member survey, Feb 2026).</li>
+<li><strong>Elite churn:</strong> Platinum 1-year renewal rate is 82% vs. 95% target — churned elites cite declining perceived value and lounge experience quality (churn interviews, Q3 2025).</li>
+</ul>
+<h3>2. Problem Matters</h3>
+<ul>
+<li>Redemption abandonment costs <strong>$40M/year</strong> in unredeemed points that erode program trust.</li>
+<li>The elite advancement gap represents a <strong>$100M/year opportunity</strong> — closing 25% → 35% adds ~210K elite members × $500 LTV.</li>
+<li>Elite churn at current rate costs an estimated <strong>$2M/year</strong> in high-LTV members switching to United MileagePlus or Delta SkyMiles.</li>
+<li>AA is now a digital experience laggard: United and Delta modernised award search and redemption UX in 2024–2025. Inaction deepens the gap.</li>
+</ul>
+<h3>3. Problem Is Solvable</h3>
+<p>All five bounded contexts already exist in production — no net-new infrastructure required. Internal prototypes confirm feasibility: a &quot;Recommended for You&quot; redemption feature moved casual completion from 45% → 62% in a constrained test (Q2 2025); the elite progress tracker beta hit 48% weekly engagement vs. 40% target. The loyalty-aadvantage avatar provides a validated PRD law application library, persona set, and roadmap scoring framework specific to this domain.</p>
+<h3>4. Users Will Exchange Value</h3>
+<ul>
+<li>Casual members complete redemption at 62% when shown relevant recommendations vs. 45% baseline — they will invest attention for relevant awards.</li>
+<li>Frequent travelers engaged with the progress tracker at 48% weekly active rate — they will invest regular check-ins to track elite advancement.</li>
+<li>Elite concierge pilot with 50 platinum members delivered 100% 1-year retention and 9.2/10 NPS — they will exchange loyalty for restored perceived value.</li>
+</ul>
+<hr />
+<h2>Scope</h2>
+<table>
+<thead>
+<tr>
+<th>In Scope</th>
+<th>Out of Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Redemption search and award discovery experience (casual member)</td>
+<td>New partner contract negotiation</td>
+</tr>
+<tr>
+<td>Elite progress tracking and advancement communications (frequent traveler)</td>
+<td>Points earn-rate or pricing changes (commercial decision)</td>
+</tr>
+<tr>
+<td>Elite retention and perceived-value experience (elite member)</td>
+<td>Credit card co-brand product terms</td>
+</tr>
+<tr>
+<td>Member-facing mobile and web surfaces across all three journey types</td>
+<td>Back-office partner settlement systems</td>
+</tr>
+<tr>
+<td>Points engine read APIs powering the redemption surface</td>
+<td>Infrastructure re-platforming</td>
+</tr>
+<tr>
+<td>Real-time elite status data flows to member-facing surfaces</td>
+<td>Non-loyalty AA products (cargo, check-in, etc.)</td>
+</tr>
+<tr>
+<td>Metric rebaseline: NPS, redemption rate, elite achievement, retention</td>
+<td>International regulatory compliance outside US</td>
+</tr>
+</tbody>
+</table>
+</div>
+    </div>
+    
+
+    
+    <!-- Exit Gate Checklist -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f0fdf4">✅</div>
+        <div class="ct">Exit Gate Checklist — Stage A → Next</div>
+        <span class="law lp">PRD-2.5 ⚠<span class="tt"><strong>Stage-Gate Law — NON-NEGOTIABLE</strong><br>ALL items must be checked before advancing.</span></span>
+      </div>
+      <div class="cb">
+        <ul class="cl">
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Discovery ID assigned: disc-2026-002</div>
+              
+              <div class="clw">ENG-11.1 · PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">stage-a-initialize.md created from template</div>
+              
+              <div class="clw">ENG-11.2 · PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Problem statement complete — all 4 PRD-2.1 dimensions filled</div>
+              
+              <div class="clw">PRD-2.1</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Scope defined (in/out table populated)</div>
+              
+              <div class="clw">PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Tier 2 declared — all 5 rubric questions Yes</div>
+              
+              <div class="clw">PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Mode (Exploratory) declared in frontmatter and narrative</div>
+              
+              <div class="clw">PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Loyalty-AADvantage, Product, and Business avatars activated</div>
+              
+              <div class="clw">PRD-2.5 · BUS-7.1</div>
+            </div>
+          </li>
+          
+          <li class="cli wait">
+            <div class="cbox">⏳</div>
+            <div>
+              <div class="ctitle">Stakeholder approval obtained from named Director+</div>
+              <div class="cdesc">Self-certification prohibited by PRD-2.5.</div>
+              <div class="clw">PRD-2.1 · PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli wait">
+            <div class="cbox">⏳</div>
+            <div>
+              <div class="ctitle">Stakeholder approval recorded in §Stakeholder Approval</div>
+              
+              <div class="clw">PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli wait">
+            <div class="cbox">⏳</div>
+            <div>
+              <div class="ctitle">All open blockers from Initial Findings resolved</div>
+              
+              <div class="clw">PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli wait">
+            <div class="cbox">⏳</div>
+            <div>
+              <div class="ctitle">package-index.md created with Tier 2 manifest</div>
+              
+              <div class="clw">ENG-11.1</div>
+            </div>
+          </li>
+          
+          <li class="cli wait">
+            <div class="cbox">⏳</div>
+            <div>
+              <div class="ctitle">stage-a-initialize.md rendered via aa-artifact-render and APPROVED in browser</div>
+              
+              <div class="clw">ENG-13.1</div>
+            </div>
+          </li>
+          
+          <li class="cli wait">
+            <div class="cbox">⏳</div>
+            <div>
+              <div class="ctitle">BUS-7.1 audit event filed — Stage A → B transition</div>
+              
+              <div class="clw">BUS-7.1</div>
+            </div>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+    
+
+    
+    <!-- Audit Log -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f1f5f9">📋</div>
+        <div class="ct">Audit Log</div>
+        <span class="law lb">BUS-7.1 ⚠<span class="tt"><strong>Audit Trail — NON-NEGOTIABLE</strong><br>Every stage transition: who / what / when / where / why / outcome.</span></span>
+      </div>
+      <div class="cb">
+        <table class="at">
+          <thead><tr><th>Event</th><th>Actor</th><th>Role</th><th>System</th><th>Timestamp</th><th>Outcome</th></tr></thead>
+          <tbody>
+            
+            <tr>
+              <td>Stage A — Initialized</td>
+              <td>Adeel Ali</td>
+              <td>Discovery Sponsor</td>
+              <td>GitHub Copilot CLI</td>
+              <td>2026-04-18T04:15:00Z</td>
+              <td><span class="ao ao-wait">IN_PROGRESS</span></td>
+            </tr>
+            
+            <tr>
+              <td>Stage A → B</td>
+              <td>&lt;name&gt;</td>
+              <td>&lt;role&gt;</td>
+              <td>&lt;…&gt;</td>
+              <td>&lt;YYYY-MM-DDTHH:MM:SSZ&gt;</td>
+              <td><span class="ao ao-wait">AWAITING</span></td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+
+  </div><!-- end main -->
+
+  <div class="side">
+
+    <!-- ENG-13.1 Render Gate -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#1e1b4b;font-size:16px;">🖥️</div>
+        <div class="ct" style="color:#4f46e5;">ENG-13.1 Render Gate</div>
+        <span class="hb hb-fail" style="font-size:9px;">NON-NEG</span>
+      </div>
+      <div class="cb">
+        
+          <div class="rg-persist-pend">⏳ <strong>PENDING</strong> — awaiting reviewer decision in the source artifact</div>
+        
+        <div class="rg">
+          <div class="rg-title">🖥️ Human Browser Review</div>
+          <div class="rg-desc">Source-of-truth is the §Render Gate checkbox in the source artifact. Button clicks are reminders only — tick the checkbox to record.</div>
+          <div class="rg-btns">
+            <button class="rgb rgb-approve" onclick="rgDecision('APPROVE')">✅ APPROVE</button>
+            <button class="rgb rgb-enhance" onclick="rgDecision('ENHANCE')">🔄 ENHANCE</button>
+            <button class="rgb rgb-reject" onclick="rgDecision('REJECT')">❌ REJECT</button>
+          </div>
+          <div id="rg-decision"></div>
+        </div>
+        <p style="font-size:12px;color:var(--aa-muted);">Stage does not advance until §Render Gate in the source artifact carries a ticked APPROVE row. (PRD-2.5 NON-NEGOTIABLE)</p>
+      </div>
+    </div>
+
+    
+
+    
+    <!-- Participating Avatars -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f5f3ff">🤖</div><div class="ct">Participating Avatars</div></div>
+      <div class="cb">
+        
+          
+          <div class="av">✈️ loyalty-aadvantage <span style="color:#6366f1;font-weight:400;font-size:11px;">· avatars/product-type/loyalty-aadvantage/ · AAdvantage · 180M members</span></div>
+          
+        
+          
+          <div class="av">🎯 product <span style="color:#6366f1;font-weight:400;font-size:11px;">· constitutional context</span></div>
+          
+        
+          
+          <div class="av">💼 business <span style="color:#6366f1;font-weight:400;font-size:11px;">· constitutional context</span></div>
+          
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- Spec Artifacts -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📂</div><div class="ct">Spec Artifacts</div></div>
+      <div class="cb">
+        
+        <div class="sf">📄 stage-a-initialize.md<span class="ss ss-ok">DRAFTED</span></div>
+        
+        <div class="sf">🌐 stage-a-initialize.html<span class="ss ss-ok">RENDERED</span></div>
+        
+        <div class="sf">📋 package-index.md<span class="ss ss-wait">PENDING</span></div>
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- Stakeholder Approval -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0fdf4">✅</div><div class="ct">Stakeholder Approval</div></div>
+      <div class="cb">
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;">
+          <div><span class="lbl">Approver</span><div style="font-weight:700;">&lt;Full name&gt;</div></div>
+          <div><span class="lbl">Title</span><div>&lt;Role / Title&gt;</div></div>
+          <div><span class="lbl">Date</span><div>&lt;YYYY-MM-DD&gt;</div></div>
+          <div><span class="lbl">Method</span><div>&lt;pending&gt;</div></div>
+          <div><span class="lbl">Self-cert?</span><div style="color:#166534;font-weight:700;">✅ No</div></div>
+        </div>
+      </div>
+    </div>
+    
+
+    
+    <!-- Active Laws -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#fff1f2">⚖️</div><div class="ct">Active Laws — Stage A</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:7px;">
+        
+          <span class="law le" style="width:fit-content">
+            PRD-2.1<span class="tt"><strong>Problem Validation Law — all 4 dimensions required before solution design</strong></span>
+          </span>
+        
+          <span class="law lp" style="width:fit-content">
+            PRD-2.5 ⚠<span class="tt"><strong>Discovery Stage-Gate Law · NON-NEGOTIABLE — stages advance only when exit criteria are fully met and filed</strong></span>
+          </span>
+        
+          <span class="law lp" style="width:fit-content">
+            BUS-7.1 ⚠<span class="tt"><strong>Audit Trail Law · NON-NEGOTIABLE — every stage transition logged with who/what/when/why/outcome</strong></span>
+          </span>
+        
+          <span class="law lp" style="width:fit-content">
+            ENG-13.1 ⚠<span class="tt"><strong>Artifact Rendering Standard · NON-NEGOTIABLE — all governance artifacts rendered as HTML before stakeholder presentation</strong></span>
+          </span>
+        
+          <span class="law le" style="width:fit-content">
+            ENG-11.1<span class="tt"><strong>Hangar SDD Law — governed spec-driven development workflow</strong></span>
+          </span>
+        
+          <span class="law lb" style="width:fit-content">
+            PRD-1.1<span class="tt"><strong>Customer-Centric Law</strong></span>
+          </span>
+        
+          <span class="law le" style="width:fit-content">
+            PRD-3.1<span class="tt"><strong>Persona Development Law — domain avatar must be activated before Stage B</strong></span>
+          </span>
+        
+          <span class="law lb" style="width:fit-content">
+            PRD-6.1<span class="tt"><strong>PMF Definition Law — success metrics defined before committing scope</strong></span>
+          </span>
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- Artifact Info -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📎</div><div class="ct">Artifact Info</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:9px;font-size:12px;">
+        <div><div class="lbl">Status</div><span class="ao ao-ip">IN_PROGRESS</span></div>
+        <div><div class="lbl">Template Version</div><div style="font-weight:600;">v1.0.0</div></div>
+        <div><div class="lbl">Template</div><div style="font-family:monospace;font-size:11px;color:#1d4ed8;word-break:break-all;">tools/templates/product-discovery/stage-a-proposal.md</div></div>
+        <div><div class="lbl">Example</div><div style="font-family:monospace;font-size:11px;color:#1d4ed8;word-break:break-all;">tools/templates/product-discovery/examples/partner-miles-reference/stage-a-proposal.html</div></div>
+        <div><div class="lbl">Avatar</div><div style="font-family:monospace;font-size:11px;color:#4338ca;word-break:break-all;">avatars/product-type/loyalty-aadvantage/</div></div>
+      </div>
+    </div>
+    
+
+  </div><!-- end side -->
+</div><!-- end body -->
+
+<footer>
+  <div style="display:flex;align-items:center;gap:8px;"><div class="ft-dot"></div>disc-2026-002 · Stage A</div>
+  <div>AADvantage Loyalty Platform — Member Experience Modernization</div>
+  <div>branch: disc-2026-002-loyalty-platform-discovery</div>
+</footer>
+
+<script>
+function rgDecision(d) {
+  var el = document.getElementById('rg-decision');
+  el.style.display = 'block';
+  if (d === 'APPROVE') {
+    el.style.cssText = 'background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x2705; <strong>APPROVE</strong> — This button is a reminder. To actually record approval, tick <code>- [x] APPROVE</code> in the PROPOSAL.md §Render Gate section.';
+  } else if (d === 'ENHANCE') {
+    el.style.cssText = 'background:rgba(124,58,237,.15);color:#c4b5fd;border:1px solid rgba(124,58,237,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x1F504; <strong>ENHANCE</strong> — Describe the enhancement needed in PROPOSAL.md §Render Gate.';
+  } else {
+    el.style.cssText = 'background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x274C; <strong>REJECT</strong> — Document the blocker in PROPOSAL.md §Render Gate. Stage does NOT advance.';
+  }
+}
+</script>
+
+</body>
+</html>

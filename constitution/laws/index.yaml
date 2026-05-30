@@ -1,0 +1,263 @@
+# hangar-ai-constitution Laws Registry
+# Master index of all constitutional laws for American Airlines
+# Version: 2.0.0
+
+version: "2.0.0"
+established: "2026-01"
+organization: "American Airlines"
+
+domains:
+  engineering:
+    prefix: ENG
+    description: Technical implementation, code quality, testing, security
+    files:
+      - foundations.md
+      - architecture.md
+      - quality.md
+      - testing.md
+      - devops.md
+      - security.md
+      - resiliency.md
+      - governance.md
+      - spec-driven-development.md
+      - agentic-feedback.md
+      - artifact-rendering.md
+      - citation-integrity.md
+    articles:
+      - I: Foundational Principles
+      - II: Architecture & Design Laws
+      - III: Code Quality Laws
+      - IV: Testing Laws
+      - V: DevOps Laws
+      - VI: Security & Privacy Laws
+      - VII: Resiliency Laws
+      - VIII: Platform Integration Laws
+      - IX: AI-Engineer Collaboration Laws
+      - X: Constitution Governance Laws
+      - XI: Spec-Driven Development Laws
+      - XII: Agentic Compliance Feedback Loop Laws
+      - XIII: Artifact Rendering Laws
+      - XIV: Citation Integrity Laws
+
+  product:
+    prefix: PRD
+    description: Product management, discovery, roadmaps, metrics
+    files:
+      - foundations.md
+      - discovery.md
+      - journey.md
+      - roadmap.md
+      - experimentation.md
+      - metrics.md
+    articles:
+      - I: Foundational Principles
+      - II: Discovery Laws
+      - III: User Journey Laws
+      - IV: Roadmap Laws
+      - V: MVP & Experimentation Laws
+      - VI: Product-Market Fit Laws
+      - VII: Prioritization Laws
+      - VIII: Metrics & Analytics Laws
+      - IX: Stakeholder & Communication Laws
+
+  business:
+    prefix: BUS
+    description: Compliance, data governance, privacy, risk, audit, aviation regulations
+    files:
+      - foundations.md
+      - compliance.md
+      - data-governance.md
+      - privacy.md
+      - risk.md
+      - audit.md
+      - incident.md
+    articles:
+      - I: Foundational Principles
+      - II: Compliance Framework Laws
+      - III: Data Governance Laws
+      - IV: Privacy Laws
+      - V: Security Governance Laws
+      - VI: Risk Management Laws
+      - VII: Audit & Evidence Laws
+      - VIII: Vendor & Third-Party Laws
+      - IX: Incident Management Laws
+      - X: Business Continuity Laws
+
+# Non-negotiable laws (require executive approval to amend)
+non_negotiable:
+  engineering:
+    - ENG-4.1  # Atomic TDD Law
+    - ENG-4.12  # Legacy Rescue Mutation Hardening Law
+    - ENG-6.1  # Security by Design Law
+    - ENG-6.4  # Data Protection Law
+    - ENG-6.7  # Audit Trail Law
+    - ENG-10.1  # Constitution Metrics Collection Law (NON-NEGOTIABLE)
+    - ENG-11.1  # Spec-Driven Development Law
+    - ENG-12.1  # Agentic Phase Gate Law
+    - ENG-13.1  # Artifact Rendering Standard (elevated 2026-04-15 — ensemble-pr31-gap6-2026-04-15)
+    - ENG-14.1  # Law Citation Audit Gate Law (Article XIV — merged 2026-05-25)
+
+  product:
+    - PRD-1.2  # Problem-First Law
+    - PRD-1.5  # Evidence-Based Decision Law
+    - PRD-2.5  # Discovery Stage-Gate Law
+    - PRD-2.6  # Multi-Cognition Phase Gate Jury Law (elevated 2026-05-12 — disc-2026-006-jury-finding)
+    - PRD-5.1  # MVP Law
+    - PRD-6.2  # Retention Over Acquisition Law
+
+  business:
+    - BUS-1.1  # Priority Hierarchy (Legal First)
+    - BUS-2.1  # FAA Compliance Law (NON-NEGOTIABLE per compliance.md + _domain.yaml — elevated 2026-05-25)
+    - BUS-2.2  # Control Framework Law (NON-NEGOTIABLE per compliance.md + _domain.yaml — elevated 2026-05-25)
+    - BUS-2.3  # DOT Consumer Protection Law (NON-NEGOTIABLE per compliance.md + _domain.yaml — elevated 2026-05-25)
+    - BUS-3.1  # PNR Data Retention (7 years — aviation regulatory)
+    - BUS-3.6  # Monetary Precision Law
+    - BUS-4.3  # Data Subject Rights Law
+    - BUS-6.1  # Dangerous Goods Compliance (aviation regulatory)
+    - BUS-7.1  # Audit Trail Law
+    - BUS-9.3  # Breach Notification Law
+
+# Note: aviation_non_negotiable merged into non_negotiable.business 2026-05-25
+# (registry loader reads non_negotiable only — aviation laws were invisible to auditor)
+
+# Total law count by domain (approximate)
+law_counts:
+  engineering: 76
+  product: 50
+  business: 55
+  total: 174
+
+# Individual law IDs per domain (for index.nonneg_laws_consistent cross-validation)
+law_ids:
+  engineering:
+    - ENG-1.1
+    - ENG-1.2
+    - ENG-1.3
+    - ENG-1.4
+    - ENG-1.5
+    - ENG-2.1
+    - ENG-2.2
+    - ENG-2.3
+    - ENG-2.4
+    - ENG-2.5
+    - ENG-3.1
+    - ENG-3.2
+    - ENG-3.3
+    - ENG-3.4
+    - ENG-3.5
+    - ENG-3.6
+    - ENG-3.7
+    - ENG-3.8
+    - ENG-3.9
+    - ENG-3.10
+    - ENG-3.11
+    - ENG-4.1
+    - ENG-4.2
+    - ENG-4.3
+    - ENG-4.4
+    - ENG-4.5
+    - ENG-4.6
+    - ENG-4.7
+    - ENG-4.8
+    - ENG-4.9
+    - ENG-4.10
+    - ENG-4.11
+    - ENG-4.12
+    - ENG-4.14
+    - ENG-5.1
+    - ENG-5.2
+    - ENG-5.3
+    - ENG-5.4
+    - ENG-5.5
+    - ENG-5.6
+    - ENG-6.1
+    - ENG-6.2
+    - ENG-6.3
+    - ENG-6.4
+    - ENG-6.5
+    - ENG-6.6
+    - ENG-6.7
+    - ENG-6.8
+    - ENG-7.1
+    - ENG-7.2
+    - ENG-7.3
+    - ENG-7.4
+    - ENG-7.5
+    - ENG-7.6
+    - ENG-7.7
+    - ENG-7.8
+    - ENG-10.1
+    - ENG-10.2
+    - ENG-10.3
+    - ENG-10.4
+    - ENG-10.5
+    - ENG-11.1
+    - ENG-11.2
+    - ENG-11.3
+    - ENG-12.1
+    - ENG-12.2
+    - ENG-12.3
+    - ENG-13.1
+    - ENG-13.2
+    - ENG-13.3
+    - ENG-14.1
+    - ENG-14.2
+  product:
+    - PRD-1.1
+    - PRD-1.2
+    - PRD-1.3
+    - PRD-1.4
+    - PRD-1.5
+    - PRD-2.1
+    - PRD-2.2
+    - PRD-2.3
+    - PRD-2.4
+    - PRD-2.5
+    - PRD-2.6
+    - PRD-3.1
+    - PRD-3.2
+    - PRD-3.3
+    - PRD-3.4
+    - PRD-4.1
+    - PRD-4.2
+    - PRD-4.3
+    - PRD-4.4
+    - PRD-5.1
+    - PRD-5.2
+    - PRD-5.3
+    - PRD-5.4
+    - PRD-6.1
+    - PRD-6.2
+    - PRD-6.3
+  business:
+    - BUS-1.1
+    - BUS-1.2
+    - BUS-1.3
+    - BUS-1.4
+    - BUS-1.5
+    - BUS-2.1
+    - BUS-2.2
+    - BUS-2.3
+    - BUS-2.4
+    - BUS-3.1
+    - BUS-3.2
+    - BUS-3.3
+    - BUS-3.4
+    - BUS-3.5
+    - BUS-4.1
+    - BUS-4.2
+    - BUS-4.3
+    - BUS-4.4
+    - BUS-4.5
+    - BUS-6.1
+    - BUS-6.2
+    - BUS-6.3
+    - BUS-6.4
+    - BUS-7.1
+    - BUS-7.2
+    - BUS-7.3
+    - BUS-7.4
+    - BUS-9.1
+    - BUS-9.2
+    - BUS-9.3
+    - BUS-9.4

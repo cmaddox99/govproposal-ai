@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  
+
+  <title>Stage B — Field Study | disc-2026-004 | Gate Management Platform — Operations Intelligence Field Study</title>
+  <style>
+    :root {
+      --aa-red:#c8102e; --aa-dark:#0a0d14; --aa-navy:#131825; --aa-blue:#0f3460;
+      --aa-accent:#e94560; --aa-gold:#f5a623; --aa-green:#22c55e; --aa-green-dk:#16a34a;
+      --aa-purple:#7c3aed; --aa-surface:#f4f6fa; --aa-border:#dde3ee;
+      --aa-text:#1e293b; --aa-muted:#64748b; --r:9px; --sh:0 2px 10px rgba(0,0,0,.07);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--aa-surface);color:var(--aa-text);font-size:14px;line-height:1.6}
+    header{background:linear-gradient(140deg,#070a12 0%,#0f3460 65%,#1a4f8a 100%);color:#fff;padding:32px 44px 26px;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;right:-60px;bottom:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(200,16,46,.18) 0%,transparent 70%);border-radius:50%}
+    .h-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px}
+    .h-title{font-size:28px;font-weight:800;letter-spacing:-.5px}
+    .h-sub{font-size:14px;color:rgba(255,255,255,.6);margin-top:4px;margin-bottom:18px}
+    .h-badges{display:flex;flex-wrap:wrap;gap:7px}
+    .hb{padding:3px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+    .hb-stage{background:var(--aa-red);color:#fff}
+    .hb-mode{background:rgba(124,58,237,.35);color:#c4b5fd;border:1px solid rgba(124,58,237,.4)}
+    .hb-tier{background:rgba(245,166,35,.2);color:var(--aa-gold);border:1px solid rgba(245,166,35,.3)}
+    .hb-law{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.18)}
+    .hb-warn{background:#c8102e;color:#fff}
+    .hb-new{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .hb-ok{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .hb-cond{background:rgba(245,166,35,.25);color:var(--aa-gold);border:1px solid rgba(245,166,35,.35)}
+    .hb-fail{background:#c8102e;color:#fff}
+    nav.stages{background:var(--aa-navy);padding:0 44px;display:flex;overflow-x:auto}
+    .st{padding:13px 18px;font-size:12px;font-weight:600;color:rgba(255,255,255,.3);border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:8px}
+    .st.done{color:rgba(255,255,255,.55);border-bottom-color:var(--aa-green-dk)}
+    .st.active{color:#fff;border-bottom-color:var(--aa-red)}
+    .st.locked{color:rgba(255,255,255,.18);cursor:not-allowed}
+    .st-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;background:rgba(255,255,255,.07);flex-shrink:0}
+    .st.done .st-n{background:var(--aa-green-dk);color:#fff}
+    .st.active .st-n{background:var(--aa-red);color:#fff}
+    .body{max-width:1200px;margin:0 auto;padding:26px 20px;display:grid;grid-template-columns:1fr 320px;gap:22px}
+    @media(max-width:900px){.body{grid-template-columns:1fr}}
+    .main{display:flex;flex-direction:column;gap:18px}
+    .side{display:flex;flex-direction:column;gap:18px}
+    .card{background:#fff;border:1px solid var(--aa-border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+    .ch{padding:13px 18px 11px;border-bottom:1px solid var(--aa-border);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+    .ci{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+    .ct{font-weight:700;font-size:13px;color:var(--aa-dark);flex:1}
+    .cb{padding:18px}
+    .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--aa-muted);margin-bottom:6px}
+    .law{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle}
+    .law:hover .tt{display:block}
+    .tt{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .tt::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .lp{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .lb{background:#fffbeb;color:#b45309;border-color:#fde68a}
+    .le{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin:2px 2px 0 0}
+    .tg{background:#dcfce7;color:#166534}
+    .tr{background:#fee2e2;color:#991b1b}
+    .ty{background:#fef3c7;color:#92400e}
+    .tb{background:#dbeafe;color:#1d4ed8}
+    .tp{background:#ede9fe;color:#5b21b6}
+    .mt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:600px){.mt-grid{grid-template-columns:1fr}}
+    .mt-box{border-radius:8px;padding:14px 16px;border:2px solid}
+    .mt-selected{background:#f5f3ff;border-color:#7c3aed}
+    .mt-gold{background:#fffbeb;border-color:var(--aa-gold)}
+    .mt-inactive{background:#f8fafc;border-color:var(--aa-border);opacity:.6}
+    .mt-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--aa-muted);margin-bottom:4px}
+    .mt-value{font-size:15px;font-weight:800;color:var(--aa-dark)}
+    .mt-desc{font-size:12px;color:var(--aa-muted);margin-top:5px}
+    .rubric{width:100%;border-collapse:collapse;font-size:12px}
+    .rubric th{background:var(--aa-surface);padding:7px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .rubric td{padding:8px 12px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .rubric tr:last-child td{border-bottom:none}
+    .yes{color:var(--aa-green-dk);font-weight:700}
+    .no{color:#991b1b;font-weight:700}
+    .tbd{color:#92400e;font-weight:700}
+    .gate-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:600px){.gate-row{grid-template-columns:1fr}}
+    .gate{border-radius:8px;padding:13px 15px;display:flex;gap:10px}
+    .ge{background:#eff6ff;border:1px solid #bfdbfe}
+    .gx{background:#f0fdf4;border:1px solid #bbf7d0}
+    .gp{background:#fffbeb;border:1px solid #fde68a}
+    .gi{font-size:18px;flex-shrink:0}
+    .gl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:2px}
+    .gtt{font-size:13px;line-height:1.5}
+    .prd-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:600px){.prd-grid{grid-template-columns:1fr}}
+    .prd-box{border-radius:8px;padding:12px 14px;border:1px solid}
+    .prd-ok{background:#f0fdf4;border-color:#bbf7d0}
+    .prd-warn{background:#fffbeb;border-color:#fde68a}
+    .prd-fail{background:#fef2f2;border-color:#fecaca}
+    .prd-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:4px}
+    .prd-txt{font-size:12px;line-height:1.5;color:var(--aa-text)}
+    .dom-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:11px}
+    .dom{border-radius:8px;border:1px solid var(--aa-border);overflow:hidden}
+    .dh{padding:9px 13px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:7px}
+    .db{padding:11px 13px;background:#fff;font-size:12px;display:flex;flex-direction:column;gap:5px}
+    .dr{display:flex;justify-content:space-between;align-items:baseline}
+    .dk{color:var(--aa-muted)}
+    .dv{font-weight:600}
+    .arch{background:var(--aa-navy);border-radius:8px;padding:18px;font-family:'Cascadia Code','Fira Code','Courier New',monospace;font-size:11.5px;color:rgba(255,255,255,.82);line-height:1.9;overflow-x:auto;white-space:pre}
+    .arch .dim{color:rgba(255,255,255,.3)}
+    .arch .hi{color:var(--aa-gold);font-weight:700}
+    .arch .grn{color:#4ade80}
+    .arch .red{color:#f87171}
+    .cl{list-style:none;display:flex;flex-direction:column;gap:8px}
+    .cli{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface)}
+    .cli.done{background:#f0fdf4;border-color:#86efac}
+    .cli.pend{background:#fff;border-color:var(--aa-border)}
+    .cli.wait{background:#fffbeb;border-color:#fde68a}
+    .cbox{width:19px;height:19px;flex-shrink:0;border:2px solid var(--aa-border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:2px}
+    .cli.done .cbox{background:var(--aa-green-dk);border-color:var(--aa-green-dk);color:#fff}
+    .cli.wait .cbox{background:var(--aa-gold);border-color:var(--aa-gold);color:#fff}
+    .ctitle{font-weight:600;font-size:13px}
+    .cdesc{font-size:12px;color:var(--aa-muted);margin-top:2px}
+    .clw{font-size:11px;font-weight:700;color:var(--aa-accent);margin-top:3px}
+    .at{width:100%;border-collapse:collapse;font-size:12px}
+    .at th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .at td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .at tr:last-child td{border-bottom:none}
+    .ao{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+    .ao-ok{background:#dcfce7;color:#166534}
+    .ao-ip{background:#fef3c7;color:#92400e}
+    .ao-wait{background:#fef3c7;color:#92400e}
+    .ao-fail{background:#fee2e2;color:#991b1b}
+    .rg{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%);border-radius:9px;padding:16px 18px;color:#fff;margin-bottom:14px}
+    .rg-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c4b5fd;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+    .rg-desc{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:12px}
+    .rg-btns{display:flex;gap:8px;flex-wrap:wrap}
+    .rgb{padding:7px 16px;border-radius:7px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+    .rgb-approve{background:#22c55e;color:#fff}.rgb-approve:hover{background:#16a34a}
+    .rgb-enhance{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25)}.rgb-enhance:hover{background:rgba(255,255,255,.22)}
+    .rgb-reject{background:#ef4444;color:#fff}.rgb-reject:hover{background:#dc2626}
+    #rg-decision{font-size:12px;margin-top:10px;padding:8px 12px;border-radius:7px;display:none}
+    .rg-persist{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);color:#86efac;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    .rg-persist-pend{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);color:#fbbf24;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    .sf{display:flex;align-items:center;gap:8px;padding:8px 11px;background:var(--aa-surface);border:1px dashed var(--aa-border);border-radius:7px;font-family:'Cascadia Code','Fira Code',monospace;font-size:11.5px;color:#1d4ed8;margin-bottom:7px}
+    .ss{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap}
+    .ss-ok{background:#dcfce7;color:#166534}
+    .ss-wait{background:#fef3c7;color:#92400e}
+    .ss-pend{background:#fee2e2;color:#991b1b}
+    .av{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;background:#f0f4ff;border:1px solid #c7d2fe;font-size:12px;font-weight:600;color:#4338ca;margin-bottom:6px}
+    .ev-panel{border-radius:0}
+    .ev-header{padding:12px 18px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--aa-border)}
+    .ev-header.ok{background:#f0fdf4;color:#166534}
+    .ev-header.cond{background:#fffbeb;color:#92400e}
+    .ev-header.fail{background:#fef2f2;color:#991b1b}
+    .ev-body{padding:0}
+    .ev-row{display:flex;gap:10px;align-items:flex-start;padding:10px 18px;border-bottom:1px solid #f1f5f9}
+    .ev-row:last-child{border-bottom:none}
+    .ev-persona{font-weight:700;font-size:12px}
+    .ev-law{font-size:10px;color:var(--aa-accent);font-weight:700;margin-top:1px}
+    .ev-note{font-size:11.5px;color:var(--aa-muted);margin-top:4px;line-height:1.5}
+    .ev-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;flex-shrink:0}
+    .ev-pass{background:#dcfce7;color:#166534}
+    .ev-warn{background:#fef3c7;color:#92400e}
+    .ev-fail{background:#fee2e2;color:#991b1b}
+    code{font-family:'Cascadia Code','Fira Code',monospace;background:#f1f5f9;padding:1px 5px;border-radius:4px;font-size:11.5px;color:#0f3460}
+    hr{border:none;border-top:1px solid var(--aa-border);margin:13px 0}
+    footer{background:var(--aa-dark);color:rgba(255,255,255,.45);padding:11px 44px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;font-size:11px}
+    .ft-dot{width:7px;height:7px;border-radius:50%;background:var(--aa-gold);animation:pulse 2s infinite;flex-shrink:0}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .prose h1,.prose h2,.prose h3{margin:12px 0 8px}
+    .prose p{margin:8px 0}
+    .prose ul,.prose ol{margin:8px 0 8px 22px}
+    .prose table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+    .prose table th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:11px;font-weight:700;border-bottom:1px solid var(--aa-border)}
+    .prose table td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    /* Fix badge contrast — Exploratory/Tier readable on dark header */
+    .hb-mode{background:#5b21b6;color:#fff;border:1px solid #7c3aed}
+    .hb-tier{background:#92400e;color:#fef3c7;border:1px solid #b45309}
+    /* Law citation spans injected by citation resolver into prose body */
+    .law-cite{display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle;background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .law-cite[data-non-negotiable="false"]{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .law-tooltip{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .law-tooltip::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .law-cite:hover .law-tooltip{display:block}
+    /* Markdown checkbox items rendered by the citation resolver */
+    .task-done,.task-pending{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface);margin:4px 0}
+    .task-done{background:#f0fdf4;border-color:#86efac}
+    .task-done .cb{width:18px;height:18px;flex-shrink:0;border-radius:4px;background:var(--aa-green-dk);border:2px solid var(--aa-green-dk);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700;padding:0!important;margin-top:2px}
+    .task-done .cb::after{content:'✓'}
+    .task-pending .cb{width:18px;height:18px;flex-shrink:0;border-radius:4px;background:#fff;border:2px solid var(--aa-border);padding:0!important;margin-top:2px}
+    .task-text{font-size:12px;line-height:1.5;flex:1}
+    .prose li:has(.task-done),.prose li:has(.task-pending){list-style:none;margin-left:-22px}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="h-eye">product-discovery-stage-a-f · disc-2026-004</div>
+  <div class="h-title">Stage B &nbsp;·&nbsp; Field Study</div>
+  <div class="h-sub">Gate Management Platform — Operations Intelligence Field Study &nbsp;·&nbsp; Workflow v2.0.0</div>
+  <div class="h-badges">
+    <span class="hb hb-stage">Stage B of 6</span>
+    <span class="hb hb-mode">🔭 Exploratory</span>
+    <span class="hb hb-tier">⚡ Tier 2</span>
+    <span class="hb hb-law">PRD-2.3</span><span class="hb hb-law">PRD-2.4</span><span class="hb hb-law">PRD-3.1</span><span class="hb hb-law">PRD-3.2</span><span class="hb hb-law">BUS-7.1</span><span class="hb hb-law">ENG-13.1</span>
+    
+  </div>
+</header>
+
+
+<nav class="stages" aria-label="Discovery stages">
+    <div class="st done">
+      <div class="st-n">✓</div>
+      Initialize
+    </div>
+    <div class="st done">
+      <div class="st-n">✓</div>
+      Field Study
+    </div>
+    <div class="st active">
+      <div class="st-n">C</div>
+      Code Evidence
+    </div>
+    <div class="st locked">
+      <div class="st-n">D</div>
+      Validation
+    </div>
+    <div class="st locked">
+      <div class="st-n">E</div>
+      Metrics
+    </div>
+    <div class="st locked">
+      <div class="st-n">F</div>
+      Roadmap Lock
+    </div>
+</nav>
+
+
+<div class="body">
+  <div class="main">
+
+    
+    <!-- Stage Gates -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#eff6ff">🚦</div>
+        <div class="ct">Stage Gates</div>
+        <span class="law lp">PRD-2.3<span class="tt"><strong>PRD-2.3</strong></span></span><span class="law lb">PRD-2.4<span class="tt"><strong>PRD-2.4</strong></span></span><span class="law le">PRD-3.1<span class="tt"><strong>Persona Development Law — domain avatar must be activated before Stage B</strong></span></span>
+      </div>
+      <div class="cb">
+        <div class="gate-row">
+          
+          <div class="gate ge">
+            <div class="gi">📥</div>
+            <div><div class="gl">Entry Gate — ✅ Met</div>
+            <div class="gtt">Stage A APPROVED — commit 6f8e2da. Stakeholder: Ram (Director of Product Agility). Reviewed by Bhavita + Derek. BUS-7.1 audit event filed 2026-04-22T18:54:17Z.
+</div></div>
+          </div>
+          
+          
+          <div class="gate gp">
+            <div class="gi">📤</div>
+            <div><div class="gl">Exit Gate — ⏳ PENDING</div>
+            <div class="gtt">Awaiting ≥3 validated user insights, competitive landscape documented, journey maps complete. Human browser review by Bhavita + Derek required. BUS-7.1 audit event required before Stage C.
+</div></div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <!-- Prose body from markdown (catch-all) -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#eff6ff">📄</div><div class="ct">Narrative &amp;amp; Rationale</div></div>
+      <div class="cb prose"><h1>Stage B Field Study: Gate Management Platform — Operations Intelligence</h1>
+<p><strong>Discovery ID:</strong> disc-2026-004 | <strong>Stage:</strong> B — Field Study | <strong>Mode:</strong> Exploratory | <strong>Tier:</strong> Tier 2</p>
+<blockquote>
+<p><strong>Evidence transparency notice (<span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span>):</strong> All personas and behavioral observations in this
+document are sourced from the validated gate-management product avatar
+(<code>avatar-product-gate-management</code>, RAG-validated 2026-04-22) and competitive public research.
+They represent structured domain hypotheses — not confirmed field evidence. Each persona is
+marked <strong>DRAFT — REQUIRES FIELD VALIDATION</strong> and must be confirmed with ≥3 gate agent
+interviews, ≥1 FLC interview, and ≥1 biometrics supervisor interview before any solution design
+proceeds to Stage D.</p>
+</blockquote>
+<hr />
+<h2>User Research Log (<span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span>)</h2>
+<h3>Research Conducted</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Source</th>
+<th>Type</th>
+<th>Date</th>
+<th>Domain</th>
+<th>Key Insight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Avatar — gate-management personas.md</td>
+<td>Avatar intelligence / domain modelling</td>
+<td>2026-04-21</td>
+<td>All</td>
+<td>Gate agents use GIDS as primary situational awareness tool; trust it until it fails; default to verbal communication when displays lag</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Avatar — dss-display-update use case</td>
+<td>Avatar intelligence / exception path analysis</td>
+<td>2026-04-21</td>
+<td>DSS</td>
+<td>No production instrumentation for staleness_ms across GIDS/FIDS/BIDS/WIDS; 5s SLA is a target, not a measurement</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Avatar — biometric-boarding use case</td>
+<td>Avatar intelligence / regulatory review</td>
+<td>2026-04-21</td>
+<td>Biometrics</td>
+<td>Opt-out path obscurity is a CBP compliance exposure — reachability not currently monitored programmatically</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Avatar — carry-on-compliance use case</td>
+<td>Avatar intelligence / exception path analysis</td>
+<td>2026-04-21</td>
+<td>Carry-On</td>
+<td>Override path exists but supervisor auth enforcement is not confirmed in production; gate-check rate is untracked</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Avatar — connect-me use case</td>
+<td>Avatar intelligence / exception path analysis</td>
+<td>2026-04-21</td>
+<td>Connect Me</td>
+<td>FLC load plan version not always visible on Teams task card; unread alert rate untracked; polling workarounds suspected</td>
+</tr>
+<tr>
+<td>6</td>
+<td>CBP TVS / Federal Register / Biometric industry research</td>
+<td>Public research</td>
+<td>2026-04-22</td>
+<td>Biometrics</td>
+<td>CBP TVS reports &lt;1% FNMR under optimal conditions; AA's avatar target of ≤1.5% is conservative relative to CBP claims — industry gap to close</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Delta ATL / Changi SIN / Amadeus / SITA research</td>
+<td>Public research</td>
+<td>2026-04-22</td>
+<td>DSS</td>
+<td>Best-in-class FIDS/GIDS now achieve sub-second propagation via push-based cloud pipelines; batch/poll architectures are the primary staleness cause</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Simple Flying / The Travel — AA carry-on enforcement</td>
+<td>Public research</td>
+<td>2026-04-22</td>
+<td>Carry-On</td>
+<td>AA removed gate sizers (Oct 2025); shifting to discretion-based enforcement — raises question of whether bag matrix rule engine is keeping pace with policy direction</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Microsoft / HARMAN / Xoriant — Teams Turn Time at Gate</td>
+<td>Public research</td>
+<td>2026-04-22</td>
+<td>Connect Me</td>
+<td>Microsoft Teams &quot;Turn Time at the Gate&quot; solution piloted with American Airlines — AI-driven alert prioritisation and gate turnaround intelligence already in market; Connect Me must differentiate or integrate</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong><span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span> gap:</strong> Minimum 5 real user interviews required before Stage D. Interviews needed:
+≥3 gate agents (different station types: hub/spoke/international), ≥1 FLC, ≥1 biometrics supervisor,
+≥1 station manager. Research log items 1–5 are avatar-proxy evidence, not direct interviews.</p>
+</blockquote>
+<hr />
+<h2>Personas (<span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span>)</h2>
+<blockquote>
+<p><strong>Evidence status:</strong> DRAFT — avatar-sourced. Must be validated with field interviews before Stage D.</p>
+</blockquote>
+<hr />
+<h3>Persona 1 — Alex, Gate Agent ⚠️ DRAFT</h3>
+<p><strong>Who they are:</strong></p>
+<ul>
+<li>Frontline gate operations staff — manages boarding, IROP response, compliance decisions at the podium</li>
+<li>Primary systems: GIDS, DCS, Biometrics podium, Carry-On scanner, Connect Me (Teams)</li>
+<li>Works in a time-compressed, high-noise physical environment; cannot leave the podium during active boarding</li>
+</ul>
+<p><strong>Goals:</strong></p>
+<ul>
+<li>Clear the gate on time; absorb IROPs without creating a downstream delay</li>
+<li>Know instantly when something changes upstream — gate swap, aircraft swap, late inbound</li>
+<li>Make compliant boarding decisions (biometrics, carry-on, upgrades) without looking something up</li>
+<li>Information arrives before the decision window closes — never chase it</li>
+</ul>
+<p><strong>Frustrations:</strong></p>
+<ul>
+<li>Display shows stale data; Alex acts on the wrong gate or aircraft type</li>
+<li>Biometric non-match returns no reason code — passenger at podium, line backing up, no guidance on next step</li>
+<li>Carry-on policy changed mid-day; scanner hasn't updated; Alex enforces a rule that no longer applies</li>
+<li>Gate change fires in ops but Teams alert arrives 90 seconds late — boarding sequence already started at old gate</li>
+<li>Override decisions must be documented but audit path is unclear; Alex moves on, knows it may come back</li>
+</ul>
+<p><strong>Evidence base:</strong></p>
+<ul>
+<li>Source: avatar-product-gate-management/examples/personas.md (DRAFT — replace with field observation notes)</li>
+<li>Field interviews required: ≥3 gate agents across hub (DFW/CLT), spoke, and international gates</li>
+</ul>
+<p><strong>Key jobs to be done:</strong></p>
+<ol>
+<li>When a gate change fires during active boarding, I want to see the new gate on GIDS before I redirect passengers, so I can avoid routing passengers to the wrong gate</li>
+<li>When a passenger fails biometric match, I want a typed reason code immediately, so I can take the right action without holding up the line</li>
+<li>When a carry-on is borderline, I want to see the current rule version on my scanner, so I can make a defensible decision that won't be overturned by a supervisor</li>
+</ol>
+<p><strong>Success looks like:</strong> Alex boards 150 passengers on time, every GIDS update fires before the verbal announcement, zero biometric decisions are made without a reason code, and the post-boarding audit log is complete without manual reconstruction.</p>
+<hr />
+<h3>Persona 2 — Marcus, Ramp Crew / Ground Ops ⚠️ DRAFT</h3>
+<p><strong>Who they are:</strong></p>
+<ul>
+<li>Ground handler — pushback, fuel, baggage, aircraft servicing</li>
+<li>Works mobile on the ramp; cannot use desktop tooling during active turns</li>
+<li>Primary systems: Connect Me (Teams mobile), ramp movement instructions</li>
+</ul>
+<p><strong>Goals:</strong></p>
+<ul>
+<li>Receive push alert and weight-and-balance clearance before the decision window closes</li>
+<li>Know actual aircraft stand and equipment type before arriving at gate</li>
+<li>Not miss an early-close signal because alert went to the wrong device or channel</li>
+</ul>
+<p><strong>Frustrations:</strong></p>
+<ul>
+<li>Push alerts sometimes arrive via polling (shared screen) — misses the 15-minute window during high-volume rotation</li>
+<li>Early-close signal sent; Marcus is at a different stand; alert doesn't reach him because Teams subscription is to the wrong gate</li>
+<li>Load plan version on his device differs from FLC's working version — weight miscalculation risk</li>
+</ul>
+<p><strong>Evidence base:</strong></p>
+<ul>
+<li>Source: avatar-product-gate-management/examples/personas.md (DRAFT — replace with ramp crew observation)</li>
+<li>Field interviews required: ≥2 ground operations staff, preferably observed during an active turn</li>
+</ul>
+<p><strong>Key jobs to be done:</strong></p>
+<ol>
+<li>When I'm on the ramp for a departure, I want to receive the push notification the moment the gate closes, so I can begin pushback without waiting for a radio call</li>
+<li>When a load plan is updated, I want to see the version and timestamp on my Teams card, so I can confirm I'm working from the current data before signing off</li>
+</ol>
+<hr />
+<h3>Persona 3 — Jordan, Flight Load Controller (FLC) ⚠️ DRAFT</h3>
+<p><strong>Who they are:</strong></p>
+<ul>
+<li>Load planning and weight-and-balance control for departures</li>
+<li>Manages 5–8 active flights simultaneously during bank operations</li>
+<li>Primary systems: Connect Me FLC workflow (Teams), load control system</li>
+</ul>
+<p><strong>Goals:</strong></p>
+<ul>
+<li>Work from the most current load plan — version number and timestamp always visible</li>
+<li>Receive workflow tasks without switching tools</li>
+<li>Close out load plan on time so ramp crew can push</li>
+</ul>
+<p><strong>Frustrations:</strong></p>
+<ul>
+<li>Receives a Teams task but cannot tell if load plan was updated 4 minutes or 40 minutes ago — no version/timestamp on card</li>
+<li>Load data sourced from a batch feed (every 5 minutes) — not real-time; Jordan approves a stale plan</li>
+<li>Workflow task completion not logged with enough fidelity for post-incident reconstruction</li>
+</ul>
+<p><strong>Evidence base:</strong></p>
+<ul>
+<li>Source: avatar-product-gate-management/examples/personas.md (DRAFT — replace with FLC interview)</li>
+<li>Field interviews required: ≥1 FLC during active bank operations</li>
+</ul>
+<p><strong>Key jobs to be done:</strong></p>
+<ol>
+<li>When I receive a load plan approval task, I want to see the version number and last-updated timestamp on the task card, so I can confirm I'm approving the current plan without opening the load control system</li>
+<li>When I approve a load plan, I want my approval logged with actor, version, and timestamp, so there is a defensible record if there is a post-incident review</li>
+</ol>
+<hr />
+<h3>Persona 4 — Sam, Airport Operations Controller ⚠️ DRAFT</h3>
+<p><strong>Who they are:</strong></p>
+<ul>
+<li>Centralised ops control — gate assignments, IROP recovery, tarmac timer, delay tracking</li>
+<li>Primary systems: AOC event system, multi-GIDS display wall, ops dashboard</li>
+</ul>
+<p><strong>Goals:</strong></p>
+<ul>
+<li>See live gate/aircraft/status across the entire concourse without switching screens</li>
+<li>Fire events that propagate to all downstream systems (DSS, Connect Me, Biometrics) in seconds</li>
+<li>Defensible audit trail for any tarmac delay event</li>
+</ul>
+<p><strong>Frustrations:</strong></p>
+<ul>
+<li>Gate change fired from AOC does not appear on old gate's GIDS for 45–90 seconds — passengers already walking</li>
+<li>Tarmac timer buried in a sub-screen; must navigate away from ops overview to check it</li>
+<li>Post-IROP reconstruction is slow; event timestamps across DSS, Connect Me, Biometrics don't share a common reference clock</li>
+</ul>
+<p><strong>Evidence base:</strong></p>
+<ul>
+<li>Source: avatar-product-gate-management/examples/personas.md (DRAFT — replace with ops controller interview)</li>
+<li>Field interviews required: ≥1 ops controller during an IROP simulation or active operational window</li>
+</ul>
+<p><strong>Key jobs to be done:</strong></p>
+<ol>
+<li>When I fire a gate change event in AOC, I want to see confirmation that all GIDS surfaces have updated within 5 seconds, so I know passengers are receiving correct information before I make the PA announcement</li>
+<li>When a tarmac timer is active, I want it visible on my primary ops dashboard without any navigation, so I never miss the DOT threshold</li>
+</ol>
+<hr />
+<h3>Persona 5 — Diana, Station Manager ⚠️ DRAFT</h3>
+<p><strong>Who they are:</strong></p>
+<ul>
+<li>Ground operations oversight — policy management, staffing, compliance accountability</li>
+<li>Primary systems: Carry-On bag matrix admin UI, compliance reporting tools</li>
+</ul>
+<p><strong>Goals:</strong></p>
+<ul>
+<li>Update carry-on rules without a helpdesk ticket or engineering involvement</li>
+<li>See rule propagation confirmed across all gates within 60 seconds</li>
+<li>Produce compliance reports on gate-check rate, override frequency, agent accuracy without manual data extraction</li>
+</ul>
+<p><strong>Frustrations:</strong></p>
+<ul>
+<li>Bag matrix changes require a helpdesk ticket with a 24–48h turnaround — DOT/legal policy changes cannot be applied at pace</li>
+<li>No visibility into which gates have received the updated rule and which are running the old version</li>
+<li>Override audit log exists but is not accessible from admin UI — requires a database extract request</li>
+</ul>
+<p><strong>Evidence base:</strong></p>
+<ul>
+<li>Source: avatar-product-gate-management/examples/personas.md (DRAFT — replace with station manager interview)</li>
+<li>Field interviews required: ≥1 station manager, ideally one who has recently pushed a policy change</li>
+</ul>
+<p><strong>Key jobs to be done:</strong></p>
+<ol>
+<li>When legal or DOT issues a policy change, I want to update the bag matrix rule and see all gates confirm the new version within 60 seconds, so I am not exposed to inconsistent enforcement liability during the transition</li>
+<li>When a compliance review is requested, I want to pull override frequency and gate-check rate from the admin UI directly, so I do not need to wait for a database extract from engineering</li>
+</ol>
+<hr />
+<h3>Persona 6 — Chris, Biometrics Operations Supervisor ⚠️ DRAFT</h3>
+<p><strong>Who they are:</strong></p>
+<ul>
+<li>Biometric boarding oversight — threshold management, enrolment monitoring, CBP compliance</li>
+<li>Primary systems: Biometrics dashboard, threshold configuration UI</li>
+</ul>
+<p><strong>Goals:</strong></p>
+<ul>
+<li>Monitor false non-match rate in real time — know when it spikes before passengers are affected</li>
+<li>Adjust match threshold with automatic CBP notification</li>
+<li>Confirm opt-out path is functioning at every active gate without relying on agent self-reporting</li>
+</ul>
+<p><strong>Frustrations:</strong></p>
+<ul>
+<li>Threshold changes require manual CBP notification — risk of missing notification under operational pressure</li>
+<li>FNMR spikes visible retrospectively in dashboard, not in real time — 30 passengers delayed before alert fires</li>
+<li>Opt-out path availability is not monitored programmatically</li>
+</ul>
+<p><strong>Evidence base:</strong></p>
+<ul>
+<li>Source: avatar-product-gate-management/examples/personas.md (DRAFT — replace with biometrics supervisor interview)</li>
+</ul>
+<p><strong>Key jobs to be done:</strong></p>
+<ol>
+<li>When I change the match threshold, I want CBP notification triggered automatically and logged, so I never have a compliance gap between the change and the required notification</li>
+<li>When FNMR spikes above 1.5% at any gate, I want an alert in under 60 seconds, so I can intervene before boarding throughput is materially impacted</li>
+</ol>
+<hr />
+<h3>Persona 7 — Taylor, Platform Engineer (DSS / Biometrics) ⚠️ DRAFT</h3>
+<p><strong>Who they are:</strong></p>
+<ul>
+<li>Platform engineer responsible for DSS event pipeline and biometrics service reliability</li>
+<li>Primary systems: dss-displayhub-flightevent, dss-displayhub-gateevent, Azure Service Bus, App Insights, Biometrics boarding API</li>
+</ul>
+<p><strong>Goals:</strong></p>
+<ul>
+<li>Observe display staleness end-to-end — AOC event fire to screen render — on a single dashboard</li>
+<li>Diagnose a display lag incident in under 5 minutes using trace data, not log mining</li>
+<li>Deploy DSS changes to one display type at one gate without touching all surfaces</li>
+</ul>
+<p><strong>Frustrations:</strong></p>
+<ul>
+<li>Display staleness is not a single metric — it's the sum of three separate pipeline segments, none surfaced individually</li>
+<li>A biometrics incident at DFW requires cross-referencing three separate log systems before the failure surface is clear</li>
+<li>DSS web-GIDS and DSS web-FIDS share a deployment pipeline — FIDS-only change requires touching GIDS config</li>
+</ul>
+<p><strong>Key jobs to be done:</strong></p>
+<ol>
+<li>When display staleness exceeds the 5s SLA at any gate, I want a single App Insights alert that shows me which pipeline segment is responsible (AOC→SB, SB→DisplayHub, DisplayHub→GIDS), so I can triage in under 5 minutes</li>
+<li>When I deploy a FIDS change, I want it isolated from the GIDS deployment pipeline, so a FIDS update cannot affect GIDS availability at any gate</li>
+</ol>
+<hr />
+<h2>Jobs-to-be-Done Summary (<span class="law-cite" data-law-id="PRD-2.3" data-non-negotiable="false">PRD-2.3<span class="law-tooltip"><strong>Jobs-to-be-Done Law</strong></span></span>)</h2>
+<table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Core Job Statement</th>
+<th>Pain Level</th>
+<th>Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gate Agent (Alex)</td>
+<td>When a gate change fires mid-boarding, I want GIDS to update before I redirect passengers, so I can avoid routing confusion</td>
+<td><strong>HIGH</strong></td>
+<td>Multiple times daily during IROPs</td>
+</tr>
+<tr>
+<td>Gate Agent (Alex)</td>
+<td>When biometric non-match occurs, I want a typed reason code immediately, so I can act without holding the line</td>
+<td><strong>HIGH</strong></td>
+<td>Several times per shift</td>
+</tr>
+<tr>
+<td>Gate Agent (Alex)</td>
+<td>When enforcing carry-on, I want the current rule version visible on my scanner, so my decision is defensible</td>
+<td><strong>MEDIUM</strong></td>
+<td>Every boarding</td>
+</tr>
+<tr>
+<td>Ramp Crew (Marcus)</td>
+<td>When departure window opens, I want the push notification before it becomes a radio call, so pushback isn't delayed</td>
+<td><strong>HIGH</strong></td>
+<td>Every departure</td>
+</tr>
+<tr>
+<td>FLC (Jordan)</td>
+<td>When approving a load plan, I want version and timestamp on the task card, so I'm not approving a stale plan</td>
+<td><strong>HIGH</strong></td>
+<td>Every departure</td>
+</tr>
+<tr>
+<td>FLC (Jordan)</td>
+<td>When I complete a workflow task, I want it logged with actor+version+timestamp, so post-incident reconstruction doesn't require manual recall</td>
+<td><strong>MEDIUM</strong></td>
+<td>Every departure</td>
+</tr>
+<tr>
+<td>Ops Controller (Sam)</td>
+<td>When I fire a gate change, I want GIDS update confirmation, so I know information is correct before the PA</td>
+<td><strong>HIGH</strong></td>
+<td>Multiple times during IROPs</td>
+</tr>
+<tr>
+<td>Ops Controller (Sam)</td>
+<td>When tarmac timer is active, I want it on my primary screen, so I never miss the DOT threshold</td>
+<td><strong>CRITICAL</strong></td>
+<td>Every tarmac event</td>
+</tr>
+<tr>
+<td>Station Manager (Diana)</td>
+<td>When DOT policy changes, I want to update bag matrix without a helpdesk ticket, so I'm not exposed during the rule gap</td>
+<td><strong>HIGH</strong></td>
+<td>Periodically</td>
+</tr>
+<tr>
+<td>Biometrics Supervisor (Chris)</td>
+<td>When I adjust match threshold, I want auto CBP notification, so I'm not exposed by a missed manual step</td>
+<td><strong>HIGH</strong></td>
+<td>Periodically</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Competitive Analysis (<span class="law-cite" data-law-id="PRD-2.4" data-non-negotiable="false">PRD-2.4<span class="law-tooltip"><strong>Competitive Analysis Law</strong></span></span>)</h2>
+<h3>Domain 1: DSS Display Staleness</h3>
+<table>
+<thead>
+<tr>
+<th>Competitor / Alternative</th>
+<th>Approach</th>
+<th>Strengths</th>
+<th>Gaps vs. AA</th>
+<th>Differentiation Opportunity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Delta Air Lines (ATL)</strong></td>
+<td>Real-time DCS → FIDS/GIDS integration; push-based, sub-second propagation</td>
+<td>Measured sub-second updates; ops staff trust display as source of truth</td>
+<td>Proprietary stack — not benchmarkable externally</td>
+<td>AA has Azure Service Bus already; closing the last-mile rendering latency is the gap</td>
+</tr>
+<tr>
+<td><strong>Changi Airport (SIN)</strong></td>
+<td>Centralized cloud-based FIDS; supports rapid gate reassignment and real-time multilingual displays</td>
+<td>Best-in-class latency; single pane for all display surfaces</td>
+<td>Airport-controlled, not airline-controlled; different operator model</td>
+<td>AA should own the airline-side event-to-render chain; Changi proves it is solvable</td>
+</tr>
+<tr>
+<td><strong>Amadeus / SITA FIDS platforms</strong></td>
+<td>Cloud SaaS FIDS — push APIs, WebSocket / MQTT real-time data delivery</td>
+<td>Sub-second propagation; proven at scale; supports AI anomaly detection</td>
+<td>Third-party dependency; AA currently runs its own DisplayHub stack</td>
+<td>AA's DisplayHub is the right long-term asset — it needs instrumentation, not replacement</td>
+</tr>
+<tr>
+<td><strong>Legacy batch/poll FIDS</strong> (AA current risk)</td>
+<td>Batch update or poll-based display refresh</td>
+<td>Simple; no streaming infrastructure required</td>
+<td>5–60s+ staleness; identified as root cause of display lag at industry level</td>
+<td>AA must confirm its DisplayHub is push-based end-to-end — not polling AOC or caching with a batch feed</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Differentiation statement:</strong> AA has the infrastructure (Azure Service Bus, DisplayHub) to match best-in-class. The gap is instrumentation — <code>dss.display.staleness_ms</code> is not yet a measured metric. Close the measurement gap first; optimise second.</p>
+<hr />
+<h3>Domain 2: Biometric Boarding</h3>
+<table>
+<thead>
+<tr>
+<th>Competitor / Alternative</th>
+<th>Approach</th>
+<th>Strengths</th>
+<th>Gaps vs. AA</th>
+<th>Differentiation Opportunity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>United Airlines</strong></td>
+<td>CBP TVS facial match at gate podium; boarding throughput focus; mature opt-out path</td>
+<td>Well-established; published high passenger acceptance rates</td>
+<td>Opt-out path design varies by gate; some friction reported</td>
+<td>AA's avatar targets ≤1.5% FNMR — industry best practice is now &lt;1% (CBP optimal conditions); AA's target may be too conservative</td>
+</tr>
+<tr>
+<td><strong>Delta Air Lines</strong></td>
+<td>Facial recognition boarding; automated non-match handling; gate agent has typed reason codes</td>
+<td>Strong reason code coverage; low escalation rate</td>
+<td>Pilot gate learnings not publicly benchmarked</td>
+<td>AA should target &lt;1% FNMR aligned to CBP optimal conditions, not 1.5%</td>
+</tr>
+<tr>
+<td><strong>CBP TIS (mandatory context)</strong></td>
+<td>Traveler Identification Service — federal matching database; all US airlines must integrate for international exits</td>
+<td>Mandated; standardised match quality; extended to 2027 via APIS Compliance Test</td>
+<td>FNMR increases under suboptimal conditions (lighting, camera angle, crowding); no real-time FNMR alerting built in</td>
+<td>AA needs a real-time FNMR monitoring layer on top of CBP TIS — CBP doesn't provide this</td>
+</tr>
+<tr>
+<td><strong>Manual scan (today's fallback)</strong></td>
+<td>Agent scans boarding pass manually when biometrics fail or passenger opts out</td>
+<td>Always available; no tech dependency</td>
+<td>Creates boarding throughput bottleneck when used at scale; no reason-code data captured</td>
+<td>Manual fallback is correct — must stay. But throughput impact must be measured: how often, and at what cost?</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Differentiation statement:</strong> The competitive gap is not biometric technology — CBP TIS is mandated and standardised. The gap is real-time monitoring (FNMR alerting before 30 passengers are impacted) and opt-out path accessibility (confirmed reachable in ≤2 taps without agent help).</p>
+<p><strong>Competitive signal — AA vs. industry target:</strong> Avatar FNMR target of ≤1.5% is conservative. CBP-reported optimal is &lt;1%. Stage D should pressure-test whether ≤1.5% is a measured production constraint or a conservative design assumption.</p>
+<hr />
+<h3>Domain 3: Carry-On Compliance</h3>
+<table>
+<thead>
+<tr>
+<th>Competitor / Alternative</th>
+<th>Approach</th>
+<th>Strengths</th>
+<th>Gaps vs. AA</th>
+<th>Differentiation Opportunity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>American Airlines (Oct 2025 policy)</strong></td>
+<td>Removed physical gate sizers; shifting to discretion-based agent enforcement</td>
+<td>Reduces confrontation at gate; customer-friendly</td>
+<td>Raises the question: if AA is moving toward discretion, what is the bag matrix rule engine actually enforcing? Needs reconciliation</td>
+<td>The bag matrix admin UI (self-serve for station managers) is the right direction — but only if policy propagation is fast and audit is complete</td>
+</tr>
+<tr>
+<td><strong>United Airlines</strong></td>
+<td>Gate sizers removed earlier (2020); agent discretion model</td>
+<td>Earlier mover; process stabilised</td>
+<td>Enforcement consistency across stations is inconsistent — same dynamic AA will face</td>
+<td>AA has an opportunity to build the audit and consistency layer that United hasn't publicly solved</td>
+</tr>
+<tr>
+<td><strong>AI camera carry-on systems</strong> (emerging)</td>
+<td>AI video analytics at gate — flags oversize bags objectively</td>
+<td>Removes agent subjectivity; systematic enforcement</td>
+<td>Not yet at scale; requires hardware at every gate; high capital cost</td>
+<td>Not the right next step for AA. Rule engine accuracy and propagation speed are the solvable problems now</td>
+</tr>
+<tr>
+<td><strong>Manual agent discretion (today's fallback)</strong></td>
+<td>Agent visual assessment; no system support</td>
+<td>Flexible; no tech dependency</td>
+<td>No rule version logged; no audit record; no consistency guarantee</td>
+<td>The bag matrix system exists precisely to replace this — but only if agents trust and use it</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Differentiation statement:</strong> AA's bag matrix rule engine is the right solution — but it only delivers value if: (a) rule propagation is fast enough that agents trust the version displayed, and (b) the override audit is complete enough for compliance reporting. Neither is confirmed in production.</p>
+<hr />
+<h3>Domain 4: Connect Me — Operational Alerts</h3>
+<table>
+<thead>
+<tr>
+<th>Competitor / Alternative</th>
+<th>Approach</th>
+<th>Strengths</th>
+<th>Gaps vs. AA</th>
+<th>Differentiation Opportunity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Microsoft &quot;Turn Time at the Gate&quot;</strong> (HARMAN/Xoriant — piloted with AA)</td>
+<td>Teams + Azure OpenAI: AI-summarised chat, delay prediction, proactive gate-turnaround notifications</td>
+<td>AA already piloted this; addresses alert fatigue with AI prioritisation; turnaround intelligence built in</td>
+<td>If this is in AA's environment already, Connect Me must either integrate with or differentiate from it — cannot operate in parallel</td>
+<td>Highest-priority competitive signal. Connect Me and Turn Time at the Gate address overlapping problems. Stage D must determine whether these are complementary or conflicting</td>
+</tr>
+<tr>
+<td><strong>Sabre / Amadeus Crew Collaboration</strong></td>
+<td>Digital operations workflow for crew — structured task cards, audit-complete workflow</td>
+<td>Structured workflow; proven in large-scale airline ops</td>
+<td>Not Teams-native; separate tool adoption required</td>
+<td>Connect Me's Teams-native approach is correct for frontline staff who live in Teams — the risk is alert volume and fatigue</td>
+</tr>
+<tr>
+<td><strong>Radio / verbal communication (today's alternative)</strong></td>
+<td>Gate agent calls ramp crew; ops controller calls station directly</td>
+<td>Always-on; no tech dependency; trusted under stress</td>
+<td>No record; no audit trail; no latency measurement; breaks down during high-volume IROPs</td>
+<td>This is the workaround Connect Me must displace — not supplement</td>
+</tr>
+<tr>
+<td><strong>Polling shared screens</strong></td>
+<td>Staff check a shared display for updates</td>
+<td>No push infrastructure required</td>
+<td>Creates the exact delay problem Connect Me is built to solve; misses the decision window</td>
+<td>Connect Me's value proposition is only realised if polling is fully eliminated — including on Marcus's ramp mobile device</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Differentiation statement:</strong> Microsoft's Turn Time at the Gate is the sharpest competitive signal — it is already in AA's environment. Connect Me must either integrate cleanly with this solution or define a non-overlapping scope. This is a Stage D validation question, not a Stage B conclusion.</p>
+<hr />
+<h2>Journey Maps (<span class="law-cite" data-law-id="PRD-3.2" data-non-negotiable="false">PRD-3.2<span class="law-tooltip"><strong>Journey Mapping Law</strong></span></span>)</h2>
+<h3>Journey 1: Gate Change During Active Boarding (IROP) — Alex (Gate Agent) + Sam (Ops Controller)</h3>
+<blockquote>
+<p><strong>Critical path:</strong> AOC event → GIDS update → agent action → passenger redirect
+<strong>Regulatory stake:</strong> DOT tarmac timer may be active simultaneously</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Actions</th>
+<th>Touchpoints</th>
+<th>Pain Points</th>
+<th>Emotional State</th>
+<th>Opportunities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Event Fires</strong></td>
+<td>Sam fires gate-change in AOC (C14 → C22)</td>
+<td>AOC terminal</td>
+<td>None at this stage — system action</td>
+<td>Sam: controlled urgency</td>
+<td>Confirm AOC event schema includes all required fields before publish</td>
+</tr>
+<tr>
+<td><strong>2. Propagation</strong></td>
+<td>Azure Service Bus routes event → DisplayHub → GIDS at C14 + C22</td>
+<td>Service Bus, DisplayHub, GIDS</td>
+<td><strong>Current gap:</strong> No staleness_ms metric — propagation time unknown; could be 5s or 90s</td>
+<td>Sam: anxious — watching the display wall</td>
+<td>Instrument each pipeline segment separately; surface as single App Insights dashboard</td>
+</tr>
+<tr>
+<td><strong>3. Display Update</strong></td>
+<td>GIDS at C14 shows &quot;Gate Changed → C22&quot;; GIDS at C22 shows inbound</td>
+<td>GIDS at both gates</td>
+<td><strong>Pain:</strong> If GIDS lags, passengers reading C14 display are misinformed while Alex is already redirecting verbally</td>
+<td>Alex: stressed — managing passenger confusion without display support</td>
+<td>Confirm GIDS update before Sam makes PA announcement — trigger an ops confirmation event</td>
+</tr>
+<tr>
+<td><strong>4. Agent Decision</strong></td>
+<td>Alex redirects passengers to C22; checks biometric podium configuration matches new gate</td>
+<td>GIDS, DCS, Teams</td>
+<td><strong>Pain:</strong> Teams alert may arrive after Alex has already acted — alert is informing, not guiding</td>
+<td>Alex: frustrated — digital channel confirmed what verbal channel already communicated</td>
+<td>Teams alert should arrive in &lt;30s to be useful; otherwise it is noise, not signal</td>
+</tr>
+<tr>
+<td><strong>5. Connect Me Alert</strong></td>
+<td>Teams push: &quot;⚠️ GATE CHANGE — AA 1234</td>
+<td>C14 → C22</td>
+<td>Departs 14:35</td>
+<td>Please confirm&quot;</td>
+<td>Teams (mobile + desktop)</td>
+</tr>
+<tr>
+<td><strong>6. Audit</strong></td>
+<td>All transitions logged: gate_id, old_gate, new_gate, event_type, timestamps, staleness_ms</td>
+<td>Audit log, App Insights</td>
+<td><strong>Pain:</strong> Timestamps across DSS, Connect Me, and Biometrics don't share a common reference clock — post-IROP reconstruction is slow</td>
+<td>Sam: relieved if it works; exposed if it doesn't</td>
+<td>Common event correlation ID across all systems would allow single-query incident reconstruction</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Journey insight:</strong> The gate change journey is currently a sequential chain with no feedback loop. Sam fires the event and has no confirmation that GIDS updated, that Alex saw the alert, or that the ramp crew acknowledged. Every link in the chain is fire-and-forget.</p>
+<hr />
+<h3>Journey 2: Biometric Boarding — Enrolled Passenger + Exception (Alex + Chris)</h3>
+<blockquote>
+<p><strong>Critical path:</strong> Camera capture → CBP TIS match → APPROVE/DENY/OPT-OUT in ≤3,000ms
+<strong>Regulatory stake:</strong> CBP Biometric Exit mandate; GDPR/CCPA PII boundary</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Actions</th>
+<th>Touchpoints</th>
+<th>Pain Points</th>
+<th>Emotional State</th>
+<th>Opportunities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Approach</strong></td>
+<td>Passenger approaches podium; camera activates</td>
+<td>Biometric podium (camera)</td>
+<td>None for enrolled passengers</td>
+<td>Passenger: neutral / curious</td>
+<td>Opt-out signage must be visible at this stage — not hidden until after camera activates</td>
+</tr>
+<tr>
+<td><strong>2. Capture</strong></td>
+<td>Camera captures face frame; sends to Biometrics API</td>
+<td>Camera, gm-web-biometrics-boarding-api</td>
+<td><strong>Pain:</strong> Suboptimal lighting or camera angle increases FNMR; no real-time environmental quality check</td>
+<td>Alex: monitoring podium status</td>
+<td>Camera quality monitoring should surface as a real-time metric, not a post-incident finding</td>
+</tr>
+<tr>
+<td><strong>3. CBP Match</strong></td>
+<td>API routes to ct-bioentexit-biometrics-apigee → CBP TIS</td>
+<td>Apigee proxy, CBP TIS</td>
+<td><strong>Pain:</strong> TIS response time varies; if &gt;3s, service-unavailable fallback triggers; frequency of fallback is unknown</td>
+<td>Alex: waiting; line building behind this passenger</td>
+<td>TIS timeout rate should be a tracked metric — how often does fallback trigger in production?</td>
+</tr>
+<tr>
+<td><strong>4a. APPROVE</strong></td>
+<td>Podium shows green APPROVED; DCS boarding record updated</td>
+<td>Podium display, DCS</td>
+<td>No pain on happy path</td>
+<td>Passenger: relieved; Alex: efficient</td>
+<td>Audit record fires automatically — no agent action required</td>
+</tr>
+<tr>
+<td><strong>4b. DENY / Non-match</strong></td>
+<td>Podium shows DENY + reason code; Alex intervenes</td>
+<td>Podium display, DCS</td>
+<td><strong>CRITICAL PAIN:</strong> No reason code means Alex has no guidance; passenger is blocking line; others watching</td>
+<td>Alex: exposed; passenger: distressed</td>
+<td>Every DENY must have a typed reason code — zero generic &quot;FAILED&quot; responses. This is a non-negotiable, not a nice-to-have</td>
+</tr>
+<tr>
+<td><strong>4c. OPT-OUT</strong></td>
+<td>Passenger selects opt-out; manual scan proceeds</td>
+<td>Podium, DCS</td>
+<td><strong>Regulatory pain:</strong> If opt-out requires agent involvement, it may not be &quot;freely available&quot; per CBP requirements</td>
+<td>Passenger: exercising a right; Alex: redirecting to manual process</td>
+<td>Opt-out reachable in ≤2 taps without agent involvement — field test required at every active pilot gate</td>
+</tr>
+<tr>
+<td><strong>5. Audit</strong></td>
+<td>Event logged: pnr_token, gate_id, match_result, timestamp — no raw template, no match score</td>
+<td>Audit log</td>
+<td><strong>Pain:</strong> PII boundary not confirmed in production logs — raw template or match score may be present in debug log levels</td>
+<td>Alex: unaware; Chris: responsible for compliance</td>
+<td>Production log audit required in Stage C — this is a Stage C code evidence task, not a Stage B conclusion</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Journey insight:</strong> The biometric journey has three exit states (APPROVE / DENY / OPT-OUT) and only one of them — APPROVE — has no operational friction. DENY and OPT-OUT both have unresolved product gaps that require field testing and code evidence before solution design.</p>
+<hr />
+<h3>Journey 3: Carry-On Policy Change — Diana (Station Manager) + Alex (Gate Agent)</h3>
+<blockquote>
+<p><strong>Critical path:</strong> Rule change → admin UI publish → propagation to all gates ≤60s
+<strong>Regulatory stake:</strong> DOT 14 CFR Part 259 — inconsistent enforcement creates consumer protection liability</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Actions</th>
+<th>Touchpoints</th>
+<th>Pain Points</th>
+<th>Emotional State</th>
+<th>Opportunities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Trigger</strong></td>
+<td>DOT or legal issues a carry-on policy change</td>
+<td>Email/legal notification</td>
+<td><strong>Pain:</strong> No structured intake channel — Diana receives policy change via email or phone, not a system-triggered workflow</td>
+<td>Diana: reactive; high urgency</td>
+<td>Structured policy change intake would reduce response time and create an audit record from step 1</td>
+</tr>
+<tr>
+<td><strong>2. Rule Update</strong></td>
+<td>Diana creates new rule in gm-web-bagmatrix-admin: rule_id, effective_date, change_reason</td>
+<td>Admin UI (bagmatrix-admin)</td>
+<td><strong>Current gap:</strong> Requires helpdesk ticket for engineering today — 24–48h delay</td>
+<td>Diana: frustrated — compliance is on her watch</td>
+<td>Admin UI self-serve rule management is the correct solution — must be confirmed as operational in Stage C</td>
+</tr>
+<tr>
+<td><strong>3. Publish</strong></td>
+<td>New rule version published (e.g., v2.4.2); propagation begins</td>
+<td>Admin UI, bag matrix service</td>
+<td><strong>Pain:</strong> Propagation status per gate not visible in current admin UI — Diana calls a gate agent to verify</td>
+<td>Diana: anxious; cannot confirm compliance without verbal check</td>
+<td>Per-gate propagation status (N/M gates updated, RED/GREEN per gate) should be visible in admin UI within 60s</td>
+</tr>
+<tr>
+<td><strong>4. Gate Receives</strong></td>
+<td>Agent scanner receives v2.4.2; scanner UI shows updated rule version</td>
+<td>Scanner UI, Apigee proxy, bag matrix service</td>
+<td><strong>Pain:</strong> If propagation fails at one gate silently, that gate enforces the old rule — no alert fires</td>
+<td>Alex: unaware of version mismatch; applying wrong rule</td>
+<td>Version mismatch alert within 90s of publish; admin UI shows gate RED until confirmed</td>
+</tr>
+<tr>
+<td><strong>5. Agent Enforcement</strong></td>
+<td>Agent scans bag; rule v2.4.2 applied; COMPLIANT / GATE-CHECK / DENIED returned</td>
+<td>Scanner, bag matrix service</td>
+<td><strong>Pain:</strong> If rule change is during active boarding, there is a window where adjacent gates are running different versions</td>
+<td>Alex: making enforcement decisions with unknown consistency relative to other gates</td>
+<td>Rule effective_date enforcement — version takes effect at scheduled time, not at publish time, to prevent mid-boarding inconsistency</td>
+</tr>
+<tr>
+<td><strong>6. Override</strong></td>
+<td>Agent requests override; supervisor auth code required; UI blocks without it</td>
+<td>Scanner UI</td>
+<td><strong>Pain:</strong> Override audit exists in database but not accessible from admin UI — Diana cannot produce compliance reports without IT</td>
+<td>Diana: compliance exposure; Alex: override process is slow under time pressure</td>
+<td>Override reporting directly in admin UI; supervisor_id + reason_code + timestamp on every override record</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Journey 4: FLC Load Plan Approval — Jordan (FLC) + Marcus (Ramp Crew)</h3>
+<blockquote>
+<p><strong>Critical path:</strong> Load plan updated → Teams task card → FLC approval → ramp crew pushback
+<strong>Regulatory stake:</strong> FAR Part 139 ops logging; load control regulatory traceability</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Actions</th>
+<th>Touchpoints</th>
+<th>Pain Points</th>
+<th>Emotional State</th>
+<th>Opportunities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Load Plan Update</strong></td>
+<td>Load plan updated in load control system; published to Azure Service Bus</td>
+<td>Load control system, Service Bus</td>
+<td><strong>Pain:</strong> Batch feed (every 5 minutes) — FLC may receive a task for a plan that was already superseded in the underlying system</td>
+<td>Jordan: working on potentially stale data</td>
+<td>Load plan updates should be event-driven (publish on change), not batch</td>
+</tr>
+<tr>
+<td><strong>2. Task Card Delivered</strong></td>
+<td>Teams task card sent to FLC: &quot;Load Plan Ready — AA 1234</td>
+<td>v3</td>
+<td>Updated 14:12&quot;</td>
+<td>Teams (FLC desktop/mobile)</td>
+<td><strong>Pain:</strong> Version and timestamp not always visible on card — Jordan has no way to confirm currency without opening load system</td>
+</tr>
+<tr>
+<td><strong>3. FLC Reviews</strong></td>
+<td>Jordan reviews load plan details; decides APPROVE or REQUEST REVISION</td>
+<td>Teams task card</td>
+<td><strong>Pain:</strong> Jordan manages 5–8 flights simultaneously; task card competes with gate change alerts and other notifications</td>
+<td>Jordan: alert-fatigued; high-stakes decisions in a noisy notification stream</td>
+<td>Load plan tasks should be visually differentiated from gate change alerts — different priority tier in Teams channel</td>
+</tr>
+<tr>
+<td><strong>4. Approval</strong></td>
+<td>Jordan taps APPROVE; confirmation sent to ramp crew; audit record created</td>
+<td>Teams, cme-workflow-manager, audit log</td>
+<td><strong>Pain:</strong> If audit record doesn't include actor_id + load_plan_version + timestamp, post-incident reconstruction requires manual recall</td>
+<td>Jordan: done; Marcus: waiting for clearance</td>
+<td>Audit record must be automatic — Jordan should not have to take any extra action to create a compliant record</td>
+</tr>
+<tr>
+<td><strong>5. Ramp Crew Notified</strong></td>
+<td>Marcus receives push notification: load plan approved; ramp crew cleared for pushback</td>
+<td>Teams (Marcus mobile)</td>
+<td><strong>Pain:</strong> If Marcus's Teams subscription is to wrong gate, notification is missed; pushback is delayed</td>
+<td>Marcus: waiting for clearance; time pressure building</td>
+<td>Gate-scoped Teams subscriptions — Marcus should receive alerts for his assigned gate, not all gates</td>
+</tr>
+<tr>
+<td><strong>6. Stale Task Supersession</strong></td>
+<td>New load plan version published before FLC acts; old task card invalidated</td>
+<td>Teams, cme-workflow-manager</td>
+<td><strong>Pain:</strong> No clear signal to Jordan that the card he is reviewing is now stale — he may approve v3 while v4 is already the operative plan</td>
+<td>Jordan: working on superseded plan</td>
+<td>Old task card MUST be visually invalidated when a newer version is published — not silently replaced</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Open Questions for Bhavita and Derek</h2>
+<p>Before we lock Stage B and move to Stage C (Code Evidence), these are the questions your product expertise should pressure-test:</p>
+<h3>On the personas</h3>
+<ol>
+<li><strong>Alex (Gate Agent):</strong> Do you believe agents actually trust the GIDS display as a primary source of truth — or has the trust already eroded from repeated staleness incidents? This matters because if trust is already gone, the product problem is not just fixing latency — it's rebuilding confidence.</li>
+<li><strong>Jordan (FLC):</strong> Have you seen a flight operation where load plan approval is genuinely done on Teams task cards — or is there still a significant offline / verbal approval workaround in place that we'd be displacing?</li>
+</ol>
+<h3>On competitive signals</h3>
+<ol start="3">
+<li><strong>Microsoft &quot;Turn Time at the Gate&quot;:</strong> This was piloted with American Airlines. Is Connect Me the same initiative, a successor to it, or a competing internal initiative? This is the most important scope boundary question before Stage C.</li>
+</ol>
+<h3>On journey priorities</h3>
+<ol start="4">
+<li><strong>Stage C priority:</strong> Amaya will need to focus code evidence on the highest-risk codebase areas. Our recommendation based on regulatory exposure: (1) Biometrics PII log boundary first — a single debug-level log containing a raw biometric template is a CBP finding, (2) DSS staleness instrumentation, (3) Carry-On propagation. Do you agree with this ordering?</li>
+</ol>
+<hr />
+<h2>Stage B Exit Checklist</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Gate</th>
+<th>Law</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>≥3 validated user insights documented</td>
+<td><span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span></td>
+<td>✅ 9 research entries (items 1–5 avatar-proxy; 6–9 public research)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Personas defined with goals, frustrations, context</td>
+<td><span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span></td>
+<td>✅ 7 personas — all marked DRAFT pending field interviews</td>
+</tr>
+<tr>
+<td>3</td>
+<td>JTBD statements framed per <span class="law-cite" data-law-id="PRD-2.3" data-non-negotiable="false">PRD-2.3<span class="law-tooltip"><strong>Jobs-to-be-Done Law</strong></span></span></td>
+<td><span class="law-cite" data-law-id="PRD-2.3" data-non-negotiable="false">PRD-2.3<span class="law-tooltip"><strong>Jobs-to-be-Done Law</strong></span></span></td>
+<td>✅ 10 JTBD statements across 7 personas</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Competitive landscape documented per <span class="law-cite" data-law-id="PRD-2.4" data-non-negotiable="false">PRD-2.4<span class="law-tooltip"><strong>Competitive Analysis Law</strong></span></span></td>
+<td><span class="law-cite" data-law-id="PRD-2.4" data-non-negotiable="false">PRD-2.4<span class="law-tooltip"><strong>Competitive Analysis Law</strong></span></span></td>
+<td>✅ 4 domains, 16 competitor/alternative entries</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Journey maps completed per <span class="law-cite" data-law-id="PRD-3.2" data-non-negotiable="false">PRD-3.2<span class="law-tooltip"><strong>Journey Mapping Law</strong></span></span></td>
+<td><span class="law-cite" data-law-id="PRD-3.2" data-non-negotiable="false">PRD-3.2<span class="law-tooltip"><strong>Journey Mapping Law</strong></span></span></td>
+<td>✅ 4 journeys — IROP gate change, biometric boarding, carry-on policy change, FLC load approval</td>
+</tr>
+<tr>
+<td>6</td>
+<td>HTML rendered and APPROVED in browser</td>
+<td><span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>⏳ Pending render</td>
+</tr>
+<tr>
+<td>7</td>
+<td><span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> audit event filed — Stage B → C</td>
+<td><span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>⏳ After render approval</td>
+</tr>
+</tbody>
+</table>
+</div>
+    </div>
+    
+
+    
+    <!-- Exit Gate Checklist -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f0fdf4">✅</div>
+        <div class="ct">Exit Gate Checklist — Stage B → Next</div>
+        <span class="law lp">PRD-2.5 ⚠<span class="tt"><strong>Stage-Gate Law — NON-NEGOTIABLE</strong><br>ALL items must be checked before advancing.</span></span>
+      </div>
+      <div class="cb">
+        <ul class="cl">
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">≥3 validated user insights documented with participant details</div>
+              
+              <div class="clw">PRD-3.1</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Personas defined with goals, frustrations, and context</div>
+              
+              <div class="clw">PRD-3.1</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Jobs-to-be-Done statements framed per PRD-2.3</div>
+              
+              <div class="clw">PRD-2.3</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Competitive landscape documented per PRD-2.4</div>
+              
+              <div class="clw">PRD-2.4</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Journey maps completed per PRD-3.2</div>
+              
+              <div class="clw">PRD-3.2</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">stage-b-field-study.md rendered via aa-artifact-render and APPROVED in browser</div>
+              
+              <div class="clw">ENG-13.1</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">BUS-7.1 audit event filed — Stage B → C transition</div>
+              
+              <div class="clw">BUS-7.1</div>
+            </div>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+    
+
+    
+    <!-- Audit Log -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f1f5f9">📋</div>
+        <div class="ct">Audit Log</div>
+        <span class="law lb">BUS-7.1 ⚠<span class="tt"><strong>Audit Trail — NON-NEGOTIABLE</strong><br>Every stage transition: who / what / when / where / why / outcome.</span></span>
+      </div>
+      <div class="cb">
+        <table class="at">
+          <thead><tr><th>Event</th><th>Actor</th><th>Role</th><th>System</th><th>Timestamp</th><th>Outcome</th></tr></thead>
+          <tbody>
+            
+            <tr>
+              <td>Stage B — Field Study initiated</td>
+              <td>Amal (Copilot CLI) + Adeel Ali</td>
+              <td>Product Coach + Discovery Sponsor</td>
+              <td>GitHub Copilot CLI</td>
+              <td>2026-04-22T19:00:00Z</td>
+              <td><span class="ao ao-wait">IN_PROGRESS</span></td>
+            </tr>
+            
+            <tr>
+              <td>Stage B — Competitive research completed</td>
+              <td>Amal (Copilot CLI)</td>
+              <td>Product Coach</td>
+              <td>GitHub Copilot CLI</td>
+              <td>2026-04-22T19:10:00Z</td>
+              <td><span class="ao ao-ip">4 domains covered — biometrics, DSS, carry-on, Connect Me</span></td>
+            </tr>
+            
+            <tr>
+              <td>Stage B — HTML rendered and reviewed</td>
+              <td>Adeel Ali</td>
+              <td>Discovery Sponsor</td>
+              <td>GitHub Copilot CLI</td>
+              <td>2026-04-22T19:38:06Z</td>
+              <td><span class="ao ao-ok">APPROVED</span></td>
+            </tr>
+            
+            <tr>
+              <td>Stage B → C</td>
+              <td>Willem (Copilot CLI)</td>
+              <td>Constitutional Architect</td>
+              <td>GitHub Copilot CLI</td>
+              <td>2026-04-22T19:38:06Z</td>
+              <td><span class="ao ao-ip">GATE PASSED — Stage C unlocked</span></td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+
+  </div><!-- end main -->
+
+  <div class="side">
+
+    <!-- ENG-13.1 Render Gate -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#1e1b4b;font-size:16px;">🖥️</div>
+        <div class="ct" style="color:#4f46e5;">ENG-13.1 Render Gate</div>
+        <span class="hb hb-fail" style="font-size:9px;">NON-NEG</span>
+      </div>
+      <div class="cb">
+        
+          <div class="rg-persist-pend">⏳ <strong>PENDING</strong> — awaiting reviewer decision in the source artifact</div>
+        
+        <div class="rg">
+          <div class="rg-title">🖥️ Human Browser Review</div>
+          <div class="rg-desc">Source-of-truth is the §Render Gate checkbox in the source artifact. Button clicks are reminders only — tick the checkbox to record.</div>
+          <div class="rg-btns">
+            <button class="rgb rgb-approve" onclick="rgDecision('APPROVE')">✅ APPROVE</button>
+            <button class="rgb rgb-enhance" onclick="rgDecision('ENHANCE')">🔄 ENHANCE</button>
+            <button class="rgb rgb-reject" onclick="rgDecision('REJECT')">❌ REJECT</button>
+          </div>
+          <div id="rg-decision"></div>
+        </div>
+        <p style="font-size:12px;color:var(--aa-muted);">Stage does not advance until §Render Gate in the source artifact carries a ticked APPROVE row. (PRD-2.5 NON-NEGOTIABLE)</p>
+      </div>
+    </div>
+
+    
+
+    
+    <!-- Participating Avatars -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f5f3ff">🤖</div><div class="ct">Participating Avatars</div></div>
+      <div class="cb">
+        
+          
+          <div class="av">🎯 avatar-product-gate-management <span style="color:#6366f1;font-weight:400;font-size:11px;">· Gate operations product avatar — 7 personas, 4 use cases, 7 laws. Primary persona and journey source for this field study. All persona behavioral details are draft until confirmed with field interviews per PRD-3.1.</span></div>
+          
+        
+          
+          <div class="av">⚙️ avatar-tech-dss-event-driven <span style="color:#6366f1;font-weight:400;font-size:11px;">· DSS DisplayHub event pipeline — Azure Service Bus, TypeScript/Node, Java, .NET. Informs journey touchpoints and exception paths.</span></div>
+          
+        
+          
+          <div class="av">🔗 avatar-tech-apigee-azure <span style="color:#6366f1;font-weight:400;font-size:11px;">· Apigee API gateway + Azure infrastructure — Biometrics, Carry-On. Informs system touchpoints and OAuth 2.0 boundary.</span></div>
+          
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- Spec Artifacts -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📂</div><div class="ct">Spec Artifacts</div></div>
+      <div class="cb">
+        
+        <div class="sf">📄 stage-b-field-study.md<span class="ss ss-ok">DRAFTED</span></div>
+        
+        <div class="sf">🌐 stage-b-field-study.html<span class="ss ss-wait">PENDING</span></div>
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- Stakeholder Approval -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0fdf4">✅</div><div class="ct">Stakeholder Approval</div></div>
+      <div class="cb">
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;">
+          <div><span class="lbl">Approver</span><div style="font-weight:700;">Ram</div></div>
+          <div><span class="lbl">Title</span><div>Director of Product Agility — Leader, Hangar</div></div>
+          <div><span class="lbl">Date</span><div>2026-04-22</div></div>
+          <div><span class="lbl">Method</span><div>In-session approval — Copilot CLI session</div></div>
+          <div><span class="lbl">Self-cert?</span><div style="color:#166534;font-weight:700;">✅ No</div></div>
+        </div>
+      </div>
+    </div>
+    
+
+    
+    <!-- Active Laws -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#fff1f2">⚖️</div><div class="ct">Active Laws — Stage B</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:7px;">
+        
+          <span class="law le" style="width:fit-content">
+            PRD-2.3<span class="tt"><strong>PRD-2.3</strong></span>
+          </span>
+        
+          <span class="law lb" style="width:fit-content">
+            PRD-2.4<span class="tt"><strong>PRD-2.4</strong></span>
+          </span>
+        
+          <span class="law le" style="width:fit-content">
+            PRD-3.1<span class="tt"><strong>Persona Development Law — domain avatar must be activated before Stage B</strong></span>
+          </span>
+        
+          <span class="law lb" style="width:fit-content">
+            PRD-3.2<span class="tt"><strong>PRD-3.2</strong></span>
+          </span>
+        
+          <span class="law lp" style="width:fit-content">
+            BUS-7.1 ⚠<span class="tt"><strong>Audit Trail Law · NON-NEGOTIABLE — every stage transition logged with who/what/when/why/outcome</strong></span>
+          </span>
+        
+          <span class="law lp" style="width:fit-content">
+            ENG-13.1 ⚠<span class="tt"><strong>Artifact Rendering Standard · NON-NEGOTIABLE — all governance artifacts rendered as HTML before stakeholder presentation</strong></span>
+          </span>
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- Artifact Info -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📎</div><div class="ct">Artifact Info</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:9px;font-size:12px;">
+        <div><div class="lbl">Status</div><span class="ao ao-ok">APPROVED</span></div>
+        
+        
+        
+        
+      </div>
+    </div>
+    
+
+  </div><!-- end side -->
+</div><!-- end body -->
+
+<footer>
+  <div style="display:flex;align-items:center;gap:8px;"><div class="ft-dot"></div>disc-2026-004 · Stage B</div>
+  <div>Gate Management Platform — Operations Intelligence Field Study</div>
+  <div>branch: main</div>
+</footer>
+
+<script>
+function rgDecision(d) {
+  var el = document.getElementById('rg-decision');
+  el.style.display = 'block';
+  if (d === 'APPROVE') {
+    el.style.cssText = 'background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x2705; <strong>APPROVE</strong> — This button is a reminder. To actually record approval, tick <code>- [x] APPROVE</code> in the PROPOSAL.md §Render Gate section.';
+  } else if (d === 'ENHANCE') {
+    el.style.cssText = 'background:rgba(124,58,237,.15);color:#c4b5fd;border:1px solid rgba(124,58,237,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x1F504; <strong>ENHANCE</strong> — Describe the enhancement needed in PROPOSAL.md §Render Gate.';
+  } else {
+    el.style.cssText = 'background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x274C; <strong>REJECT</strong> — Document the blocker in PROPOSAL.md §Render Gate. Stage does NOT advance.';
+  }
+}
+</script>
+
+</body>
+</html>

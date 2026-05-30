@@ -1,0 +1,124 @@
+avatar:
+  id: avatar-product-{{ product-slug }}
+  type: product
+  name: "{{ Product Display Name }}"
+  version: "1.0.0"
+  created: "{{ YYYY-MM-DD }}"
+  last_updated: "{{ YYYY-MM-DD }}"
+
+domain:
+  category: "{{ Product Category }}"
+  description: |
+    Brief description of the product domain.
+    What are the core responsibilities?
+    What's the business value?
+  
+  personas:
+    - "{{ Persona 1 }}"
+    - "{{ Persona 2 }}"
+    - "{{ Persona 3 }}"
+  personas_file: "examples/personas.md"
+
+core_journeys:
+  - "{{ User Journey 1 }}"
+  - "{{ User Journey 2 }}"
+  - "{{ User Journey 3 }}"
+  - "{{ User Journey 4 }}"
+
+activates:
+  skills:
+    # Discovery & Research
+    - skill-spec-governance
+    - skill-02-user-journey-mapping
+    
+    # Product Planning
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+    
+    # Development (select as applicable)
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    
+  workflows:
+    - workflow-discovery-to-delivery
+    - workflow-{{ product-slug }}-specific
+
+specializes_laws:
+  - id: PRD-1.1
+    title: "Continuous Discovery"
+    description: "Understand {{ product }} customer needs through research"
+    example_file: "examples/PRD-1.1-discovery.md"
+    key_practices:
+      - "{{ Practice 1 }}"
+      - "{{ Practice 2 }}"
+    law_citations:
+      - "{{ Citation 1 }}"
+      - "{{ Citation 2 }}"
+  
+  - id: PRD-2.1
+    title: "User Journey Mapping"
+    description: "Map {{ product }} workflows and touchpoints"
+    example_file: "examples/PRD-2.1-journey.md"
+    key_practices:
+      - "{{ Journey mapping practice 1 }}"
+      - "{{ Journey mapping practice 2 }}"
+    law_citations:
+      - "{{ Citation 1 }}"
+      - "{{ Citation 2 }}"
+  
+  - id: PRD-3.1
+    title: "Roadmap Planning"
+    description: "Prioritize {{ product }} features and releases"
+    example_file: "examples/PRD-3.1-roadmap.md"
+    key_practices:
+      - "{{ Roadmap practice 1 }}"
+      - "{{ Roadmap practice 2 }}"
+    law_citations:
+      - "{{ Citation 1 }}"
+      - "{{ Citation 2 }}"
+  
+  - id: PRD-4.1
+    title: "MVP & Product-Market Fit"
+    description: "Define MVP and validate {{ product }} market fit"
+    example_file: "examples/PRD-4.1-mvp.md"
+    key_practices:
+      - "{{ MVP practice 1 }}"
+      - "{{ MVP practice 2 }}"
+    law_citations:
+      - "{{ Citation 1 }}"
+      - "{{ Citation 2 }}"
+  
+  - id: PRD-5.1
+    title: "Metrics & Success Definition"
+    description: "Define KPIs and measure {{ product }} success"
+    example_file: "examples/PRD-5.1-metrics.md"
+    key_practices:
+      - "{{ Metrics practice 1 }}"
+      - "{{ Metrics practice 2 }}"
+    law_citations:
+      - "{{ Citation 1 }}"
+      - "{{ Citation 2 }}"
+
+rag_index:
+  enabled: true
+  folders:
+    - "examples/"
+    - "use-cases/"
+  max_tokens_per_example: 800
+  citation_style: "law_id_and_title"
+  refresh_frequency: "weekly"
+
+related_products:
+  - "{{ Related Product 1 }}"
+  - "{{ Related Product 2 }}"
+
+dependencies:
+  # External systems this product depends on
+  - "{{ System 1 }}"
+  - "{{ System 2 }}"
+
+tags:
+  - product
+  - "{{ product-slug }}"
+  - "{{ domain-tag }}"

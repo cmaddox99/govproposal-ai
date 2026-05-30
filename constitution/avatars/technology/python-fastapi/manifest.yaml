@@ -1,0 +1,140 @@
+# Python/FastAPI Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-python-fastapi
+  type: technology
+  name: Python/FastAPI
+  version: "2.0.0"
+
+stack:
+  language: Python 3.11+
+  framework: FastAPI
+  testing:
+    - pytest
+    - pytest-asyncio
+    - pytest-cov
+    - httpx
+  orm:
+    - SQLAlchemy (async)
+    - MongoDB (motor)
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+    complexity: radon
+
+dependencies:
+  required:
+    - fastapi>=0.109.0
+    - uvicorn[standard]>=0.27.0
+    - pydantic>=2.5.0
+    - pydantic-settings>=2.1.0
+  dev:
+    - pytest>=8.0.0
+    - pytest-asyncio>=0.23.0
+    - pytest-cov>=4.1.0
+    - httpx>=0.26.0
+    - ruff>=0.1.0
+    - mypy>=1.8.0
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+    - greenfield-development
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-3.2
+    title: Immutability Law
+    example_file: examples/ENG-3.2-immutability.md
+  - id: ENG-3.3
+    title: Law of Demeter
+    example_file: examples/ENG-3.3-demeter.md
+  - id: ENG-2.1
+    title: DDD Aggregate Root
+    example_file: examples/ENG-2.1-aggregates.md
+  - id: ENG-2.2
+    title: Layered Architecture
+    example_file: examples/ENG-2.2-layers.md
+  - id: ENG-6.5
+    title: Input Validation
+    example_file: examples/ENG-6.5-validation.md
+  - id: ENG-4.4
+    title: Test Structure
+    example_file: examples/ENG-4.4-test-structure.md
+  - id: ENG-3.5
+    title: Naming Conventions
+    example_file: examples/ENG-3.5-naming.md
+
+conventions:
+  naming:
+    classes: PascalCase
+    functions: snake_case
+    variables: snake_case
+    constants: SCREAMING_SNAKE
+    modules: snake_case
+    private: leading_underscore
+    test_files: test_*.py
+
+  patterns:
+    value_object: "@dataclass(frozen=True)"
+    entity: "@dataclass"
+    repository: "Abstract base class + concrete impl"
+    service: "Class with injected dependencies"
+    factory: "@classmethod or separate factory class"
+    dto: "pydantic.BaseModel"
+
+commands:
+  test:
+    all: pytest
+    verbose: pytest -v
+    single_file: pytest tests/test_order.py
+    single_test: pytest tests/test_order.py::TestOrder::test_method
+    coverage: pytest --cov=app --cov-report=html
+    stop_first: pytest -x
+    parallel: pytest -n auto
+  dev:
+    start: uvicorn app.main:app --reload
+    debug: python -m debugpy --listen 5678 -m uvicorn app.main:app --reload
+  lint:
+    format: ruff format app tests
+    check: ruff check app tests --fix
+    types: mypy app --strict
+    all: ruff format app tests && ruff check app tests && mypy app
+
+project_structure: |
+  src/
+  ├── app/
+  │   ├── __init__.py
+  │   ├── main.py                    # FastAPI app setup
+  │   ├── config.py                  # Settings via pydantic-settings
+  │   ├── dependencies.py            # Dependency injection
+  │   ├── domain/                    # Domain layer
+  │   │   ├── models/                # Aggregates, entities, value objects
+  │   │   ├── repositories/          # Abstract repositories
+  │   │   ├── services/              # Domain services
+  │   │   └── events/                # Domain events
+  │   ├── application/               # Application layer
+  │   │   └── *_service.py           # Use case orchestration
+  │   ├── infrastructure/            # Infrastructure layer
+  │   │   ├── persistence/           # Repository implementations
+  │   │   └── clients/               # External service clients
+  │   └── api/                       # Presentation layer
+  │       ├── routes/                # FastAPI route handlers
+  │       ├── schemas/               # Pydantic request/response
+  │       └── middleware/            # Error handlers, logging
+  └── tests/
+      ├── conftest.py                # Shared fixtures
+      ├── unit/                      # Unit tests
+      └── integration/               # Integration tests

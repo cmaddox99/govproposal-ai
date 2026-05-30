@@ -1,0 +1,185 @@
+# Operations Research / MIP Optimizer Avatar Manifest
+# Defines stack configuration and law specializations for
+# mixed-integer programming (MIP) optimization applications
+
+avatar:
+  id: avatar-operations-research-optimizer
+  type: technology
+  name: Operations Research / MIP Optimizer
+  version: "1.0.0"
+  description: >
+    Covers applications that use mathematical programming solvers (MIP, LP, CP)
+    to make optimal decisions over large combinatorial spaces. Typical pattern:
+    CLI or batch application triggered by a message queue, fetching input data
+    from external APIs, solving a model, and uploading structured output.
+    JOSE (Journey Optimization & Spoilage Elimination) is the reference implementation.
+
+stack:
+  language: Java 21+ (primary), Python 3.11+ (secondary)
+  solvers:
+    - FICO Xpress (xpress-optimizer)
+    - IBM CPLEX
+    - Gurobi
+    - OR-Tools (Google)
+  paradigm: Mixed-Integer Programming (MIP) / Linear Programming (LP)
+  runtime: CLI / batch (NOT a web server — no @RestController)
+  trigger: Azure Service Bus, AWS SQS, or direct CLI invocation
+  output: Structured files (Excel, JSON) uploaded to cloud storage
+  testing:
+    - JUnit 5
+    - AssertJ
+    - Mockito
+
+dependencies:
+  optional:
+    - xpress-optimizer (FICO Xpress Java bindings)
+    - cplex (IBM CPLEX Java bindings)
+    - gurobi (Gurobi Java bindings)
+    - ortools (Google OR-Tools Java/Python bindings)
+  integration:
+    - Azure Service Bus (trigger)
+    - Azure Blob Storage (input/output)
+    - External REST APIs (input data)
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-03-executable-spec
+    - skill-08-code-review
+    - skill-09-refactoring
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law (NON-NEGOTIABLE)
+    note: >
+      For MIP applications, TDD applies to constraint logic, option generation,
+      and scoring — not to the solver itself. Test the math, not the vendor library.
+    example_file: examples/ENG-4.1-constraint-tdd.md
+
+  - id: ENG-6.1
+    title: Security by Design Law (NON-NEGOTIABLE)
+    note: >
+      OAuth tokens must never be logged. Client certificates must be loaded from
+      secure stores, not hardcoded. All API credentials come from injected config.
+    example_file: examples/ENG-6.1-security-by-design.md
+
+  - id: ENG-6.4
+    title: Data Protection Law (NON-NEGOTIABLE)
+    note: >
+      Pilot PII (employee IDs, names, schedules) must not appear in logs or be
+      persisted beyond the run lifecycle. Output files contain only minimum
+      necessary fields. Snapshot IDs use employee numbers, not names.
+    example_file: examples/ENG-6.4-data-protection.md
+
+  - id: ENG-6.7
+    title: Audit Trail Law (NON-NEGOTIABLE)
+    note: >
+      Every solver run MUST log: solver status, objective value, solve time,
+      variable count, constraint count, and snapshot ID. Run status transitions
+      (RUNNING → COMPLETED | FAILED) must also be logged. MDC context must be
+      set at run start so all log lines carry the snapshot ID.
+    example_file: examples/ENG-6.7-solver-audit.md
+
+  - id: ENG-3.1
+    title: Cyclomatic Complexity Law
+    note: >
+      Objective functions and constraint builders are high-risk complexity targets.
+      Each constraint should be its own method (≤10 complexity).
+    example_file: examples/ENG-3.1-constraint-complexity.md
+
+  # BUS-2.1 (FAA Compliance Law) removed — business law, not permitted in technology avatar.
+  # FAA traceability requirement routed to avatars/industry/aviation-faa/ which specializes BUS-2.1.
+  # Engineering citation for compliance traceability: ENG-6.7 (Audit Trail).
+  - id: ENG-6.7
+    title: Audit Trail (Engineering)
+    note: >
+      When constraints encode FAA/FAR rules (e.g., FAR Part 117 rest limits),
+      each constraint method MUST cite the specific regulation in its Javadoc.
+      Traceability from regulation → constraint method → test is mandatory.
+      See avatars/industry/aviation-faa/ for BUS-2.1 (FAA Compliance) specialization.
+
+conventions:
+  naming:
+    model_class: "OptionSelectionModel, RewardMaximizationModel"
+    constraint_method: "add{ConstraintName}Constraint()"
+    objective_method: "buildObjectiveFunction()"
+    solver_wrapper: "MathModel"
+    option_class: "{Domain}Option (e.g., StudentOption)"
+    scorer_class: "{Domain}OptionScorer"
+    weight_profile: "ScoringWeightProfile"
+
+  patterns:
+    math_first: >
+      ALWAYS formulate the constraint mathematically on paper (or in Javadoc)
+      BEFORE writing code. Never translate directly from English to code.
+    one_constraint_one_method: >
+      Each logical constraint is its own private method in the model class.
+      Never add multiple constraints in a single method.
+    guard_clauses: >
+      Scoring compute methods start with a guard clause returning 0.0
+      when the reward does not apply to the given option/student.
+    weight_profiles: >
+      All scoring weights MUST exist in ALL profiles (standard, limitedMoves,
+      experimental). Missing a profile causes silent 0.0 defaults.
+    null_safe_config: >
+      Config POJO fields use @JsonSetter(nulls = Nulls.SKIP) on primitive
+      fields so JSON null preserves the Java-declared default, not false/0.
+
+testing_patterns:
+  constraint_feasibility: >
+    Given valid inputs that satisfy all constraints,
+    assert the model is FEASIBLE and the objective value is > 0.
+  constraint_infeasibility: >
+    Given inputs that violate a specific constraint,
+    assert the model is INFEASIBLE (not just empty solution).
+  objective_regression: >
+    Given a known dataset with known optimal reward,
+    assert the objective value equals or exceeds the known baseline.
+  solution_structure: >
+    Assert that selected options obey mutual exclusivity:
+    no sequence appears in more than one selected option.
+  scoring_unit: >
+    Test each compute method in StudentOptionScorer independently
+    with a minimal StudentOption and known expected reward.
+
+commands:
+  test:
+    all: "./mvnw test"
+    single: "./mvnw test -Dtest=OptionSelectionModelTest"
+    coverage: "./mvnw test jacoco:report"
+  run_local: >
+    Run via IntelliJ with Main class, program args (snapshotId),
+    and -Dspring.profiles.active=local (uses local JSON files instead of APIs)
+  format: "./mvnw spotless:apply"
+
+project_structure: |
+  src/main/java/com/aa/{app}/
+  ├── {App}Application.java             # CommandLineRunner entry point
+  ├── controller/
+  │   └── {App}Controller.java          # Pipeline orchestrator (@Component)
+  ├── component/
+  │   ├── mathmodel/                    # MIP model layer
+  │   │   ├── MathModel.java            # Solver wrapper
+  │   │   ├── OptionSelectionModel.java # Decision variables + constraints
+  │   │   └── RewardMaximizationModel.java # Objective function
+  │   └── network/                      # Option generation + scoring
+  │       ├── NetworkGenerator.java     # DAG-based option enumeration
+  │       ├── {Domain}OptionScorer.java # Reward computation
+  │       └── ScoringWeightProfile.java # Immutable weight sets
+  ├── model/
+  │   ├── {Domain}Option.java           # Candidate assignment option
+  │   ├── OptimizationDataBundle.java   # Central data carrier
+  │   └── config/
+  │       ├── Config.java               # Runtime config (@Component POJO)
+  │       └── ScoringWeightProfileOverride.java
+  ├── processors/
+  │   ├── DtoProcessor.java             # DTO → domain model
+  │   └── ModelProcessor.java           # Domain model enrichment
+  └── util/
+      └── RunContext.java               # Per-run identity + derived dates
+  src/test/java/com/aa/{app}/
+  ├── component/mathmodel/              # Constraint + objective tests
+  └── component/network/               # Scoring + option generation tests
+

@@ -1,0 +1,14 @@
+{% extends "_base.html" %}
+{% block title %}{{ frontmatter.get('title', 'Skill') }} — Hangar AI Constitution{% endblock %}
+{% block body %}
+{% set title = frontmatter.get('title', 'Agent Skill') %}
+<div class="page cover">
+  <div class="eyebrow">Hangar AI Constitution — Agent Skill</div>
+  <h1>{{ title }}</h1>
+  <div class="footer"><div>{{ title }}</div><div class="pn">1</div></div>
+</div>
+<div class="page content">
+  {{ body | safe }}
+  <div class="footer"><div>{{ title }}</div><div class="pn">2</div></div>
+</div>
+{% endblock %}

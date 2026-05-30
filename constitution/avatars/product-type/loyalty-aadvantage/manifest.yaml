@@ -1,0 +1,212 @@
+avatar:
+  id: avatar-loyalty-aadvantage
+  type: product
+  name: "AADvantage Loyalty"
+  version: "1.4.0"
+  created: "2026-02-20"
+  last_updated: "2026-06-01"
+
+domain:
+  category: "Member Loyalty Program"
+  description: |
+    AADvantage is American Airlines' loyalty program with 180M+ members worldwide.
+    Our mission is to reward member loyalty, drive incremental revenue, and create
+    experiences that matter. Key value drivers include points earning redemption,
+    elite benefits, partnerships, and personalized offers.
+  
+  personas:
+    - Casual Member
+    - Frequent Traveler
+    - Elite Member
+    - Program Manager (Internal)
+  personas_file: "examples/personas.md"
+
+core_journeys:
+  - "Member Enrollment & Onboarding"
+  - "Points Earning Through Travel"
+  - "Points Redemption"
+  - "Elite Status Achievement"
+  - "Retention & Win-Back Campaigns"
+
+activates:
+  skills:
+    # Discovery & Research
+    - spec-governance
+    - 02-user-journey-mapping
+    
+    
+    # Product Planning
+    - 03-executable-spec
+    - 04-business-domain-modeling
+    - 05-business-rules
+
+    # Compliance & Security
+    - 10-security-review
+    - 27-constitution-compliance
+
+  workflows:
+    - product-discovery-stage-a-f
+    - workflow-loyalty-retention
+    - legacy-rescue-decision-track
+    - legacy-rescue-refactor
+
+specializes_laws:
+  - id: PRD-1.1
+    title: "Continuous Discovery"
+    description: "Understand member needs, engagement patterns, and redemption preferences"
+    example_file: "examples/PRD-1.1-discovery.md"
+    key_practices:
+      - "Survey members on points value and redemption desires"
+      - "Analyze earning/redemption behavior by cohort"
+      - "Research competitive loyalty program features"
+      - "Study elite member retention drivers"
+    law_citations:
+      - "Member research methods and engagement patterns"
+      - "Competitive program analysis"
+  
+  - id: PRD-2.1
+    title: "User Journey Mapping"
+    description: "Map member journey from enrollment through redemption and retention"
+    example_file: "examples/PRD-2.1-journey.md"
+    key_practices:
+      - "Map enrollment funnel and onboarding experience"
+      - "Track earning touchpoints (flights, partners, credit card)"
+      - "Document redemption workflows and options"
+      - "Identify retention decision points"
+    law_citations:
+      - "Member lifecycle workflow from join to elite"
+      - "Earning and redemption touchpoints"
+  
+  - id: PRD-3.1
+    title: "Roadmap Planning"
+    description: "Prioritize loyalty features to maximize engagement and lifetime value"
+    example_file: "examples/PRD-3.1-roadmap.md"
+    key_practices:
+      - "Rank features by member satisfaction and lifetime value impact"
+      - "Evaluate partner integration opportunities"
+      - "Assess operational complexity"
+      - "Plan seasonal campaigns and promotions"
+    law_citations:
+      - "Loyalty program OKRs and member value maximization"
+      - "Feature prioritization for retention"
+  
+  - id: PRD-4.1
+    title: "MVP & Product-Market Fit"
+    description: "Define MVP for new loyalty features and validate with member segments"
+    example_file: "examples/PRD-4.1-mvp.md"
+    key_practices:
+      - "Test new redemption options with small member cohort"
+      - "Validate partner integrations with beta users"
+      - "Measure: NPS, repeat engagement, lifetime value change"
+      - "Expand based on success signals"
+    law_citations:
+      - "MVP validation with member segments"
+      - "Product-market fit measurement for features"
+  
+  - id: PRD-5.1
+    title: "Metrics & Success Definition"
+    description: "Define KPIs for program engagement, retention, and member lifetime value"
+    example_file: "examples/PRD-5.1-metrics.md"
+    key_practices:
+      - "Engagement metrics: earning rate, redemption rate, elite achievement"
+      - "Retention metrics: monthly active, churn rate, win-back success"
+      - "Financial metrics: member lifetime value, program margin"
+      - "Satisfaction metrics: NPS, redemption satisfaction"
+    law_citations:
+      - "Loyalty program KPIs aligned to business model"
+      - "Member value and retention measurement"
+
+  # Compliance enrichment (Phase 8)
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: |
+      AAdvantage program with 180M+ members has obligations under CCPA (California members),
+      GDPR Article 6 (EU members), and IRS/financial tax treatment of award redemptions.
+      Points expiration policies must be disclosed per consumer protection requirements.
+      Partner program agreements have contractual compliance obligations.
+    key_practices:
+      - "CCPA: California member right-to-know applies to points ledger and redemption history"
+      - "GDPR Article 6: lawful basis documented for EU member program participation"
+      - "Tax treatment: award redemptions above IRS de minimis threshold require reporting"
+      - "Partner program: Citi/Barclays cobrand agreement compliance obligations documented"
+    example_file: examples/BUS-2.1-regulatory-mapping.md
+    law_citations:
+      - "CCPA and GDPR compliance for 180M+ AAdvantage member PII"
+      - "IRS reporting for high-value award redemptions"
+
+  - id: BUS-2.2
+    title: "Control Framework"
+    description: "PCI-DSS controls for points redemption payments; data governance controls for 180M+ member PII; GDPR Article 6 lawful basis for EU member data"
+  - id: BUS-4.1
+    title: "Privacy by Design"
+    description: |
+      Member PII minimization in points ledger. Data retention limits for inactive members.
+      Consent management for marketing communications. Biometric data (if used for elite
+      recognition) requires explicit consent per CCPA/GDPR.
+    key_practices:
+      - "Points ledger: store member ID hash rather than PII in transaction records"
+      - "Inactive member PII: review at 3-year mark per retention policy"
+      - "Marketing consent: explicit opt-in for promotional communications; separate from program enrollment"
+      - "Redemption records: de-identify PII after 7-year financial retention period"
+    example_file: examples/BUS-4.1-privacy-by-design.md
+    law_citations:
+      - "Member PII minimization in points ledger"
+      - "Inactive member data retention policy"
+  - id: BUS-4.3
+    title: "Data Retention"
+    description: "Points ledger retention: lifetime of membership + 7 years. Transaction history: 7 years per financial record rules. Inactive member PII: review at 3-year mark per retention policy"
+  - id: ENG-6.4
+    title: "PII & GDPR"
+    description: "EU member data: Article 6(1)(b) contract basis for loyalty program; Article 6(1)(a) consent for marketing. Right to erasure limited by financial record retention obligations"
+
+project_structure:
+  repos:
+    - name: mobile-aadvantage-bff
+      path: bff/mobile-aadvantage-bff/
+      stack: "Java 25 / Spring Boot 4.0.5"
+      description: "Primary loyalty BFF — points, promotions, member activity via WSDL + GraphQL"
+      key_packages:
+        - "com.aa.ct.mobile.aadvantage.bff.api.controller"
+        - "com.aa.ct.mobile.aadvantage.bff.api.service"
+        - "com.aa.ct.mobile.aadvantage.bff.api.connector"
+        - "com.aa.ct.mobile.aadvantage.bff.config"
+    - name: aa-ct-fly-mobile-loyalty-bff
+      path: bff/aa-ct-fly-mobile-loyalty-bff/
+      stack: "Java / Spring Boot"
+      description: "Loyalty enrollment BFF — CHUB integration, Apigee token auth"
+    - name: Mobile-Loyalty-Events-Qualifier
+      path: bff/Mobile-Loyalty-Events-Qualifier/
+      stack: "Java / Kafka"
+      description: "Event processor for PNR feed and tailored offers — Kafka consumers"
+  test_pattern: "*Test.java"
+  ci_workflows:
+    - ".github/workflows/deploy-QA.yaml"
+    - ".github/workflows/deploy-IQA.yaml"
+    - ".github/workflows/production-deployment.yaml"
+
+commands:
+  build: "./gradlew clean build"
+  test: "./gradlew test"
+  coverage: "./gradlew jacocoTestReport"
+  run_local: "./gradlew bootRun"
+
+conventions:
+  - "WSDL-generated clients for downstream SOAP: RetrieveLoyaltyReferenceInformationV2, ManageCustomerProfileV5_6"
+  - "GraphQL schemas in schema/activity_schema.graphqls and schema/promotions_schema.graphqls"
+  - "Kubernetes deployment templates in .kubernetes/"
+  - "Docker images at docker.aa.com/{env}/{app-name}"
+  - "Apigee token auth for CHUB (Customer Hub) integration"
+  - "Kafka consumers: PnrFeedReceiver, TailoredOffersReceiver in Events Qualifier"
+
+dependencies:
+  - "Member Database"
+  - "Points Ledger System"
+  - "Partner Integration APIs"
+  - "Email/Communication Platform"
+
+tags:
+  - product
+  - loyalty
+  - retention
+  - member-experience
+  - revenue

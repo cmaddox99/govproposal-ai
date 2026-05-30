@@ -1,0 +1,113 @@
+# OpenTelemetry Python Avatar Manifest
+
+avatar:
+  id: avatar-opentelemetry-python
+  type: technology
+  name: OpenTelemetry Python (OTEL)
+  version: "1.0.0"
+  created: "2026-03-18"
+  last_updated: "2026-03-18"
+
+stack:
+  language: Python 3.11+
+  platform: OpenTelemetry (OTLP → Dynatrace / OTLP collector)
+  frameworks:
+    - opentelemetry-api
+    - opentelemetry-sdk
+    - opentelemetry-distro
+    - opentelemetry-exporter-otlp
+    - opentelemetry-instrumentation-fastapi
+    - opentelemetry-instrumentation-logging
+    - structlog (for structured log + trace correlation)
+  testing:
+    - pytest
+    - opentelemetry-sdk (InMemorySpanExporter for unit tests — no live OTLP collector needed)
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - opentelemetry-api: "==1.39.1"
+    - opentelemetry-distro: "==0.60b1"
+    - opentelemetry-exporter-otlp: "==1.39.1"
+    - opentelemetry-instrumentation-fastapi: "==0.60b1"
+    - opentelemetry-instrumentation-logging: "==0.60b1"
+    - structlog: ">=25.2,<26.0"
+  dev:
+    - opentelemetry-sdk: "==1.39.1"  # includes InMemorySpanExporter for tests
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-13-observability
+    - skill-07-vertical-slice-dev
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD
+    focus: Span emission testable with InMemorySpanExporter — no live OTLP collector in unit tests
+    example_file: "guidance.md"
+
+  - id: ENG-6.7
+    title: Audit Trail Law
+    focus: Correlation ID propagation via X-Correlation-ID header and W3C trace context; every service boundary must propagate trace_id and span_id for end-to-end distributed tracing and audit log correlation
+    example_file: "guidance.md"
+
+  - id: ENG-6.7
+    title: Audit Trail (Engineering)
+    focus: Every LLM call and compliance decision must emit a span for observability; trace ID ties OTEL trace to audit log record
+    example_file: "guidance.md"
+
+  - id: ENG-1.2
+    title: AI-Engineer Pairing
+    focus: OTEL configuration decisions must be explainable with law citations; agent must not recommend removing instrumentation
+    example_file: "guidance.md"
+
+env_vars:
+  required:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      description: OTLP collector / Dynatrace ingest endpoint — e.g., https://xxx.live.dynatrace.com/api/v2/otlp
+      security: May require Authorization header token; configure via OTEL_EXPORTER_OTLP_HEADERS
+    - name: OTEL_SERVICE_NAME
+      description: Service name for span identification — e.g., cr-genai-draft-response
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      description: Additional resource tags — e.g., deployment.environment=prod,service.version=1.2.0
+  optional:
+    - name: OTEL_EXPORTER_OTLP_HEADERS
+      description: Authorization header for Dynatrace — e.g., "Authorization=Api-Token dt0c01.xxx"
+
+instrumentation_modes:
+  auto: |
+    opentelemetry-instrument uvicorn app.main:app
+    # Instruments FastAPI routes, httpx, logging automatically
+    # Preferred for production — minimal code changes
+  manual: |
+    from opentelemetry import trace
+    tracer = trace.get_tracer(__name__)
+    with tracer.start_as_current_span("pii_redaction") as span:
+        span.set_attribute("complaint.category", category)
+        result = redact_pii(complaint)
+    # Use for critical business operations needing named spans
+
+conventions:
+  span_naming:
+    pattern: "{domain}.{operation}" 
+    examples:
+      - "pii.redact"
+      - "llm.generate"
+      - "compliance.validate"
+      - "audit.write_trace"
+  attribute_keys:
+    do:
+      - "complaint.category"
+      - "model.deployment_name"
+      - "request.tid"
+      - "outcome"
+    never:
+      - "customer.name"       # PII — never in span attributes
+      - "complaint.text"      # may contain PII
+      - "api.key"             # credential — never in spans

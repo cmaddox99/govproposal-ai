@@ -1,0 +1,362 @@
+avatar:
+  id: avatar-check-in-travel
+  type: product
+  name: "American Airlines Check-In & Boarding"
+  version: "1.6.1"
+  created: "2026-02-20"
+  last_updated: "2026-04-30"
+
+domain:
+  category: "Passenger Check-In & Boarding Operations"
+  description: |
+    Check-In & Boarding streamlines the passenger journey from home to gate. Our products
+    include digital check-in (web/app), mobile boarding pass, kiosk self-service, and gate
+    operations. We optimize for speed (check-in <30 seconds), accessibility (multiple channels),
+    and reliability (99.9% uptime). Every day, 1.7M passengers use our check-in and boarding
+    products across 900+ daily departures.
+  
+  personas:
+    - Digital Traveler (self-service, app-first)
+    - Airport Traveler (kiosk/counter needed)
+    - Gate Agent (boarding operations)
+    - Operations Manager (throughput & reliability)
+  personas_file: "examples/personas.md"
+
+core_journeys:
+  - "Online Check-In (24-48 hours pre-flight)"
+  - "Mobile Check-In (airport arrival)"
+  - "Self-Service Kiosk Check-In"
+  - "Gate Boarding Process"
+  - "Exception Handling (standby, oversold, accessible)"
+
+activates:
+  skills:
+    # Discovery & Customer Understanding
+    - 01-customer-discovery
+    - 02-user-journey-mapping
+    - 02-research-synthesis
+    
+    # Product & Operations Design
+    - 03-executable-spec
+    - 04-business-domain-modeling
+    - 05-business-rules
+    - 07-operational-excellence
+
+    # Compliance & Security
+    - 10-security-review
+    - 27-constitution-compliance
+
+  workflows:
+    - product-discovery-stage-a-f
+    - workflow-boarding-operations
+    - legacy-rescue-decision-track
+    - legacy-rescue-refactor
+
+specializes_laws:
+  - id: PRD-1.1
+    title: "Continuous Discovery"
+    description: "Understand passenger needs, pain points, and alternative services; benchmark airport operations"
+    example_file: "examples/PRD-1.1-discovery.md"
+    key_practices:
+      - "Observe passengers checking in; identify friction (lost, confused, technology barriers)"
+      - "Interview gate agents; understand operational constraints and bottlenecks"
+      - "Study competitors and peer airlines; how fast, simple, accessible are they?"
+      - "Accessibility research; how do elderly and mobility-limited passengers use check-in?"
+    law_citations:
+      - "Passenger check-in experience and accessibility"
+      - "Gate operations optimization and capacity planning"
+  
+  - id: PRD-2.1
+    title: "User Journey Mapping"
+    description: "Map passenger journey from 48 hours pre-flight through gate boarding and exceptions"
+    example_file: "examples/PRD-2.1-journey.md"
+    key_practices:
+      - "Map 3 check-in paths: Online (web) → Mobile (app) → In-airport (kiosk/counter)"
+      - "Track boarding journey: Gate opens → Boarding announcements → Seat assignment → Pushback"
+      - "Identify exception flows: Oversold, standby, accessible passengers, unaccompanied minors"
+      - "Measure time & success at each step; where do passengers get stuck?"
+    law_citations:
+      - "Passenger journey from home to pushback"
+      - "Gate operations and boarding flow optimization"
+  
+  - id: PRD-3.1
+    title: "Roadmap Planning"
+    description: "Prioritize check-in & boarding features to maximize passenger satisfaction and operational efficiency"
+    example_file: "examples/PRD-3.1-roadmap.md"
+    key_practices:
+      - "Rank by passenger satisfaction (convenience, speed, reliability) and operations impact (throughput, accuracy)"
+      - "Consider accessibility and equity; features must work for all passenger types"
+      - "Evaluate mobile-first vs. system redesign; what has bigger impact?"
+      - "Plan seasonal peaks (holidays); can we scale?"
+    law_citations:
+      - "Check-in experience prioritization for speed and accessibility"
+      - "Boarding operations efficiency and capacity"
+  
+  - id: PRD-4.1
+    title: "MVP & Product-Market Fit"
+    description: "Pilot check-in & boarding features with cohorts; validate passenger acceptance and operational benefit"
+    example_file: "examples/PRD-4.1-mvp.md"
+    key_practices:
+      - "Test digital check-in redesign with 10% of departures; measure check-in time, success rate, errors"
+      - "Pilot mobile boarding pass on select routes; track adoption and gate scanning success"
+      - "Test gate boarding process changes (zone boarding, group assignments); measure boarding time and passenger satisfaction"
+      - "Go/no-go decisions based on metrics; proceed or iterate"
+    law_citations:
+      - "Check-in and boarding feature validation with passenger cohorts"
+      - "Operations reliability and passenger experience trade-offs"
+  
+  - id: PRD-5.1
+    title: "Metrics & Success Definition"
+    description: "Define and track KPIs for passenger satisfaction, operational efficiency, and reliability"
+    example_file: "examples/PRD-5.1-metrics.md"
+    key_practices:
+      - "Passenger metrics: Check-in time, boarding time, satisfaction, mobile adoption, accessibility"
+      - "Operations metrics: Gate throughput (passengers/hour), errors (wrong seat assigned), reliability (uptime)"
+      - "Efficiency metrics: Labor hours per 1,000 passengers, cost per boarding"
+      - "Escalation metrics: Oversold incidents, accessibility accommodations, customer service interactions"
+    law_citations:
+      - "Check-in and boarding KPIs for passenger experience and operations"
+      - "Reliability and cost metrics for operations leadership"
+
+  # Compliance enrichment (Phase 8)
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: "TSA 49 CFR Part 1544 (air carrier security — boarding pass validation); DOT ADA requirements (14 CFR Part 382) for check-in accessibility; DOT 14 CFR Part 250 (oversell management at check-in)"
+  - id: BUS-2.2
+    title: "Control Framework"
+    description: "Identity verification controls: government ID check at staffed counters; biometric (IDEMIA/CBP) for facial match programs. ADA: wheelchair request fulfillment SLA before departure"
+  - id: BUS-2.4
+    title: "Evidence Collection"
+    description: "Oversold event audit trail: standby list, IDB/VDB compensation issued, DOT-required written statement. ADA accommodation: request timestamp, fulfillment confirmation, any denial escalation"
+  - id: ENG-6.4
+    title: "PII & TSA Secure Flight"
+    description: "TSA Secure Flight: SFPD (Secure Flight Passenger Data) — name/DOB/gender transmitted to TSA per 49 CFR 1560. Data minimization: SFPD not retained beyond 7 days post-flight"
+  - id: ENG-6.7
+    title: "Audit Trail"
+    description: "All boarding pass issuance, deny-boarding events, ADA requests, and TSA/CBP interactions must be immutably logged with timestamp, agent ID, and regulatory reference"
+
+  - id: PRD-1.2
+    title: "Problem-First Development"
+    description: |
+      Before building new check-in features, deeply understand the passenger problem being solved.
+      Root-cause passenger friction through observation and data before designing solutions.
+      Biometric check-in, TSA PreCheck, and passport scanning must solve validated passenger pain points.
+    key_practices:
+      - "Analyze abandonment signals in check-in flow logs to identify friction points"
+      - "Observe passengers at kiosks and counters before building new self-service features"
+      - "Define the specific TSA PreCheck or biometric enrollment problem before proposing solutions"
+      - "Validate that seat map PII display solves a passenger need, not just a design preference"
+      - "Document the problem statement and evidence before any check-in feature begins design"
+    example_file: examples/PRD-1.2-problem-first.md
+    law_citations:
+      - "Passenger check-in friction discovery and root-cause analysis"
+      - "Biometric and TSA PreCheck feature validation"
+
+  - id: PRD-1.5
+    title: "Evidence-Based Decision Law"
+    description: |
+      Check-in product decisions must be grounded in measurable data from real passenger behavior.
+      Biometric adoption rates, boarding time reductions, and TSA PreCheck utilization metrics
+      must drive feature investment and prioritization, not assumptions.
+    key_practices:
+      - "Track biometric adoption rate by route before expanding facial match programs"
+      - "Measure boarding time delta (pre/post) for each boarding process change"
+      - "Use A/B test results on check-in flow changes before full rollout"
+      - "Report TSA PreCheck utilization and error rates as a leading indicator for kiosk improvements"
+    example_file: examples/PRD-1.5-evidence-based.md
+    law_citations:
+      - "Data-driven boarding time decisions and biometric adoption metrics"
+      - "Check-in performance measurement"
+
+  - id: PRD-2.5
+    title: "Discovery Stage-Gate Law"
+    description: |
+      New check-in channels (biometric, kiosk, mobile) must pass defined discovery gates before
+      development investment. Stage-gates ensure government compliance requirements (CBP/TSA) are
+      validated before any passenger-facing biometric or document-scanning feature ships.
+    key_practices:
+      - "Gate 1: Passenger problem validated with research evidence before solution design"
+      - "Gate 2: Regulatory review (TSA/CBP compliance) completed before biometric feature design"
+      - "Gate 3: Technical feasibility confirmed with security review before build commitment"
+      - "Gate 4: Pilot plan with measurable success criteria defined before launch"
+    example_file: examples/PRD-2.5-stage-gate.md
+    law_citations:
+      - "Stage-gating new check-in channels and biometric programs"
+      - "CBP/TSA compliance gate before passenger-facing feature development"
+
+  - id: PRD-6.2
+    title: "Retention Law"
+    description: |
+      Check-in and boarding products must prioritize loyalty-aware experiences that strengthen
+      passenger relationships and reduce service failure churn. TSA PreCheck and elite boarding
+      benefits are retention levers that must be tracked and protected.
+    key_practices:
+      - "Track TSA PreCheck recognition rate and fix recognition failures promptly"
+      - "Measure check-in abandonment by loyalty tier — elite members must have friction-free experience"
+      - "Analyze post-IROP check-in experience for retention impact"
+      - "Report boarding priority accuracy for elite members as a retention KPI"
+    example_file: examples/PRD-6.2-retention.md
+    law_citations:
+      - "Passenger loyalty-aware check-in and TSA PreCheck retention"
+      - "Elite boarding experience as a retention driver"
+
+  - id: BUS-1.1
+    title: "Priority Hierarchy Law"
+    description: |
+      Check-in decisions must follow the priority hierarchy: Legal > Safety > Privacy > Security >
+      Business Continuity > Efficiency. Government data sharing with CBP/TSA is a legal obligation
+      that overrides all efficiency considerations. Biometric opt-in respects the Safety>Privacy hierarchy.
+    key_practices:
+      - "CBP/TSA APIS transmission is non-negotiable — never delay or skip for performance reasons"
+      - "TSA PreCheck must never be bypassed or approximated for boarding speed"
+      - "Biometric enrollment must be opt-in — Safety requires passenger consent before Privacy is secondary"
+      - "ADA accessibility requirements override efficiency improvements that reduce accessibility"
+      - "Document every decision where a higher-priority concern overruled an efficiency goal"
+    example_file: examples/BUS-1.1-priority-hierarchy.md
+    law_citations:
+      - "Government mandate compliance (CBP/TSA) takes precedence over efficiency"
+      - "Safety and privacy hierarchy for biometric programs"
+
+  - id: BUS-4.3
+    title: "Data Subject Rights Law"
+    description: |
+      Passengers have the right to access, correct, erase, and port their check-in data including
+      biometric data (passport scans, facial match), TSA PreCheck enrollment, and boarding pass history.
+      Biometric data erasure requests must be honoured with documented SLAs and audit confirmation.
+    key_practices:
+      - "Document and publish SLAs for access, erasure, and portability requests for biometric data"
+      - "Erasure of facial match data must propagate to CBP partnership systems per vendor agreement"
+      - "Access requests must include what passport scan data is retained and for how long"
+      - "TSA PreCheck number must be erasable from AA systems independent of TSA master record"
+      - "Boarding pass history portability must be available in a structured, machine-readable format"
+    example_file: examples/BUS-4.3-data-subject-rights.md
+    law_citations:
+      - "Biometric data subject rights (passport scans, facial match for CBP)"
+      - "GDPR Article 17 erasure for EU passenger biometric and travel data"
+
+  - id: BUS-7.1
+    title: "Audit Trail Law"
+    description: |
+      Every significant check-in action affecting passenger data or regulatory compliance must be
+      recorded in an append-only audit log. Boarding pass issuance, APIS/CBP transmissions,
+      deny-boarding events, and ADA accommodations all require immutable records retained 7 years.
+    key_practices:
+      - "Log every boarding pass issuance with: passenger_id_hash, flight, gate, agent_id, timestamp"
+      - "Record every APIS/CBP government data transmission with acknowledgment reference"
+      - "Immutably log all deny-boarding decisions with regulatory basis and compensation offered"
+      - "ADA accommodation requests and fulfillment/denial must be auditable"
+    example_file: examples/BUS-7.1-audit-trail.md
+    law_citations:
+      - "Boarding pass issuance audit and government APIS/CBP transmission log"
+      - "ADA accommodation and deny-boarding event audit (7-year retention)"
+
+  - id: BUS-9.3
+    title: "Breach Notification Law"
+    description: |
+      Unauthorized exposure of passenger check-in data, especially passport scan data, facial
+      recognition data, or CBP/TSA APIS records, triggers immediate incident response with
+      government notification obligations in addition to standard GDPR/CCPA requirements.
+    key_practices:
+      - "Detect biometric data exposures via automated DLP monitoring on passport/facial match stores"
+      - "Notify Legal within 1 hour of any confirmed or suspected biometric data exposure"
+      - "CBP/TSA must be notified of APIS data exposures per government data sharing agreements"
+      - "GDPR DPA notification within 72 hours for EU passenger biometric or travel data breach"
+      - "Maintain pre-approved breach notification templates for biometric data incidents"
+    example_file: examples/BUS-9.3-breach-notification.md
+    law_citations:
+      - "Passport scan and biometric data breach notification (government + GDPR)"
+      - "CBP/TSA APIS exposure notification requirements"
+
+dependencies:
+  - "Passenger Booking Database"
+  - "Seat Assignment System"
+  - "Baggage Tracking"
+  - "Gate Display Systems"
+  - "Airport WiFi"
+  - "Mobile Push Notification"
+
+project_structure:
+  checkin_ios:
+    root: ios/checkin-ios/Sources/
+    key_dirs:
+      - Relevance/       # AAFeatureCheckInEligible, AAFeatureTSATouchlessID, AAFeatureFlyCheckinModernization
+      - CheckInManager/  # CheckInManager.swift — check-in orchestration
+      - CheckInReservationViewController/  # Primary check-in entry point
+      - IFCI/ScanPassport/  # ScanPassportViewController
+      - IFCI/NFCScanning/   # MRZEntryViewController — NFC passport scan
+      - IFCI/ValidatePassenger/  # IFCIValidatePassengerViewController
+      - TravelerContactInfo/  # TravelerContactInfoViewController
+      - Hazmat/  # HazmatViewController, HazmatProcessor
+    test_dir: Tests/Sources/
+    mock_dir: Tests/SharedSources/MockData/
+    config: Tooling/fastlane/Fastfile
+  flightboarding_ios:
+    root: ios/flightboarding-ios/ios/AmericanFlightBoarding/BoardingNow/
+    key_files:
+      - BoardingTracker.swift
+      - BoardingData.swift
+      - BoardingTrackerApplicationContext.swift
+      - AAInteractiveNotifications_NowBoarding.swift
+    test_dir: ios/AmericanFlightBoardingTests/
+  checkin_bff:
+    root: bff/mobile-fly-checkin-bff/src/main/java/com/aa/ct/mobile/bff/fly/
+    key_dirs:
+      - checkin/infrastructure/controller/  # CheckInController, TouchlessController
+      - checkin/performer/infrastructure/   # PerformerController, PerformerService
+      - checkin/performer/model/traveldocs/ # TravelDocsStatusRequestBuilder
+      - flifo/infrastructure/               # FlightStatusController, FlifoAdapter
+      - flifo/domain/                       # Flight.java
+    build: build.gradle
+  boardingpass_bff:
+    root: bff/aa-ct-mobile-boardingpass-bff/src/main/java/com/aa/ct/mobile/boardingpass/
+    key_dirs:
+      - controller/   # BoardingPassController, WalletController
+      - dto/iospassbook/  # MobileBoardingPass, PassbookField, PassbookSeat
+      - dto/android/  # GoogleWalletPass, AndroidV2BoardingPass
+      - utils/        # BoardingPassUtils, PkPassGenerator, IOSRequestValidator
+    build: build.gradle
+
+commands:
+  ios:
+    setup: "fastlane ios setup_dependencies"
+    release: "fastlane ios create_framework_release"
+  bff:
+    build: "./gradlew build"
+    test: "./gradlew test"
+    coverage: "./gradlew jacocoTestReport"
+    lint: "./gradlew checkstyle"
+  ci:
+    coverage_gate: "GitHub Actions code-coverage.yaml"
+
+conventions:
+  ios_naming:
+    view_controllers: "*ViewController.swift"
+    processors: "*Processor.swift"
+    managers: "*Manager.swift"
+    trackers: "*Tracker.swift"
+    data_models: "*Data.swift"
+    feature_flags: "AAFeature*.swift"
+    notifications: "AAInteractiveNotifications_*.swift"
+    tests: "*Tests.swift, *UnitTests.swift"
+    mocks: "Mock*.swift"
+  java_naming:
+    controllers: "*Controller.java"
+    services: "*Service.java, *ServiceImpl.java"
+    adapters: "*Adapter.java"
+    factories: "*Factory.java"
+    validators: "*Validator.java (IOSRequestValidator, AndroidV2RequestValidator)"
+    utils: "*Utils.java"
+    tests: "*Test.java"
+  testing:
+    ios: "XCTest; test naming *Tests.swift; mocks via MockURLProtocol pattern"
+    bff: "JUnit 5 + Mockito + Serenity BDD + Rest Assured; coverage via Jacoco"
+  travel_docs_embedded: "TravelDocsStatusRequestBuilder embedded in checkin-bff performer/model/traveldocs/"
+
+tags:
+  - product
+  - passenger-experience
+  - operations
+  - check-in
+  - boarding
+  - accessibility
+  - throughput

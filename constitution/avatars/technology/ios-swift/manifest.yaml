@@ -1,0 +1,210 @@
+# iOS Swift Avatar Manifest
+# Defines stack configuration and law specializations
+# Grounded in Jon Reid / Quality Coding principles (qualitycoding.org)
+# See: hangar-ai-specs/changes/ios-swift-avatar/PROPOSAL.md
+
+avatar:
+  id: avatar-ios-swift
+  type: technology
+  name: iOS (Swift / Xcode)
+  version: "1.2.0"
+  split_from: avatar-mobile-native
+  authority:
+    - name: Jon Reid — Quality Coding
+      url: https://qualitycoding.org
+      book: "iOS Unit Testing by Example: XCTest Tips and Techniques Using Swift"
+
+stack:
+  platform: iOS 14.0+ / iPadOS 14.0+
+  language: Swift 5.9+ (Swift 6.0 for tooling packages)
+  frameworks:
+    ui:
+      - UIKit              # Dominant (87% of source files in production repos)
+      - SwiftUI            # Incrementally adopted (13%); not primary UI layer
+    testing:
+      - XCTest             # Dominant (85% of test files) — primary test framework
+      - Swift Testing      # Adoption in progress: @Suite(.serialized), @Test(arguments:)
+    async:
+      - Combine
+      - Swift Concurrency  # async/await, @MainActor, Sendable
+  build_system: Tuist (Project.swift) + xcodebuild / xcpretty
+  package_manager: Carthage (--use-xcframeworks; xcframeworks under Carthage/Build/)
+  dependency_tooling: SPM for DangerDependencies (CI tooling only — not production deps)
+  ci_cd: fastlane (in Tooling/fastlane/ — shared via moduletools-ios)
+
+dependencies:
+  carthage:
+    internal: |
+      # Declared in Cartfile — AA internal framework modules
+      # e.g.: github "AAInternal/businessui-ios" ~> 39.0
+      # Run: ./Tooling/update-dependencies.sh update --mute-notifications
+    xcconfig: Configuration/Debug.xcconfig, Configuration/Release.xcconfig
+  spm:
+    dev_only:
+      - package: DangerDependencies
+        path: DangerDependencies/Package.swift
+        purpose: Danger CI tooling (not for production deps)
+
+activates:
+  skills:
+    - 06-atomic-tdd
+    - 07-vertical-slice-dev
+    - 08-code-review
+    - 04-business-domain-modeling
+    - 09-refactoring
+  workflows:
+    - product-discovery-stage-a-f
+    - greenfield-development
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+    ios_notes: >
+      XCTest and Swift Testing both supported. Jon Reid's "Test Zero" pattern:
+      start each new test file with a deliberately failing test to verify
+      infrastructure before writing meaningful tests.
+  - id: ENG-4.2
+    title: Test Pyramid Law
+    example_file: examples/ENG-4.2-test-pyramid.md
+    deliberation_file: examples/ENG-4.2-test-pyramid-deliberation.md
+    ios_notes: >
+      iOS pyramid: unit tests (XCTest/Swift Testing, ≥75%) → integration
+      (URLSession stubs, ~20%) → UI tests (XCUITest, ≤5%). Cap XCUITest
+      at ≤10 scenarios for revenue-critical and safety-critical paths only.
+      Use ViewInspector for SwiftUI layout assertions at unit-test speed.
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-3.2
+    title: Immutability Law
+    example_file: examples/ENG-3.2-immutability.md
+    ios_notes: >
+      Prefer struct for value objects and entities. Use let wherever possible.
+      Domain entities mutate via `mutating func`. Published properties
+      use `private(set)` to enforce read-only external access.
+  - id: ENG-2.2
+    title: Layered Architecture
+    example_file: examples/ENG-2.2-layers.md
+    ios_notes: >
+      Domain / Application / Infrastructure / Presentation. SwiftUI views
+      are the Presentation layer — they should contain zero business logic.
+      ViewModels mediate between Application and Presentation layers.
+  - id: ENG-6.1
+    title: Security by Design
+    example_file: examples/ENG-6.1-security.md
+    ios_notes: >
+      Keychain for all secrets. No API keys in code or Info.plist.
+      App Transport Security (ATS) must be enabled. Swift 6 data-race
+      safety: use @MainActor for ViewModels, Sendable for cross-actor types.
+  - id: ENG-6.4
+    title: Data Protection Law
+    example_file: examples/ENG-6.4-data-protection.md
+    ios_notes: >
+      Keychain for all secrets. Certificate pinning via URLSessionDelegate.
+      PII redaction via CustomStringConvertible. Data classification:
+      Restricted/Confidential/Internal/Public.
+  - id: ENG-6.7
+    title: Audit Trail Law
+    example_file: examples/ENG-6.7-audit-trail.md
+    ios_notes: >
+      fastlane `increment_build_number` ensures every TestFlight/App Store
+      build has a unique, auto-incremented CFBundleVersion tied to CI.
+      Build artifacts (IPA, dSYM, build logs) archived per run.
+  - id: ENG-10.1
+    title: Constitution Governance Law
+    example_file: examples/ENG-10.1-constitution-governance.md
+    ios_notes: >
+      iOS projects must include a `hangar-ai-specs/` directory at repo root.
+      Avatar manifest is the single source of truth for which laws apply to
+      this codebase. Agents must read the manifest before proposing changes.
+  - id: ENG-11.1
+    title: Spec-Driven Development Law
+    example_file: examples/ENG-11.1-spec-driven-development.md
+    ios_notes: >
+      Every new feature starts with a hangar-ai-specs entry: avatar reference,
+      law assertions, and acceptance criteria. Code review gate: spec exists
+      and is referenced in the PR before merge.
+  - id: ENG-12.1
+    title: Agentic Feedback Loop Law
+    example_file: examples/ENG-12.1-agentic-feedback-loop.md
+    ios_notes: >
+      SonarQube constitutional gate must be provisioned before any workflow phase.
+      Human reviews dashboard gate status before each phase advance.
+      Agent cannot declare phase complete if dashboard shows FAIL.
+  - id: ENG-13.1
+    title: Artifact Rendering Standard
+    example_file: examples/ENG-13.1-artifact-rendering.md
+    ios_notes: >
+      All governance artifacts (PROPOSAL.md, phase gate evidence, ADRs) must be
+      rendered via aa-artifact-render before team review or PR submission.
+      render_gate.rendered: true required in frontmatter.
+
+conventions:
+  naming:
+    types: PascalCase
+    functions: camelCase
+    properties: camelCase
+    constants: camelCase (or PascalCase for type-level)
+    files: PascalCase
+    test_methods:
+      xctest: "func test{BehaviorDescription}()  # camelCase — AA observed pattern"
+      swift_testing: "@Test func {behaviorInCamelCase}()  # or @Test(arguments: [...])"
+    test_classes:
+      xctest: "class {Subject}Tests: XCTestCase  # or {Subject}UnitTests: XCTestCase"
+      swift_testing: "@Suite(.serialized) struct {Subject}Tests: Contextual  # Contextual = AA custom test protocol"
+    feature_toggles: "AAFeature{Name}  # e.g., AAFeatureTSATouchlessID"
+    framework_prefix: "American{Framework}  # e.g., AmericanCheckIn, AmericanCoreNetworking"
+
+  patterns:
+    value_object: "struct with Equatable + Hashable"
+    entity: "struct with mutating func (or class for identity semantics)"
+    view_model: "@MainActor final class ... ObservableObject"
+    view: "struct: View (zero business logic)"
+    repository_protocol: "protocol <Subject>Repository (async throws)"
+    mock: "final class Mock<Subject>: <Subject>Protocol (hand-written, no framework)"
+
+commands:
+  test:
+    unit: "bundle exec fastlane run_unit_tests"
+    unit_beta: "bundle exec fastlane run_unit_tests_beta"
+    ui: "bundle exec fastlane run_ui_tests"
+  build:
+    framework: "bundle exec fastlane build_ios"
+    release: "bundle exec fastlane create_framework_release"
+    release_beta: "bundle exec fastlane create_framework_release_beta"
+  ci:
+    setup_dependencies: "bundle exec fastlane setup_dependencies"
+    code_signing: "bundle exec fastlane sync_signing_assets_jenkins"
+  dependencies:
+    update: "./Tooling/update-dependencies.sh update --mute-notifications"
+    tuist: "tuist generate"
+  lint:
+    constitution: "aa-constitution-lint ."
+    swift: "swiftlint"
+
+project_structure: |
+  {FrameworkName}/
+  ├── Sources/                         # Framework source, organized by feature
+  │   ├── {Feature}/
+  │   │   ├── {Subject}ViewController.swift   # UIKit-first
+  │   │   ├── Presenters/
+  │   │   └── Relevance/               # AAFeature* feature toggle definitions
+  │   └── {Core}/                      # Core module code
+  ├── Tests/
+  │   ├── Sources/                     # Test files
+  │   │   ├── {Subject}Tests.swift     # XCTest (dominant)
+  │   │   ├── {Subject}UnitTests.swift # XCTest ViewController unit tests
+  │   │   └── SharedSources/           # Shared test helpers
+  │   │       └── MockData/            # Mock implementations (Mock{Protocol}.swift)
+  ├── Example/                         # Example app for development
+  │   └── Sources/
+  ├── Tooling/                         # Shared tooling (populated from moduletools-ios)
+  │   ├── fastlane/                    # Fastfile, Scanfile, Gymfile
+  │   ├── carthage-wrapper.sh          # Carthage dependency update
+  │   └── update-dependencies.sh
+  ├── DangerDependencies/              # Danger CI tooling (SPM — dev only)
+  ├── Cartfile                         # Carthage dependency declarations
+  ├── Project.swift                    # Tuist project definition
+  └── aa.yaml                          # AA metadata (squad ID, app short name)
+

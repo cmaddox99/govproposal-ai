@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="en"
+  data-source-commit="ce020cab89d0eeb0e96a1de6a432c3606d352747"
+  data-source-files="laws/index.yaml"
+  data-render-timestamp="2026-05-26T21:25:00Z"
+  data-page-id="P2"
+  data-registry-version="2.0.0"
+  data-nav-parent="p1-landing.html">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hangar AI Constitution — Constitutional AI Model</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   ADOPTION GUIDE DESIGN SYSTEM v2 — ENG-13.1 ⛔ COMPLIANT
+   Zero external deps. System fonts only. Inner pages.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── RESET & TOKENS ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #132033;
+  background:
+    radial-gradient(circle at top right, rgba(199,155,44,0.12), transparent 30%),
+    radial-gradient(circle at left 20%, rgba(0,51,102,0.06), transparent 25%),
+    linear-gradient(180deg, #fdfcf8 0%, #f2f5fa 50%, #f8f2ea 100%);
+  min-height: 100vh;
+}
+a { color: inherit; }
+h1,h2,h3,h4 {
+  margin: 0;
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-weight: 700;
+  line-height: 1.08;
+}
+p { margin: 0 0 1rem; }
+ul, ol { margin: 0 0 1rem; padding-left: 1.4rem; }
+li { margin-bottom: 0.4rem; }
+code {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88em;
+  background: rgba(0,51,102,0.07);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+pre {
+  background: #0f1f3d;
+  color: #e8f0f8;
+  padding: 20px;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────────────── */
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+main { padding-bottom: 72px; }
+section { margin-top: 56px; }
+.section-head { margin-bottom: 28px; }
+.section-label {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #cc0000;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.section-head h2 {
+  font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+  letter-spacing: -0.03em;
+  color: #132033;
+}
+.section-head p {
+  margin: 12px 0 0;
+  max-width: 680px;
+  color: #566579;
+  font-size: 1rem;
+}
+
+/* ── STICKY NAV ──────────────────────────────────────────────────── */
+.site-nav {
+  background: #001a40;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+  gap: 16px;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.88);
+  text-decoration: none;
+}
+.nav-brand-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fff, #f7ca66);
+  flex-shrink: 0;
+}
+.nav-links { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.nav-link {
+  color: rgba(255,255,255,0.68);
+  text-decoration: none;
+  font-size: 0.83rem;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+.nav-link:hover { color: #fff; }
+.btn-nav-home {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: #fff;
+  font-size: 0.80rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btn-nav-home:hover { background: rgba(255,255,255,0.18); }
+
+/* ── PAGE HERO ───────────────────────────────────────────────────── */
+.page-hero-wrap { padding: 36px 0 28px; }
+.page-hero {
+  padding: 44px 44px 40px;
+  border-radius: 30px;
+  background: linear-gradient(140deg, #001a40 0%, #003366 58%, #0d4080 100%);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 20px 60px rgba(0,26,64,0.22);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: auto -8% -40% 55%;
+  height: 280px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+  transform: rotate(-8deg);
+}
+.page-hero::after {
+  content: "";
+  position: absolute;
+  right: -50px; top: -50px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.07);
+  pointer-events: none;
+}
+.eyebrow {
+  display: inline-block;
+  color: #ffd880;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.page-hero h1 {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-top: 14px;
+  text-shadow: 0 2px 20px rgba(0,26,64,0.30);
+}
+.page-hero .subtitle {
+  margin: 16px 0 0;
+  max-width: 680px;
+  color: rgba(255,255,255,0.80);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+.persona-routing { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.routing-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* ── CONTENT CARDS ───────────────────────────────────────────────── */
+.card {
+  padding: 28px 26px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  box-shadow: 0 14px 36px rgba(0,26,64,0.09);
+  margin-bottom: 16px;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 48px rgba(0,26,64,0.14);
+}
+.card h3 {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: #132033;
+  margin-bottom: 10px;
+}
+
+/* ── CALLOUTS ────────────────────────────────────────────────────── */
+.callout-warning, .callout-amber {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(255,215,0,0.08); border-left: 4px solid #c79b2c;
+  margin: 12px 0;
+}
+.callout-danger, .callout-red {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(204,0,0,0.06); border-left: 4px solid #cc0000;
+  margin: 12px 0;
+}
+.callout-info, .callout-blue {
+  padding: 16px 20px; border-radius: 14px;
+  background: #eaf0f7; border-left: 4px solid #0066cc;
+  margin: 12px 0;
+}
+.callout-success, .callout-green {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(0,153,76,0.07); border-left: 4px solid #009934;
+  margin: 12px 0;
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: #003366;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-primary:hover { background: #001a40; transform: translateY(-1px); }
+
+.btn-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: rgba(0,51,102,0.08);
+  border: 1px solid rgba(0,51,102,0.14);
+  color: #003366;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.btn-copy:hover { background: rgba(0,51,102,0.14); }
+.btn-copy.copied { background: rgba(0,153,76,0.12); border-color: rgba(0,153,76,0.20); color: #007a2e; }
+
+/* ── ACCORDIONS ──────────────────────────────────────────────────── */
+details {
+  border-radius: 14px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+details[open] { box-shadow: 0 8px 24px rgba(0,26,64,0.09); }
+summary {
+  padding: 18px 20px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #132033;
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  gap: 12px;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after {
+  content: "▾";
+  color: #566579;
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+  font-family: sans-serif;
+  flex-shrink: 0;
+}
+details[open] summary::after { transform: rotate(180deg); }
+.details-body { padding: 4px 20px 20px; }
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+th {
+  background: #003366;
+  color: #fff;
+  padding: 12px 14px;
+  font-size: 0.83rem;
+  text-align: left;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0,51,102,0.09);
+  vertical-align: top;
+  font-size: 0.92rem;
+  color: #132033;
+}
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: rgba(0,51,102,0.03); }
+
+/* ── TAGS / PILLS ────────────────────────────────────────────────── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #eaf0f7;
+  color: #003366;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.tag-gold { background: rgba(199,155,44,0.15); color: #7a5800; }
+.tag-red { background: rgba(204,0,0,0.08); color: #cc0000; }
+.tag-green { background: rgba(0,153,76,0.10); color: #007a2e; }
+.tag-navy { background: rgba(0,51,102,0.12); color: #003366; }
+
+/* ── PHASE STEPS (workflow pages) ────────────────────────────────── */
+.phase-step {
+  padding: 28px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  box-shadow: 0 14px 36px rgba(0,26,64,0.08);
+  margin-bottom: 20px;
+}
+.phase-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: #003366;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0,26,64,0.20);
+}
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.phase-header h3 {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: #132033;
+}
+
+/* ── GRID HELPERS ────────────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 820px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* ── FOOTER ──────────────────────────────────────────────────────── */
+footer {
+  background: #003366;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.82rem;
+  padding: 36px 24px;
+  text-align: center;
+  line-height: 2;
+  border-top: 2px solid #001a40;
+}
+.footer-inner { max-width: 1180px; margin: 0 auto; }
+.footer-title {
+  color: rgba(255,255,255,0.82);
+  font-weight: 700;
+  font-size: 0.92rem;
+  margin-bottom: 4px;
+}
+footer a { color: rgba(106,171,221,0.90); text-decoration: none; font-weight: 600; }
+footer a:hover { text-decoration: underline; color: #fff; }
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin-top: 12px;
+}
+.footer-sep { color: rgba(255,255,255,0.20); }
+
+
+/* ═══ P2 PAGE-SPECIFIC STYLES ═══ */
+
+/* ── PAGE TOKENS ── */
+:root {
+  --aa-navy: #003366;
+  --aa-red: #cc0000;
+  --aa-silver: #d0d6de;
+  --aa-blue: #0066cc;
+  --aa-light: #f0f4f8;
+  --eng: #1a6b3a;
+  --prd: #7b3f8c;
+  --bus: #b85c00;
+  --eng-bg: #e8f5ec;
+  --prd-bg: #f2e8f7;
+  --bus-bg: #fdf0e0;
+  --nn: #cc0000;
+  --card-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  --radius: 8px;
+}
+
+/* ── MAIN WRAPPER ── */
+.page { max-width: 1180px; margin: 0 auto; padding: 24px 24px 48px; }
+.section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+  color: #666; margin: 28px 0 12px; padding-bottom: 6px;
+  border-bottom: 1px solid #dde3ea;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title::before { content: ''; width: 3px; height: 14px; border-radius: 2px; background: var(--aa-blue); display: inline-block; }
+
+/* ── EXTRA GRIDS ── */
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.grid-5    { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+
+/* ── CARD TITLE ── */
+.card-title { font-size: 12px; font-weight: 700; color: var(--aa-navy); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.card-title .icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+
+/* ── CONSTITUTION PILLARS ── */
+.pillar-eng { border-top: 3px solid var(--eng); }
+.pillar-prd { border-top: 3px solid var(--prd); }
+.pillar-bus { border-top: 3px solid var(--bus); }
+.pillar-eng .card-title { color: var(--eng); }
+.pillar-prd .card-title { color: var(--prd); }
+.pillar-bus .card-title { color: var(--bus); }
+.pill-eng { background: var(--eng-bg); color: var(--eng); border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 600; }
+.pill-prd { background: var(--prd-bg); color: var(--prd); border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 600; }
+.pill-bus { background: var(--bus-bg); color: var(--bus); border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 600; }
+
+/* ── LAW ITEMS ── */
+.law-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 6px 8px; border-radius: 5px; margin-bottom: 4px;
+  background: #fafbfc; border: 1px solid #e8ecf0;
+  transition: background 0.15s;
+}
+.law-item:hover { background: #f0f4fa; }
+.law-id { font-size: 10px; font-weight: 700; font-family: monospace; white-space: nowrap; min-width: 64px; }
+.law-id.eng { color: var(--eng); }
+.law-id.prd { color: var(--prd); }
+.law-id.bus { color: var(--bus); }
+.law-text { font-size: 11px; color: #3a4558; line-height: 1.4; }
+.nn-star { color: var(--nn); font-weight: 700; font-size: 10px; }
+
+/* ── WORKFLOW ── */
+.workflow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin: 8px 0; }
+.wf-step {
+  background: var(--aa-navy); color: #fff;
+  padding: 6px 12px; font-size: 11px; font-weight: 600;
+  border-radius: 4px; white-space: nowrap; position: relative;
+}
+.wf-step.red    { background: #c0392b; }
+.wf-step.green  { background: var(--eng); }
+.wf-step.blue   { background: var(--aa-blue); }
+.wf-step.purple { background: var(--prd); }
+.wf-step.orange { background: var(--bus); }
+.wf-step.gray   { background: #556; }
+.wf-arrow { font-size: 14px; color: #aab; margin: 0 4px; }
+
+/* ── AUTHORITY PYRAMID ── */
+.pyramid { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 0; }
+.pyr-tier {
+  border-radius: 5px; font-size: 11px; font-weight: 600;
+  text-align: center; padding: 8px 16px; color: #fff;
+  display: flex; flex-direction: column; align-items: center;
+}
+.pyr-tier .tier-label { font-size: 9px; font-weight: 400; opacity: 0.8; margin-top: 2px; }
+
+/* ── RAG TIERS ── */
+.rag-tier {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 10px; border-radius: 6px; margin-bottom: 6px;
+  background: #fafbfc; border-left: 3px solid #aab;
+}
+.rag-tier-num {
+  background: var(--aa-navy); color: #fff;
+  border-radius: 50%; width: 20px; height: 20px; min-width: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+}
+.rag-tier-body { flex: 1; }
+.rag-tier-type   { font-size: 11px; font-weight: 700; color: var(--aa-navy); }
+.rag-tier-detail { font-size: 10px; color: #556; margin-top: 2px; }
+
+/* ── SKILL ITEMS ── */
+.skill-item {
+  padding: 7px 10px; border-radius: 6px; border: 1px solid #e0e6f0;
+  background: #fafcff; margin-bottom: 5px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.skill-name    { font-size: 11px; font-weight: 700; color: var(--aa-navy); }
+.skill-laws    { display: flex; gap: 4px; flex-wrap: wrap; }
+.skill-law-tag { font-size: 9px; font-family: monospace; background: #e8ecf5; color: #345; padding: 1px 5px; border-radius: 3px; }
+.skill-trigger { font-size: 10px; color: #778; font-style: italic; }
+
+/* ── OPERATING MODES ── */
+.mode-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.mode-card { border-radius: 6px; padding: 12px; border: 1px solid #dde3ea; display: flex; flex-direction: column; gap: 6px; }
+.mode-card h4 { font-size: 12px; font-weight: 700; }
+.mode-card ul { list-style: none; padding: 0; }
+.mode-card ul li { font-size: 10px; color: #556; padding: 2px 0; }
+.mode-card ul li::before { content: '→ '; color: var(--aa-blue); }
+
+/* ── HIERARCHY LAYERS ── */
+.hier-layer {
+  background: #fff; border-radius: 6px; padding: 10px 16px;
+  border: 1px solid #dde; margin-bottom: 4px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.hier-layer-label { font-size: 12px; font-weight: 700; color: var(--aa-navy); }
+.hier-layer-sub   { font-size: 10px; color: #778; }
+.hier-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.hier-chip {
+  border-radius: 10px; padding: 2px 9px; font-size: 10px; font-weight: 600;
+  background: var(--aa-light); color: var(--aa-navy); border: 1px solid #c8d4e8;
+}
+
+/* ── AGENTIC FEEDBACK LOOP ── */
+.loop-diagram { display: flex; flex-direction: column; gap: 6px; padding: 8px; }
+.loop-step { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 6px; }
+.loop-step .actor { font-size: 10px; font-weight: 700; min-width: 50px; text-align: center; border-radius: 4px; padding: 3px 6px; }
+.loop-step .actor.agent  { background: #1a6b3a; color: #fff; }
+.loop-step .actor.system { background: var(--aa-blue); color: #fff; }
+.loop-step .actor.human  { background: var(--aa-red); color: #fff; }
+.loop-step .action { font-size: 11px; color: #334; flex: 1; }
+.loop-step .gate { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+.loop-step .gate.fail { background: #fde; color: #c00; }
+.loop-step .gate.pass { background: #dfd; color: #060; }
+
+/* ── TOKEN STATS ── */
+.stat-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0; }
+.stat { background: var(--aa-light); border: 1px solid #c8d8e8; border-radius: 6px; padding: 8px 14px; text-align: center; flex: 1; min-width: 100px; }
+.stat-val { font-size: 18px; font-weight: 700; color: var(--aa-navy); }
+.stat-lbl { font-size: 10px; color: #778; margin-top: 2px; }
+
+/* ── GUARDRAILS ── */
+.guardrail-item { display: flex; align-items: flex-start; gap: 8px; padding: 5px 8px; margin-bottom: 3px; border-radius: 5px; }
+.guardrail-item.never  { background: #fff0f0; border-left: 3px solid #e00; }
+.guardrail-item.always { background: #f0fff4; border-left: 3px solid #090; }
+.guardrail-icon { font-size: 12px; min-width: 16px; }
+.guardrail-text { font-size: 11px; }
+.guardrail-law  { font-size: 10px; font-family: monospace; color: #888; }
+
+/* ── AVATAR GRID ── */
+.avatar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.avatar-chip {
+  background: #fff; border: 1px solid #dde3ea; border-radius: 6px;
+  padding: 8px 10px; font-size: 11px; text-align: center;
+  display: flex; flex-direction: column; gap: 3px; align-items: center;
+}
+.avatar-chip .cat  { font-size: 9px; color: #778; }
+.avatar-chip .name { font-weight: 600; color: var(--aa-navy); }
+
+/* ── TABS ── */
+.tab-bar { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+.tab {
+  padding: 6px 14px; border-radius: 5px 5px 0 0; font-size: 11px; font-weight: 600;
+  cursor: pointer; border: 1px solid #dde3ea; border-bottom: none;
+  background: #e8ecf5; color: #556; transition: all 0.15s;
+}
+.tab.active { background: #fff; color: var(--aa-navy); border-color: #c8d4e8; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── INLINE MISC ── */
+.small-label { font-size: 10px; font-weight: 700; color: #778; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+.divider { border: none; border-top: 1px solid #e8ecf0; margin: 12px 0; }
+.mono { font-family: monospace; font-size: 11px; background: #f0f4f8; padding: 1px 5px; border-radius: 3px; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+
+/* ── BADGES (page-hero area) ── */
+.badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 2px 10px; font-size: 11px; color: #c8d8ea; }
+.badge.nn { background: rgba(204,0,0,0.3); border-color: rgba(204,0,0,0.5); color: #ffaaaa; }
+
+</style>
+</head>
+<body>
+
+
+<nav class="site-nav" aria-label="Site navigation">
+  <div class="nav-inner">
+    <a href="p1-landing.html" class="nav-brand" aria-label="Adoption Guide Home">
+      <div class="nav-brand-dot" aria-hidden="true"></div>
+      Hangar AI · Adoption Guide
+    </a>
+    <div class="nav-links">
+      <a href="workflows/index.html" class="nav-link">Workflows</a>
+      <a href="phase-gate-guide.html" class="nav-link">Phase Gate Guide</a>
+      <a href="p1-landing.html" class="btn-nav-home">← Guide Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="page-hero-wrap">
+    <div class="page-hero">
+      <div class="eyebrow">CONSTITUTIONAL FRAMEWORK</div>
+      <h1>The Constitutional AI Model</h1>
+      <p class="subtitle">How laws, gates, and personas work together to govern every AI-assisted task at American Airlines.</p>
+      <div class="persona-routing" aria-label="Intended audiences">
+        <span class="routing-chip">🎓 Coach ✅</span>
+        <span class="routing-chip">🏗️ Architect ✅</span>
+        <span class="routing-chip">⚙️ Engineer ✅</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+<div class="page">
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 1: IDENTITY & AUTHORITY HIERARCHY
+═══════════════════════════════════════════════════════════ -->
+<div class="section-title">1. Agent Identity &amp; Authority Hierarchy</div>
+<div class="grid-2" style="align-items:start;">
+
+  <!-- AGENT IDENTITY -->
+  <div class="card">
+    <div class="card-title">🤖 Agent Identity (AGENT.md)</div>
+    <div class="small-label">Persona</div>
+    <p style="font-size:12px; line-height:1.6; color:#334; margin-bottom:10px;">
+      <strong>Senior XP Engineer</strong> · 15+ years TDD, DDD, Agile · Teaching-first mindset · Socratic guidance pattern.
+      Primary role: <em>develop engineer judgment over time</em>, not create dependency.
+    </p>
+    <hr class="divider">
+    <div class="small-label">Authority Hierarchy (strict priority)</div>
+    <div class="pyramid">
+      <div class="pyr-tier" style="background:#cc0000; width:90%;">
+        Level 1 — Constitution Laws <span class="tier-label">ABSOLUTE · 3 domains · 168 laws</span>
+      </div>
+      <div class="pyr-tier" style="background:#003366; width:75%;">
+        Level 2 — AGENT.md Instructions <span class="tier-label">OPERATIONAL · guardrails &amp; protocols</span>
+      </div>
+      <div class="pyr-tier" style="background:#0066cc; width:60%;">
+        Level 3 — Project AGENTS.md <span class="tier-label">CONTEXTUAL · stack &amp; team overrides</span>
+      </div>
+      <div class="pyr-tier" style="background:#556677; width:45%;">
+        Level 4 — Hangar SDD Proposals <span class="tier-label">WORK CONTEXT · active feature specs</span>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="small-label">Conflict Resolution Rule</div>
+    <div class="workflow">
+      <div class="wf-step red">Constitution</div><div class="wf-arrow">▶</div>
+      <div class="wf-step blue">AGENT.md</div><div class="wf-arrow">▶</div>
+      <div class="wf-step gray">Project AGENTS.md</div><div class="wf-arrow">▶</div>
+      <div class="wf-step gray">Hangar SDD</div>
+    </div>
+  </div>
+
+  <!-- GUARDRAILS -->
+  <div class="card">
+    <div class="card-title">🛡️ Agent Guardrails</div>
+    <div class="small-label" style="color:#c00;">⛔ NEVER Do</div>
+    <div class="guardrail-item never"><span class="guardrail-icon">✗</span><div><div class="guardrail-text">Write code without a failing test first</div><div class="guardrail-law">ENG-4.1</div></div></div>
+    <div class="guardrail-item never"><span class="guardrail-icon">✗</span><div><div class="guardrail-text">Skip complexity verification</div><div class="guardrail-law">ENG-3.2</div></div></div>
+    <div class="guardrail-item never"><span class="guardrail-icon">✗</span><div><div class="guardrail-text">Merge architectural layers</div><div class="guardrail-law">ENG-2.3</div></div></div>
+    <div class="guardrail-item never"><span class="guardrail-icon">✗</span><div><div class="guardrail-text">Create untraceable changes</div><div class="guardrail-law">PRD-5.1</div></div></div>
+    <div class="guardrail-item never"><span class="guardrail-icon">✗</span><div><div class="guardrail-text">Assume requirements without validation</div><div class="guardrail-law">PRD-3.2</div></div></div>
+    <div class="guardrail-item never"><span class="guardrail-icon">✗</span><div><div class="guardrail-text">Bypass security controls or commit secrets</div><div class="guardrail-law">BUS-7.1 / ENG-5.2</div></div></div>
+    <hr class="divider">
+    <div class="small-label" style="color:#090;">✅ ALWAYS Do</div>
+    <div class="guardrail-item always"><span class="guardrail-icon">✓</span><div><div class="guardrail-text">Cite constitutional reference when enforcing</div><div class="guardrail-law">AGENT.md 2.1</div></div></div>
+    <div class="guardrail-item always"><span class="guardrail-icon">✓</span><div><div class="guardrail-text">Follow Atomic TDD cycle RED→GREEN→REFACTOR</div><div class="guardrail-law">ENG-4.1</div></div></div>
+    <div class="guardrail-item always"><span class="guardrail-icon">✓</span><div><div class="guardrail-text">Think in vertical slices end-to-end</div><div class="guardrail-law">ENG-2.3</div></div></div>
+    <div class="guardrail-item always"><span class="guardrail-icon">✓</span><div><div class="guardrail-text">Validate product/business problem before technical</div><div class="guardrail-law">PRD-1.1</div></div></div>
+    <div class="guardrail-item always"><span class="guardrail-icon">✓</span><div><div class="guardrail-text">Document decisions in Hangar SDD</div><div class="guardrail-law">PRD-5.1</div></div></div>
+    <hr class="divider">
+    <div class="small-label">Guardrail Enforcement Protocol</div>
+    <div class="workflow">
+      <div class="wf-step red">Stop</div><div class="wf-arrow">→</div>
+      <div class="wf-step orange">Cite</div><div class="wf-arrow">→</div>
+      <div class="wf-step blue">Explain</div><div class="wf-arrow">→</div>
+      <div class="wf-step green">Guide</div><div class="wf-arrow">→</div>
+      <div class="wf-step gray">Verify</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 2: THREE CONSTITUTIONS
+═══════════════════════════════════════════════════════════ -->
+<div class="section-title">2. The Three Constitutions — Laws Registry (laws/index.yaml)</div>
+<div class="grid-3">
+
+  <!-- ENGINEERING -->
+  <div class="card pillar-eng">
+    <div class="card-title">
+      <span class="icon" style="background:var(--eng-bg);">🔧</span>
+      Engineering Constitution
+      <span class="pill-eng">ENG · 67 laws</span>
+    </div>
+    <div class="small-label">Question: HOW do we build?</div>
+    <p style="font-size:11px; color:#445; margin-bottom:10px;">Code quality, testing, architecture, DevOps, security, resiliency.</p>
+    <div class="small-label">Articles (13)</div>
+    <div style="font-size:10px; color:#556; line-height:1.8;">
+      I Foundational · II Architecture &amp; Design · III Code Quality ·
+      IV Testing · V DevOps · VI Security &amp; Privacy · VII Resiliency ·
+      VIII Platform Integration · IX AI-Engineer Collaboration ·
+      X Constitution Governance · XI Spec-Driven Development ·
+      XII Agentic Compliance Feedback · XIII Artifact Rendering
+    </div>
+    <hr class="divider">
+    <div class="small-label">Non-Negotiable Laws ⛔</div>
+    <div class="law-item"><span class="law-id eng">ENG-4.1</span><div><div class="law-text">Atomic TDD — all code via RED→GREEN→REFACTOR</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id eng">ENG-6.1</span><div><div class="law-text">Security by Design — built-in, not bolted-on</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id eng">ENG-6.4</span><div><div class="law-text">Data Protection — PII by design</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id eng">ENG-6.7</span><div><div class="law-text">Audit Trail — all actions logged and traceable</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id eng">ENG-10.1</span><div><div class="law-text">Constitution Metrics Collection</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id eng">ENG-11.1</span><div><div class="law-text">Hangar SDD Law — PROPOSE→IMPLEMENT→ARCHIVE</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id eng">ENG-12.1</span><div><div class="law-text">Agentic Feedback Loop — SonarQube gate required</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id eng">ENG-13.1</span><div><div class="law-text">Artifact Rendering Standard — HTML before stakeholder review</div><span class="nn-star">⛔ NN</span></div></div>
+    <hr class="divider">
+    <div class="small-label">Priority Hierarchy (ENG-1.1)</div>
+    <div style="font-size:10px; color:#334; line-height:1.9;">
+      1 Security → 2 Correctness → 3 Reliability → 4 Maintainability → 5 Performance → 6 DX
+    </div>
+    <hr class="divider">
+    <div class="small-label">Key Thresholds</div>
+    <div style="font-size:10px; display:grid; grid-template-columns:1fr 1fr; gap:3px; color:#334;">
+      <span>Cyclomatic complexity</span><span style="font-weight:700;">≤ 10</span>
+      <span>Cognitive complexity</span><span style="font-weight:700;">≤ 7</span>
+      <span>Test coverage</span><span style="font-weight:700;">≥ 90%</span>
+      <span>Method length</span><span style="font-weight:700;">≤ 20 lines</span>
+      <span>Unit tests</span><span style="font-weight:700;">70–80%</span>
+      <span>Integration tests</span><span style="font-weight:700;">15–25%</span>
+      <span>E2E tests</span><span style="font-weight:700;">5–10%</span>
+    </div>
+  </div>
+
+  <!-- PRODUCT -->
+  <div class="card pillar-prd">
+    <div class="card-title">
+      <span class="icon" style="background:var(--prd-bg);">🎯</span>
+      Product Constitution
+      <span class="pill-prd">PRD · 49 laws</span>
+    </div>
+    <div class="small-label">Question: WHAT do we build?</div>
+    <p style="font-size:11px; color:#445; margin-bottom:10px;">User journeys, discovery, roadmaps, metrics, experimentation.</p>
+    <div class="small-label">Articles (9)</div>
+    <div style="font-size:10px; color:#556; line-height:1.8;">
+      I Foundational · II Discovery · III User Journey ·
+      IV Roadmap · V MVP &amp; Experimentation · VI Product-Market Fit ·
+      VII Prioritization · VIII Metrics &amp; Analytics · IX Stakeholder &amp; Communication
+    </div>
+    <hr class="divider">
+    <div class="small-label">Non-Negotiable Laws ⛔</div>
+    <div class="law-item"><span class="law-id prd">PRD-1.2</span><div><div class="law-text">Problem-First — no feature without validated user problem</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id prd">PRD-1.5</span><div><div class="law-text">Evidence-Based Decisions — no HiPPO, data required</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id prd">PRD-2.5</span><div><div class="law-text">Discovery Stage-Gate — 6-stage A→F evidence gates</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id prd">PRD-5.1</span><div><div class="law-text">MVP Law — ship minimum viable, learn, iterate</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id prd">PRD-6.2</span><div><div class="law-text">Retention Over Acquisition — retain before grow</div><span class="nn-star">⛔ NN</span></div></div>
+    <hr class="divider">
+    <div class="small-label">Foundational Laws</div>
+    <div class="law-item"><span class="law-id prd">PRD-1.1</span><div class="law-text">Customer-Centric — decisions anchored in customer needs</div></div>
+    <div class="law-item"><span class="law-id prd">PRD-1.3</span><div class="law-text">Outcome-Driven — measured by outcomes not feature count</div></div>
+    <div class="law-item"><span class="law-id prd">PRD-1.4</span><div class="law-text">Continuous Discovery — weekly customer touchpoints</div></div>
+    <hr class="divider">
+    <div class="small-label">Evidence Strength (PRD-1.5)</div>
+    <div style="font-size:10px; display:grid; grid-template-columns:auto 1fr; gap:3px 8px; color:#334;">
+      <span style="color:var(--eng); font-weight:700;">Strong</span><span>≥5 interviews + quantitative data → Proceed</span>
+      <span style="color:var(--bus); font-weight:700;">Moderate</span><span>3–4 interviews OR quant only → Proceed w/ risk</span>
+      <span style="color:var(--nn); font-weight:700;">Weak</span><span>&lt;3 interviews, no data → Must document plan</span>
+    </div>
+  </div>
+
+  <!-- BUSINESS -->
+  <div class="card pillar-bus">
+    <div class="card-title">
+      <span class="icon" style="background:var(--bus-bg);">✈️</span>
+      Business Constitution
+      <span class="pill-bus">BUS · 55 laws</span>
+    </div>
+    <div class="small-label">Question: WHY and under what constraints?</div>
+    <p style="font-size:11px; color:#445; margin-bottom:10px;">Compliance, data governance, privacy, risk, audit, aviation regulations.</p>
+    <div class="small-label">Articles (10)</div>
+    <div style="font-size:10px; color:#556; line-height:1.8;">
+      I Foundational · II Compliance Framework · III Data Governance ·
+      IV Privacy · V Security Governance · VI Risk Management ·
+      VII Audit &amp; Evidence · VIII Vendor &amp; Third-Party ·
+      IX Incident Management · X Business Continuity
+    </div>
+    <hr class="divider">
+    <div class="small-label">Non-Negotiable Laws ⛔</div>
+    <div class="law-item"><span class="law-id bus">BUS-1.1</span><div><div class="law-text">Priority Hierarchy — Legal always first, no schedule overrides</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id bus">BUS-3.6</span><div class="law-text">Monetary Precision Law</div></div>
+    <div class="law-item"><span class="law-id bus">BUS-4.3</span><div class="law-text">Data Subject Rights Law</div></div>
+    <div class="law-item"><span class="law-id bus">BUS-7.1</span><div><div class="law-text">Business Audit Trail — financial/compliance actions logged</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id bus">BUS-9.3</span><div><div class="law-text">Breach Notification — reported per regulation</div><span class="nn-star">⛔ NN</span></div></div>
+    <hr class="divider">
+    <div class="small-label">Aviation Non-Negotiable</div>
+    <div class="law-item"><span class="law-id bus">BUS-2.1</span><div class="law-text">FAA Compliance — FAR Part 121, DO-178C, DO-326A</div></div>
+    <div class="law-item"><span class="law-id bus">BUS-2.2</span><div class="law-text">TSA Security Requirements</div></div>
+    <div class="law-item"><span class="law-id bus">BUS-2.3</span><div class="law-text">DOT Consumer Protection &amp; Refund Timelines</div></div>
+    <div class="law-item"><span class="law-id bus">BUS-3.1</span><div class="law-text">PNR Data Retention — 7 years</div></div>
+    <div class="law-item"><span class="law-id bus">BUS-6.1</span><div class="law-text">Dangerous Goods Compliance</div></div>
+    <hr class="divider">
+    <div class="small-label">BUS-1.1 Priority Order</div>
+    <div style="font-size:10px; color:#334; line-height:1.9;">
+      1 Legal → 2 Safety → 3 Privacy → 4 Security → 5 Business Continuity → 6 Efficiency
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 3: CONSTITUTIONAL HIERARCHY (ADOPTION LAYERS)
+═══════════════════════════════════════════════════════════ -->
+<div class="section-title">3. Constitutional Hierarchy — Adoption Layers</div>
+<div class="card">
+  <div style="font-size:11px; color:#556; margin-bottom:12px;">Lower layers <strong>extend</strong> upper layers — they may never override them.</div>
+  <div class="hier-layer" style="border-left: 4px solid #cc0000;">
+    <div>
+      <div class="hier-layer-label">BASE CONSTITUTIONS</div>
+      <div class="hier-layer-sub">Apply to ALL AA software · 168 laws across 3 domains</div>
+    </div>
+    <div class="hier-chips">
+      <span class="hier-chip" style="background:var(--eng-bg); color:var(--eng);">Engineering</span>
+      <span class="hier-chip" style="background:var(--prd-bg); color:var(--prd);">Product</span>
+      <span class="hier-chip" style="background:var(--bus-bg); color:var(--bus);">Business</span>
+    </div>
+  </div>
+  <div class="hier-layer" style="border-left: 4px solid #b85c00;">
+    <div>
+      <div class="hier-layer-label">INDUSTRY ADOPTION</div>
+      <div class="hier-layer-sub">avatars/industry/ · Aviation-specific compliance requirements</div>
+    </div>
+    <div class="hier-chips">
+      <span class="hier-chip">FAA Part 121</span>
+      <span class="hier-chip">DO-178C</span>
+      <span class="hier-chip">DO-326A</span>
+      <span class="hier-chip">TSA</span>
+      <span class="hier-chip">DOT</span>
+    </div>
+  </div>
+  <div class="hier-layer" style="border-left: 4px solid #7b3f8c;">
+    <div>
+      <div class="hier-layer-label">PRODUCT-TYPE ADOPTION</div>
+      <div class="hier-layer-sub">avatars/product-type/ · 23 product domains · Domain-specific patterns &amp; rules</div>
+    </div>
+    <div class="hier-chips">
+      <span class="hier-chip">Booking</span><span class="hier-chip">Cargo</span><span class="hier-chip">Loyalty</span>
+      <span class="hier-chip">Check-In</span><span class="hier-chip">Airport Ops</span><span class="hier-chip">Customer Svc</span>
+      <span class="hier-chip">Manage Trip</span><span class="hier-chip">Crew Recovery</span><span class="hier-chip">+15 more</span>
+    </div>
+  </div>
+  <div class="hier-layer" style="border-left: 4px solid #0066cc;">
+    <div>
+      <div class="hier-layer-label">TECHNOLOGY ADOPTION</div>
+      <div class="hier-layer-sub">avatars/technology/ · 34 tech stacks · Stack-specific implementations</div>
+    </div>
+    <div class="hier-chips">
+      <span class="hier-chip">Java/Spring</span><span class="hier-chip">React/TS</span><span class="hier-chip">Python/FastAPI</span>
+      <span class="hier-chip">.NET Core</span><span class="hier-chip">Angular</span><span class="hier-chip">iOS/Android</span>
+      <span class="hier-chip">ML/Analytics</span><span class="hier-chip">LangChain</span><span class="hier-chip">+26 more</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 4: AGENT OPERATING MODES & WORKFLOWS
+═══════════════════════════════════════════════════════════ -->
+<div class="section-title">4. Agent Operating Modes &amp; Workflows</div>
+
+<!-- Operating Modes -->
+<div class="card" style="margin-bottom:16px;">
+  <div class="card-title">🔄 Agent Operating Modes (AGENT.md §4)</div>
+  <div class="workflow" style="margin-bottom:14px;">
+    <div class="wf-step blue">Discovery</div><div class="wf-arrow">→</div>
+    <div class="wf-step purple">Planning</div><div class="wf-arrow">→</div>
+    <div class="wf-step green">Implementation</div><div class="wf-arrow">→</div>
+    <div class="wf-step gray">Review</div>
+  </div>
+  <div class="mode-grid">
+    <div class="mode-card" style="border-color:#0066cc; border-top:2px solid #0066cc;">
+      <h4 style="color:#0066cc;">Discovery Mode</h4>
+      <div style="font-size:10px; color:#778; margin-bottom:4px;">Validate problems, synthesize research</div>
+      <ul>
+        <li>User Journey Mapping</li>
+        <li>Business Domain Modeling</li>
+        <li>Business Rules identification</li>
+      </ul>
+      <div style="font-size:10px; color:#445; margin-top:4px;"><strong>Output:</strong> Validated problem statements, journey maps, domain insights</div>
+    </div>
+    <div class="mode-card" style="border-color:var(--prd); border-top:2px solid var(--prd);">
+      <h4 style="color:var(--prd);">Planning Mode</h4>
+      <div style="font-size:10px; color:#778; margin-bottom:4px;">Roadmaps, specs, implementation plans</div>
+      <ul>
+        <li>Roadmapping (Now/Next/Later)</li>
+        <li>Executable Spec (Gherkin/BDD)</li>
+        <li>Vertical Slice planning</li>
+      </ul>
+      <div style="font-size:10px; color:#445; margin-top:4px;"><strong>Output:</strong> Roadmaps, feature specs, slice plans</div>
+    </div>
+    <div class="mode-card" style="border-color:var(--eng); border-top:2px solid var(--eng);">
+      <h4 style="color:var(--eng);">Implementation Mode</h4>
+      <div style="font-size:10px; color:#778; margin-bottom:4px;">Build via test-driven development</div>
+      <ul>
+        <li>Atomic TDD (8-step cycle)</li>
+        <li>Vertical Slice Development</li>
+        <li>Business Domain Modeling</li>
+      </ul>
+      <div style="font-size:10px; color:#445; margin-top:4px;"><strong>Output:</strong> Tested, working software in vertical slices</div>
+    </div>
+    <div class="mode-card" style="border-color:#556; border-top:2px solid #556;">
+      <h4 style="color:#556;">Review Mode</h4>
+      <div style="font-size:10px; color:#778; margin-bottom:4px;">Verify quality &amp; constitutional compliance</div>
+      <ul>
+        <li>Code Review (compliance check)</li>
+        <li>Executable Spec verification</li>
+        <li>Business Rules compliance</li>
+      </ul>
+      <div style="font-size:10px; color:#445; margin-top:4px;"><strong>Output:</strong> Review feedback with constitutional citations</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2" style="align-items:start;">
+
+  <!-- ATOMIC TDD WORKFLOW -->
+  <div class="card">
+    <div class="card-title">🔴 Atomic TDD Cycle — ENG-4.1 ⛔</div>
+    <div style="font-size:11px; color:#445; margin-bottom:10px;">8-step cycle. One test at a time. No batching. No skipping steps.</div>
+    <div style="display:flex; flex-wrap:wrap; gap:4px; align-items:center; margin-bottom:10px;">
+      <div class="wf-step red">RED</div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step green">GREEN</div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step blue">REFACTOR</div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step blue">VERIFY</div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step gray">DOCUMENT</div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step gray">COMMIT</div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step gray">PUSH</div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step red" style="font-size:9px;">REPEAT ↺</div>
+    </div>
+    <div class="small-label">Test Pyramid (ENG-4.2)</div>
+    <div style="font-size:11px; margin-top:4px;">
+      <div style="display:flex; align-items:center; gap:6px; margin-bottom:3px;">
+        <div style="width:12px; height:12px; background:#1a6b3a; border-radius:2px;"></div>
+        <span style="color:#334;">Unit Tests: <strong>70–80%</strong> — fast, no Spring context, isolated</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; margin-bottom:3px;">
+        <div style="width:12px; height:12px; background:#0066cc; border-radius:2px;"></div>
+        <span style="color:#334;">Integration Tests: <strong>15–25%</strong> — controller layer, database</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <div style="width:12px; height:12px; background:#b85c00; border-radius:2px;"></div>
+        <span style="color:#334;">E2E Tests: <strong>5–10%</strong> — critical user journeys only</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HANGAR SDD LIFECYCLE -->
+  <div class="card">
+    <div class="card-title">📋 Hangar SDD Lifecycle — ENG-11.1 ⛔</div>
+    <div style="font-size:11px; color:#445; margin-bottom:10px;">Every project MUST have <span class="mono">hangar-ai-specs/</span>. Significant work requires an approved <span class="mono">PROPOSAL.md</span> before implementation.</div>
+    <div class="workflow" style="margin-bottom:12px;">
+      <div class="wf-step purple">PROPOSE</div><div class="wf-arrow">→</div>
+      <div class="wf-step green">IMPLEMENT</div><div class="wf-arrow">→</div>
+      <div class="wf-step gray">ARCHIVE</div>
+    </div>
+    <div style="font-size:10px; display:grid; grid-template-columns:auto 1fr auto; gap:4px 12px; color:#334; align-items:start;">
+      <span style="font-weight:700; color:var(--prd);">PROPOSE</span><span>Scaffold <span class="mono">changes/[verb-noun-id]/</span></span><span><span class="mono">PROPOSAL.md + tasks.md</span></span>
+      <span style="font-weight:700; color:var(--eng);">IMPLEMENT</span><span>Execute tasks; update PROGRESS.md</span><span><span class="mono">Working code</span></span>
+      <span style="font-weight:700; color:#556;">ARCHIVE</span><span>Move to <span class="mono">archive/YYYY-MM-DD-[id]/</span></span><span><span class="mono">Completed record</span></span>
+    </div>
+    <hr class="divider">
+    <div class="small-label">SDD Folder Contract</div>
+    <div style="font-size:10px; font-family:monospace; background:#f0f4f8; padding:8px; border-radius:5px; line-height:1.7; color:#334;">
+      hangar-ai-specs/<br>
+      &nbsp;&nbsp;changes/[verb-noun-id]/<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;PROPOSAL.md &nbsp;&nbsp;&nbsp;← problem + law citations (ENG-11.2)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;tasks.md &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← work breakdown + checkboxes<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;PROGRESS.md &nbsp;&nbsp;&nbsp;← phase tracking<br>
+      &nbsp;&nbsp;archive/YYYY-MM-DD-[id]/<br>
+      &nbsp;&nbsp;specs/[domain]/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← current system truth (ENG-11.3)
+    </div>
+  </div>
+</div>
+
+<!-- FULL SDD LIFECYCLE WITH FEEDBACK -->
+<div class="card" style="margin-top:16px;">
+  <div class="card-title">🔁 Full Spec-Driven Development Lifecycle (SDD)</div>
+  <div style="display:flex; align-items:center; gap:0; flex-wrap:wrap; margin:10px 0;">
+    <div class="wf-step blue">Discovery</div><div class="wf-arrow">→</div>
+    <div class="wf-step purple">Specification</div><div class="wf-arrow">→</div>
+    <div class="wf-step orange">Planning</div><div class="wf-arrow">→</div>
+    <div class="wf-step green">Implementation</div><div class="wf-arrow">→</div>
+    <div class="wf-step gray">Review</div><div class="wf-arrow">→</div>
+    <div class="wf-step red">Deployment</div>
+    <div class="wf-arrow" style="font-size:10px; color:#aab; margin:0 8px;">↺ Feedback Loop</div>
+  </div>
+  <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:8px; font-size:10px;">
+    <div style="background:#e8f0fc; border-radius:5px; padding:6px;"><strong>Discovery</strong><br>Problem validation · User journey · Domain modeling</div>
+    <div style="background:#f2e8f7; border-radius:5px; padding:6px;"><strong>Specification</strong><br>PROPOSAL.md · Gherkin specs · Acceptance criteria</div>
+    <div style="background:#fdf0e0; border-radius:5px; padding:6px;"><strong>Planning</strong><br>Roadmap · Vertical slices · tasks.md</div>
+    <div style="background:#e8f5ec; border-radius:5px; padding:6px;"><strong>Implementation</strong><br>Atomic TDD · Vertical slice dev · Domain model</div>
+    <div style="background:#f5f5f5; border-radius:5px; padding:6px;"><strong>Review</strong><br>Code review · SonarQube gate · Compliance check</div>
+    <div style="background:#fff0f0; border-radius:5px; padding:6px;"><strong>Deployment</strong><br>CI/CD · Evidence archive · Observability</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 5: RAG MULTI-INDEX ARCHITECTURE
+═══════════════════════════════════════════════════════════ -->
+<div class="section-title">5. Multi-RAG Architecture — Retrieval System</div>
+<div class="grid-2" style="align-items:start;">
+
+  <!-- RAG REGISTRIES -->
+  <div class="card">
+    <div class="card-title">📑 Multi-RAG Registries</div>
+    <div style="font-size:11px; color:#445; margin-bottom:10px;">Four indexes enable AI agents to resolve laws, skills, and context-specific patterns.</div>
+    <div class="rag-tier">
+      <div class="rag-tier-num" style="background:var(--eng);">1</div>
+      <div class="rag-tier-body">
+        <div class="rag-tier-type">Laws Index — <span class="mono">laws/index.yaml</span></div>
+        <div class="rag-tier-detail">Master law catalog · 168 laws · law IDs, titles, non-negotiable flags · version 2.0.0</div>
+      </div>
+    </div>
+    <div class="rag-tier">
+      <div class="rag-tier-num" style="background:var(--prd);">2</div>
+      <div class="rag-tier-body">
+        <div class="rag-tier-type">Domain YAMLs — <span class="mono">laws/{domain}/_domain.yaml</span></div>
+        <div class="rag-tier-detail">Law metadata per domain · summaries, non-negotiable status, article titles</div>
+      </div>
+    </div>
+    <div class="rag-tier">
+      <div class="rag-tier-num" style="background:var(--bus);">3</div>
+      <div class="rag-tier-body">
+        <div class="rag-tier-type">Skills Indices — <span class="mono">skills-by-domain/{domain}/index.yaml</span></div>
+        <div class="rag-tier-detail">Skill-to-law mappings · trigger phrases · 5 skill domains · 29+ skills</div>
+      </div>
+    </div>
+    <div class="rag-tier">
+      <div class="rag-tier-num" style="background:var(--aa-blue);">4</div>
+      <div class="rag-tier-body">
+        <div class="rag-tier-type">Avatar RAG Index — <span class="mono">avatars/AVATAR-RAG-INDEX.yaml</span></div>
+        <div class="rag-tier-detail">Context specialization · selective doc loading · token-optimized per query</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RAG QUERY TIERS -->
+  <div class="card">
+    <div class="card-title">🔍 RAG Query Resolution — 4-Tier Search</div>
+    <div style="font-size:10px; color:#778; margin-bottom:10px;">
+      Model: <span class="mono">text-embedding-3-large</span> · Recall target: 95% · Precision: 90%
+    </div>
+    <div class="rag-tier" style="border-left-color:var(--eng);">
+      <div class="rag-tier-num" style="background:var(--eng);">T1</div>
+      <div class="rag-tier-body">
+        <div class="rag-tier-type">Exact Law Reference</div>
+        <div class="rag-tier-detail">e.g. "PRD-3.1" → Load specific law + example · Highest confidence</div>
+      </div>
+    </div>
+    <div class="rag-tier" style="border-left-color:#0066cc;">
+      <div class="rag-tier-num" style="background:#0066cc;">T2</div>
+      <div class="rag-tier-body">
+        <div class="rag-tier-type">Semantic Topic Query</div>
+        <div class="rag-tier-detail">e.g. "How do we discover customer needs?" → Load PRD-1.1 + guidance · ~750 tokens</div>
+      </div>
+    </div>
+    <div class="rag-tier" style="border-left-color:var(--prd);">
+      <div class="rag-tier-num" style="background:var(--prd);">T3</div>
+      <div class="rag-tier-body">
+        <div class="rag-tier-type">Use-Case Scenario</div>
+        <div class="rag-tier-detail">e.g. "First-time booking workflow" → Load use-case + manifest · 1200–1500 tokens</div>
+      </div>
+    </div>
+    <div class="rag-tier" style="border-left-color:#aaa;">
+      <div class="rag-tier-num" style="background:#888;">T4</div>
+      <div class="rag-tier-body">
+        <div class="rag-tier-type">Ambiguous Fallback</div>
+        <div class="rag-tier-detail">Load guidance.md + offer clarification · Offer domain choices</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="small-label">Token Budget (per query)</div>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-val">750</div><div class="stat-lbl">tokens / law example</div></div>
+      <div class="stat"><div class="stat-val">1,350</div><div class="stat-lbl">tokens / use-case</div></div>
+      <div class="stat"><div class="stat-val">3–4K</div><div class="stat-lbl">total / query</div></div>
+      <div class="stat" style="border-color:var(--eng); background:var(--eng-bg);"><div class="stat-val" style="color:var(--eng);">67%</div><div class="stat-lbl">token reduction vs full avatar</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILL DISCOVERY PROTOCOL -->
+<div class="card" style="margin-top:16px;">
+  <div class="card-title">🎯 Skill Discovery &amp; Invocation Protocol (AGENT.md §6)</div>
+  <div class="grid-2" style="align-items:start;">
+    <div>
+      <div class="small-label">Intent Matching Priority</div>
+      <div class="rag-tier" style="border-left-color:var(--eng);">
+        <div class="rag-tier-num" style="background:var(--eng);">P1</div>
+        <div class="rag-tier-body">
+          <div class="rag-tier-type">Exact trigger phrase match</div>
+          <div class="rag-tier-detail">Highest confidence — from skill YAML frontmatter triggers.phrases</div>
+        </div>
+      </div>
+      <div class="rag-tier" style="border-left-color:#0066cc;">
+        <div class="rag-tier-num" style="background:#0066cc;">P2</div>
+        <div class="rag-tier-body">
+          <div class="rag-tier-type">Semantic similarity to triggers</div>
+          <div class="rag-tier-detail">High confidence — matches intent against skill category &amp; purpose</div>
+        </div>
+      </div>
+      <div class="rag-tier" style="border-left-color:var(--prd);">
+        <div class="rag-tier-num" style="background:var(--prd);">P3</div>
+        <div class="rag-tier-body">
+          <div class="rag-tier-type">Law-concept match</div>
+          <div class="rag-tier-detail">Medium — domain concepts map to law IDs</div>
+        </div>
+      </div>
+      <div class="rag-tier" style="border-left-color:#aaa;">
+        <div class="rag-tier-num" style="background:#888;">P4</div>
+        <div class="rag-tier-body">
+          <div class="rag-tier-type">Category match</div>
+          <div class="rag-tier-detail">Low confidence — offer choices from skill domain</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="small-label">Skill Chaining — Example: New Feature</div>
+      <div class="workflow" style="flex-direction:column; align-items:flex-start; gap:6px;">
+        <div style="display:flex; align-items:center; gap:6px; width:100%;">
+          <div class="wf-step blue" style="width:180px; text-align:center;">User Journey Mapping</div>
+          <span style="font-size:10px; color:#778;">→ Understand the problem</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; width:100%;">
+          <div class="wf-step purple" style="width:180px; text-align:center;">Executable Spec</div>
+          <span style="font-size:10px; color:#778;">→ Define acceptance criteria</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; width:100%;">
+          <div class="wf-step orange" style="width:180px; text-align:center;">Vertical Slice Dev</div>
+          <span style="font-size:10px; color:#778;">→ Plan implementation slices</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; width:100%;">
+          <div class="wf-step green" style="width:180px; text-align:center;">Atomic TDD</div>
+          <span style="font-size:10px; color:#778;">→ Implement each slice</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; width:100%;">
+          <div class="wf-step gray" style="width:180px; text-align:center;">Code Review</div>
+          <span style="font-size:10px; color:#778;">→ Verify constitutional compliance</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 6: AGENT SKILLS BY DOMAIN
+═══════════════════════════════════════════════════════════ -->
+<div class="section-title">6. Agent Skills — 29+ Modular Capabilities (5 Domains)</div>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('dev-practices', this)">Development Practices (11)</div>
+  <div class="tab" onclick="showTab('discovery', this)">Discovery &amp; Research (4)</div>
+  <div class="tab" onclick="showTab('product', this)">Product Planning (3)</div>
+  <div class="tab" onclick="showTab('platform', this)">Platform Engineering (7+)</div>
+  <div class="tab" onclick="showTab('mlai', this)">ML / AI (9)</div>
+</div>
+
+<div id="tab-dev-practices" class="tab-content active">
+  <div class="grid-2" style="align-items:start;">
+    <div>
+      <div class="skill-item"><div class="skill-name">04 Business Domain Modeling</div><div class="skill-laws"><span class="skill-law-tag">ENG-2.1</span><span class="skill-law-tag">ENG-2.4</span><span class="skill-law-tag">ENG-3.4</span></div><div class="skill-trigger">triggers: domain model, aggregates, bounded contexts, DDD, context map</div></div>
+      <div class="skill-item"><div class="skill-name">05 Business Rules</div><div class="skill-laws"><span class="skill-law-tag">ENG-2.1</span><span class="skill-law-tag">BUS-2.2</span></div><div class="skill-trigger">triggers: business rules, constraints, compliance requirements</div></div>
+      <div class="skill-item"><div class="skill-name">06 Atomic TDD ⛔</div><div class="skill-laws"><span class="skill-law-tag">ENG-4.1</span><span class="skill-law-tag">ENG-4.2</span><span class="skill-law-tag">ENG-4.3</span><span class="skill-law-tag">ENG-4.4</span></div><div class="skill-trigger">triggers: test, testing, TDD, write tests, red-green-refactor, test first</div></div>
+      <div class="skill-item"><div class="skill-name">07 Vertical Slice Development</div><div class="skill-laws"><span class="skill-law-tag">ENG-2.3</span><span class="skill-law-tag">ENG-1.4</span></div><div class="skill-trigger">triggers: vertical slice, break down feature, smallest deployable, incremental</div></div>
+      <div class="skill-item"><div class="skill-name">08 Code Review</div><div class="skill-laws"><span class="skill-law-tag">ENG-3.1</span><span class="skill-law-tag">ENG-3.2</span><span class="skill-law-tag">ENG-3.3</span><span class="skill-law-tag">ENG-3.4</span><span class="skill-law-tag">ENG-6.5</span></div><div class="skill-trigger">triggers: code review, PR review, check compliance, review this code</div></div>
+      <div class="skill-item"><div class="skill-name">09 Refactoring</div><div class="skill-laws"><span class="skill-law-tag">ENG-1.3</span><span class="skill-law-tag">ENG-3.1</span><span class="skill-law-tag">ENG-3.8</span></div><div class="skill-trigger">triggers: refactor, code smells, cyclomatic complexity, SOLID principles</div></div>
+    </div>
+    <div>
+      <div class="skill-item"><div class="skill-name">11 Mutation Testing</div><div class="skill-laws"><span class="skill-law-tag">ENG-4.1</span><span class="skill-law-tag">ENG-4.2</span><span class="skill-law-tag">ENG-4.11</span></div><div class="skill-trigger">triggers: mutation testing, test quality, PIT, mutation score</div></div>
+      <div class="skill-item"><div class="skill-name">25 UX Design</div><div class="skill-laws"><span class="skill-law-tag">PRD-3.1</span><span class="skill-law-tag">PRD-3.4</span></div><div class="skill-trigger">triggers: UX design, user interface, accessibility, design system</div></div>
+      <div class="skill-item"><div class="skill-name">26 Design to Code</div><div class="skill-laws"><span class="skill-law-tag">ENG-2.3</span><span class="skill-law-tag">PRD-3.4</span></div><div class="skill-trigger">triggers: design to code, Figma to React, design handoff</div></div>
+      <div class="skill-item"><div class="skill-name">Workflow Authoring</div><div class="skill-laws"><span class="skill-law-tag">ENG-11.1</span><span class="skill-law-tag">ENG-10.1</span><span class="skill-law-tag">ENG-12.1</span></div><div class="skill-trigger">triggers: create a workflow, governed workflow, new workflow</div></div>
+      <div class="skill-item"><div class="skill-name">Artifact HTML Rendering ⛔</div><div class="skill-laws"><span class="skill-law-tag">ENG-13.1</span><span class="skill-law-tag">ENG-13.2</span><span class="skill-law-tag">ENG-13.3</span></div><div class="skill-trigger">triggers: render artifact, HTML artifact, render proposal, governance artifact</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-discovery" class="tab-content">
+  <div class="grid-2" style="align-items:start;">
+    <div>
+      <div class="skill-item"><div class="skill-name">Hangar SDD Spec Governance ⛔</div><div class="skill-laws"><span class="skill-law-tag">ENG-11.1</span><span class="skill-law-tag">ENG-11.2</span><span class="skill-law-tag">BUS-7.1</span><span class="skill-law-tag">ENG-4.1</span><span class="skill-law-tag">PRD-2.1</span></div><div class="skill-trigger">triggers: new feature, start a change, scaffold a proposal, archive this work, check compliance</div></div>
+      <div class="skill-item"><div class="skill-name">02 User Journey Mapping</div><div class="skill-laws"><span class="skill-law-tag">PRD-3.1</span><span class="skill-law-tag">PRD-3.2</span><span class="skill-law-tag">PRD-2.3</span></div><div class="skill-trigger">triggers: user journey, pain points, user problems, journey map</div></div>
+    </div>
+    <div>
+      <div class="skill-item"><div class="skill-name">Product Discovery Orchestration</div><div class="skill-laws"><span class="skill-law-tag">PRD-2.1</span><span class="skill-law-tag">PRD-2.5</span><span class="skill-law-tag">BUS-7.1</span><span class="skill-law-tag">PRD-2.3</span><span class="skill-law-tag">PRD-4.1</span></div><div class="skill-trigger">triggers: start product discovery, stage A–F gate, build vs buy, validate problem, business case for feature</div></div>
+      <div class="skill-item"><div class="skill-name">Taxonomy-Governed Avatar Enrichment</div><div class="skill-laws"><span class="skill-law-tag">PRD-3.1</span><span class="skill-law-tag">PRD-5.1</span><span class="skill-law-tag">BUS-1.1</span><span class="skill-law-tag">ENG-10.1</span></div><div class="skill-trigger">triggers: avatar enrichment, product taxonomy, brownfield enrichment</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-product" class="tab-content">
+  <div class="grid-2" style="align-items:start;">
+    <div>
+      <div class="skill-item"><div class="skill-name">01 Roadmapping</div><div class="skill-laws"><span class="skill-law-tag">PRD-4.1</span><span class="skill-law-tag">PRD-4.2</span><span class="skill-law-tag">PRD-4.3</span><span class="skill-law-tag">PRD-4.4</span></div><div class="skill-trigger">triggers: roadmap, product direction, prioritize backlog, define MVP, what to build next</div></div>
+      <div class="skill-item"><div class="skill-name">03 Executable Specification</div><div class="skill-laws"><span class="skill-law-tag">PRD-3.3</span><span class="skill-law-tag">ENG-4.1</span><span class="skill-law-tag">ENG-4.4</span></div><div class="skill-trigger">triggers: acceptance criteria, Gherkin specs, feature behavior, BDD</div></div>
+    </div>
+    <div>
+      <div class="skill-item"><div class="skill-name">16 Documentation</div><div class="skill-laws"><span class="skill-law-tag">ENG-3.6</span></div><div class="skill-trigger">triggers: write documentation, create ADR, runbook, API docs</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-platform" class="tab-content">
+  <div class="grid-2" style="align-items:start;">
+    <div>
+      <div class="skill-item"><div class="skill-name">10 Security Review</div><div class="skill-laws"><span class="skill-law-tag">ENG-6.1</span><span class="skill-law-tag">ENG-6.2</span><span class="skill-law-tag">ENG-6.3</span><span class="skill-law-tag">ENG-6.4</span><span class="skill-law-tag">ENG-6.5</span></div><div class="skill-trigger">triggers: security review, OWASP, vulnerabilities, encrypt data, PII handling</div></div>
+      <div class="skill-item"><div class="skill-name">11 Incident Response</div><div class="skill-laws"><span class="skill-law-tag">BUS-9.1</span><span class="skill-law-tag">BUS-9.2</span><span class="skill-law-tag">BUS-9.3</span><span class="skill-law-tag">BUS-9.4</span></div><div class="skill-trigger">triggers: production incident, postmortem, breach notification, security incident</div></div>
+      <div class="skill-item"><div class="skill-name">12 API Design</div><div class="skill-laws"><span class="skill-law-tag">ENG-1.5</span><span class="skill-law-tag">ENG-2.2</span><span class="skill-law-tag">ENG-4.9</span></div><div class="skill-trigger">triggers: design API, API contract, REST endpoint, API versioning</div></div>
+      <div class="skill-item"><div class="skill-name">13 Observability</div><div class="skill-laws"><span class="skill-law-tag">ENG-5.5</span><span class="skill-law-tag">ENG-6.7</span><span class="skill-law-tag">BUS-7.1</span></div><div class="skill-trigger">triggers: logging, metrics, distributed tracing, audit log, audit trail</div></div>
+    </div>
+    <div>
+      <div class="skill-item"><div class="skill-name">14 Technical Debt Management</div><div class="skill-laws"><span class="skill-law-tag">ENG-1.3</span></div><div class="skill-trigger">triggers: technical debt, debt inventory, pay down debt</div></div>
+      <div class="skill-item"><div class="skill-name">15 Data Modeling</div><div class="skill-laws"><span class="skill-law-tag">BUS-3.1</span><span class="skill-law-tag">BUS-3.2</span><span class="skill-law-tag">BUS-3.4</span></div><div class="skill-trigger">triggers: schema design, data migration, entity relationships</div></div>
+      <div class="skill-item"><div class="skill-name">27 Constitution Compliance</div><div class="skill-laws"><span class="skill-law-tag">ENG-10.2</span><span class="skill-law-tag">ENG-10.1</span><span class="skill-law-tag">BUS-7.1</span></div><div class="skill-trigger">triggers: constitution compliance, validate against laws, compliance check</div></div>
+      <div class="skill-item"><div class="skill-name">SonarQube Compliance Gate</div><div class="skill-laws"><span class="skill-law-tag">ENG-4.1</span><span class="skill-law-tag">ENG-6.1</span><span class="skill-law-tag">ENG-10.1</span></div><div class="skill-trigger">triggers: sonarqube, code quality gate, coverage gate, mutation score</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-mlai" class="tab-content">
+  <div class="grid-2" style="align-items:start;">
+    <div>
+      <div class="skill-item"><div class="skill-name">17 ML Pipeline</div><div class="skill-laws"><span class="skill-law-tag">ENG-5.2</span><span class="skill-law-tag">BUS-3.3</span></div><div class="skill-trigger">triggers: ML pipeline, automate training, MLOps, data pipeline</div></div>
+      <div class="skill-item"><div class="skill-name">18 Experiment Tracking</div><div class="skill-laws"><span class="skill-law-tag">PRD-5.3</span><span class="skill-law-tag">BUS-7.1</span></div><div class="skill-trigger">triggers: track experiments, compare models, MLflow, reproducibility</div></div>
+      <div class="skill-item"><div class="skill-name">19 Model Serving</div><div class="skill-laws"><span class="skill-law-tag">ENG-7.1</span><span class="skill-law-tag">ENG-7.5</span></div><div class="skill-trigger">triggers: deploy model, inference API, model versioning</div></div>
+      <div class="skill-item"><div class="skill-name">20 ML Monitoring</div><div class="skill-laws"><span class="skill-law-tag">ENG-5.5</span><span class="skill-law-tag">BUS-6.3</span></div><div class="skill-trigger">triggers: monitor model, detect drift, model performance, retraining</div></div>
+      <div class="skill-item"><div class="skill-name">21 Prompt Engineering</div><div class="skill-laws"><span class="skill-law-tag">PRD-5.2</span></div><div class="skill-trigger">triggers: design prompts, Azure OpenAI, LangChain, responsible LLM, system prompt</div></div>
+    </div>
+    <div>
+      <div class="skill-item"><div class="skill-name">22 RAG Architecture</div><div class="skill-laws"><span class="skill-law-tag">ENG-2.1</span><span class="skill-law-tag">BUS-3.1</span></div><div class="skill-trigger">triggers: build RAG, knowledge retrieval, vector database, ground LLM</div></div>
+      <div class="skill-item"><div class="skill-name">23 AI Agents</div><div class="skill-laws"><span class="skill-law-tag">BUS-1.1</span></div><div class="skill-trigger">triggers: build AI agent, autonomous workflow, agent with tools, multi-step reasoning</div></div>
+      <div class="skill-item"><div class="skill-name">24 AI Safety</div><div class="skill-laws"><span class="skill-law-tag">BUS-1.1</span><span class="skill-law-tag">BUS-6.1</span></div><div class="skill-trigger">triggers: AI safety, responsible AI, guardrails, bias detection</div></div>
+      <div class="skill-item"><div class="skill-name">28 Content Transformation</div><div class="skill-laws"><span class="skill-law-tag">PRD-3.4</span><span class="skill-law-tag">ENG-2.3</span></div><div class="skill-trigger">triggers: transform presentation, convert slides, apply brand</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 7: AGENTIC COMPLIANCE FEEDBACK LOOP
+═══════════════════════════════════════════════════════════ -->
+<div class="section-title">7. Agentic Compliance Feedback Loop — ENG-12 ⛔</div>
+<div class="grid-2" style="align-items:start;">
+
+  <div class="card">
+    <div class="card-title">🔄 Constitutional Gate Flow (ENG-12.1)</div>
+    <div style="font-size:11px; color:#445; margin-bottom:10px;">
+      The SonarQube dashboard is the human-in-the-loop contract. The agent does the work. The human stays in the loop by watching FAIL → PASS.
+    </div>
+    <div class="loop-diagram">
+      <div class="loop-step" style="background:#f0faf4;">
+        <div class="actor agent">AGENT</div>
+        <div class="action">Completes phase work (Atomic TDD, refactor, review)</div>
+      </div>
+      <div style="text-align:center; font-size:12px; color:#aab;">↓</div>
+      <div class="loop-step" style="background:#e8f0fc;">
+        <div class="actor agent">AGENT</div>
+        <div class="action">Runs SonarQube scan (<span class="mono" style="font-size:10px;">skill-sonarqube-compliance-gate</span>)</div>
+      </div>
+      <div style="text-align:center; font-size:12px; color:#aab;">↓</div>
+      <div class="loop-step" style="background:#e8f0fc;">
+        <div class="actor system">SONAR</div>
+        <div class="action">Returns gate API result (pass/fail)</div>
+        <span class="gate fail">API result alone ≠ compliance</span>
+      </div>
+      <div style="text-align:center; font-size:12px; color:#aab;">↓</div>
+      <div class="loop-step" style="background:#fff0e8; border:1px solid #f5c5a0; border-radius:6px;">
+        <div class="actor human">HUMAN</div>
+        <div class="action"><strong>Reviews dashboard</strong> — THE mandatory checkpoint. Agent cannot advance without this.</div>
+      </div>
+      <div style="text-align:center; font-size:12px; color:#aab;">↓</div>
+      <div class="loop-step" style="background:#f0faf4;">
+        <div class="actor human">HUMAN</div>
+        <div class="action">Approves phase advance (or directs remediation)</div>
+        <span class="gate pass">PASS ✓</span>
+      </div>
+      <div style="text-align:center; font-size:12px; color:#aab;">↓</div>
+      <div class="loop-step" style="background:#e8f0fc;">
+        <div class="actor agent">AGENT</div>
+        <div class="action">Proceeds to next phase</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ ENG-12 Laws — Agentic Compliance</div>
+    <div class="law-item"><span class="law-id eng">ENG-12.1</span><div><div class="law-text">Agentic Feedback Loop Law — Constitutional Gate MUST be provisioned before any workflow phase begins; agent cannot advance without human dashboard review</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id eng">ENG-12.2</span><div class="law-text">Dashboard-First Development — SonarQube dashboard MUST be open throughout the session as the human review checkpoint</div></div>
+    <div class="law-item"><span class="law-id eng">ENG-12.3</span><div class="law-text">External Referee Law — the agent that introduced a change cannot self-certify its compliance; SonarQube provides the objective verdict</div></div>
+    <hr class="divider">
+    <div class="small-label">Human Checkpoint Triggers</div>
+    <div style="font-size:10px; display:grid; grid-template-columns:1fr 1fr; gap:4px 8px; color:#334;">
+      <span style="font-weight:700;">Trigger</span><span style="font-weight:700;">Required Action</span>
+      <span>Phase 1 complete</span><span>Review baseline scan on dashboard</span>
+      <span>Phase transition (any)</span><span>Review gate status before approving</span>
+      <span>HARD_BLOCK condition</span><span>Explicitly acknowledge, direct remediation</span>
+      <span>Session end</span><span>Commit delta to <span class="mono" style="font-size:9px;">evidence/sonarqube-delta.md</span></span>
+    </div>
+    <hr class="divider">
+    <div class="small-label">Constitution Governance Laws (ENG-10)</div>
+    <div class="law-item"><span class="law-id eng">ENG-10.1</span><div><div class="law-text">Metrics Collection — track compliance rate per law, per team, per project</div><span class="nn-star">⛔ NN</span></div></div>
+    <div class="law-item"><span class="law-id eng">ENG-10.2</span><div class="law-text">Enforcement Tracking — violations logged with law ID, context, timestamp</div></div>
+    <div class="law-item"><span class="law-id eng">ENG-10.4</span><div class="law-text">Health Dashboard — real-time constitution health metrics</div></div>
+    <div class="law-item"><span class="law-id eng">ENG-10.5</span><div class="law-text">Law Effectiveness Measurement — outcome metrics per law</div></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 8: AVATAR SYSTEM
+═══════════════════════════════════════════════════════════ -->
+<div class="section-title">8. Avatar System — Context Specialization</div>
+<div class="card">
+  <div class="card-title">🎭 Avatar Purpose</div>
+  <div style="font-size:11px; color:#445; margin-bottom:12px;">
+    Avatars apply universal constitutional laws to specific contexts. A lower-layer avatar <strong>extends</strong> but never overrides higher layers. Each avatar includes: <span class="mono">manifest.yaml</span> + <span class="mono">guidance.md</span> + product examples + use-cases + specializes_laws.
+  </div>
+  <div class="grid-3" style="gap:12px;">
+    <div>
+      <div class="small-label">Technology Avatars (34 stacks)</div>
+      <div class="avatar-grid">
+        <div class="avatar-chip"><div class="name">Java/Spring</div><div class="cat">Backend</div></div>
+        <div class="avatar-chip"><div class="name">Python/FastAPI</div><div class="cat">Backend</div></div>
+        <div class="avatar-chip"><div class="name">React/TS</div><div class="cat">Frontend</div></div>
+        <div class="avatar-chip"><div class="name">.NET Core</div><div class="cat">Backend</div></div>
+        <div class="avatar-chip"><div class="name">Angular</div><div class="cat">Frontend</div></div>
+        <div class="avatar-chip"><div class="name">Node.js/TS</div><div class="cat">Backend</div></div>
+        <div class="avatar-chip"><div class="name">iOS Swift</div><div class="cat">Mobile</div></div>
+        <div class="avatar-chip"><div class="name">Android Kotlin</div><div class="cat">Mobile</div></div>
+        <div class="avatar-chip"><div class="name">LangChain</div><div class="cat">AI</div></div>
+        <div class="avatar-chip"><div class="name">Azure OpenAI</div><div class="cat">AI</div></div>
+        <div class="avatar-chip"><div class="name">PyTorch</div><div class="cat">ML</div></div>
+        <div class="avatar-chip"><div class="name">+23 more</div><div class="cat">various</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="small-label">Product-Type Avatars (23 domains)</div>
+      <div class="avatar-grid">
+        <div class="avatar-chip"><div class="name">Passenger Booking</div><div class="cat">Customer</div></div>
+        <div class="avatar-chip"><div class="name">Check-In &amp; Travel</div><div class="cat">Customer</div></div>
+        <div class="avatar-chip"><div class="name">Cargo &amp; Freight</div><div class="cat">Ops</div></div>
+        <div class="avatar-chip"><div class="name">Loyalty AAdvantage</div><div class="cat">Customer</div></div>
+        <div class="avatar-chip"><div class="name">Airport Operations</div><div class="cat">Ops</div></div>
+        <div class="avatar-chip"><div class="name">Customer Service</div><div class="cat">Customer</div></div>
+        <div class="avatar-chip"><div class="name">Manage Trip</div><div class="cat">Customer</div></div>
+        <div class="avatar-chip"><div class="name">Gate Management</div><div class="cat">Ops</div></div>
+        <div class="avatar-chip"><div class="name">Crew Recovery</div><div class="cat">Ops</div></div>
+        <div class="avatar-chip"><div class="name">Network Planning</div><div class="cat">Strategy</div></div>
+        <div class="avatar-chip"><div class="name">Marketing Personalization</div><div class="cat">Customer</div></div>
+        <div class="avatar-chip"><div class="name">+12 more</div><div class="cat">various</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="small-label">Industry Avatar (1)</div>
+      <div class="avatar-chip" style="text-align:left; align-items:flex-start; margin-bottom:10px;">
+        <div class="name" style="font-size:12px;">Aviation / FAA</div>
+        <div class="cat" style="text-align:left;">All AA software must adopt</div>
+      </div>
+      <div style="font-size:10px; color:#334; line-height:1.7;">
+        • FAA Part 121 — Air carrier cert<br>
+        • DO-178C — Airborne SW assurance<br>
+        • DO-326A — Airborne cybersecurity<br>
+        • TSA — Security &amp; vetting<br>
+        • DOT — Consumer protection
+      </div>
+      <hr class="divider">
+      <div class="small-label">Avatar RAG Config</div>
+      <div style="font-size:10px; color:#334; line-height:1.7;">
+        Embedding: <span class="mono">text-embedding-3-large</span><br>
+        Recall: <strong>95%+</strong> for domain queries<br>
+        Precision: <strong>90%+</strong> false positive rate<br>
+        Chunk: selective doc loading<br>
+        Max context: 2000–3500 tokens
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 9: TEACHING FEEDBACK LOOP
+═══════════════════════════════════════════════════════════ -->
+<div class="section-title">9. Teaching Feedback Loop — ENG-1.2 &amp; AI-Engineer Pairing</div>
+<div class="card">
+  <div class="card-title">🎓 Constitutional Teaching Feedback Loop (ENG-1.2)</div>
+  <div style="font-size:11px; color:#445; margin-bottom:12px;">
+    AI acts as teaching partner, not code generator. Junior engineers + AI produce senior-level work while learning senior-level thinking.
+  </div>
+  <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:16px;">
+    <div style="text-align:center; max-width:160px;">
+      <div class="wf-step blue" style="width:100%; text-align:center; margin-bottom:4px;">1. Observe</div>
+      <div style="font-size:10px; color:#556;">Identify what the engineer is trying to accomplish</div>
+    </div>
+    <div class="wf-arrow" style="align-self:center;">→</div>
+    <div style="text-align:center; max-width:160px;">
+      <div class="wf-step purple" style="width:100%; text-align:center; margin-bottom:4px;">2. Guide</div>
+      <div style="font-size:10px; color:#556;">Ask questions to lead to discovery (Socratic pattern)</div>
+    </div>
+    <div class="wf-arrow" style="align-self:center;">→</div>
+    <div style="text-align:center; max-width:160px;">
+      <div class="wf-step orange" style="width:100%; text-align:center; margin-bottom:4px;">3. Explain</div>
+      <div style="font-size:10px; color:#556;">Provide constitutional context &amp; rationale</div>
+    </div>
+    <div class="wf-arrow" style="align-self:center;">→</div>
+    <div style="text-align:center; max-width:160px;">
+      <div class="wf-step green" style="width:100%; text-align:center; margin-bottom:4px;">4. Demonstrate</div>
+      <div style="font-size:10px; color:#556;">Show good vs bad examples with citations</div>
+    </div>
+    <div class="wf-arrow" style="align-self:center;">→</div>
+    <div style="text-align:center; max-width:160px;">
+      <div class="wf-step gray" style="width:100%; text-align:center; margin-bottom:4px;">5. Verify</div>
+      <div style="font-size:10px; color:#556;">Confirm understanding before proceeding</div>
+    </div>
+    <div class="wf-arrow" style="align-self:center;">→</div>
+    <div style="text-align:center; max-width:160px;">
+      <div class="wf-step red" style="width:100%; text-align:center; margin-bottom:4px;">6. Reinforce</div>
+      <div style="font-size:10px; color:#556;">Connect to broader principles for lasting learning</div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="grid-2">
+    <div>
+      <div class="small-label">Constitutional Citation Format</div>
+      <div style="font-family:monospace; font-size:11px; background:#f0f4f8; padding:8px; border-radius:5px; color:#334; line-height:1.8;">
+        [Constitution Name] Article [N], Section [N]<br>
+        e.g. "Per Engineering Constitution Article IV, Section 4.1..."<br>
+        e.g. "Per ENG-4.1 (Atomic TDD, NON-NEGOTIABLE)..."
+      </div>
+    </div>
+    <div>
+      <div class="small-label">Response Structure (§5.1)</div>
+      <div style="font-size:10px; color:#334; line-height:1.9;">
+        1. <strong>Acknowledge</strong> — Show understanding of the request<br>
+        2. <strong>Context</strong> — Reference relevant constitutional articles<br>
+        3. <strong>Guidance</strong> — Provide direction with rationale<br>
+        4. <strong>Examples</strong> — Demonstrate good/bad patterns<br>
+        5. <strong>Next Step</strong> — Suggest clear next action
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 10: TOOLS
+═══════════════════════════════════════════════════════════ -->
+<div class="section-title">10. Constitutional Enforcement Tools</div>
+<div class="grid-2" style="align-items:start;">
+  <div class="card">
+    <div class="card-title">🔧 CLI Tools (tools/)</div>
+    <div class="skill-item">
+      <div class="skill-name">aa-constitution-lint</div>
+      <div style="font-size:10px; color:#445;">Validates law files, skill indexes, and law ID references across the entire constitution. Command: <span class="mono">aa-constitution-lint .</span></div>
+      <div class="skill-laws"><span class="skill-law-tag">ENG-10.1</span><span class="skill-law-tag">ENG-10.2</span></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-name">aa-artifact-render</div>
+      <div style="font-size:10px; color:#445;">Renders governance artifacts (proposals, ADRs, evidence, tasks) as self-contained HTML with interactive law citation tooltips. Optional PDF via <span class="mono">--pdf</span></div>
+      <div class="skill-laws"><span class="skill-law-tag">ENG-13.1</span><span class="skill-law-tag">ENG-13.2</span><span class="skill-law-tag">ENG-13.3</span></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-name">sonarqube-gate</div>
+      <div style="font-size:10px; color:#445;">Enforces code quality gates. Human MUST review dashboard — API result alone does not constitute compliance confirmation. Command: <span class="mono">sonarqube-gate</span></div>
+      <div class="skill-laws"><span class="skill-law-tag">ENG-4.1</span><span class="skill-law-tag">ENG-12.1</span></div>
+    </div>
+    <div class="skill-item">
+      <div class="skill-name">RAG Eval Harness</div>
+      <div style="font-size:10px; color:#445;">Evaluates constitution RAG retrieval quality. Command: <span class="mono">python tools/rag-eval/evaluate.py</span></div>
+      <div class="skill-laws"><span class="skill-law-tag">ENG-10.5</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📐 Architecture Laws Quick Reference</div>
+    <div class="law-item"><span class="law-id eng">ENG-2.1</span><div class="law-text">DDD Law — Entities, Value Objects, Aggregates, Domain Services, Domain Events</div></div>
+    <div class="law-item"><span class="law-id eng">ENG-2.2</span><div class="law-text">Layered Architecture — Presentation → Application → Domain → Infrastructure</div></div>
+    <div class="law-item"><span class="law-id eng">ENG-2.3</span><div class="law-text">Vertical Slice Architecture — features as complete end-to-end slices</div></div>
+    <div class="law-item"><span class="law-id eng">ENG-2.4</span><div class="law-text">Bounded Context Law — well-defined interfaces, no cross-context leakage</div></div>
+    <div class="law-item"><span class="law-id eng">ENG-2.5</span><div class="law-text">Dependency Inversion — high-level and low-level depend on abstractions</div></div>
+    <hr class="divider">
+    <div class="small-label">Code Quality Laws (ENG-3.x)</div>
+    <div class="law-item"><span class="law-id eng">ENG-3.1</span><div class="law-text">Style &amp; Formatting — consistent per avatar stack</div></div>
+    <div class="law-item"><span class="law-id eng">ENG-3.2</span><div class="law-text">Complexity Limits — cyclomatic ≤10, cognitive ≤7</div></div>
+    <div class="law-item"><span class="law-id eng">ENG-3.3</span><div class="law-text">Immutability Law — value objects and DTOs SHALL be immutable</div></div>
+    <div class="law-item"><span class="law-id eng">ENG-3.4</span><div class="law-text">Law of Demeter — only interact with immediate collaborators</div></div>
+    <div class="law-item"><span class="law-id eng">ENG-3.6</span><div class="law-text">Documentation requirements</div></div>
+  </div>
+</div>
+
+</div><!-- /.page -->
+
+<!-- T3.2c — "Questions to Explore" coaching block (DC-06: Socratic permitted for Senior Architects) -->
+<details style="margin: 32px 40px 0; background:#fff; border:1px solid #dde3ea; border-radius:8px; overflow:hidden;">
+  <summary style="
+    padding:14px 20px; cursor:pointer; font-size:12px; font-weight:700;
+    color:#003366; background:#f0f4f8; border-bottom:1px solid #dde3ea;
+    list-style:none; display:flex; align-items:center; gap:8px;
+  ">
+    <span style="font-size:16px">🧭</span>
+    Questions to Explore — Coaching Notes
+    <span style="margin-left:auto; font-size:10px; font-weight:400; color:#666;">(Senior Architect Socratic Path — DC-06)</span>
+  </summary>
+  <div style="padding:20px 24px;">
+    <p style="font-size:12px; color:#666; margin-bottom:16px; font-style:italic;">
+      Use these open-ended questions with your team to build constitutional fluency. These are NOT required steps — they are optional coaching prompts for experienced practitioners.
+    </p>
+    <ol style="font-size:13px; color:#1a2332; line-height:1.9; padding-left:20px; margin:0;">
+      <li>
+        <strong>Architecture review:</strong> Looking at the three pillars (ENG / PRD / BUS), which pillar is most underrepresented in your team's current pull request reviews — and what law would close that gap first?
+      </li>
+      <li>
+        <strong>Non-negotiable exposure:</strong> Of the 13 ⛔ Non-Negotiable laws, which two would be hardest to retrofit into your current system architecture, and why?
+      </li>
+      <li>
+        <strong>RAG model trust:</strong> If the law registry version bumped tomorrow and your pages weren't re-rendered, which auto-generated page (P2, P4, P5, P6) would be most dangerous to leave stale — and for which team?
+      </li>
+      <li>
+        <strong>Governance gaps:</strong> Scan the 23 product domains in the RAG model. Which domain is closest to your team's current sprint work, and is there a constitution-governed workflow already covering it?
+      </li>
+      <li>
+        <strong>Adoption blockers:</strong> Steve Fraser's survey identified "trusting the AI" as the #1 adoption barrier. What evidence would a skeptical engineer on your team need to see in a pull request before trusting a constitutionally-governed change?
+      </li>
+    </ol>
+  </div>
+</details>
+
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-title">Hangar AI Constitution — Adoption Guide</div>
+    <div>American Airlines · Hangar AI Program · Adoption Guide v1.0.0</div>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="p1-landing.html">Guide Home</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="p3-coach-quick-start.html">Coach Quick Start</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="workflows/index.html">Workflows Hub</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="phase-gate-guide.html">Phase Gate Guide</a>
+    </nav>
+  </div>
+</footer>
+
+
+<script>
+function showTab(id, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+
+</body>
+</html>

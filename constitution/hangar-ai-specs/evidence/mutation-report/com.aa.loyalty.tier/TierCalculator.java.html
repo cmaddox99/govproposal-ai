@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>TierCalculator.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package com.aa.loyalty.tier;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.stereotype.Component;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * VIOLATIONS:</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * - Elite bonus logic duplicated verbatim from MileageCalculator</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * - Tier thresholds hardcoded &#8212; should be configurable</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * - Method knows too much about member state</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@Component</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>public class TierCalculator {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // VIOLATION: duplicate of MileageCalculator elite tier map</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public double getEliteMilesBonus(String tier) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_16'/>
+16
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_16'>4</a>
+<span>
+1. getEliteMilesBonus : removed conditional - replaced equality check with false &rarr; SURVIVED<br/>
+2. getEliteMilesBonus : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. getEliteMilesBonus : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+4. getEliteMilesBonus : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        if (tier == null || tier.equals(&#34;GENERAL&#34;)) return 0.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_17'/>
+17
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_17'>3</a>
+<span>
+1. getEliteMilesBonus : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. getEliteMilesBonus : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. getEliteMilesBonus : replaced double return with 0.0d for com/aa/loyalty/tier/TierCalculator::getEliteMilesBonus &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (tier.equals(&#34;GOLD&#34;)) return 0.25;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_18'/>
+18
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_18'>3</a>
+<span>
+1. getEliteMilesBonus : replaced double return with 0.0d for com/aa/loyalty/tier/TierCalculator::getEliteMilesBonus &rarr; KILLED<br/>
+2. getEliteMilesBonus : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+3. getEliteMilesBonus : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (tier.equals(&#34;PLATINUM&#34;)) return 0.50;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_19'/>
+19
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_19'>3</a>
+<span>
+1. getEliteMilesBonus : replaced double return with 0.0d for com/aa/loyalty/tier/TierCalculator::getEliteMilesBonus &rarr; KILLED<br/>
+2. getEliteMilesBonus : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. getEliteMilesBonus : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (tier.equals(&#34;PLATINUM_PRO&#34;)) return 0.75;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_20'/>
+20
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_20'>3</a>
+<span>
+1. getEliteMilesBonus : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. getEliteMilesBonus : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. getEliteMilesBonus : replaced double return with 0.0d for com/aa/loyalty/tier/TierCalculator::getEliteMilesBonus &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (tier.equals(&#34;EXECUTIVE_PLATINUM&#34;)) return 1.00;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_21'/>
+21
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_21'>3</a>
+<span>
+1. getEliteMilesBonus : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. getEliteMilesBonus : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+3. getEliteMilesBonus : replaced double return with 0.0d for com/aa/loyalty/tier/TierCalculator::getEliteMilesBonus &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (tier.equals(&#34;CONCIERGE_KEY&#34;)) return 1.00;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        return 0.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * VIOLATION: cyclomatic complexity ~18, all thresholds magic numbers</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public String calculateNewTier(long eqm, int eqs, long totalMiles) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // EQM = Elite Qualifying Miles, EQS = Elite Qualifying Segments</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_30'/>
+30
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_30'>3</a>
+<span>
+1. calculateNewTier : changed conditional boundary &rarr; KILLED<br/>
+2. calculateNewTier : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+3. calculateNewTier : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (eqm &#62;= 100000) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_31'/>
+31
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_31'>1</a>
+<span>
+1. calculateNewTier : replaced return value with &#34;&#34; for com/aa/loyalty/tier/TierCalculator::calculateNewTier &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return &#34;EXECUTIVE_PLATINUM&#34;;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_32'/>
+32
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_32'>9</a>
+<span>
+1. calculateNewTier : removed conditional - replaced comparison check with true &rarr; SURVIVED<br/>
+2. calculateNewTier : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+3. calculateNewTier : changed conditional boundary &rarr; KILLED<br/>
+4. calculateNewTier : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+5. calculateNewTier : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+6. calculateNewTier : changed conditional boundary &rarr; KILLED<br/>
+7. calculateNewTier : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+8. calculateNewTier : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+9. calculateNewTier : changed conditional boundary &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        } else if (eqm &#62;= 75000 || (eqm &#62;= 50000 &#38;&#38; eqs &#62;= 90)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_33'/>
+33
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_33'>1</a>
+<span>
+1. calculateNewTier : replaced return value with &#34;&#34; for com/aa/loyalty/tier/TierCalculator::calculateNewTier &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return &#34;PLATINUM_PRO&#34;;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_34'/>
+34
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_34'>9</a>
+<span>
+1. calculateNewTier : removed conditional - replaced comparison check with true &rarr; SURVIVED<br/>
+2. calculateNewTier : changed conditional boundary &rarr; KILLED<br/>
+3. calculateNewTier : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+4. calculateNewTier : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+5. calculateNewTier : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+6. calculateNewTier : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+7. calculateNewTier : changed conditional boundary &rarr; KILLED<br/>
+8. calculateNewTier : changed conditional boundary &rarr; KILLED<br/>
+9. calculateNewTier : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        } else if (eqm &#62;= 50000 || (eqm &#62;= 40000 &#38;&#38; eqs &#62;= 60)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_35'/>
+35
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_35'>1</a>
+<span>
+1. calculateNewTier : replaced return value with &#34;&#34; for com/aa/loyalty/tier/TierCalculator::calculateNewTier &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return &#34;PLATINUM&#34;;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_36'/>
+36
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_36'>9</a>
+<span>
+1. calculateNewTier : removed conditional - replaced comparison check with true &rarr; SURVIVED<br/>
+2. calculateNewTier : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+3. calculateNewTier : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+4. calculateNewTier : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+5. calculateNewTier : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+6. calculateNewTier : changed conditional boundary &rarr; KILLED<br/>
+7. calculateNewTier : changed conditional boundary &rarr; KILLED<br/>
+8. calculateNewTier : changed conditional boundary &rarr; KILLED<br/>
+9. calculateNewTier : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        } else if (eqm &#62;= 25000 || (eqm &#62;= 20000 &#38;&#38; eqs &#62;= 30)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_37'/>
+37
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_37'>1</a>
+<span>
+1. calculateNewTier : replaced return value with &#34;&#34; for com/aa/loyalty/tier/TierCalculator::calculateNewTier &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return &#34;GOLD&#34;;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_39'/>
+39
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_39'>1</a>
+<span>
+1. calculateNewTier : replaced return value with &#34;&#34; for com/aa/loyalty/tier/TierCalculator::calculateNewTier &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return &#34;GENERAL&#34;;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // VIOLATION: duplicate of isEligibleForUpgrade in MileageService</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public boolean isUpgradeEligible(long eqm, int eqs, String currentTier) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_45'/>
+45
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_45'>9</a>
+<span>
+1. isUpgradeEligible : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+2. isUpgradeEligible : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+3. isUpgradeEligible : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+4. isUpgradeEligible : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+5. isUpgradeEligible : changed conditional boundary &rarr; KILLED<br/>
+6. isUpgradeEligible : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+7. isUpgradeEligible : changed conditional boundary &rarr; KILLED<br/>
+8. isUpgradeEligible : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+9. isUpgradeEligible : replaced boolean return with false for com/aa/loyalty/tier/TierCalculator::isUpgradeEligible &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (currentTier.equals(&#34;GENERAL&#34;) &#38;&#38; eqm &#62;= 25000 &#38;&#38; eqs &#62;= 30) return true;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_46'/>
+46
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_46'>6</a>
+<span>
+1. isUpgradeEligible : replaced boolean return with false for com/aa/loyalty/tier/TierCalculator::isUpgradeEligible &rarr; KILLED<br/>
+2. isUpgradeEligible : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+3. isUpgradeEligible : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+4. isUpgradeEligible : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+5. isUpgradeEligible : changed conditional boundary &rarr; KILLED<br/>
+6. isUpgradeEligible : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (currentTier.equals(&#34;GOLD&#34;) &#38;&#38; eqm &#62;= 50000) return true;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_47'/>
+47
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_47'>6</a>
+<span>
+1. isUpgradeEligible : replaced boolean return with false for com/aa/loyalty/tier/TierCalculator::isUpgradeEligible &rarr; KILLED<br/>
+2. isUpgradeEligible : changed conditional boundary &rarr; KILLED<br/>
+3. isUpgradeEligible : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+4. isUpgradeEligible : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+5. isUpgradeEligible : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+6. isUpgradeEligible : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (currentTier.equals(&#34;PLATINUM&#34;) &#38;&#38; eqm &#62;= 75000) return true;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_48'/>
+48
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_48'>6</a>
+<span>
+1. isUpgradeEligible : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+2. isUpgradeEligible : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. isUpgradeEligible : changed conditional boundary &rarr; KILLED<br/>
+4. isUpgradeEligible : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+5. isUpgradeEligible : replaced boolean return with false for com/aa/loyalty/tier/TierCalculator::isUpgradeEligible &rarr; KILLED<br/>
+6. isUpgradeEligible : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (currentTier.equals(&#34;PLATINUM_PRO&#34;) &#38;&#38; eqm &#62;= 100000) return true;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_49'/>
+49
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_49'>1</a>
+<span>
+1. isUpgradeEligible : replaced boolean return with true for com/aa/loyalty/tier/TierCalculator::isUpgradeEligible &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return false;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public int getUpgradeComplimentaryCount(String tier) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // VIOLATION: magic numbers, not configurable</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_54'/>
+54
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_54'>3</a>
+<span>
+1. getUpgradeComplimentaryCount : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. getUpgradeComplimentaryCount : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. getUpgradeComplimentaryCount : replaced int return with 0 for com/aa/loyalty/tier/TierCalculator::getUpgradeComplimentaryCount &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (tier.equals(&#34;EXECUTIVE_PLATINUM&#34;)) return 8;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_55'/>
+55
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_55'>3</a>
+<span>
+1. getUpgradeComplimentaryCount : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. getUpgradeComplimentaryCount : replaced int return with 0 for com/aa/loyalty/tier/TierCalculator::getUpgradeComplimentaryCount &rarr; KILLED<br/>
+3. getUpgradeComplimentaryCount : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (tier.equals(&#34;PLATINUM_PRO&#34;)) return 6;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_56'/>
+56
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_56'>3</a>
+<span>
+1. getUpgradeComplimentaryCount : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. getUpgradeComplimentaryCount : replaced int return with 0 for com/aa/loyalty/tier/TierCalculator::getUpgradeComplimentaryCount &rarr; KILLED<br/>
+3. getUpgradeComplimentaryCount : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (tier.equals(&#34;PLATINUM&#34;)) return 4;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_57'/>
+57
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_57'>3</a>
+<span>
+1. getUpgradeComplimentaryCount : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. getUpgradeComplimentaryCount : replaced int return with 0 for com/aa/loyalty/tier/TierCalculator::getUpgradeComplimentaryCount &rarr; KILLED<br/>
+3. getUpgradeComplimentaryCount : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (tier.equals(&#34;GOLD&#34;)) return 2;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        return 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_16'>16</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_16'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>none</span></span> removed conditional - replaced equality check with false &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_null_returnsZero()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_gold_returnsPointTwoFive()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_gold_returnsPointTwoFive()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_17'>17</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_17'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_gold_returnsPointTwoFive()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_conciergeKey_returnsOne()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_gold_returnsPointTwoFive()]</span></span> replaced double return with 0.0d for com/aa/loyalty/tier/TierCalculator::getEliteMilesBonus &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_18'>18</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_18'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_platinum_returnsPointFive()]</span></span> replaced double return with 0.0d for com/aa/loyalty/tier/TierCalculator::getEliteMilesBonus &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_platinum_returnsPointFive()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_conciergeKey_returnsOne()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_19'>19</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_19'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_platinumPro_returnsPointSevenFive()]</span></span> replaced double return with 0.0d for com/aa/loyalty/tier/TierCalculator::getEliteMilesBonus &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_conciergeKey_returnsOne()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_platinumPro_returnsPointSevenFive()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_20'>20</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_20'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_execPlat_returnsOne()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_unknownTier_returnsZero()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_execPlat_returnsOne()]</span></span> replaced double return with 0.0d for com/aa/loyalty/tier/TierCalculator::getEliteMilesBonus &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_21'>21</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_21'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_unknownTier_returnsZero()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_conciergeKey_returnsOne()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>getEliteMilesBonus<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_conciergeKey_returnsOne()]</span></span> replaced double return with 0.0d for com/aa/loyalty/tier/TierCalculator::getEliteMilesBonus &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_30'>30</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_30'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_100kEqm_returnsExecPlat()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_100kEqm_returnsExecPlat()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_75kEqm_returnsPlatinumPro()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_31'>31</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_31'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_100kEqm_returnsExecPlat()]</span></span> replaced return value with &#34;&#34; for com/aa/loyalty/tier/TierCalculator::calculateNewTier &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_32'>32</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_32'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_50kEqm_returnsPlatinum()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_75kEqm_returnsPlatinumPro()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_75kEqm_returnsPlatinumPro()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>none</span></span> removed conditional - replaced comparison check with true &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_50kEqmWith90Eqs_returnsPlatinumPro()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_50kEqmWith90Eqs_returnsPlatinumPro()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>7.<span><b>7</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_50kEqmWith90Eqs_returnsPlatinumPro()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>8.<span><b>8</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_50kEqm_returnsPlatinum()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>9.<span><b>9</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_50kEqmWith90Eqs_returnsPlatinumPro()]</span></span> changed conditional boundary &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_33'>33</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_33'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_75kEqm_returnsPlatinumPro()]</span></span> replaced return value with &#34;&#34; for com/aa/loyalty/tier/TierCalculator::calculateNewTier &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_34'>34</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_34'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_40kEqmWith60Eqs_returnsPlatinum_v2()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_40kEqmWith60Eqs_returnsPlatinum_v2()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_justBelow50k_notPlatinum()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_40kEqmWith60Eqs_returnsPlatinum_v2()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_25kEqm_returnsGold()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>none</span></span> removed conditional - replaced comparison check with true &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>7.<span><b>7</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_40kEqmWith60Eqs_returnsPlatinum_v2()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>8.<span><b>8</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_50kEqm_returnsPlatinum()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>9.<span><b>9</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_50kEqm_returnsPlatinum()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_35'>35</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_35'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_50kEqm_returnsPlatinum()]</span></span> replaced return value with &#34;&#34; for com/aa/loyalty/tier/TierCalculator::calculateNewTier &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_36'>36</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_36'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_20kEqmWith30Eqs_returnsGold_v2()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_justBelow25k_notGold()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_justBelow25k_notGold()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_25kEqm_returnsGold()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>none</span></span> removed conditional - replaced comparison check with true &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_20kEqmWith30Eqs_returnsGold_v2()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>7.<span><b>7</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_25kEqm_returnsGold()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>8.<span><b>8</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_20kEqmWith30Eqs_returnsGold_v2()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>9.<span><b>9</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_20kEqmWith30Eqs_returnsGold_v2()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_37'>37</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_37'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_25kEqm_returnsGold()]</span></span> replaced return value with &#34;&#34; for com/aa/loyalty/tier/TierCalculator::calculateNewTier &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_39'>39</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_39'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateNewTier<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_below25kEqm_returnsGeneral()]</span></span> replaced return value with &#34;&#34; for com/aa/loyalty/tier/TierCalculator::calculateNewTier &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_45'>45</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_45'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_generalJustBelowSegmentThreshold_returnsFalse()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_general25kEqm30Eqs_returnsTrue()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_generalJustBelowMilesThreshold_returnsFalse()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumProJustBelow_returnsFalse()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_general25kEqm30Eqs_returnsTrue()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_general25kEqm30Eqs_returnsTrue()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>7.<span><b>7</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_general25kEqm30Eqs_returnsTrue()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>8.<span><b>8</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_general25kEqm30Eqs_returnsTrue()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>9.<span><b>9</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_general25kEqm30Eqs_returnsTrue()]</span></span> replaced boolean return with false for com/aa/loyalty/tier/TierCalculator::isUpgradeEligible &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_46'>46</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_46'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_gold50kEqm_returnsTrue()]</span></span> replaced boolean return with false for com/aa/loyalty/tier/TierCalculator::isUpgradeEligible &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_goldJustBelowThreshold_returnsFalse()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_gold50kEqm_returnsTrue()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumProJustBelow_returnsFalse()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_gold50kEqm_returnsTrue()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_gold50kEqm_returnsTrue()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_47'>47</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_47'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinum75kEqm_returnsTrue()]</span></span> replaced boolean return with false for com/aa/loyalty/tier/TierCalculator::isUpgradeEligible &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinum75kEqm_returnsTrue()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumProJustBelow_returnsFalse()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumJustBelowThreshold_returnsFalse()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinum75kEqm_returnsTrue()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinum75kEqm_returnsTrue()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_48'>48</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_48'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumPro100k_returnsTrue()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_execPlat_returnsFalseAlways()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumPro100k_returnsTrue()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumPro100k_returnsTrue()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumPro100k_returnsTrue()]</span></span> replaced boolean return with false for com/aa/loyalty/tier/TierCalculator::isUpgradeEligible &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumProJustBelow_returnsFalse()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_49'>49</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_49'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>isUpgradeEligible<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumProJustBelow_returnsFalse()]</span></span> replaced boolean return with true for com/aa/loyalty/tier/TierCalculator::isUpgradeEligible &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_54'>54</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_54'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getUpgradeComplimentaryCount<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_execPlat_returnsEight()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getUpgradeComplimentaryCount<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_platinum_returnsFour()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>getUpgradeComplimentaryCount<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_execPlat_returnsEight()]</span></span> replaced int return with 0 for com/aa/loyalty/tier/TierCalculator::getUpgradeComplimentaryCount &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_55'>55</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_55'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getUpgradeComplimentaryCount<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_platinumPro_returnsSix()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getUpgradeComplimentaryCount<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_platinumPro_returnsSix()]</span></span> replaced int return with 0 for com/aa/loyalty/tier/TierCalculator::getUpgradeComplimentaryCount &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>getUpgradeComplimentaryCount<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_platinum_returnsFour()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_56'>56</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_56'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getUpgradeComplimentaryCount<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_platinum_returnsFour()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getUpgradeComplimentaryCount<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_platinum_returnsFour()]</span></span> replaced int return with 0 for com/aa/loyalty/tier/TierCalculator::getUpgradeComplimentaryCount &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>getUpgradeComplimentaryCount<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_general_returnsZero()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@2ace1cd3_57'>57</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@2ace1cd3_57'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getUpgradeComplimentaryCount<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_gold_returnsTwo()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getUpgradeComplimentaryCount<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_gold_returnsTwo()]</span></span> replaced int return with 0 for com/aa/loyalty/tier/TierCalculator::getUpgradeComplimentaryCount &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>getUpgradeComplimentaryCount<br/><b>Killed by : </b>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_general_returnsZero()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>EXPERIMENTAL_SWITCH</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_ELSE</li>
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_IF</li>
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_ELSE</li>
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_IF</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_gold_returnsPointTwoFive()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_conciergeKey_returnsOne()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_unknownTier_returnsZero()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_execPlat_returnsOne()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_platinum_returnsPointFive()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_conciergeKey_returnsOneHundredPercent()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_platinumPro_returnsPointSevenFive()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_20kEqmWith30Eqs_returnsGold_v2()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_20kEqmWith30Eqs_returnsGold()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_justBelow25k_notGold()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_below25kEqm_returnsGeneral()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumProJustBelow_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumPro100k_returnsTrue()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_40kEqmWith60Eqs_returnsPlatinum_v2()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_40kEqmWith60Eqs_returnsPlatinum()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_justBelow50k_notPlatinum()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_25kEqm_returnsGold()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_general_returnsZero()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_gold_returnsTwo()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_gold50kEqm_returnsTrue()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_75kEqm_returnsPlatinumPro()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_50kEqm_returnsPlatinum()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_50kEqmWith90Eqs_returnsPlatinumPro()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_justBelow75k_withoutSegments_notPlatinumPro()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_justBelow100k_notExecPlat()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:calculateNewTier_100kEqm_returnsExecPlat()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_execPlat_returnsFalseAlways()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_generalJustBelowMilesThreshold_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinumJustBelowThreshold_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_generalBelowThreshold_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_generalJustBelowSegmentThreshold_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_goldJustBelowThreshold_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_general25kEqm30Eqs_returnsTrue()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:isUpgradeEligible_platinum75kEqm_returnsTrue()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_platinum_returnsFour()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_general_returnsZero()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_platinumPro_returnsSix()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getEliteMilesBonus_null_returnsZero()] (0 ms)</li><li>com.aa.loyalty.tier.TierCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierCalculatorTest]/[method:getUpgradeComplimentaryCount_execPlat_returnsEight()] (0 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.15.3
+
+</body>
+</html>

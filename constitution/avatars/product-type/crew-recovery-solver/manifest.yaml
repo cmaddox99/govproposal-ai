@@ -1,0 +1,81 @@
+avatar:
+  id: avatar-product-crew-recovery-solver
+  type: product
+  name: "American Airlines Crew Recovery Solver"
+  version: "1.0.0"
+  created: "2026-04-23"
+  last_updated: "2026-04-23"
+
+taxonomy:
+  domain_gate: PASS
+  user_journey_gate: PASS
+  boundary_gate: PASS
+  stability_gate: PASS
+  retrieval_gate: PASS
+
+domain:
+  category: "Product (Service Recovery)"
+  description: |
+    Crew Recovery Solver handles IROP crew reassignment when flights are cancelled,
+    delayed, or disrupted. It presents evidence-scored recovery options while enforcing
+    FAR Part 117 crew rest minimums as a hard safety constraint. Every assignment
+    decision produces an immutable audit trail entry for regulatory review.
+  personas:
+    - Crew Scheduler (SOC — primary operator)
+    - Crew Member (subject of reassignment)
+    - FAA Compliance Analyst (audit and regulatory review)
+    - Operations Manager (escalation and manual override)
+
+core_journeys:
+  - "Single flight cancellation — reassign all affected crew"
+  - "Cascading delay reassignment across multi-leg trips"
+  - "FAR 117 eligibility check before presenting recovery options"
+  - "Manual override with compliance justification"
+  - "Audit trail review for regulatory inquiry"
+
+activates:
+  skills:
+    - skill-spec-governance
+    - skill-02-user-journey-mapping
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+    - skill-03-executable-spec
+    - skill-10-security-review
+    - skill-13-observability
+  workflows:
+    - product-discovery-stage-a-f
+    - greenfield-development
+    - legacy-rescue-decision-track
+
+specializes_laws:
+  - id: PRD-1.1
+    title: "Customer-Centric Law"
+    example_file: examples/PRD-1.1-discovery.md
+  - id: PRD-1.2
+    title: "Problem-First Law"
+    example_file: examples/PRD-1.2-problem-first.md
+  - id: PRD-1.5
+    title: "Evidence-Based Decision Law"
+    example_file: examples/PRD-1.5-evidence-based.md
+  - id: PRD-2.1
+    title: "Problem Validation Law"
+    example_file: examples/PRD-2.1-journey.md
+  - id: PRD-2.5
+    title: "Discovery Stage-Gate Law"
+    example_file: examples/PRD-2.5-stage-gate.md
+  - id: PRD-5.1
+    title: "MVP Law"
+    example_file: examples/PRD-5.1-metrics.md
+  - id: PRD-6.2
+    title: "Retention Over Acquisition Law"
+    example_file: examples/PRD-6.2-retention.md
+  - id: BUS-2.1
+    title: "FAA Compliance Law"
+    example_file: examples/BUS-2.1-far-117.md
+  - id: BUS-7.1
+    title: "Audit Trail Law"
+    example_file: examples/BUS-7.1-audit-trail.md
+  - id: ENG-6.7
+    title: "Audit Trail Law (Engineering)"
+    justification: "CWR has direct regulatory audit obligations (BUS-7.1) requiring specific engineering implementation patterns — correlation ID in every crew assignment event log"
+    example_file: examples/ENG-6.7-correlation-id.md

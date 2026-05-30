@@ -1,0 +1,116 @@
+# React Native Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-mobile-react-native
+  type: technology
+  name: React Native
+  version: "2.0.0"
+
+stack:
+  language: TypeScript
+  framework: React Native
+  navigation: React Navigation
+  testing:
+    - Jest
+    - React Native Testing Library
+  tools:
+    formatter: prettier
+    linter: eslint
+    type_checker: typescript
+
+dependencies:
+  required:
+    - react-native: "^0.73.0"
+    - typescript: "^5.3.0"
+    - "@react-navigation/native": "^6.0.0"
+  dev:
+    - jest: "^29.0.0"
+    - "@testing-library/react-native": "^12.0.0"
+    - eslint: "^8.0.0"
+    - prettier: "^3.0.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+    - greenfield-development
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-3.2
+    title: Immutability Law
+    example_file: examples/ENG-3.2-immutability.md
+  - id: ENG-2.2
+    title: Layered Architecture
+    example_file: examples/ENG-2.2-layers.md
+
+conventions:
+  naming:
+    screens: PascalCase + Screen
+    components: PascalCase
+    hooks: camelCase with use prefix
+    services: camelCase + Service
+    types: PascalCase
+    test_files: "*.test.tsx"
+
+  patterns:
+    screen: "function component with navigation"
+    component: "function component with props"
+    hook: "custom hook with useState/useEffect"
+    service: "object with async methods"
+    context: "createContext + Provider + useContext hook"
+
+commands:
+  test:
+    all: npm test
+    watch: npm test -- --watch
+    single_file: npm test -- OrderSummary.test.tsx
+    coverage: npm test -- --coverage
+    update_snapshots: npm test -- --updateSnapshot
+  dev:
+    start: npm start
+    ios: npm run ios
+    android: npm run android
+    clear_cache: npm start -- --reset-cache
+  lint:
+    check: npm run lint
+    typecheck: npm run typecheck
+    format: npm run format
+
+project_structure: |
+  src/
+  ├── components/              # Reusable UI components
+  │   ├── OrderCard/
+  │   │   ├── OrderCard.tsx
+  │   │   ├── OrderCard.test.tsx
+  │   │   └── index.ts
+  │   └── common/
+  ├── screens/                 # Screen components
+  │   ├── OrderListScreen.tsx
+  │   ├── OrderDetailScreen.tsx
+  │   └── CheckoutScreen.tsx
+  ├── navigation/              # Navigation setup
+  │   ├── RootNavigator.tsx
+  │   └── types.ts
+  ├── hooks/                   # Custom hooks
+  │   ├── useOrders.ts
+  │   └── useAuth.ts
+  ├── services/                # API clients
+  │   └── orderService.ts
+  ├── types/                   # TypeScript types
+  │   └── order.ts
+  ├── utils/                   # Utility functions
+  │   └── format.ts
+  ├── context/                 # React contexts
+  │   └── AuthContext.tsx
+  └── App.tsx

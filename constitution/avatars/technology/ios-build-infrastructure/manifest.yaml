@@ -1,0 +1,37 @@
+# iOS Build Infrastructure — companion to avatar-ios-swift
+
+avatar:
+  id: avatar-ios-build-infrastructure
+  type: technology
+  name: iOS Build Infrastructure (Xcode / Carthage / Coverage)
+  version: "1.0.0"
+stack:
+  platform: iOS 14.0+
+  build_system: xcodebuild (direct CLI)
+  package_manager: Carthage (--use-xcframeworks)
+  coverage_toolchain: llvm-profdata + xccov (xcresult bundle)
+  network_stubbing: WireMock (external JAR, port 8080)
+
+activates:
+  skills:
+    - 06-atomic-tdd
+    - 08-code-review
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-6.7
+    title: Audit Trail Law
+  - id: ENG-4.1
+    title: Atomic TDD Law
+  - id: ENG-4.2
+    title: Test Pyramid Law
+
+tags:
+  - ios
+  - xcode
+  - carthage
+  - coverage
+  - wiremock
+  - profraw
+  - deriveddata

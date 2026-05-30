@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Body Checks B01–B03 — Hangar AI Constitution</title>
+<style>
+/* ── AA Constitutional Design System ── */
+@page { size: 1088px 1408px; margin: 0; }
+
+:root {
+  --aa-blue: #003087;
+  --aa-red:  #C8102E;
+  --ink:     #17202a;
+  --muted:   #5f6d7a;
+  --line:    #d9e1ea;
+  --soft:    #f3f7fb;
+  --soft-2:  #eef3f8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* ── Page layout ── */
+.page {
+  width: 1088px;
+  min-height: 1408px;
+  padding: 94px 88px 100px;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  page-break-after: always;
+}
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 12px;
+  background: linear-gradient(90deg, var(--aa-blue), var(--aa-red));
+}
+.page::after {
+  content: "✈";
+  position: absolute;
+  right: 34px; bottom: -10px;
+  font-size: 240px;
+  color: var(--aa-blue);
+  opacity: .03;
+  transform: rotate(18deg);
+  pointer-events: none;
+}
+.page.cover {
+  background:
+    radial-gradient(circle at 85% 16%, rgba(0,48,135,.08), transparent 22%),
+    linear-gradient(180deg, #fbfcfe 0%, #f1f6fa 100%);
+}
+.footer {
+  position: absolute;
+  left: 88px; right: 88px; bottom: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5ebf1;
+  padding-top: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #7f8b97;
+}
+.footer .pn { color: var(--aa-blue); font-weight: 800; }
+
+/* ── Typography ── */
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--aa-red);
+}
+h1 {
+  margin-top: 22px;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--aa-blue);
+  font-weight: 850;
+  max-width: 820px;
+}
+h2 {
+  margin-top: 32px;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -.6px;
+  color: var(--aa-blue);
+  font-weight: 800;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+h3 { margin-top: 20px; font-size: 19px; color: var(--aa-blue); font-weight: 700; }
+h4 { margin-top: 16px; font-size: 16px; color: var(--ink); font-weight: 700; }
+p  { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #32404d; }
+ul, ol { margin-top: 10px; padding-left: 24px; }
+li { font-size: 15px; line-height: 1.55; color: #32404d; margin-top: 4px; }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  background: var(--soft-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+pre {
+  margin-top: 14px;
+  background: #1e2832;
+  color: #c9d1d9;
+  padding: 16px 18px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.4; }
+th { border-top: 0; background: var(--soft); color: var(--aa-blue); font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+blockquote { border-left: 4px solid var(--aa-blue); margin-top: 14px; padding: 10px 16px; background: var(--soft); color: var(--muted); font-size: 14px; }
+
+/* ── Meta / stat cards ── */
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; max-width: 820px; }
+.meta-card { border: 1px solid var(--line); background: #fff; padding: 16px 18px; }
+.meta-card .k { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: var(--aa-red); font-weight: 800; }
+.meta-card .v { margin-top: 7px; font-size: 17px; line-height: 1.4; color: #23303d; }
+.summary-band { margin-top: 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card { border: 1px solid var(--line); background: #fff; padding: 14px; }
+.stat-card .n { font-size: 34px; line-height: 1; color: var(--aa-blue); font-weight: 850; letter-spacing: -1px; }
+.stat-card .l { margin-top: 7px; font-size: 13px; line-height: 1.35; color: #52606d; }
+
+/* ── Status badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.status-badge.proposed  { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.implemented { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.archived  { background: var(--soft-2); color: var(--muted); border: 1px solid var(--line); }
+.status-badge.accepted  { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.deprecated { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.high   { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.medium { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.low    { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+
+/* ── Chip row ── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--aa-blue);
+  letter-spacing: .3px;
+}
+
+/* ── ADR header ── */
+.adr-header {
+  border: 2px solid var(--aa-blue);
+  padding: 20px 24px;
+  margin-top: 24px;
+  background: var(--soft);
+}
+.adr-header .adr-num { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); font-weight: 700; }
+.adr-header h1 { margin-top: 8px; font-size: 32px; }
+.adr-header .adr-meta { display: flex; gap: 20px; margin-top: 14px; align-items: center; flex-wrap: wrap; }
+.adr-header .adr-meta-item { font-size: 13px; color: var(--muted); }
+.adr-header .adr-meta-item strong { color: var(--ink); }
+
+/* ── Confidence band ── */
+.confidence-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-left: 6px solid var(--aa-blue);
+  background: var(--soft);
+  margin-top: 24px;
+}
+.confidence-band .cb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.confidence-band.high  { border-left-color: #1b7a2b; }
+.confidence-band.medium { border-left-color: #b36b00; }
+.confidence-band.low   { border-left-color: var(--aa-red); }
+
+/* ── Tasks / checklist ── */
+.task-done, .task-pending {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 5px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.task-done .cb   { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; background: #1b7a2b; border: 2px solid #1b7a2b; display: flex; align-items: center; justify-content: center; }
+.task-done .cb::after { content: "✓"; color: #fff; font-size: 11px; font-weight: 900; }
+.task-pending .cb { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; border: 2px solid var(--aa-blue); }
+.task-done .task-text   { color: #52606d; text-decoration: line-through; }
+.task-pending .task-text { color: #32404d; }
+.phase-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+.phase-num {
+  background: var(--aa-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+.progress-table { margin-top: 20px; }
+
+/* ── Law citation tooltips (Task 4.4) ── */
+.law-cite {
+  position: relative;
+  display: inline;
+  color: var(--aa-blue);
+  font-weight: 700;
+  border-bottom: 1px dashed var(--aa-blue);
+  cursor: help;
+  white-space: nowrap;
+}
+.law-cite[data-non-negotiable="true"] {
+  color: var(--aa-red);
+  border-bottom-color: var(--aa-red);
+}
+.law-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 9999;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2832;
+  color: #e8edf2;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: normal;
+  min-width: 220px;
+  max-width: 340px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: opacity .15s ease, visibility .15s ease;
+  text-align: left;
+  font-weight: 400;
+}
+.law-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e2832;
+}
+.law-tooltip .law-summary { font-size: 12px; color: #9aaab8; margin-top: 4px; display: block; }
+.law-tooltip em { color: #f0a500; font-style: normal; font-size: 11px; font-weight: 700; }
+.law-cite:hover .law-tooltip,
+.law-cite:focus .law-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+/* Flip tooltip below when near top of viewport */
+.law-cite.flip-below .law-tooltip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.law-cite.flip-below .law-tooltip::after {
+  top: auto; bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1e2832;
+}
+
+@media print {
+  .law-tooltip { display: none; }
+  .law-cite { border-bottom: none; color: inherit; font-weight: inherit; }
+}
+</style>
+</head>
+<body>
+
+
+<div class="page cover">
+  <div class="eyebrow">Hangar AI Constitution</div>
+  <h1>Body Checks B01–B03</h1>
+  <div class="footer"><div>Body Checks B01–B03</div><div class="pn">1</div></div>
+</div>
+<div class="page content">
+  <h1>VS-05 Evidence: Body Checks B01–B03</h1>
+<h2>Slice Objective</h2>
+<p>Implement <code>checks/body.py</code> with B01–B03 section-heading detection checks.
+Body checks operate on the text after the closing <code>---</code> frontmatter delimiter.
+SKIP logic is the orchestrator's responsibility (VS-07); these functions return PASS/FAIL only.</p>
+<hr />
+<h2>Deliverables</h2>
+<table>
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>Path</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Body checks</td>
+<td><code>tools/aa-jury-gate/aa_jury_gate/checks/body.py</code></td>
+<td>✅ committed <code>0d454bc</code></td>
+</tr>
+<tr>
+<td>Body tests</td>
+<td><code>tools/aa-jury-gate/tests/test_body.py</code></td>
+<td>✅ committed <code>0d454bc</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Public API</h2>
+<pre><code class="language-python"># checks/body.py
+def check_b01(body: str) -&gt; CheckItem  # R1 section heading present
+def check_b02(body: str) -&gt; CheckItem  # R2 section heading present
+def check_b03(body: str) -&gt; CheckItem  # Synthesis/Final/Judicial heading present
+</code></pre>
+<p>DETAIL messages per Phase 3 §1.4:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>FAIL DETAIL format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B01</td>
+<td><code>R1 section heading not found in body</code></td>
+</tr>
+<tr>
+<td>B02</td>
+<td><code>R2 section heading not found in body</code></td>
+</tr>
+<tr>
+<td>B03</td>
+<td><code>synthesis section heading not found in body</code></td>
+</tr>
+</tbody>
+</table>
+<p>Patterns (multiline, case-insensitive — Phase 3 §3 Surface 4):</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B01</td>
+<td><code>^##\s+(Round\s+1|R1)(\s|:|-|$)</code></td>
+</tr>
+<tr>
+<td>B02</td>
+<td><code>^##\s+(Round\s+2|R2)(\s|:|-|$)</code></td>
+</tr>
+<tr>
+<td>B03</td>
+<td><code>^##\s+(Synthesis|Final|Judicial)(\s|:|-|$)</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Implementation Notes</h2>
+<ul>
+<li>Patterns compiled at module level (not per-call) for efficiency (<span class="law-cite" data-law-id="ENG-2.1" data-non-negotiable="false">ENG-2.1<span class="law-tooltip"><strong>Domain-Driven Design Law</strong></span></span>)</li>
+<li><code>re.MULTILINE | re.IGNORECASE</code> on all three patterns</li>
+<li><code>## R10</code> does NOT match B01 — trailing <code>(\s|:|-|$)</code> prevents digit continuation</li>
+<li><code>## R1.1</code> does NOT match B01 — <code>.</code> absent from trailing char class (RC-P3-J2-009a)</li>
+<li>SKIP logic (B01–B03 skipped when S11 fails) is in <code>gate.py</code> (VS-07), not here (C-P5-J1-005, C-P5-J5-001)</li>
+</ul>
+<hr />
+<h2>Test Evidence</h2>
+<h3>Test Targets</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>PASS tests</th>
+<th>FAIL tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B01</td>
+<td>Round 1, R1:, R1-, R1 EOL, case-insensitive, midway in body</td>
+<td>no heading, ## R10, ## R1.1, ## Round 10, empty, inline prose</td>
+</tr>
+<tr>
+<td>B02</td>
+<td>Round 2, R2:, R2-, R2 EOL, case-insensitive</td>
+<td>no heading, ## R20, ## R2.1, empty, inline prose</td>
+</tr>
+<tr>
+<td>B03</td>
+<td>Synthesis, Final, Judicial, :, -, EOL, case-insensitive×2, all-three-present</td>
+<td>no heading, empty (BDD F04), inline prose, ## Judicial.1</td>
+</tr>
+</tbody>
+</table>
+<h3>Test Run</h3>
+<pre><code>pytest tests/test_body.py -q
+======================== 40 passed in 0.07s ========================
+</code></pre>
+<p>All 40 tests pass (35 initial + 5 R1 observation additions).</p>
+<h3>Coverage</h3>
+<pre><code>aa_jury_gate/checks/body.py    39     0   100%
+</code></pre>
+<p>100% line coverage.</p>
+<h3>Mutation Testing</h3>
+<pre><code>mutmut run --paths-to-mutate aa_jury_gate/checks/body.py
+21/21 🎉; 0 survivors in body.py
+</code></pre>
+<p><strong>21/21 = 100%</strong> on body.py.</p>
+<hr />
+<h2>Ruff</h2>
+<pre><code>ruff check aa_jury_gate/checks/body.py tests/test_body.py → All checks passed!
+</code></pre>
+<hr />
+<h2>Law Compliance</h2>
+<table>
+<thead>
+<tr>
+<th>Law</th>
+<th>Requirement</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="law-cite" data-law-id="ENG-2.1" data-non-negotiable="false">ENG-2.1<span class="law-tooltip"><strong>Domain-Driven Design Law</strong></span></span></td>
+<td>Modular decomposition</td>
+<td><code>body.py</code> self-contained; depends only on <code>models.py</code>; patterns compiled at module level</td>
+</tr>
+<tr>
+<td><span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>TDD RED→GREEN→REFACTOR</td>
+<td>Tests written first (RED: <code>ModuleNotFoundError</code>); implementation to GREEN</td>
+</tr>
+<tr>
+<td><span class="law-cite" data-law-id="ENG-4.6" data-non-negotiable="false">ENG-4.6<span class="law-tooltip"><strong>Coverage Requirements</strong></span></span></td>
+<td>Coverage ≥ 90%</td>
+<td>100% on body.py</td>
+</tr>
+<tr>
+<td><span class="law-cite" data-law-id="ENG-4.11" data-non-negotiable="false">ENG-4.11<span class="law-tooltip"><strong>Mutation Testing Law</strong></span></span></td>
+<td>Mutation ≥ 85%</td>
+<td>100% body.py (21/21, 0 survivors)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Jury Gate Record</h2>
+<h3>Round 1 — All 5 APPROVED</h3>
+<table>
+<thead>
+<tr>
+<th>Juror</th>
+<th>Model</th>
+<th>Verdict</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>J1 — Domain Sceptic</td>
+<td>claude-opus-4.6</td>
+<td>APPROVED</td>
+<td>Patterns correct, tests comprehensive, no deviations</td>
+</tr>
+<tr>
+<td>J2 — Technical Expert</td>
+<td>claude-sonnet-4.6</td>
+<td>APPROVED</td>
+<td>SHOULD-FIX: add <code>$</code>-branch tests + B02 Round-20 non-match</td>
+</tr>
+<tr>
+<td>J3 — Strategic/Product</td>
+<td>gpt-5.4</td>
+<td>APPROVED</td>
+<td>Product alignment confirmed</td>
+</tr>
+<tr>
+<td>J4 — Defense Counsel</td>
+<td>gpt-5.2</td>
+<td>APPROVED</td>
+<td>No issues</td>
+</tr>
+<tr>
+<td>J5 — Devil's Advocate</td>
+<td>gpt-5.4-mini</td>
+<td>APPROVED</td>
+<td>Patterns and tests sound</td>
+</tr>
+</tbody>
+</table>
+<h3>J2 Observations Addressed (commit <code>0d454bc</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test Added</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C-P6-VS05-R1-J2-001</td>
+<td><code>test_pass_r1_end_of_string_no_newline</code>, <code>test_pass_round_1_end_of_string_no_newline</code> (B01 <code>$</code> branch)</td>
+</tr>
+<tr>
+<td>C-P6-VS05-R1-J2-002</td>
+<td><code>test_fail_round_20_does_not_match</code>, <code>test_pass_r2_end_of_string_no_newline</code> (B02 symmetry + <code>$</code> branch)</td>
+</tr>
+<tr>
+<td>C-P6-VS05-R1-J2-003</td>
+<td><code>test_pass_synthesis_end_of_string_no_newline</code> (B03 <code>$</code> branch)</td>
+</tr>
+</tbody>
+</table>
+<h3>Round 2 — 4/5 APPROVED, 1 NEEDS_REVISION</h3>
+<table>
+<thead>
+<tr>
+<th>Juror</th>
+<th>Model</th>
+<th>Verdict</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>J1 — Domain Sceptic</td>
+<td>claude-opus-4.6</td>
+<td>APPROVED</td>
+<td>New tests correct and well-targeted</td>
+</tr>
+<tr>
+<td>J2 — Technical Expert</td>
+<td>claude-sonnet-4.6</td>
+<td>APPROVED</td>
+<td>All R1 observations confirmed</td>
+</tr>
+<tr>
+<td>J3 — Strategic/Product</td>
+<td>gpt-5.4</td>
+<td>APPROVED</td>
+<td>Slice ready to ship</td>
+</tr>
+<tr>
+<td>J4 — Defense Counsel</td>
+<td>gpt-5.2</td>
+<td>APPROVED</td>
+<td>40 tests pass</td>
+</tr>
+<tr>
+<td>J5 — Devil's Advocate</td>
+<td>gpt-5.4-mini</td>
+<td>NEEDS_REVISION</td>
+<td>Code-block false positives + indented headings missed</td>
+</tr>
+</tbody>
+</table>
+<h3>Judicial Synthesis</h3>
+<p><strong>Synthesizer:</strong> claude-opus-4.5 | <strong>Final Verdict: APPROVED</strong></p>
+<p>J5's concerns (code-block false positives, indented ATX headings) ruled <strong>SPEC-LEVEL DESIGN CHOICES</strong> — Phase 3 §3 Surface 4 specifies pure regex on body text, no code-block exclusions, and explicitly <code>^##</code> with no leading spaces. CAVEAT-VS05-A/B document both for future spec revision if needed.</p>
+<hr />
+<h2>Final Verdict</h2>
+<p><strong>VERDICT: APPROVED</strong> — 40 tests pass, 100% coverage, 21/21 mutmut (0 survivors), ruff clean. Commits <code>db20848</code>, <code>0d454bc</code>.</p>
+
+  <div class="footer"><div>Body Checks B01–B03</div><div class="pn">2</div></div>
+</div>
+
+<script>
+// Flip tooltip below the citation when it would overflow the top of the viewport
+document.querySelectorAll('.law-cite').forEach(function(el) {
+  el.addEventListener('mouseenter', function() {
+    var rect = el.getBoundingClientRect();
+    var tooltip = el.querySelector('.law-tooltip');
+    if (!tooltip) return;
+    var tipH = tooltip.offsetHeight || 80;
+    if (rect.top < tipH + 12) {
+      el.classList.add('flip-below');
+    } else {
+      el.classList.remove('flip-below');
+    }
+  });
+  // Keyboard accessibility
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  el.setAttribute('aria-describedby', 'tooltip-' + el.dataset.lawId);
+  var tip = el.querySelector('.law-tooltip');
+  if (tip) tip.id = 'tooltip-' + el.dataset.lawId;
+});
+</script>
+</body>
+</html>

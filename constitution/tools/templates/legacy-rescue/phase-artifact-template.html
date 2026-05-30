@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{PHASE_TITLE}} — AAdvantage Legacy Rescue</title>
+<style>
+/* ── AA Constitutional Design System ── */
+@page { size: 1088px 1408px; margin: 0; }
+
+:root {
+  --aa-blue: #003087;
+  --aa-red:  #C8102E;
+  --ink:     #17202a;
+  --muted:   #5f6d7a;
+  --line:    #d9e1ea;
+  --soft:    #f3f7fb;
+  --soft-2:  #eef3f8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* ── Page layout ── */
+.page {
+  width: 1088px;
+  min-height: 1408px;
+  padding: 94px 88px 100px;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  page-break-after: always;
+}
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 12px;
+  background: linear-gradient(90deg, var(--aa-blue), var(--aa-red));
+}
+.page::after {
+  content: "✈";
+  position: absolute;
+  right: 34px; bottom: -10px;
+  font-size: 240px;
+  color: var(--aa-blue);
+  opacity: .03;
+  transform: rotate(18deg);
+  pointer-events: none;
+}
+.page.cover {
+  background:
+    radial-gradient(circle at 85% 16%, rgba(0,48,135,.08), transparent 22%),
+    linear-gradient(180deg, #fbfcfe 0%, #f1f6fa 100%);
+}
+.footer {
+  position: absolute;
+  left: 88px; right: 88px; bottom: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5ebf1;
+  padding-top: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #7f8b97;
+}
+.footer .pn { color: var(--aa-blue); font-weight: 800; }
+
+/* ── Typography ── */
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--aa-red);
+}
+h1 {
+  margin-top: 22px;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--aa-blue);
+  font-weight: 850;
+  max-width: 820px;
+}
+h2 {
+  margin-top: 32px;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -.6px;
+  color: var(--aa-blue);
+  font-weight: 800;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+h3 { margin-top: 20px; font-size: 19px; color: var(--aa-blue); font-weight: 700; }
+h4 { margin-top: 16px; font-size: 16px; color: var(--ink); font-weight: 700; }
+p  { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #32404d; }
+ul, ol { margin-top: 10px; padding-left: 24px; }
+li { font-size: 15px; line-height: 1.55; color: #32404d; margin-top: 4px; }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  background: var(--soft-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+pre {
+  margin-top: 14px;
+  background: #1e2832;
+  color: #c9d1d9;
+  padding: 16px 18px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.4; }
+th { border-top: 0; background: var(--soft); color: var(--aa-blue); font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+blockquote { border-left: 4px solid var(--aa-blue); margin-top: 14px; padding: 10px 16px; background: var(--soft); color: var(--muted); font-size: 14px; }
+
+/* ── Meta / stat cards ── */
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; max-width: 820px; }
+.meta-card { border: 1px solid var(--line); background: #fff; padding: 16px 18px; }
+.meta-card .k { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: var(--aa-red); font-weight: 800; }
+.meta-card .v { margin-top: 7px; font-size: 17px; line-height: 1.4; color: #23303d; }
+.summary-band { margin-top: 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card { border: 1px solid var(--line); background: #fff; padding: 14px; }
+.stat-card .n { font-size: 34px; line-height: 1; color: var(--aa-blue); font-weight: 850; letter-spacing: -1px; }
+.stat-card .l { margin-top: 7px; font-size: 13px; line-height: 1.35; color: #52606d; }
+.stat-card.danger .n { color: var(--aa-red); }
+.stat-card.warn .n { color: #b36b00; }
+
+/* ── Status badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.status-badge.proposed  { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.implemented { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.archived  { background: var(--soft-2); color: var(--muted); border: 1px solid var(--line); }
+.status-badge.accepted  { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.deprecated { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.pass   { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.fail   { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.warn   { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.critical { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.high   { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+
+/* ── Chip row ── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--aa-blue);
+  letter-spacing: .3px;
+}
+
+/* ── Confidence band ── */
+.confidence-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-left: 6px solid var(--aa-blue);
+  background: var(--soft);
+  margin-top: 24px;
+}
+.confidence-band .cb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.confidence-band.high  { border-left-color: #1b7a2b; }
+.confidence-band.medium { border-left-color: #b36b00; }
+.confidence-band.low   { border-left-color: var(--aa-red); }
+
+/* ── Phase header ── */
+.phase-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+.phase-num {
+  background: var(--aa-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+
+/* ── Law citation tooltips ── */
+.law-cite {
+  position: relative;
+  display: inline;
+  color: var(--aa-blue);
+  font-weight: 700;
+  border-bottom: 1px dashed var(--aa-blue);
+  cursor: help;
+  white-space: nowrap;
+}
+.law-cite[data-non-negotiable="true"] {
+  color: var(--aa-red);
+  border-bottom-color: var(--aa-red);
+}
+.law-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 9999;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2832;
+  color: #e8edf2;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: normal;
+  min-width: 220px;
+  max-width: 340px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: opacity .15s ease, visibility .15s ease;
+  text-align: left;
+  font-weight: 400;
+}
+.law-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e2832;
+}
+.law-tooltip .law-summary { font-size: 12px; color: #9aaab8; margin-top: 4px; display: block; }
+.law-cite:hover .law-tooltip,
+.law-cite:focus .law-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+.law-cite.flip-below .law-tooltip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.law-cite.flip-below .law-tooltip::after {
+  top: auto; bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1e2832;
+}
+
+.gate-block {
+  margin-top: 24px;
+  border: 2px solid var(--aa-red);
+  padding: 18px 22px;
+  background: #fdf2f4;
+}
+.gate-block .gate-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--aa-red); font-weight: 800; margin-bottom: 8px; }
+.gate-block .gate-row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+.gate-block .gate-item { font-size: 14px; color: var(--ink); }
+.gate-block .gate-item strong { color: var(--aa-red); }
+
+td.critical { color: var(--aa-red); font-weight: 700; }
+td.high-sev { color: #b36b00; font-weight: 700; }
+
+@media print {
+  .law-tooltip { display: none; }
+  .law-cite { border-bottom: none; color: inherit; font-weight: inherit; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     AA CONSTITUTIONAL DESIGN SYSTEM — Legacy Rescue Phase Template
+     Version: 1.0  |  Constitutional AI · Hangar AI Constitution
+     
+     AGENT GENERATION INSTRUCTIONS:
+     ─────────────────────────────────────────────────────────────
+     When generating a live phase artifact, replace ALL {{TOKENS}}
+     and follow these rules:
+
+     REQUIRED TOKENS:
+       {{PHASE_TITLE}}    e.g. "Phase 1 — Assess"
+       {{PHASE_NUM}}      e.g. "1"
+       {{PHASE_NAME}}     e.g. "Assess"
+       {{PHASE_OF}}       e.g. "1 of 7 — Constitutional Audit & Baseline"
+       {{PROJECT_KEY}}    e.g. "aa-loyalty-legacy"
+       {{CODEBASE}}       e.g. "aa-loyalty-legacy — Java 8 Spring MVC Monolith"
+       {{GATE_STATUS}}    one of: "NOT MET" | "IN PROGRESS" | "PASSED ✅"
+       {{GATE_COLOR}}     one of: "danger" | "warn" | "ok"
+       {{PAGE_COUNT}}     total pages in this artifact e.g. "3"
+       {{DATE}}           ISO date e.g. "2026-05-04"
+       {{FOOTER_TEXT}}    e.g. "AAdvantage Legacy Rescue · Phase 1 — Assess"
+
+     DESIGN RULES (NON-NEGOTIABLE for constitutional artifacts):
+     1. Every page MUST be a <div class="page"> or <div class="page cover">
+     2. Every page MUST end with <div class="footer">...</div>
+     3. Law citations MUST use <span class="law-cite" data-law-id="ENG-X.Y"
+        data-non-negotiable="true|false"> with .law-tooltip child
+     4. Human gate blocks MUST use <div class="gate-block"> with .gate-label
+        and .gate-row .gate-item children
+     5. Page 1 MUST be a .cover page with eyebrow, h1, .meta grid, .chip-row,
+        and a constitutional gate block showing current phase gate status
+     6. AI-GENERATED DEMO REPO banner MUST be the very first element in <body>
+        (fixed position, amber, same markup as shown in BANNER COMPONENT below)
+     7. All stat highlights use .summary-band > .stat-card with danger/warn/ok class
+     8. Violation tables use .violation-table with .sev-p0/.sev-p1/.sev-p2/.sev-p3
+     9. Colors: --aa-blue: #003087  --aa-red: #C8102E  (never substitute)
+    10. Page width is always 1088px — do not change
+
+     BANNER COMPONENT (copy exactly):
+     ════════════════════════════════
+═══════════════════════════════════════════════════════════════ -->
+
+<!-- AI-GENERATED DEMO REPO BANNER — copy exactly, do not omit -->
+<div style="position:fixed; top:0; left:0; right:0; z-index:9999; background:#fef3c7; border-bottom:2px solid #f59e0b; padding:6px 16px; display:flex; align-items:center; gap:10px; font-family:sans-serif; font-size:0.8rem; color:#78350f;">
+  <span style="font-size:1rem;">&#9888;&#65039;</span>
+  <strong>AI-GENERATED DEMO REPO</strong> &mdash; This codebase (<code>aa-loyalty-legacy</code>) is entirely AI-generated for illustration purposes. It is <strong>not</strong> real AA production code and does not represent any AA system.
+</div>
+<div style="height:38px;"></div>
+
+<!-- ══ PAGE 1: COVER ══════════════════════════════════════════════ -->
+<div class="page cover">
+  <div class="eyebrow">Legacy Rescue · AAdvantage Loyalty Platform</div>
+  <h1>{{PHASE_TITLE}}</h1>
+  <div class="meta" style="margin-top:48px; max-width:680px;">
+    <div class="meta-card">
+      <div class="k">Project</div>
+      <div class="v">AA AAdvantage Loyalty Platform — Legacy Rescue</div>
+    </div>
+    <div class="meta-card">
+      <div class="k">Codebase</div>
+      <div class="v"><code>{{CODEBASE}}</code></div>
+    </div>
+    <div class="meta-card">
+      <div class="k">SonarQube Project Key</div>
+      <div class="v"><code>{{PROJECT_KEY}}</code></div>
+    </div>
+    <div class="meta-card">
+      <div class="k">Phase</div>
+      <div class="v">{{PHASE_OF}}</div>
+    </div>
+    <div class="meta-card">
+      <div class="k">Date</div>
+      <div class="v">{{DATE}}</div>
+    </div>
+  </div>
+  <div class="chip-row" style="margin-top:40px;">
+    <!-- Add relevant bounded context / scope chips here -->
+    <span class="chip">Miles Accrual</span>
+    <span class="chip">Award Redemption</span>
+    <span class="chip">Partner Integration</span>
+    <span class="chip">Member Profile</span>
+  </div>
+  <div class="gate-block" style="margin-top:52px; max-width:680px;">
+    <div class="gate-label">Constitutional Gate — Phase {{PHASE_NUM}} Result</div>
+    <div class="gate-row">
+      <div class="gate-item">SonarQube Quality Gate: <strong>{{SONAR_GATE}}</strong></div>
+      <div class="gate-item">Constitutional Gate: <strong>{{GATE_STATUS}}</strong></div>
+      <div class="gate-item">Disposition: <strong>{{DISPOSITION}}</strong></div>
+    </div>
+  </div>
+  <div class="footer"><div>{{FOOTER_TEXT}}</div><div class="pn">1</div></div>
+</div>
+
+<!-- ══ PAGE 2+: CONTENT PAGES ════════════════════════════════════ -->
+<!-- Use this structure for each content page: -->
+<!--
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase {{PHASE_NUM}}</span>
+    <span style="font-size:20px; font-weight:800; color:var(--aa-blue);">PAGE TITLE</span>
+  </div>
+
+  <h2>Section Heading</h2>
+  <p>Body text with <span class="law-cite" data-law-id="ENG-X.Y" data-non-negotiable="false">
+    ENG-X.Y<span class="law-tooltip"><strong>Law Name</strong><span class="law-summary">
+    Summary of the law.</span></span></span> citation inline.</p>
+
+  [STAT BAND — for metrics]
+  <div class="summary-band">
+    <div class="stat-card danger"><div class="n">0%</div><div class="l">Coverage<br><span style="color:var(--aa-red);font-size:11px;font-weight:700;">Gate: ≥95% · FAIL</span></div></div>
+    <div class="stat-card warn"><div class="n">36</div><div class="l">Code Smells</div></div>
+    <div class="stat-card ok"><div class="n">1421</div><div class="l">Lines of Code</div></div>
+  </div>
+
+  [VIOLATION TABLE — for assessments]
+  <table class="violation-table">
+    <thead><tr><th>ID</th><th>Violation</th><th>File</th><th>Severity</th><th>Law</th></tr></thead>
+    <tbody>
+      <tr><td>V-01</td><td>Hardcoded DB password</td><td>DatabaseConfig.java:20</td>
+          <td><span class="sev-p0">P0</span></td>
+          <td><span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7 ⛔<span class="law-tooltip"><strong>Credentials Law</strong><span class="law-summary">No credentials in source.</span></span></span></td></tr>
+    </tbody>
+  </table>
+
+  [HUMAN GATE BLOCK — required on last page of each phase]
+  <div class="gate-block" style="margin-top:32px;">
+    <div class="gate-label">Human Gate — Phase {{PHASE_NUM}} Review Required</div>
+    <div class="gate-row">
+      <div class="gate-item">Review: <strong>REQUIRED</strong></div>
+      <div class="gate-item">Agent cannot proceed without human sign-off</div>
+    </div>
+  </div>
+
+  <div class="footer"><div>{{FOOTER_TEXT}}</div><div class="pn">PAGE_NUM</div></div>
+</div>
+-->
+
+<script>
+document.querySelectorAll('.law-cite').forEach(function(el) {
+  el.addEventListener('mouseenter', function() {
+    var rect = el.getBoundingClientRect();
+    var tooltip = el.querySelector('.law-tooltip');
+    if (!tooltip) return;
+    var tipH = tooltip.offsetHeight || 80;
+    if (rect.top < tipH + 12) {
+      el.classList.add('flip-below');
+    } else {
+      el.classList.remove('flip-below');
+    }
+  });
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  var tip = el.querySelector('.law-tooltip');
+  if (tip) tip.id = 'tooltip-' + el.dataset.lawId;
+});
+</script>
+</body>
+</html>

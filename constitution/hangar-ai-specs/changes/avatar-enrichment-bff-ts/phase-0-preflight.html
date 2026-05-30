@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 0 — Pre-flight | BFF TS Avatar Clinic</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; color: #1a1a2e; margin: 0; padding: 24px; }
+  h1 { font-size: 1.6rem; font-weight: 700; }
+  h2 { font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; border-bottom: 2px solid #e0e0e0; padding-bottom: 6px; }
+  .header { background: linear-gradient(135deg, #4527a0, #311b92); color: white; border-radius: 10px; padding: 24px 28px; margin-bottom: 28px; }
+  .header .meta { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .header .meta span { background: rgba(255,255,255,0.18); border-radius: 6px; padding: 4px 12px; font-size: 0.82rem; }
+  .section { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+  th { background: #f0f4f8; font-weight: 600; text-align: left; padding: 8px 10px; border-bottom: 2px solid #dde; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; }
+  .pass { background: #e8f5e9; color: #2e7d32; }
+  .reject { background: #fce4ec; color: #880e4f; }
+  .map { background: #e3f2fd; color: #0d47a1; }
+  .verdict { padding: 14px 18px; border-radius: 8px; font-weight: 600; margin-top: 16px; }
+  .verdict.green { background: #e8f5e9; color: #1b5e20; border-left: 5px solid #43a047; }
+  code { font-size: 0.82rem; background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+  footer { text-align: center; color: #aaa; font-size: 0.78rem; margin-top: 32px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🛫 Phase 0 — Pre-flight (Taxonomy Gate)</h1>
+  <p>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF TypeScript Session</p>
+  <div class="meta"><span>📅 2026-04-27</span><span>4 TS/Node repos</span><span>1 existing taxon</span><span>No new taxon needed</span></div>
+</div>
+
+<div class="section">
+  <h2>BFF TypeScript Fleet</h2>
+  <p>4 TypeScript/Node repos from the BFF fleet (deferred from the Java BFF session). The fleet breakdown per executive summary: 19 Java · <strong>3 TypeScript · 2 TypeScript/Node</strong> · 1 Kotlin.</p>
+  <table>
+    <thead><tr><th>Repo</th><th>Lang</th><th>Score</th><th>Tier</th><th>Largest File</th><th>Key Finding</th></tr></thead>
+    <tbody>
+      <tr><td><code>mobile-cache-ms</code></td><td>TS/Node</td><td>5.2</td><td>🟡 Yellow</td><td>144 LOC</td><td>9 <code>: any</code> annotations; 59% branch coverage; module-level side effects; no DI; 4 eslint-disable</td></tr>
+      <tr><td><code>Mobile-FLIFO-BFF</code></td><td>TS</td><td>5.8</td><td>🟡 Yellow</td><td>646 LOC (flightStatusBuilder.ts)</td><td>15+ <code>any</code> types; 2 typos in type definitions; env-switching if-else OCP violation; branch coverage 80%</td></tr>
+      <tr><td><code>mobile-platform-config</code></td><td>TS</td><td>6.9</td><td>🟢 Green</td><td>90 LOC</td><td>Reference for config-as-code; 8.5 coverage; jest 90% threshold enforced</td></tr>
+      <tr><td><code>mobile-platform-bff</code></td><td>TS/Node</td><td>7.2</td><td>🟢 Green</td><td>381 LOC</td><td><strong>Fleet TS reference.</strong> 100% coverage across statements/branches/functions/lines; 92 TypeScript interfaces</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Taxonomy Gate Decision</h2>
+  <table>
+    <thead><tr><th>Question</th><th>Answer</th><th>Decision</th></tr></thead>
+    <tbody>
+      <tr><td>Does "BFF TypeScript" represent a genuinely distinct technology stack?</td><td>No — these repos use the same Node.js/TypeScript/Express stack as <code>avatar-nodejs-typescript</code></td><td><span class="badge reject">REJECT new taxon</span></td></tr>
+      <tr><td>Does an existing avatar cover this stack?</td><td>Yes — <code>avatar-nodejs-typescript</code> exists in the registry (version 2.0.0)</td><td><span class="badge map">MAP to existing</span></td></tr>
+      <tr><td>New product domain?</td><td>Flight status (FLIFO) → check-in-travel; platform/config → internal. No new product domain.</td><td><span class="badge map">MAP to existing product avatars</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Avatar Mapping</h2>
+  <table>
+    <thead><tr><th>Avatar</th><th>Repos Covered</th><th>Mode</th></tr></thead>
+    <tbody>
+      <tr><td><code>avatar-nodejs-typescript</code></td><td>All 4 TS/Node repos</td><td>Mode 2 Correct + Mode 4 Enrich</td></tr>
+      <tr><td><code>avatar-check-in-travel</code></td><td>Mobile-FLIFO-BFF (flight status data)</td><td>Mode 4 Enrich — TS-specific BFF evidence</td></tr>
+      <tr><td><code>avatar-passenger-booking</code></td><td>mobile-platform-bff (serves booking flows)</td><td>Mode 4 Enrich — platform-bff TS reference</td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green">✅ Taxonomy gate PASS — no new avatar. Mode 2 Correct + Mode 4 Enrich on avatar-nodejs-typescript and 2 product avatars.</div>
+</div>
+
+<footer>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF TypeScript Session · 2026-04-27</footer>
+</body>
+</html>

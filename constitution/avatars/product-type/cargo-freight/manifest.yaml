@@ -1,0 +1,163 @@
+avatar:
+  id: avatar-product-cargo
+  type: product
+  name: "Cargo & Freight"
+  version: "1.0.0"
+  created: "2026-02-20"
+  last_updated: "2026-02-20"
+
+domain:
+  category: "Cargo Booking & Operations"
+  description: |
+    American Airlines Cargo provides international and domestic freight logistics services,
+    handling everything from high-value goods and hazmat to e-commerce shipments.
+    Critical value drivers include speed of booking, rate competitiveness, reliability,
+    and exception handling for premium customers.
+  
+  personas:
+    - Freight Forwarder
+    - Direct Shipper
+    - Partner Airline (PAL)
+    - Cargo Operations Manager
+  personas_file: "examples/personas.md"
+
+core_journeys:
+  - "Rate Quote to Booking"
+  - "Shipment Tracking & Updates"
+  - "Claims Processing"
+  - "PAL Application & Vetting"
+  - "Rate Management & Optimization"
+
+activates:
+  skills:
+    # Discovery & Research
+    - skill-spec-governance
+    - skill-02-user-journey-mapping
+    - skill-02-research-synthesis
+    
+    # Product Planning
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+    
+    # Development
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+
+    # Compliance & Security
+    - skill-10-security-review
+    - skill-27-constitution-compliance
+
+  workflows:
+    - product-discovery-stage-a-f
+    - workflow-cargo-booking
+    - legacy-rescue-decision-track
+    - legacy-rescue-refactor
+
+specializes_laws:
+  - id: PRD-1.1
+    title: "Continuous Discovery"
+    description: "Understand cargo customer needs through forwarder interviews, shipper research, and competitive analysis"
+    example_file: "examples/PRD-1.1-discovery.md"
+    key_practices:
+      - "Interview freight forwarders about rate quote pain points"
+      - "Analyze shipper satisfaction metrics and NPS trends"
+      - "Research competitor booking speeds and features"
+      - "Study exception handling workflows"
+    law_citations:
+      - "Cargo research methods from customer interviews"
+      - "Rate competitiveness and speed as primary differentiators"
+  
+  - id: PRD-2.1
+    title: "User Journey Mapping"
+    description: "Map cargo booking and operations workflows including touchpoints, handoffs, and exception paths"
+    example_file: "examples/PRD-2.1-journey.md"
+    key_practices:
+      - "Map end-to-end booking journey from rate search to confirmation"
+      - "Document pickup/delivery touchpoints and dependencies"
+      - "Identify exception flows (hazmat, oversized, PAL bookings)"
+      - "Track communication channels (phone, web, API)"
+    law_citations:
+      - "Cargo booking workflow stages and decision points"
+      - "Exception handling flows and escalation paths"
+  
+  - id: PRD-3.1
+    title: "Roadmap Planning"
+    description: "Prioritize cargo features based on customer impact, revenue potential, and operational efficiency"
+    example_file: "examples/PRD-3.1-roadmap.md"
+    key_practices:
+      - "Rank features by customer impact (quotes, speed, reliability)"
+      - "Evaluate revenue impact (volume growth, margin improvement)"
+      - "Assess engineering effort and operational complexity"
+      - "Plan phased rollouts to manage risk"
+    law_citations:
+      - "Cargo OKRs: quote time, booking rate, customer retention"
+      - "Capacity vs. rates trade-offs in feature prioritization"
+  
+  - id: PRD-4.1
+    title: "MVP & Product-Market Fit"
+    description: "Define minimum viable cargo product and validate market fit with key customer segments"
+    example_file: "examples/PRD-4.1-mvp.md"
+    key_practices:
+      - "Define MVP scope: quote speed < 15s, booking in < 2 min"
+      - "Focus on top 3 freight forwarders as initial users"
+      - "Validate need: will they use daily? Can they integrate?"
+      - "Measure: quote accuracy, booking completion rate"
+    law_citations:
+      - "MVP definition focused on fastest quote and booking times"
+      - "Market fit validation with high-volume freight partners"
+  
+  - id: PRD-5.1
+    title: "Metrics & Success Definition"
+    description: "Define KPIs for cargo product including speed, reliability, customer satisfaction, and financial impact"
+    example_file: "examples/PRD-5.1-metrics.md"
+    key_practices:
+      - "Speed metrics: quote time, booking time, pickup time"
+      - "Quality metrics: booking accuracy, on-time delivery rate"
+      - "Customer metrics: NPS, repeat booking rate, claim resolution time"
+      - "Financial metrics: revenue per shipment, margin, customer LTV"
+    law_citations:
+      - "Cargo KPIs aligned to business model (volume, margin, retention)"
+      - "Real-time monitoring for exception handling"
+
+  # Compliance enrichment (Phase 8)
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: "IATA regulations for hazmat/dangerous goods (IATA DGR); DOT 49 CFR Part 175 (hazmat air transport); TSA Known Shipper program; CITES for wildlife shipments; export control (EAR/ITAR) for controlled goods"
+  - id: BUS-2.4
+    title: "Evidence Collection"
+    description: "Hazmat shipment audit trail: shipper declaration, acceptance check, aircraft loading record. Regulatory audit trail per DOT 49 CFR. Chain of custody for high-value shipments"
+  - id: ENG-6.1
+    title: "Security by Design"
+    description: "Known Shipper verification before acceptance; hazmat classification validation; no dangerous goods mis-declaration. CBRN screening protocols for cargo origin countries"
+  - id: ENG-6.7
+    title: "Audit Trail"
+    description: "All cargo acceptance, loading, delivery events and exception handling must be immutably logged with regulation citation. Hazmat incidents require immediate regulatory notification log"
+
+rag_index:
+  enabled: true
+  folders:
+    - "examples/"
+    - "use-cases/"
+  max_tokens_per_example: 800
+  citation_style: "law_id_and_title"
+  refresh_frequency: "weekly"
+
+related_products:
+  - "Ops Control"
+  - "Accounting System"
+  - "CRM Platform"
+
+dependencies:
+  - "Pricing Engine"
+  - "Shipping APIs (integrations)"
+  - "Customer Database"
+  - "Capacity Management System"
+
+tags:
+  - product
+  - cargo
+  - freight
+  - logistics
+  - booking

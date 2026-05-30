@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aa-artifact-render"
+version = "1.2.0"
+description = "Render Hangar AI Constitution governance artifacts as self-contained HTML with law citation tooltips, and optionally as reproducible PDFs."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Proprietary — American Airlines Internal" }
+dependencies = [
+    "click>=8.1",
+    "markdown-it-py>=3.0",
+    "PyYAML>=6.0",
+    "Jinja2>=3.1",
+    "playwright>=1.40",
+]
+
+[project.scripts]
+aa-artifact-render = "aa_artifact_render.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "beautifulsoup4>=4.12",
+    "mutmut>=2.4",
+]
+
+[tool.mutmut]
+paths_to_mutate = "src/aa_artifact_render/verdict_engine.py"
+runner = "python -m pytest tests/test_verdict_engine.py -x -q --no-cov"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=aa_artifact_render --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["aa_artifact_render"]
+omit = ["tests/*"]

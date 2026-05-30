@@ -1,0 +1,132 @@
+# Flight Status & FLIFO Information Avatar Manifest
+
+avatar:
+  id: avatar-flight-status-flifo
+  type: product
+  name: "Flight Status & FLIFO Information"
+  version: "1.0.0"
+  created: "2026-04-30"
+  last_updated: "2026-04-30"
+
+domain:
+  category: "Real-Time Flight Information & Status Notifications"
+  description: |
+    "FLIFO" is internal American Airlines terminology aligned with repository naming
+    (flightinfo-ios, Mobile-FLIFO-BFF). Externally this surfaces as "Flight Status."
+    This avatar covers real-time flight status search (by flight number or city-pair),
+    flight details display (leg, performance, cabin), calendar-based date lookup, and
+    push notification subscription for flight status updates (delays, gate changes,
+    cancellations). Advisory-only domain — no booking mutations are performed.
+    All real-time status data is sourced from the FAA FLIFO data feed, proxied
+    through the Mobile-FLIFO-BFF service.
+  personas:
+    - Traveling Passenger (monitoring own flight)
+    - Meeting Planner (tracking others' flights)
+    - Airport Observer (tracking general flight info)
+
+core_journeys:
+  - "Flight Status Search (flight number or city-pair)"
+  - "Flight Details & Performance Display"
+  - "Push Notification Subscription for Flight Alerts"
+  - "Calendar-Based Flight Date Lookup"
+  - "Watch App Flight Status Glance"
+
+activates:
+  skills:
+    - skill-spec-governance
+    - skill-02-user-journey-mapping
+    - skill-02-research-synthesis
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+  workflows:
+    - product-discovery-stage-a-f
+    - legacy-rescue-decision-track
+
+specializes_laws:
+  - PRD-1.2
+  - PRD-1.5
+  - PRD-2.5
+  - PRD-5.1
+  - PRD-6.2
+  - BUS-1.1
+  - BUS-4.3
+  - BUS-7.1
+  - BUS-9.3
+  # BUS-2.1: FAA FLIFO regulatory data feed compliance — applicable because all
+  # real-time flight status data originates from the FAA FLIFO feed. Governs
+  # data accuracy obligations, feed SLA acknowledgment, and advisory-only use
+  # (no operational control decisions may be made from this data downstream).
+  - BUS-2.1
+
+conventions:
+  search_modes:
+    - flight_number: "Primary mode — direct lookup by AA flight number and date"
+    - city_pair: "Secondary mode — origin/destination airport pair with date"
+  cache_strategy: "BFF caches FLIFO responses; AAFeatureFlightStatusIgnoreCache feature toggle bypasses cache for real-time override"
+  feature_toggle_prefix: "AAFeatureFlifo* and AAFeatureFlightStatus*"
+  notification_opt_in: "Explicit push notification opt-in required per FlightStatusNotificationViewController; no silent enrollment"
+  data_classification: "Advisory display only — status data must not be used to gate operational decisions"
+  next_day_departure: "AAFeatureFlightStatusSearchNextDayDeparture controls cross-midnight search window"
+
+commands:
+  - name: "generate-status-spec"
+    description: "Generate a flight status feature spec grounded in FLIFO domain conventions"
+  - name: "review-notification-ux"
+    description: "Review push notification opt-in UX against BUS-9.3 and PRD-6.2"
+  - name: "stage-gate-check"
+    description: "Run PRD-2.5 stage-gate compliance check for a FLIFO feature increment"
+
+project_structure:
+  ios_framework: "flightinfo-ios — AmericanFlightInfo framework (114 Swift files)"
+  notification_module: "flightstatusnotification-ios (14 Swift files)"
+  bff: "Mobile-FLIFO-BFF (aa.yaml, dockerBuild.sh, config/)"
+  key_viewmodels:
+    - FlightStatusSearchViewModel
+    - FlightStatusSearchResultsViewModel
+    - FlightStatusSlice_ViewModel
+    - FlightDetailsViewModel
+    - LegDetailsViewModel
+    - PerformanceViewModel
+    - CabinInfoViewModel
+  key_viewcontrollers:
+    - FlightStatusSearchViewController
+    - FlightStatusSearchEntryViewController
+    - FlightStatusSearchResultsViewController
+    - FlightStatusNotificationViewController
+  feature_toggles:
+    - AAFeatureFlifoFlightStatus
+    - AAFeatureFlifoFlightStatusBanner
+    - AAFeatureFlifoFlightStatusWatch
+    - AAFeatureFlightStatusIgnoreCache
+    - AAFeatureFlightStatusAirports
+    - AAFeatureFlightStatusSearchNextDayDeparture
+    - AAFeatureIncomingFlifoFlightStatusWatch
+
+dependencies:
+  - "Mobile-FLIFO-BFF (primary data proxy for FAA FLIFO feed)"
+  - "FAA FLIFO data feed (upstream real-time status source)"
+  - "Apple Push Notification service (APNs) — flight alert delivery"
+  - "Apple Watch connectivity — AAFeatureFlifoFlightStatusWatch"
+  - "iOS Location Services — airport detection for search defaults"
+
+compliance_domains:
+  - "FAA FLIFO data feed accuracy and advisory-only use"
+  - "Push notification opt-in consent (BUS-9.3)"
+  - "Passenger data handling (BUS-4.3)"
+  - "Operational audit trail for notification subscriptions (BUS-7.1)"
+
+tags:
+  - product
+  - flight-status
+  - flifo
+  - real-time
+  - push-notifications
+  - ios
+  - watch-app
+  - bff
+  - faa-data
+  - advisory-display

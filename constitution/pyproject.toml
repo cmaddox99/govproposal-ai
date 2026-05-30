@@ -1,0 +1,44 @@
+# Root project configuration for constitution self-validation tests.
+#
+# The constitution's governance tests (tests/governance/) verify internal
+# consistency of the constitution itself — registry vs law-file titles,
+# non-negotiable flag sync, orphan-article status, cross-domain index
+# coherence. This is distinct from tools/constitution-lint/ which lints
+# downstream codebases against the constitution.
+
+[project]
+name = "aa-hangar-constitution"
+version = "0.5.0"
+description = "Hangar AI Constitution — governance test suite for the constitution itself"
+requires-python = ">=3.11"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = []
+
+[project.optional-dependencies]
+governance-tests = [
+    "pytest>=8.0",
+    "pyyaml>=6.0",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["."]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+]
+markers = [
+    "governance: constitution self-validation tests",
+    "pinning: document current (possibly buggy) state of the constitution",
+    "correctness: assert desired state of the constitution; failures indicate drift",
+]

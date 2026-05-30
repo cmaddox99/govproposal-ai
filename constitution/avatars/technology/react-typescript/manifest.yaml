@@ -1,0 +1,102 @@
+# React/TypeScript Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-react-typescript
+  type: technology
+  name: React/TypeScript
+  version: "2.0.0"
+
+stack:
+  language: TypeScript 5.x
+  framework: React 18+
+  testing:
+    - Jest
+    - React Testing Library
+    - Playwright (E2E)
+  state:
+    - React Query
+    - Zustand
+  styling:
+    - Tailwind CSS
+    - CSS Modules
+  build:
+    - Vite
+    - Next.js
+
+dependencies:
+  required:
+    - react
+    - react-dom
+    - typescript
+  dev:
+    - "@testing-library/react"
+    - "@testing-library/jest-dom"
+    - jest
+    - "@types/react"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-25-ux-design
+    - skill-26-design-to-code
+    - skill-08-code-review
+  workflows:
+    - greenfield-development
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  # PRD-3.4 (Experience Principles) removed — product law, not permitted in technology avatar.
+  # Accessibility guidance routed to product-type avatars per avatar-workflow law boundary rules.
+  - id: ENG-3.2
+    title: Immutability Law
+    example_file: examples/ENG-3.2-immutability.md
+
+conventions:
+  naming:
+    components: PascalCase
+    hooks: useCamelCase
+    utils: camelCase
+    constants: SCREAMING_SNAKE
+    files: PascalCase.tsx (components), camelCase.ts (utils)
+    test_files: "*.test.tsx"
+
+  patterns:
+    component: "function ComponentName(props: Props): JSX.Element"
+    hook: "function useHookName(): ReturnType"
+    context: "createContext + Provider pattern"
+
+commands:
+  test:
+    all: "npm test"
+    watch: "npm test -- --watch"
+    coverage: "npm test -- --coverage"
+  dev:
+    start: "npm run dev"
+    build: "npm run build"
+  lint:
+    format: "prettier --write ."
+    check: "eslint . --ext .ts,.tsx"
+    types: "tsc --noEmit"
+
+project_structure: |
+  src/
+  ├── components/
+  │   ├── ui/                        # Reusable UI components
+  │   │   ├── Button/
+  │   │   │   ├── Button.tsx
+  │   │   │   ├── Button.test.tsx
+  │   │   │   └── index.ts
+  │   │   └── ...
+  │   └── features/                  # Feature-specific components
+  ├── hooks/                         # Custom hooks
+  ├── lib/                           # Utilities, API clients
+  ├── pages/ or app/                 # Routes (Next.js)
+  ├── stores/                        # State management
+  └── types/                         # TypeScript types

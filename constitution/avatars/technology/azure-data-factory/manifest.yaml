@@ -1,0 +1,85 @@
+# Azure Data Factory Avatar Manifest
+
+avatar:
+  id: avatar-technology-azure-data-factory
+  type: technology
+  name: "Azure Data Factory"
+  version: "1.0.0"
+
+platform:
+  service: Azure Data Factory
+  authoring:
+    - JSON (ARM templates / ADF Git integration)
+    - VS Code (Azure Data Factory extension)
+    - Azure Portal (read-only review only)
+  components:
+    pipelines: "Orchestration of data movement and transformation"
+    triggers:
+      - Schedule
+      - TumblingWindow
+      - EventBased
+    linked_services: "Connection definitions to data stores and compute"
+    datasets: "Schema definitions for source/sink data"
+    data_flows: "Spark-based transformation logic"
+
+security:
+  authentication: Azure Managed Identity (preferred)
+  secrets: Azure Key Vault parameter references
+  no_plaintext_credentials: true
+
+cicd:
+  source_control: GitHub (ADF Git integration)
+  deployment: GitHub Actions + ARM template deploy
+  environments:
+    - dev
+    - stage
+    - prod
+
+testing:
+  approaches:
+    - ADF debug pipeline runs (unit)
+    - ADF REST API validation (schema/config validation)
+    - Integration test pipelines (end-to-end in stage)
+  tools:
+    - az CLI (validation)
+    - GitHub Actions (promotion gates)
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-08-code-review
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-5.1
+    title: CI/CD Law
+    example_file: examples/ENG-5.1-cicd.md
+  - id: ENG-6.1
+    title: Security by Design
+    example_file: examples/ENG-6.1-security-by-design.md
+  - id: ENG-6.7
+    title: Audit Trail Law
+    example_file: examples/ENG-6.7-audit-trail.md
+
+conventions:
+  naming:
+    pipelines: "pl_{env}_{campaign_or_domain}_{frequency} (e.g., pl_stage_anp_daily)"
+    linked_services: "ls_{service_type}_{env} (e.g., ls_adls_stage, ls_databricks_prod)"
+    datasets: "ds_{source}_{table_name} (e.g., ds_adls_customer_segments)"
+    triggers: "tr_{pipeline_name}_{schedule} (e.g., tr_pl_prod_anp_daily_0300)"
+    data_flows: "df_{transformation_name} (e.g., df_offer_enrichment)"
+  patterns:
+    parameterization: "ALL environment-specific values are pipeline parameters — no hardcoded workspace URLs or table names"
+    linked_service_managed_identity: "Linked Services use Managed Identity — no credentials block"
+    key_vault_reference: "@Microsoft.KeyVault(SecretUri=https://topml-kv.vault.azure.net/secrets/jdbc-conn/)"
+    no_studio_publish: "NEVER use ADF Studio Publish button — all changes via Git + GitHub Actions"
+
+commands:
+  validate:
+    pipeline: "az datafactory pipeline create --validate --factory-name topml-adf-stage --resource-group topml-rg --name pl_stage_anp_daily --pipeline @pipeline.json"
+  deploy:
+    arm: "az deployment group create --resource-group topml-rg --template-file adf-arm-template.json --parameters @parameters-stage.json"

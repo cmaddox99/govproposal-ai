@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 2 — Scan | BFF TS Avatar Clinic</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; color: #1a1a2e; margin: 0; padding: 24px; }
+  h1 { font-size: 1.6rem; font-weight: 700; }
+  h2 { font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; border-bottom: 2px solid #e0e0e0; padding-bottom: 6px; }
+  .header { background: linear-gradient(135deg, #4527a0, #311b92); color: white; border-radius: 10px; padding: 24px 28px; margin-bottom: 28px; }
+  .header .meta { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .header .meta span { background: rgba(255,255,255,0.18); border-radius: 6px; padding: 4px 12px; font-size: 0.82rem; }
+  .section { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+  th { background: #f0f4f8; font-weight: 600; text-align: left; padding: 8px 10px; border-bottom: 2px solid #dde; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; }
+  .blocking { background: #fce4ec; color: #880e4f; }
+  .pass { background: #e8f5e9; color: #2e7d32; }
+  .advisory { background: #fff8e1; color: #e65100; }
+  .verdict { padding: 14px 18px; border-radius: 8px; font-weight: 600; margin-top: 16px; }
+  .verdict.red { background: #fce4ec; color: #880e4f; border-left: 5px solid #e53935; }
+  code { font-size: 0.82rem; background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+  footer { text-align: center; color: #aaa; font-size: 0.78rem; margin-top: 32px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 14px 0; }
+  .stat { background: #f0f4f8; border-radius: 8px; padding: 12px; text-align: center; }
+  .stat .num { font-size: 1.8rem; font-weight: 700; color: #880e4f; }
+  .stat .lbl { font-size: 0.8rem; color: #555; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🔬 Phase 2 — Scan (Token Budget)</h1>
+  <p>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF TypeScript Session</p>
+  <div class="meta"><span>📅 2026-04-27</span><span>8 BLOCKINGs</span><span>2 PASS</span><span>3 advisories</span></div>
+</div>
+
+<div class="section">
+  <div class="summary-grid">
+    <div class="stat"><div class="num">8</div><div class="lbl">BLOCKINGs</div></div>
+    <div class="stat"><div class="num">2</div><div class="lbl">Files PASS</div></div>
+    <div class="stat"><div class="num">3</div><div class="lbl">Advisories</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>nodejs-typescript — File Budget Scan</h2>
+  <p>Budgets: <code>guidance.md</code> ≤ 450 tokens (~338w) · <code>examples/</code> ≤ 850 tokens (~638w) · <code>use-cases/</code> ≤ 1,500 tokens (~1,125w)</p>
+  <table>
+    <thead><tr><th>File</th><th>Words</th><th>Est. Tokens</th><th>Budget</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><code>guidance.md</code></td><td>1,356w</td><td>1,804</td><td>450</td><td><span class="badge blocking">BLOCKING (+1,354)</span></td></tr>
+      <tr><td><code>examples/ENG-4.1-atomic-tdd.md</code></td><td>1,759w</td><td>2,340</td><td>850</td><td><span class="badge blocking">BLOCKING (+1,490)</span></td></tr>
+      <tr><td><code>examples/ENG-6.5-validation.md</code></td><td>2,214w</td><td>2,945</td><td>850</td><td><span class="badge blocking">BLOCKING (+2,095)</span></td></tr>
+      <tr><td><code>examples/ENG-3.1-complexity.md</code></td><td>2,025w</td><td>2,693</td><td>850</td><td><span class="badge blocking">BLOCKING (+1,843)</span></td></tr>
+      <tr><td><code>examples/ENG-3.5-naming.md</code></td><td>904w</td><td>1,202</td><td>850</td><td><span class="badge blocking">BLOCKING (+352)</span></td></tr>
+      <tr><td><code>examples/ENG-3.3-demeter.md</code></td><td>688w</td><td>915</td><td>850</td><td><span class="badge blocking">BLOCKING (+65)</span></td></tr>
+      <tr><td><code>examples/ENG-2.2-layers.md</code></td><td>1,224w</td><td>1,628</td><td>850</td><td><span class="badge blocking">BLOCKING (+778)</span></td></tr>
+      <tr><td><code>examples/ENG-2.1-aggregates.md</code></td><td>1,318w</td><td>1,753</td><td>850</td><td><span class="badge blocking">BLOCKING (+903)</span></td></tr>
+      <tr><td><code>examples/ENG-3.2-immutability.md</code></td><td>571w</td><td>759</td><td>850</td><td><span class="badge pass">PASS</span></td></tr>
+      <tr><td><code>examples/ENG-6-security.md</code></td><td>123w</td><td>164</td><td>850</td><td><span class="badge pass">PASS</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Manifest Advisories</h2>
+  <table>
+    <thead><tr><th>Finding</th><th>Detail</th><th>Severity</th></tr></thead>
+    <tbody>
+      <tr><td>skill- prefix in <code>activates.skills</code></td><td>4 entries: <code>skill-06-atomic-tdd</code> → <code>06-atomic-tdd</code>, etc. Actual skill files have no prefix.</td><td><span class="badge advisory">ADVISORY</span></td></tr>
+      <tr><td>ENG-10.1 missing from specializes_laws</td><td>Constitution Metrics Collection Law — NON-NEGOTIABLE in all avatars</td><td><span class="badge advisory">ADVISORY</span></td></tr>
+      <tr><td>ENG-11.1 missing from specializes_laws</td><td>Hangar SDD Law — NON-NEGOTIABLE in all avatars</td><td><span class="badge advisory">ADVISORY</span></td></tr>
+      <tr><td>No use-cases/ directory</td><td>Zero AA-specific use cases. 4 TS repos provide rich evidence.</td><td><span class="badge advisory">ADVISORY</span></td></tr>
+    </tbody>
+  </table>
+  <div class="verdict red">🔴 8 BLOCKINGs — guidance.md and 7 of 9 examples exceed token budget. Phase 4 must trim all 8 files and add AA BFF TS evidence. No file is AA-specific today.</div>
+</div>
+
+<footer>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF TypeScript Session · 2026-04-27</footer>
+</body>
+</html>

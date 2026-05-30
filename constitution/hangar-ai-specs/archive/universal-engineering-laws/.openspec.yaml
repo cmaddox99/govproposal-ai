@@ -1,0 +1,46 @@
+# OpenSpec Change Configuration
+# Universal Engineering Laws & Skill Discovery
+
+change:
+  id: universal-engineering-laws
+  title: "Universal Engineering Laws & Skill Discovery"
+  status: implemented
+  priority: high
+  created: "2026-02-13"
+
+description: |
+  Decouple tactical OOP patterns from universal engineering laws,
+  enrich avatar examples for rewritten laws, and add skill discovery
+  protocol for intent-based prompts.
+
+affected_files:
+  laws:
+    - laws/engineering/quality.md
+    - laws/engineering/architecture.md
+    - laws/engineering/foundations.md
+    - laws/engineering/devops.md
+    - laws/engineering/security.md
+  agent:
+    - agent-skills/base/AGENT.md
+    - agent-skills/skills/index.yaml
+  avatars:
+    - avatars/technology/*/manifest.yaml
+    - avatars/technology/*/examples/ENG-3.2-immutability.md
+    - avatars/technology/*/examples/ENG-3.3-demeter.md
+    - avatars/technology/*/examples/ENG-3.5-naming.md
+  root:
+    - AGENTS.md
+
+phases:
+  - name: "Phase 1: Rewrite Laws"
+    status: complete
+    description: "Rewrote 11 laws to remove OOP-specific and tool-specific language"
+  - name: "Phase 2: Skill Discovery Protocol"
+    status: complete
+    description: "Added Section 6.3 to AGENT.md, enriched all 29 skills with trigger phrases"
+  - name: "Phase 3: Avatar Examples"
+    status: complete
+    description: "Created ~23 new avatar example files for rewritten laws and coverage gaps"
+  - name: "Phase 4: Cross-cutting Updates"
+    status: complete
+    description: "Updated AGENTS.md, avatar manifests, created openspec proposal"

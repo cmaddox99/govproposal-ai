@@ -1,0 +1,68 @@
+avatar:
+  id: avatar-manage-trip
+  type: product
+  name: "Trip Management & Post-Booking Modifications"
+  version: "1.0.0"
+  created: "2026-04-30"
+  last_updated: "2026-04-30"
+
+domain:
+  category: "Post-Booking Reservation Management"
+  description: |
+    Manage-Trip owns the post-booking surface: everything a traveler needs to do
+    after purchasing a ticket and before the boarding-pass phase. This includes
+    trip cancellation and refund processing, lap infant addition, special service
+    request (SSR) management, reservation contact information updates, and
+    itinerary review. It operates on existing PNRs via BFF orchestration rather
+    than initiating new bookings.
+
+    Manage-Trip is distinct from:
+    - passenger-booking: initial ticket purchase and seat selection at time of sale
+    - check-in-travel: boarding pass issuance, day-of-travel status, and gate changes
+    - schedule-change-self-serve: carrier-initiated disruption rebooking flows
+
+    The domain is responsible for cancellation eligibility adjudication, DOT
+    refund rule enforcement, PNR state retention after voluntary changes, and
+    audit logging of all reservation mutations.
+  personas:
+    - Booked Traveler
+    - Family Traveler (lap infant)
+    - Business Traveler
+
+core_journeys:
+  - "Trip Cancellation & Refund"
+  - "Lap Infant Addition"
+  - "Reservation Contact Update"
+  - "Special Service Request Management"
+  - "Trip Details & Itinerary Review"
+
+activates:
+  skills:
+    - skill-spec-governance
+    - skill-02-user-journey-mapping
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-06-atomic-tdd
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - PRD-1.2
+  - PRD-1.5
+  - PRD-2.5
+  - PRD-5.1
+  - PRD-6.2
+  - BUS-1.1
+  - BUS-2.3
+  - BUS-3.1
+  - BUS-4.3
+  - BUS-7.1
+  - BUS-9.3
+
+tags:
+  - mobile
+  - ios
+  - post-booking
+  - reservation-management
+  - cancellation
+  - trip-management

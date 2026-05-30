@@ -1,0 +1,92 @@
+# DSS Event-Driven Microservices Avatar Manifest
+avatar:
+  id: avatar-tech-dss-event-driven
+  type: technology
+  name: "DSS Event-Driven Microservices"
+  version: "1.0.0"
+
+stack:
+  language: "TypeScript / Node.js 20+ (primary), Java 17+ (processors), C# / .NET 8 (mgmt APIs)"
+  framework: "Event-driven microservices (DisplayHub pattern)"
+  testing:
+    backend:
+      - "Jest (Node.js services)"
+      - "JUnit 5 + Mockito (Java/Spring processors)"
+      - "xUnit + Moq (.NET management APIs)"
+      - "Testcontainers (PostgreSQL, Redis, Service Bus emulator)"
+    frontend:
+      - "Jest + React Testing Library (React UIs)"
+      - "Jasmine + Karma (Angular UIs)"
+  persistence:
+    - "PostgreSQL 15+ (durable state)"
+    - "Redis (hot cache — sub-100ms reads)"
+  messaging:
+    - "Azure Service Bus (inter-service event delivery)"
+    - "Azure Event Grid (external airline ops events)"
+
+commands:
+  test:
+    node: "npm test"
+    java: "./mvnw test jacoco:report"
+    dotnet: "dotnet test --collect 'Code Coverage'"
+  build:
+    node: "npm run build"
+    java: "./mvnw package -DskipTests"
+    dotnet: "dotnet build"
+  deploy: "kubectl apply -f k8s/ --namespace dss-prod"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+    - skill-10-security-review
+    - skill-14-real-time-data-integration
+    - skill-27-constitution-compliance
+  workflows:
+    - greenfield-development
+    - legacy-rescue-refactor
+
+specializes_laws:
+  - id: ENG-4.1
+    title: "Atomic TDD Law"
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-2.1
+    title: "Domain-Driven Design Law"
+    example_file: examples/ENG-2.1-ddd.md
+  - id: ENG-3.1
+    title: "Complexity Limits"
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-5.5
+    title: "Observability Law"
+    example_file: examples/ENG-5.5-observability.md
+  - id: ENG-6.4
+    title: "Data Protection Law"
+    example_file: examples/ENG-6.4-data-protection.md
+  - id: ENG-7.1
+    title: "Failure Handling Law"
+    example_file: examples/ENG-7.1-failure-handling.md
+  - id: ENG-6.1
+    title: "Security by Design Law"
+    example_file: examples/ENG-6.1-security-by-design.md
+  - id: ENG-6.7
+    title: "Audit Trail Law"
+    example_file: examples/ENG-6.7-audit-trail.md
+
+tags:
+  - technology
+  - event-driven
+  - microservices
+  - displayhub
+  - dss
+  - nodejs
+  - java-spring
+  - dotnet
+  - react
+  - angular
+  - postgresql
+  - redis
+  - azure-service-bus
+  - kubernetes
+  - wave-4
+  - gate-management

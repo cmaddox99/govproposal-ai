@@ -1,0 +1,147 @@
+avatar:
+  id: avatar-account-identity
+  type: product
+  name: "Account Identity & Profile Management"
+  version: "1.0.0"
+  created: "2026-04-30"
+  last_updated: "2026-04-30"
+
+domain:
+  category: "Authentication, Account Profile & Device Trust"
+  description: |
+    SCOPE: Scope = authentication, account profile management, device trust/validation.
+    Explicitly excludes loyalty program membership, AAdvantage miles/status/benefits
+    (→ loyalty-aadvantage). Note: account-ios uses web-bridge (WKWebView) via
+    MyAccountBridgedWebViewController for account screens — this is an ENG-3.1
+    architectural risk requiring careful product/engineering coordination.
+
+    This avatar governs the end-to-end identity lifecycle for American Airlines app
+    users: credential-based and biometric sign-in, session management, guest vs.
+    authenticated state transitions, account profile editing (contact info, secure
+    traveler details, travel preferences), and device trust/validation flows.
+    AAdvantage member number is used as an identifier here but miles, status tiers,
+    and loyalty benefits are owned by loyalty-aadvantage. All profile data is PII
+    under BUS-4.3 — data subject rights (access, correction, deletion) and breach
+    notification (BUS-9.3) apply to every feature in this domain.
+  personas:
+    - Authenticated Traveler
+    - Guest User
+    - AAdvantage Member
+    - Security-Sensitive User (biometric)
+
+core_journeys:
+  - "Account Sign-In (Authenticated vs. Guest)"
+  - "Biometric Login (Face ID / Touch ID)"
+  - "Account Profile Management"
+  - "Device Trust Registration & Validation"
+  - "Guest-to-Authenticated Conversion"
+
+activates:
+  skills:
+    - skill-spec-governance
+    - skill-02-user-journey-mapping
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-06-atomic-tdd
+    - skill-10-security-review
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - PRD-1.2
+  - PRD-1.5
+  - PRD-2.5
+  - PRD-5.1
+  - PRD-6.2
+  - BUS-1.1
+  - BUS-4.3
+  - BUS-7.1
+  - BUS-9.3
+  - ENG-6.4
+
+conventions:
+  - id: conv-webbridge-coordination
+    description: >
+      All account screens rendered via MyAccountBridgedWebViewController (WKWebView)
+      require joint product + engineering sign-off before feature changes. Web-bridge
+      screens must be tracked in the ENG-3.1 risk register.
+  - id: conv-pii-by-default
+    description: >
+      Treat all account profile fields as PII by default. Any new field added to
+      AccountProfileEndpoint or UserAccountInfo must have a data classification
+      review before shipping.
+  - id: conv-auth-audit-trail
+    description: >
+      Every authentication event (sign-in, sign-out, biometric enrollment, device
+      registration, session expiry) must be captured for audit trail per BUS-7.1.
+
+commands:
+  - /account-identity:sign-in-flow — Generate a stage-gate discovery plan for a sign-in
+    improvement using PRD-2.5 and the AccountManager / UserAccountEndpoint modules.
+  - /account-identity:profile-change — Draft a BUS-4.3-compliant feature brief for any
+    profile field addition or modification, including data subject rights impact.
+  - /account-identity:device-trust — Scope a devicevalidation-ios feature with stage-gate
+    validation per PRD-2.5 before committing to device registration changes.
+
+project_structure:
+  ios_framework: AmericanAccount (account-ios, 358 Swift files)
+  device_validation: devicevalidation-ios (22 Swift files)
+  key_modules:
+    wrappers:
+      - MyAccountBridgedWebViewController
+      - MyAccountBridgedWebViewController_WKNavigationDelegate
+      - MyAccountBridgedWebViewController_WKUIDelegate
+      - MyAccountNavigationManager
+      - MyAccountSpinnerController
+      - MyAccountSpinnerView
+    io:
+      - AccountManager
+      - AccountManager_Notifications
+      - UserAccountEndpoint
+      - UserAccountInfo
+      - UserAccountCache
+      - GuestCache
+      - GuestEndPoint
+      - SecureTravelerEndpoint
+      - SecureTravelerSubmitEndpoint
+      - AAdvantageUser_Summaries
+      - AdmiralsClubPassFetcher
+      - AccountInfoActor
+      - AccountCache
+      - AccountProfileEndpoint
+      - TravelCreditEndpoint
+      - SummariesEndpoint
+      - ActivityEndpoint
+      - PromotionsEndpoint
+    features:
+      - AAFeatureGuestUser
+      - AAFeatureUserLoginObserver
+    device_validation_capabilities:
+      - device trust/validation
+      - biometric authentication support
+      - device registration
+
+dependencies:
+  internal:
+    - loyalty-aadvantage: AAdvantage member number linkage (read-only from this domain)
+    - booking-core: authenticated booking sessions require valid AccountManager state
+    - notifications: account security alerts (breach, unusual sign-in)
+  external:
+    - devicevalidation-ios: device trust checks on authentication
+    - WKWebView (iOS SDK): web-bridge rendering for account screens (ENG-3.1 risk)
+
+compliance_domains:
+  - BUS-4.3: Personal data in account profile — right to access, correct, delete
+  - BUS-7.1: Audit trail for all authentication and profile change events
+  - BUS-9.3: Breach notification protocol for account and biometric data
+  - ENG-6.4: PII handling requirements in authentication and profile management flows
+
+tags:
+  - authentication
+  - account-profile
+  - device-trust
+  - biometric
+  - guest-user
+  - pii
+  - web-bridge
+  - eng-3.1-risk

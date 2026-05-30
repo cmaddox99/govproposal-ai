@@ -1,0 +1,112 @@
+# Gate Management Platform Avatar Manifest
+avatar:
+  id: avatar-product-gate-management
+  type: product
+  name: "Gate Management Platform"
+  version: "1.0.0"
+
+domain:
+  category: "Gate Operations & Passenger Processing"
+  description: |
+    The Gate Management Platform governs integrated software at the boarding gate —
+    from passenger display boards to aircraft door close. Four coordinated domains:
+    Digital Signage (DSS), Touchless Biometric Boarding, Carry-On Baggage Compliance,
+    and Connect Me operational communications. Systems are event-driven, real-time,
+    and FAA/TSA/DOT-regulated.
+  personas:
+    - Gate Agent
+    - Ramp Crew / Ground Operations Staff
+    - Flight Load Controller (FLC)
+    - Airport Operations Controller
+    - Station Manager
+    - Biometrics Operations Supervisor
+    - IT/Platform Engineer (DSS/Biometrics)
+
+core_journeys:
+  - "Digital Signage: Real-Time Flight & Gate Display"
+  - "Touchless Biometric Boarding: Enroll → Match → Board"
+  - "Carry-On Compliance: Size Check → Policy Decision → Gate-Check"
+  - "Connect Me: Flight Event Notification → Agent Action"
+  - "IROP Gate Recovery: Gate Reassignment → Display Update → Agent Alert"
+  - "Boarding Closeout: Stats Aggregation → Audit Trail"
+
+activates:
+  skills:
+    - skill-02-user-journey-mapping
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+    - skill-06-atomic-tdd
+    - skill-08-code-review
+    - skill-10-security-review
+    - skill-14-real-time-data-integration
+    - skill-22-decision-support
+    - skill-27-constitution-compliance
+  workflows:
+    - product-discovery-stage-a-f
+    - greenfield-development
+    - legacy-rescue-decision-track
+    - legacy-rescue-refactor
+
+specializes_laws:
+  - id: BUS-2.1
+    title: "FAA Compliance Law"
+    example_file: examples/BUS-2.1-faa-compliance.md
+  - id: BUS-2.2
+    title: "Control Framework Law"
+    example_file: examples/BUS-2.2-control-framework.md
+  - id: BUS-2.4
+    title: "Evidence Collection Law"
+    example_file: examples/BUS-2.4-evidence-collection.md
+  - id: ENG-6.7
+    title: "Audit Trail Law"
+    example_file: examples/ENG-6.7-audit-trail.md
+  - id: ENG-6.1
+    title: "Security by Design Law"
+    example_file: examples/ENG-6.1-security-by-design.md
+  - id: PRD-1.2
+    title: "Problem-First Law"
+    example_file: examples/PRD-1.2-problem-first.md
+  - id: PRD-5.1
+    title: "MVP Law"
+    example_file: examples/PRD-5.1-mvp-law.md
+
+compliance_domains:
+  - standard: "FAR Part 139"
+    scope: "Airport certification — all gate operations systems"
+  - standard: "TSA 49 CFR Part 1542"
+    scope: "Airport security — biometric boarding and gate access"
+  - standard: "CBP Biometric Exit"
+    scope: "Facial recognition boarding — federal mandate"
+  - standard: "DOT 14 CFR Part 259"
+    scope: "Tarmac delay and consumer protection"
+  - standard: "GDPR / CCPA"
+    scope: "Biometric PII — international passengers"
+
+dependencies:
+  upstream:
+    - "Airline Ops Control (AOC) — flight event source of truth"
+    - "Passenger Name Record (PNR) — reservation data"
+    - "Azure Active Directory — gate agent identity"
+    - "Google Apigee — API gateway (Biometrics, Carry-On)"
+    - "Microsoft Teams — Connect Me delivery channel"
+  downstream:
+    - "Departure Control System (DCS)"
+    - "Load Control System"
+    - "Regulatory Reporting (FAA/TSA/CBP)"
+
+tags:
+  - product
+  - gate-management
+  - wave-4
+  - aviation
+  - biometrics
+  - digital-signage
+  - carry-on-baggage
+  - connect-me
+  - real-time
+  - event-driven
+  - faa
+  - tsa
+  - cbp
+  - dot

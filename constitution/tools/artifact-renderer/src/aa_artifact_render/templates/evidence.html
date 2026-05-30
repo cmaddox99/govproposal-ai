@@ -1,0 +1,41 @@
+{% extends "_base.html" %}
+{% block title %}{{ frontmatter.get('title', 'Evidence') }} — Hangar AI Constitution{% endblock %}
+{% block body %}
+{% set title = frontmatter.get('title', 'Evidence Document') %}
+{% set confidence = frontmatter.get('confidence', '') | lower %}
+{% set workflow = frontmatter.get('workflow', '') %}
+{% set phase = frontmatter.get('phase', '') %}
+{% set laws_applied = frontmatter.get('laws_applied', []) %}
+
+<div class="page cover">
+  <div class="eyebrow">Hangar AI Constitution — Evidence Artifact</div>
+  <h1>{{ title }}</h1>
+  {% if confidence %}
+  <div class="confidence-band {{ confidence }}" style="margin-top: 28px;">
+    <div>
+      <div class="cb-label">Confidence</div>
+      <span class="status-badge {{ confidence }}" style="margin-top: 6px; display: inline-block;">{{ confidence | upper }}</span>
+    </div>
+    {% if workflow %}<div><div class="cb-label">Workflow</div><div style="margin-top: 6px; font-size: 15px; font-weight: 700;">{{ workflow }}</div></div>{% endif %}
+    {% if phase %}<div><div class="cb-label">Phase</div><div style="margin-top: 6px; font-size: 15px; font-weight: 700;">{{ phase }}</div></div>{% endif %}
+  </div>
+  {% endif %}
+  {% if laws_applied %}
+  <div class="chip-row" style="margin-top: 20px;">
+    {% for law in laws_applied %}<span class="chip">{{ law }}</span>{% endfor %}
+  </div>
+  {% endif %}
+  <div class="footer">
+    <div>{{ title }}</div>
+    <div class="pn">1</div>
+  </div>
+</div>
+
+<div class="page content">
+  {{ body | safe }}
+  <div class="footer">
+    <div>{{ title }}</div>
+    <div class="pn">2</div>
+  </div>
+</div>
+{% endblock %}

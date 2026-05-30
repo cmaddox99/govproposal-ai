@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gate Management Platform — Product Walkthrough</title>
+  <style>
+    :root {
+      --aa-red: #CC0000;
+      --aa-dark: #1a1a2e;
+      --aa-blue: #0057B8;
+      --aa-light-blue: #e8f0fb;
+      --aa-amber: #F5A623;
+      --aa-green: #27AE60;
+      --aa-orange: #E67E22;
+      --aa-purple: #8E44AD;
+      --bg: #f7f8fc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --tag-bg: #f1f5f9;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0057B8 100%);
+      color: white;
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+    .hero .aa-badge {
+      display: inline-block;
+      background: var(--aa-red);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+    }
+    .hero h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .hero .subtitle { font-size: 1.05rem; opacity: 0.85; max-width: 640px; margin: 0 auto 1.5rem; }
+    .hero .meta {
+      display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+      font-size: 0.82rem; opacity: 0.75;
+    }
+    .hero .meta span::before { content: '• '; }
+    .hero .meta span:first-child::before { content: ''; }
+
+    /* ── NAV ── */
+    .sticky-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .sticky-nav span { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-right: 0.5rem; }
+    .sticky-nav a {
+      font-size: 0.82rem; color: var(--aa-blue); text-decoration: none;
+      padding: 0.3rem 0.75rem; border-radius: 20px; border: 1px solid #d1ddf5;
+      transition: all 0.15s;
+    }
+    .sticky-nav a:hover { background: var(--aa-light-blue); }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1060px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+    /* ── SECTION TITLES ── */
+    .section-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.25rem; margin-top: 2.5rem;
+    }
+    .section-header:first-child { margin-top: 0; }
+    .section-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .section-header h2 { font-size: 1.25rem; font-weight: 700; }
+    .section-header .section-sub { font-size: 0.82rem; color: var(--muted); margin-top: 0.1rem; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem;
+    }
+    .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .card p, .card li { font-size: 0.9rem; color: var(--text); }
+
+    /* ── DOMAIN CARDS ── */
+    .domain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    @media (max-width: 700px) { .domain-grid { grid-template-columns: 1fr; } }
+
+    .domain-card {
+      background: var(--card); border-radius: 14px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .domain-card .domain-header {
+      padding: 1.1rem 1.25rem 0.9rem;
+      display: flex; align-items: flex-start; gap: 0.85rem;
+    }
+    .domain-emoji { font-size: 1.6rem; line-height: 1; margin-top: 2px; }
+    .domain-card .domain-title { font-size: 1rem; font-weight: 700; }
+    .domain-card .domain-subtitle { font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
+    .domain-card .domain-body { padding: 0 1.25rem 1.25rem; }
+    .domain-card .failure-mode {
+      font-size: 0.8rem; font-weight: 600;
+      background: #fff5f5; color: #c53030;
+      border: 1px solid #fed7d7; border-radius: 6px;
+      padding: 0.4rem 0.75rem; margin-bottom: 0.85rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .domain-card .target-badge {
+      font-size: 0.78rem; font-weight: 600;
+      background: #f0fff4; color: #276749;
+      border: 1px solid #c6f6d5; border-radius: 6px;
+      padding: 0.4rem 0.75rem; margin-bottom: 0.85rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .domain-card ul { list-style: none; }
+    .domain-card ul li {
+      font-size: 0.83rem; color: var(--muted);
+      padding: 0.3rem 0; border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; gap: 0.5rem;
+    }
+    .domain-card ul li:last-child { border-bottom: none; }
+    .domain-card ul li::before { content: '→'; color: var(--aa-blue); font-size: 0.75rem; margin-top: 2px; flex-shrink: 0; }
+    .status-pill {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.18rem 0.55rem; border-radius: 20px; margin-bottom: 0.75rem;
+    }
+    .status-discovery { background: #fef3c7; color: #92400e; }
+
+    /* ── PERSONA GRID ── */
+    .persona-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 800px) { .persona-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 500px) { .persona-grid { grid-template-columns: 1fr; } }
+
+    .persona-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.1rem;
+    }
+    .persona-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 0.6rem;
+    }
+    .persona-card h4 { font-size: 0.9rem; font-weight: 700; }
+    .persona-card .persona-role { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.7rem; }
+    .persona-card .persona-goal {
+      font-size: 0.78rem; color: var(--text);
+      background: var(--aa-light-blue); border-radius: 6px;
+      padding: 0.4rem 0.6rem; margin-bottom: 0.5rem;
+    }
+    .persona-card .persona-pain {
+      font-size: 0.78rem; color: #7b341e;
+      background: #fff5f5; border-radius: 6px;
+      padding: 0.4rem 0.6rem;
+    }
+    .persona-card .persona-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.2rem; }
+
+    /* ── USE CASE BLOCKS ── */
+    .usecase-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden; margin-bottom: 1.25rem;
+    }
+    .usecase-header {
+      padding: 1.1rem 1.5rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+    .usecase-header h3 { font-size: 1rem; font-weight: 700; }
+    .usecase-header .usecase-reg {
+      font-size: 0.72rem; color: var(--muted);
+      display: flex; gap: 0.4rem; flex-wrap: wrap;
+    }
+    .reg-tag {
+      background: var(--tag-bg); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.15rem 0.5rem; font-size: 0.68rem; font-weight: 600; color: var(--muted);
+    }
+    .usecase-body { padding: 1.25rem 1.5rem; }
+    .usecase-body > p { font-size: 0.88rem; color: var(--muted); margin-bottom: 1rem; }
+
+    .journey-steps {
+      counter-reset: step;
+      list-style: none;
+      margin-bottom: 1.25rem;
+    }
+    .journey-steps li {
+      counter-increment: step;
+      display: flex; gap: 0.85rem; align-items: flex-start;
+      padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.84rem;
+    }
+    .journey-steps li:last-child { border-bottom: none; }
+    .journey-steps li::before {
+      content: counter(step);
+      background: var(--aa-blue); color: white;
+      font-size: 0.7rem; font-weight: 700;
+      width: 20px; height: 20px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 650px) { .two-col { grid-template-columns: 1fr; } }
+
+    .mini-section h4 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.6rem; }
+
+    .non-neg-list { list-style: none; }
+    .non-neg-list li {
+      font-size: 0.82rem; padding: 0.35rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 0.5rem; align-items: flex-start;
+    }
+    .non-neg-list li:last-child { border-bottom: none; }
+    .non-neg-list li::before { content: '🔴'; font-size: 0.7rem; margin-top: 3px; flex-shrink: 0; }
+
+    .ac-list { list-style: none; }
+    .ac-list li {
+      font-size: 0.82rem; padding: 0.3rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 0.5rem; align-items: flex-start; color: var(--muted);
+    }
+    .ac-list li:last-child { border-bottom: none; }
+    .ac-list li::before { content: '☐'; font-size: 0.9rem; flex-shrink: 0; }
+
+    /* ── MVP LADDER ── */
+    .mvp-domain { margin-bottom: 1.75rem; }
+    .mvp-domain h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+    .mvp-stages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+    @media (max-width: 650px) { .mvp-stages { grid-template-columns: 1fr; } }
+
+    .mvp-stage {
+      border-radius: 10px; padding: 0.9rem; border: 1px solid var(--border);
+    }
+    .mvp-stage.stage-1 { background: #f0fff4; border-color: #c6f6d5; }
+    .mvp-stage.stage-2 { background: #fffbeb; border-color: #fde68a; }
+    .mvp-stage.stage-3 { background: #eff6ff; border-color: #bfdbfe; }
+    .mvp-stage .stage-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.35rem; }
+    .mvp-stage .stage-scope { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.35rem; }
+    .mvp-stage .stage-hyp { font-size: 0.77rem; color: var(--muted); margin-bottom: 0.35rem; }
+    .mvp-stage .stop-signal { font-size: 0.73rem; color: #c53030; background: #fff5f5; border-radius: 4px; padding: 0.25rem 0.5rem; }
+    .mvp-stage .stop-label { font-size: 0.65rem; font-weight: 700; color: #c53030; text-transform: uppercase; }
+
+    /* ── DISCOVERY QUESTIONS ── */
+    .discovery-domain { margin-bottom: 1.5rem; }
+    .discovery-domain h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem; }
+    .discovery-domain .discovery-candidate {
+      font-size: 0.82rem; font-style: italic; color: var(--muted);
+      background: var(--tag-bg); border-radius: 6px; padding: 0.5rem 0.75rem; margin-bottom: 0.6rem;
+    }
+    .q-list { list-style: none; }
+    .q-list li {
+      font-size: 0.84rem; padding: 0.4rem 0.75rem; margin-bottom: 0.4rem;
+      background: white; border: 1px solid var(--border); border-radius: 8px;
+      display: flex; align-items: flex-start; gap: 0.5rem;
+    }
+    .q-list li::before { content: '?'; background: var(--aa-amber); color: white; font-size: 0.68rem; font-weight: 800; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 3px; }
+    .do-not-build {
+      font-size: 0.8rem; font-weight: 600; color: #c53030;
+      background: #fff5f5; border: 1px solid #fed7d7; border-radius: 6px;
+      padding: 0.45rem 0.75rem; margin-top: 0.5rem;
+    }
+
+    /* ── COMPLIANCE ── */
+    .compliance-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }
+    @media (max-width: 600px) { .compliance-grid { grid-template-columns: 1fr; } }
+    .compliance-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1rem; border-left: 4px solid var(--aa-red);
+    }
+    .compliance-card h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .compliance-card p { font-size: 0.8rem; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    .doc-footer {
+      text-align: center; padding: 2rem;
+      font-size: 0.78rem; color: var(--muted);
+      border-top: 1px solid var(--border); margin-top: 3rem;
+    }
+    .doc-footer strong { color: var(--text); }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem;
+      display: flex; gap: 0.75rem; align-items: flex-start;
+      font-size: 0.87rem;
+    }
+    .callout.info { background: var(--aa-light-blue); border: 1px solid #bfdbfe; }
+    .callout.warn { background: #fffbeb; border: 1px solid #fde68a; }
+    .callout.danger { background: #fff5f5; border: 1px solid #fed7d7; }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+    hr.section-rule { border: none; border-top: 2px solid var(--border); margin: 2.5rem 0; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<div class="hero">
+  <div class="aa-badge">American Airlines · Wave 4</div>
+  <h1>Gate Management Platform</h1>
+  <p class="subtitle">A product walkthrough for discovery, use cases, personas, MVP staging, and open questions — in plain language.</p>
+  <div class="meta">
+    <span>4 product domains</span>
+    <span>7 personas</span>
+    <span>FAA · TSA · CBP · DOT regulated</span>
+    <span>Status: Discovery</span>
+    <span>Prepared 2026-04-22</span>
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav class="sticky-nav">
+  <span>Jump to</span>
+  <a href="#domains">Domains</a>
+  <a href="#personas">Personas</a>
+  <a href="#usecases">Use Cases</a>
+  <a href="#mvp">MVP Ladder</a>
+  <a href="#discovery">Discovery Questions</a>
+  <a href="#compliance">Compliance</a>
+</nav>
+
+<!-- ══════════ MAIN ══════════ -->
+<div class="container">
+
+  <!-- ONE-LINE SUMMARY -->
+  <div class="callout info" style="margin-top:0.5rem">
+    <span class="callout-icon">💡</span>
+    <div><strong>What this product is about:</strong> Software at the boarding gate — from the moment a flight event fires in operations control to the moment a passenger boards or a bag is checked. Four integrated domains: digital displays, biometric boarding, carry-on compliance, and ops communications. The root failure mode across all four is the same: <strong>decision latency</strong> — the right information arriving too late for the agent or controller to act on it correctly.</div>
+  </div>
+
+  <hr class="section-rule" id="domains">
+
+  <!-- ══ DOMAINS ══ -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#eff6ff">🏗️</div>
+    <div>
+      <h2>The Four Domains</h2>
+      <div class="section-sub">Each domain has its own primary failure mode, latency target, and regulatory context.</div>
+    </div>
+  </div>
+
+  <div class="domain-grid">
+
+    <div class="domain-card">
+      <div class="domain-header">
+        <div class="domain-emoji">📺</div>
+        <div>
+          <div class="domain-title">Digital Signage (DSS)</div>
+          <div class="domain-subtitle">GIDS · FIDS · BIDS · WIDS</div>
+        </div>
+      </div>
+      <div class="domain-body">
+        <span class="status-pill status-discovery">Discovery</span>
+        <div class="failure-mode">⚠️ Root failure: display staleness</div>
+        <div class="target-badge">🎯 AOC event → display updated: ≤5s p95</div>
+        <ul>
+          <li>Gate display shows stale gate after ops fires a change</li>
+          <li>Agents develop verbal workarounds, bypassing the display</li>
+          <li>Tarmac timer buried in sub-screen (DOT violation risk)</li>
+          <li>No baseline measurement of staleness by layer yet</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="domain-card">
+      <div class="domain-header">
+        <div class="domain-emoji">🤳</div>
+        <div>
+          <div class="domain-title">Touchless Biometric Boarding</div>
+          <div class="domain-subtitle">Face match · CBP TIS · Opt-out path</div>
+        </div>
+      </div>
+      <div class="domain-body">
+        <span class="status-pill status-discovery">Discovery</span>
+        <div class="failure-mode">⚠️ Root failure: false non-match + PII leakage risk</div>
+        <div class="target-badge">🎯 Face capture → APPROVE/DENY: ≤3s p95</div>
+        <ul>
+          <li>False non-match causes line backup and erodes agent trust</li>
+          <li>Opt-out path not consistently accessible without agent help</li>
+          <li>Biometric PII (templates, scores) appearing in operational logs</li>
+          <li>Throughput vs. manual scan baseline not yet measured</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="domain-card">
+      <div class="domain-header">
+        <div class="domain-emoji">🧳</div>
+        <div>
+          <div class="domain-title">Carry-On Baggage Compliance</div>
+          <div class="domain-subtitle">Bag matrix · Rule versioning · Override audit</div>
+        </div>
+      </div>
+      <div class="domain-body">
+        <span class="status-pill status-discovery">Discovery</span>
+        <div class="failure-mode">⚠️ Root failure: rule version lag + silent overrides</div>
+        <div class="target-badge">🎯 Scan → decision returned: ≤2s p95</div>
+        <ul>
+          <li>Policy changes require helpdesk ticket (24–48h delay)</li>
+          <li>No visibility into which gates are running which rule version</li>
+          <li>Agents override compliance decisions without supervisor auth</li>
+          <li>Gate-check rate and override rate baselines not yet measured</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="domain-card">
+      <div class="domain-header">
+        <div class="domain-emoji">📲</div>
+        <div>
+          <div class="domain-title">Connect Me</div>
+          <div class="domain-subtitle">Teams push alerts · FLC load plans · IROP ops comms</div>
+        </div>
+      </div>
+      <div class="domain-body">
+        <span class="status-pill status-discovery">Discovery</span>
+        <div class="failure-mode">⚠️ Root failure: alert arrives after decision window closes</div>
+        <div class="target-badge">🎯 AOC publish → Teams device delivery: ≤30s p95</div>
+        <ul>
+          <li>Agents still polling shared screens instead of receiving push alerts</li>
+          <li>FLC cannot tell if the load plan card shows the current version</li>
+          <li>Unread alert rate and delivery latency not yet measured</li>
+          <li>Workflow completions not logged with actor + version + timestamp</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="section-rule" id="personas">
+
+  <!-- ══ PERSONAS ══ -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fef3c7">👤</div>
+    <div>
+      <h2>Personas</h2>
+      <div class="section-sub">Seven people whose working day this product either fixes or frustrates. All details are experimental until validated in the field.</div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <span class="callout-icon">⚠️</span>
+    <div><strong>These personas are hypotheses.</strong> Every goal, pain point, and behaviour listed below needs to be validated through field observation and interviews before being used to drive a product decision.</div>
+  </div>
+
+  <div class="persona-grid">
+
+    <div class="persona-card">
+      <div class="persona-avatar" style="background:#dbeafe">✈️</div>
+      <h4>Alex — Gate Agent</h4>
+      <div class="persona-role">Frontline gate operations</div>
+      <div class="persona-label">Top Goal</div>
+      <div class="persona-goal">Clear the gate on time. Know when something upstream changes before the decision window closes.</div>
+      <div class="persona-label" style="margin-top:0.5rem">Key Pain</div>
+      <div class="persona-pain">Display shows stale data mid-boarding. Gate change fires in ops but Teams alert arrives 90 seconds later — Alex has already started the wrong sequence.</div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-avatar" style="background:#dcfce7">🔧</div>
+      <h4>Marcus — Ramp Crew</h4>
+      <div class="persona-role">Ground handler — pushback, fuel, baggage</div>
+      <div class="persona-label">Top Goal</div>
+      <div class="persona-goal">Receive push alerts and weight-and-balance clearance before the window closes — without polling a shared screen.</div>
+      <div class="persona-label" style="margin-top:0.5rem">Key Pain</div>
+      <div class="persona-pain">Early close signal sent; Marcus is at a different stand; alert doesn't reach him. Falls back to radio.</div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-avatar" style="background:#fef9c3">📋</div>
+      <h4>Jordan — Flight Load Controller</h4>
+      <div class="persona-role">Load planning and weight-and-balance</div>
+      <div class="persona-label">Top Goal</div>
+      <div class="persona-goal">Always know the load plan version and timestamp. Approve from Teams without switching tools.</div>
+      <div class="persona-label" style="margin-top:0.5rem">Key Pain</div>
+      <div class="persona-pain">Task card shows no version or timestamp. Jordan approves a plan that's already 5 minutes stale.</div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-avatar" style="background:#fce7f3">🖥️</div>
+      <h4>Sam — Ops Controller</h4>
+      <div class="persona-role">Central ops — gate assignments, IROP recovery</div>
+      <div class="persona-label">Top Goal</div>
+      <div class="persona-goal">Fire gate-change events that propagate everywhere within seconds. See the full concourse picture without screen-switching.</div>
+      <div class="persona-label" style="margin-top:0.5rem">Key Pain</div>
+      <div class="persona-pain">Gate change fires, GIDS takes 45–90s to update. Tarmac timer buried in sub-screen. Post-IROP reconstruction is slow.</div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-avatar" style="background:#ede9fe">📁</div>
+      <h4>Diana — Station Manager</h4>
+      <div class="persona-role">Policy management, compliance accountability</div>
+      <div class="persona-label">Top Goal</div>
+      <div class="persona-goal">Update carry-on rules in minutes, not days. See per-gate propagation status. Access override audit without a database extract.</div>
+      <div class="persona-label" style="margin-top:0.5rem">Key Pain</div>
+      <div class="persona-pain">Policy changes require a 24–48h helpdesk ticket. Calls a gate agent to verify propagation because the system doesn't confirm it.</div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-avatar" style="background:#ffedd5">🔍</div>
+      <h4>Chris — Biometrics Supervisor</h4>
+      <div class="persona-role">Match threshold management, CBP compliance</div>
+      <div class="persona-label">Top Goal</div>
+      <div class="persona-goal">See false non-match rate spikes in real time, not retrospectively. Every threshold change auto-notifies CBP.</div>
+      <div class="persona-label" style="margin-top:0.5rem">Key Pain</div>
+      <div class="persona-pain">Dashboard shows problems 30 minutes after the fact. CBP notification is a manual step that gets missed under pressure.</div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-avatar" style="background:#e0f2fe">⚙️</div>
+      <h4>Taylor — Platform Engineer</h4>
+      <div class="persona-role">DSS event pipeline and biometrics reliability</div>
+      <div class="persona-label">Top Goal</div>
+      <div class="persona-goal">Observe end-to-end display staleness with a single dashboard. Diagnose incidents in &lt;5 minutes from trace data.</div>
+      <div class="persona-label" style="margin-top:0.5rem">Key Pain</div>
+      <div class="persona-pain">Staleness is the sum of three unmeasured lags. Biometrics incident requires three log systems to cross-reference.</div>
+    </div>
+
+  </div>
+
+  <hr class="section-rule" id="usecases">
+
+  <!-- ══ USE CASES ══ -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4">📖</div>
+    <div>
+      <h2>Use Cases</h2>
+      <div class="section-sub">Happy paths, exception paths, and non-negotiables for each domain.</div>
+    </div>
+  </div>
+
+  <!-- DSS -->
+  <div class="usecase-card">
+    <div class="usecase-header">
+      <h3>📺 Real-Time DSS Display Update</h3>
+      <div class="usecase-reg">
+        <span class="reg-tag">FAR Part 139</span>
+        <span class="reg-tag">DOT 14 CFR 259</span>
+      </div>
+    </div>
+    <div class="usecase-body">
+      <p>AOC fires a flight ops event → propagates to all display surfaces (GIDS, FIDS, BIDS, WIDS) within 5 seconds. The tarmac timer is always visible in the primary GIDS view — never behind a tab.</p>
+      <div class="two-col">
+        <div class="mini-section">
+          <h4>Happy Path — Gate Change (IROP)</h4>
+          <ol class="journey-steps">
+            <li>Ops Controller fires gate-change in AOC (C14 → C22)</li>
+            <li>AOC publishes to Azure Service Bus</li>
+            <li>DisplayHub consumer processes event (target ≤2,000ms)</li>
+            <li>Flight state cache updated with new gate</li>
+            <li>GIDS at C14 shows "Gate Changed → C22"; GIDS at C22 shows inbound flight</li>
+            <li>Audit record created: flight_id, old_gate, new_gate, staleness_ms</li>
+          </ol>
+        </div>
+        <div class="mini-section">
+          <h4>Non-Negotiables</h4>
+          <ul class="non-neg-list">
+            <li>No polling AOC — consume from Service Bus only</li>
+            <li>Staleness SLA: 5 seconds AOC publish → GIDS render</li>
+            <li>Tarmac timer in primary GIDS view always (DOT mandate)</li>
+            <li>Every state transition emits audit record with staleness_ms</li>
+            <li>Gate context (flight_id, gate_id, timestamp) on every log event</li>
+          </ul>
+          <br/>
+          <h4>Acceptance Criteria</h4>
+          <ul class="ac-list">
+            <li>Gate change: both GIDS surfaces updated within 5,000ms</li>
+            <li>Tarmac timer visible in primary view within 5,000ms of door-close</li>
+            <li>Staleness metric wired to App Insights per surface (Sprint 1)</li>
+            <li>Consumer lag alert: threshold >3s sustained >1min</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Biometrics -->
+  <div class="usecase-card">
+    <div class="usecase-header">
+      <h3>🤳 Touchless Biometric Boarding</h3>
+      <div class="usecase-reg">
+        <span class="reg-tag">TSA 49 CFR 1542</span>
+        <span class="reg-tag">CBP Biometric Exit</span>
+        <span class="reg-tag">GDPR/CCPA</span>
+      </div>
+    </div>
+    <div class="usecase-body">
+      <p>Passenger presents face at gate podium → CBP TIS facial match → APPROVE / DENY / OPT-OUT in ≤3 seconds. Gate agent monitors and handles non-matches and opt-outs. Biometric PII never reaches operational logs.</p>
+      <div class="two-col">
+        <div class="mini-section">
+          <h4>Happy Path — Enrolled Passenger</h4>
+          <ol class="journey-steps">
+            <li>Camera captures face frame at gate podium</li>
+            <li>Biometrics API → Apigee → CBP TIS facial match</li>
+            <li>TIS returns MATCH above threshold</li>
+            <li>API verifies PNR active + flight open for boarding</li>
+            <li>Podium shows green APPROVED; DCS boarding record updated</li>
+            <li>Audit: pnr_token, gate_id, match_result: APPROVE — no raw template, no match score</li>
+          </ol>
+        </div>
+        <div class="mini-section">
+          <h4>Non-Negotiables</h4>
+          <ul class="non-neg-list">
+            <li>Opt-out always reachable without agent involvement</li>
+            <li>Match threshold changes require supervisor auth + CBP notification</li>
+            <li>Every DENY has a typed reason code — no generic "FAILED"</li>
+            <li>No biometric PII (templates, scores) in operational logs — ever</li>
+            <li>Raw biometric deleted ≤12h post-departure (CBP mandate)</li>
+          </ul>
+          <br/>
+          <h4>Acceptance Criteria</h4>
+          <ul class="ac-list">
+            <li>Throughput ≥22 pax/min at pilot gate (Sprint 0 baseline)</li>
+            <li>False non-match rate ≤1.5% at pilot gate</li>
+            <li>Opt-out reachable in ≤2 taps, without agent</li>
+            <li>Zero log entries with biometric template or match score</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carry-On -->
+  <div class="usecase-card">
+    <div class="usecase-header">
+      <h3>🧳 Carry-On Baggage Compliance</h3>
+      <div class="usecase-reg">
+        <span class="reg-tag">DOT 14 CFR 259</span>
+        <span class="reg-tag">DOT Consumer Protection</span>
+      </div>
+    </div>
+    <div class="usecase-body">
+      <p>Agent scans/measures carry-on → bag matrix returns COMPLIANT / GATE-CHECK / DENIED with rule version → agent enforces. Station Manager updates rules from admin UI without engineering. Every decision is immutable in the audit log.</p>
+      <div class="two-col">
+        <div class="mini-section">
+          <h4>Happy Path — Policy Update</h4>
+          <ol class="journey-steps">
+            <li>Manager creates updated rule in Bag Matrix Admin UI</li>
+            <li>UI requires: rule_id, effective_date, change_reason, manager_id</li>
+            <li>New rule version published (e.g. v2.4.2)</li>
+            <li>Admin UI shows per-gate propagation: N/M gates updated</li>
+            <li>All gates at station running new version within 60 seconds</li>
+            <li>Audit: rule_version, changed_by, change_reason, propagation_timestamp</li>
+          </ol>
+        </div>
+        <div class="mini-section">
+          <h4>Non-Negotiables</h4>
+          <ul class="non-neg-list">
+            <li>Rule version logged with every decision (COMPLIANT, GATE-CHECK, DENIED, MANUAL)</li>
+            <li>Override requires supervisor auth — blocked at UI without it</li>
+            <li>Policy propagation ≤60 seconds — status visible in admin UI</li>
+            <li>No in-place edits — every change is a new versioned entry</li>
+          </ul>
+          <br/>
+          <h4>Acceptance Criteria</h4>
+          <ul class="ac-list">
+            <li>Every decision returns rule_version in response and displays it to agent</li>
+            <li>Override path: UI blocks without supervisor auth code — zero silent overrides</li>
+            <li>Propagation p95 ≤60s; failure alert within 90s</li>
+            <li>Bag matrix p95 latency ≤2,000ms from scan to decision</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connect Me -->
+  <div class="usecase-card">
+    <div class="usecase-header">
+      <h3>📲 Connect Me — Flight Event Notifications</h3>
+      <div class="usecase-reg">
+        <span class="reg-tag">FAR Part 139</span>
+        <span class="reg-tag">Load Control Traceability</span>
+      </div>
+    </div>
+    <div class="usecase-body">
+      <p>Flight ops event fires → right person (gate agent, ramp crew, FLC) receives an actionable Teams message before their decision window closes. Push only — no polling.</p>
+      <div class="two-col">
+        <div class="mini-section">
+          <h4>Happy Path — Gate Change Alert</h4>
+          <ol class="journey-steps">
+            <li>Ops Controller fires gate-change in AOC (C14 → C22)</li>
+            <li>AOC publishes to Azure Service Bus</li>
+            <li>Connect Me consumer processes event (target ≤2,000ms)</li>
+            <li>Teams message sent to gate agent: "⚠️ GATE CHANGE — AA 1234 | C14 → C22 | Please confirm"</li>
+            <li>Agent taps CONFIRM on task card</li>
+            <li>Audit: event_type, recipient_id, delivered_at, actioned_at, delivery_latency_ms</li>
+          </ol>
+        </div>
+        <div class="mini-section">
+          <h4>Non-Negotiables</h4>
+          <ul class="non-neg-list">
+            <li>All operational alerts are push — agents must never poll for status</li>
+            <li>FLC task cards always show load plan version and timestamp</li>
+            <li>All workflow completions logged with actor_id + task_version + timestamp</li>
+          </ul>
+          <br/>
+          <h4>Acceptance Criteria</h4>
+          <ul class="ac-list">
+            <li>Gate change alert delivered within 30,000ms of AOC publish (p95)</li>
+            <li>Load plan card shows version and timestamp on 100% of tasks</li>
+            <li>Unconfirmed gate change: escalation triggered after 5 minutes</li>
+            <li>Unread alert rate metric: alert if >5% unread within 5 minutes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-rule" id="mvp">
+
+  <!-- ══ MVP ══ -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fef3c7">🪜</div>
+    <div>
+      <h2>MVP Staging Ladder</h2>
+      <div class="section-sub">One gate before one hub. One hub before the network. Never advance a stage without validated evidence and stakeholder sign-off.</div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <span class="callout-icon">🔴</span>
+    <div><strong>Gate before advance:</strong> hypothesis validated (measured, not assumed) · stop signal NOT triggered · Product Owner + Ops Lead sign-off · no open P1/P2 compliance issues from current stage.</div>
+  </div>
+
+  <div class="mvp-domain">
+    <h4>📺 DSS — Digital Signage</h4>
+    <div class="mvp-stages">
+      <div class="mvp-stage stage-1">
+        <div class="stage-label">Stage 1 — Gate Pilot</div>
+        <div class="stage-scope">1 display type (GIDS) at 1 gate — DFW A15</div>
+        <div class="stage-hyp">Hypothesis: staleness drops to ≤5s from baseline</div>
+        <div class="stop-label">Stop signal</div>
+        <div class="stop-signal">Staleness still >5s after 2-week run</div>
+      </div>
+      <div class="mvp-stage stage-2">
+        <div class="stage-label">Stage 2 — Hub Pilot</div>
+        <div class="stage-scope">All GIDS at DFW Concourse A (20 gates)</div>
+        <div class="stage-hyp">Hypothesis: p99 staleness ≤5s under real event volume</div>
+        <div class="stop-label">Stop signal</div>
+        <div class="stop-signal">DLQ events >1% of total events</div>
+      </div>
+      <div class="mvp-stage stage-3">
+        <div class="stage-label">Stage 3 — Network Rollout</div>
+        <div class="stage-scope">Full GIDS network → FIDS → BIDS</div>
+        <div class="stage-hyp">Hypothesis: ops controller decision speed improves</div>
+        <div class="stop-label">Stop signal</div>
+        <div class="stop-signal">Blocked until GIDS NPS >4.0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mvp-domain">
+    <h4>🤳 Biometrics — Touchless Boarding</h4>
+    <div class="mvp-stages">
+      <div class="mvp-stage stage-1">
+        <div class="stage-label">Stage 1 — Gate Pilot</div>
+        <div class="stage-scope">1 departure gate — DFW A15, domestic only</div>
+        <div class="stage-hyp">Hypothesis: throughput ≥ manual scan (≥10 pax/min)</div>
+        <div class="stop-label">Stop signal</div>
+        <div class="stop-signal">Throughput &lt;9 pax/min after 2-week run</div>
+      </div>
+      <div class="mvp-stage stage-2">
+        <div class="stage-label">Stage 2 — Concourse Pilot</div>
+        <div class="stage-scope">Full Concourse A — DFW</div>
+        <div class="stage-hyp">Hypothesis: match rate ≥98%; opt-out rate stable</div>
+        <div class="stop-label">Stop signal</div>
+        <div class="stop-signal">Opt-out rate >20%</div>
+      </div>
+      <div class="mvp-stage stage-3">
+        <div class="stage-label">Stage 3 — Hub Rollout</div>
+        <div class="stage-scope">Full DFW → ORD → MIA</div>
+        <div class="stage-hyp">Hypothesis: CBP compliance maintained at scale</div>
+        <div class="stop-label">Stop signal</div>
+        <div class="stop-signal">Any TSA/CBP compliance finding</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mvp-domain">
+    <h4>🧳 Carry-On Baggage Compliance</h4>
+    <div class="mvp-stages">
+      <div class="mvp-stage stage-1">
+        <div class="stage-label">Stage 1 — Gate Pilot</div>
+        <div class="stage-scope">1 gate agent, 1 gate — DFW A15</div>
+        <div class="stage-hyp">Hypothesis: decision time ≤45s; consistent application</div>
+        <div class="stop-label">Stop signal</div>
+        <div class="stop-signal">Disputes >10% of decisions</div>
+      </div>
+      <div class="mvp-stage stage-2">
+        <div class="stage-label">Stage 2 — Station Pilot</div>
+        <div class="stage-scope">All gate agents at DFW</div>
+        <div class="stage-hyp">Hypothesis: rule version consistency (0 stale-rule incidents)</div>
+        <div class="stop-label">Stop signal</div>
+        <div class="stop-signal">Any stale-rule incident post-SLA validation</div>
+      </div>
+      <div class="mvp-stage stage-3">
+        <div class="stage-label">Stage 3 — Hub Rollout</div>
+        <div class="stage-scope">Full DFW</div>
+        <div class="stage-hyp">Hypothesis: gate-check rate aligns with policy intent</div>
+        <div class="stop-label">Stop signal</div>
+        <div class="stop-signal">Override rate >15%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mvp-domain">
+    <h4>📲 Connect Me</h4>
+    <div class="mvp-stages">
+      <div class="mvp-stage stage-1">
+        <div class="stage-label">Stage 1 — FLC Pilot</div>
+        <div class="stage-scope">FLC workflow at 1 hub — DFW</div>
+        <div class="stage-hyp">Hypothesis: time-from-event to FLC-aware ≤90s</div>
+        <div class="stop-label">Stop signal</div>
+        <div class="stop-signal">Time >120s after 2-week run</div>
+      </div>
+      <div class="mvp-stage stage-2">
+        <div class="stage-label">Stage 2 — Gate Agent Pilot</div>
+        <div class="stage-scope">Gate agent alerts at DFW</div>
+        <div class="stage-hyp">Hypothesis: agent acts on alert within 2min, 90% of the time</div>
+        <div class="stop-label">Stop signal</div>
+        <div class="stop-signal">Action rate &lt;80%</div>
+      </div>
+      <div class="mvp-stage stage-3">
+        <div class="stage-label">Stage 3 — Hub Rollout</div>
+        <div class="stage-scope">All airport teams DFW → ORD</div>
+        <div class="stage-hyp">Hypothesis: Teams adoption ≥80%</div>
+        <div class="stop-label">Stop signal</div>
+        <div class="stop-signal">Adoption &lt;60% after 4 weeks</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-rule" id="discovery">
+
+  <!-- ══ DISCOVERY ══ -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff7ed">🔍</div>
+    <div>
+      <h2>Open Discovery Questions</h2>
+      <div class="section-sub">The questions we must answer before building anything. These are the baseline gaps — hypotheses, not facts.</div>
+    </div>
+  </div>
+
+  <div class="callout danger">
+    <span class="callout-icon">🛑</span>
+    <div><strong>PRD-1.2 — Problem-First Law:</strong> Do not propose a solution until you have a measured baseline. The questions below are the field work that unlocks building.</div>
+  </div>
+
+  <div class="discovery-domain">
+    <h4>📺 Digital Signage</h4>
+    <div class="discovery-candidate">Problem candidate: Gate displays show stale flight status during irregular operations.</div>
+    <ul class="q-list">
+      <li>What is the current measured staleness (ms) from AOC event to display update — and at which layer is the lag worst: hand-off, consumer, or render pipeline?</li>
+      <li>Do gate agents actually trust the GIDS display, or have they already built verbal workarounds that bypass it entirely?</li>
+    </ul>
+    <div class="do-not-build">🔴 Do not build until: staleness baseline per display type + one confirmed incident where staleness caused a wrong agent decision.</div>
+  </div>
+
+  <div class="discovery-domain">
+    <h4>🤳 Biometric Boarding</h4>
+    <div class="discovery-candidate">Problem candidate: False non-matches delay passengers and erode agent trust in the system.</div>
+    <ul class="q-list">
+      <li>What is the current false non-match rate (%)? Is it uniform across gates or concentrated at specific hardware or lighting conditions?</li>
+      <li>What is boarding throughput (pax/min) biometric vs. manual scan? Is biometric boarding actually faster in practice?</li>
+      <li>Is the opt-out path genuinely findable without agent help? Have we observed passengers in the field?</li>
+    </ul>
+    <div class="do-not-build">🔴 Do not build until: false non-match rate baseline, confirmed agent understanding of reason codes, opt-out usability confirmed by field observation.</div>
+  </div>
+
+  <div class="discovery-domain">
+    <h4>🧳 Carry-On Baggage</h4>
+    <div class="discovery-candidate">Problem candidate: Inconsistent enforcement due to rule version lag across gates.</div>
+    <ul class="q-list">
+      <li>What is the current gate-check rate — and does it vary across gates in ways that suggest different rule versions are running?</li>
+      <li>What is the override rate? Are overrides concentrated at specific agents or specific policy rules?</li>
+      <li>How long does it currently take a policy change to reach all gates, and does anyone measure it today?</li>
+    </ul>
+    <div class="do-not-build">🔴 Do not build until: gate-check rate baseline, confirmed rule version visibility gap, propagation time measurement.</div>
+  </div>
+
+  <div class="discovery-domain">
+    <h4>📲 Connect Me</h4>
+    <div class="discovery-candidate">Problem candidate: Flight event alerts arrive after the agent decision window closes.</div>
+    <ul class="q-list">
+      <li>What is the current time from AOC event fire to agent-aware-and-acting? Where is the lag — pipeline, Teams delivery, or notification visibility on the device?</li>
+      <li>What percentage of operational alerts go unread? Which alert types have the highest unread rate?</li>
+      <li>Can FLC confirm load plan currency from the task card today — or do they always need to open the load control system to check?</li>
+    </ul>
+    <div class="do-not-build">🔴 Do not build until: measured alert latency baseline, unread rate by alert type, confirmed FLC load data version visibility gap.</div>
+  </div>
+
+  <hr class="section-rule" id="compliance">
+
+  <!-- ══ COMPLIANCE ══ -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff5f5">⚖️</div>
+    <div>
+      <h2>Regulatory Constraints</h2>
+      <div class="section-sub">These are not preferences — they are hard product boundaries. Getting them wrong has legal and operational consequences.</div>
+    </div>
+  </div>
+
+  <div class="compliance-grid">
+    <div class="compliance-card">
+      <h4>FAR Part 139</h4>
+      <p>Airport certification — applies to all gate operations systems. Every state transition must be auditable.</p>
+    </div>
+    <div class="compliance-card">
+      <h4>TSA 49 CFR Part 1542</h4>
+      <p>Airport security — governs biometric boarding and gate access. Match threshold changes require CBP notification.</p>
+    </div>
+    <div class="compliance-card">
+      <h4>CBP Biometric Exit Mandate</h4>
+      <p>Facial recognition boarding. Raw biometric data deleted ≤12h post-departure. Audit retention: 7 years.</p>
+    </div>
+    <div class="compliance-card">
+      <h4>DOT 14 CFR Part 259</h4>
+      <p>Tarmac delay and consumer protection. Tarmac timer must be in primary GIDS view — never a sub-screen.</p>
+    </div>
+    <div class="compliance-card">
+      <h4>GDPR / CCPA</h4>
+      <p>Biometric PII for international passengers. Opt-out path must be accessible without agent assistance.</p>
+    </div>
+    <div class="compliance-card">
+      <h4>DOT Consumer Protection (Baggage)</h4>
+      <p>Governs baggage disclosure and denied boarding. Every carry-on decision must be auditable with rule version.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<div class="doc-footer">
+  <strong>Gate Management Platform — Product Walkthrough</strong><br/>
+  Prepared by 🟡 Amal (Product Coach) · Hangar AI Constitution · American Airlines Wave 4<br/>
+  All persona details and baselines are experimental hypotheses until validated through field observation and interviews.<br/>
+  <span style="opacity:0.6">2026-04-22 · avatar-product-gate-management v1.0.0 · RAG validated</span>
+</div>
+
+</body>
+</html>

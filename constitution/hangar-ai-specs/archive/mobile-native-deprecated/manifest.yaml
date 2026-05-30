@@ -1,0 +1,147 @@
+# iOS/Android Native Avatar Manifest
+# Defines stack configuration and law specializations
+#
+# NOTE: For iOS-specific patterns (Jon Reid TDD, Keychain, Swift 6 @MainActor,
+# fastlane CI/CD, certificate pinning), use the dedicated ios-swift avatar:
+# avatars/technology/ios-swift/
+#
+# NOTE: For Android-specific patterns (Jeroen Mols TDD, MockK, Turbine,
+# Android Keystore, fastlane supply, Hilt, Jetpack Compose), use the dedicated
+# android-kotlin avatar: avatars/technology/android-kotlin/
+#
+# This avatar is retained for cross-platform iOS+Android migration guidance only.
+# It will be deprecated once android-kotlin is fully shipped.
+
+avatar:
+  id: avatar-mobile-native
+  type: technology
+  name: Mobile Native (iOS/Android)
+  version: "2.0.0"
+
+stack:
+  platforms:
+    ios:
+      language: Swift 5+
+      framework: SwiftUI / UIKit
+      testing: XCTest, Quick/Nimble
+    android:
+      language: Kotlin
+      framework: Jetpack Compose
+      testing: JUnit 5, MockK, Turbine
+  architecture: MVVM
+
+dependencies:
+  ios:
+    - XCTest (built-in)
+    - Quick: "~> 7.0"
+    - Nimble: "~> 12.0"
+  android:
+    - junit-jupiter: "5.10.0"
+    - mockk: "1.13.0"
+    - turbine: "1.0.0"
+    - kotlinx-coroutines-test: "1.7.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+    - greenfield-development
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-3.2
+    title: Immutability Law
+    example_file: examples/ENG-3.2-immutability.md
+  - id: ENG-2.2
+    title: Layered Architecture
+    example_file: examples/ENG-2.2-layers.md
+
+conventions:
+  ios:
+    naming:
+      types: PascalCase
+      functions: camelCase
+      properties: camelCase
+      constants: camelCase or PascalCase
+      files: PascalCase
+      test_methods: test_scenario_expected
+    patterns:
+      value_object: "struct"
+      entity: "struct or class"
+      view_model: "@MainActor class ObservableObject"
+      view: "struct: View"
+  android:
+    naming:
+      classes: PascalCase
+      functions: camelCase
+      properties: camelCase
+      constants: SCREAMING_SNAKE
+      files: PascalCase
+      test_methods: "backtick name with spaces"
+    patterns:
+      value_object: "@JvmInline value class"
+      entity: "class"
+      view_model: "@HiltViewModel class ViewModel"
+      composable: "@Composable fun"
+
+commands:
+  ios:
+    test:
+      all: xcodebuild test -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 15'
+      specific: xcodebuild test -scheme MyApp -only-testing:MyAppTests/OrderTests
+      coverage: xcodebuild test -scheme MyApp -enableCodeCoverage YES
+    build: xcodebuild build -scheme MyApp
+  android:
+    test:
+      unit: ./gradlew test
+      specific: ./gradlew test --tests "com.example.myapp.domain.OrderTest"
+      instrumented: ./gradlew connectedAndroidTest
+    build: ./gradlew assembleDebug
+    lint: ./gradlew lint
+
+project_structure:
+  ios: |
+    MyApp/
+    ├── Domain/
+    │   ├── Entities/
+    │   ├── ValueObjects/
+    │   └── Errors/
+    ├── Application/
+    │   ├── Services/
+    │   └── Protocols/
+    ├── Infrastructure/
+    │   ├── Repositories/
+    │   └── Network/
+    ├── Presentation/
+    │   ├── Screens/
+    │   └── Components/
+    └── MyAppApp.swift
+    MyAppTests/
+    ├── Domain/
+    ├── Application/
+    └── Mocks/
+  android: |
+    app/src/main/java/com/example/myapp/
+    ├── domain/
+    │   ├── model/
+    │   ├── repository/
+    │   └── exception/
+    ├── data/
+    │   ├── repository/
+    │   ├── local/
+    │   └── remote/
+    ├── presentation/
+    │   ├── orderlist/
+    │   └── orderdetail/
+    ├── di/
+    └── MyApp.kt
+    app/src/test/

@@ -1,0 +1,34 @@
+{% extends "_base.html" %}
+{% block title %}{{ frontmatter.get('title', 'Tasks') }} — Hangar AI Constitution{% endblock %}
+{% block body %}
+{% set title = frontmatter.get('title', 'Tasks') %}
+{% set spec_id = frontmatter.get('spec_id', '') %}
+{% set status = frontmatter.get('status', 'NOT_STARTED') %}
+
+<div class="page cover">
+  <div class="eyebrow">Hangar AI Constitution — Spec-Driven Development</div>
+  <div style="margin-top: 20px;">
+    <span class="chip">Tasks</span>
+    {% if spec_id %}<span class="chip" style="margin-left: 6px;">{{ spec_id }}</span>{% endif %}
+  </div>
+  <h1>{{ title }}</h1>
+  <div style="margin-top: 20px;">
+    {% if status == 'NOT_STARTED' %}<span class="status-badge archived">Not Started</span>
+    {% elif status == 'IN_PROGRESS' %}<span class="status-badge proposed">In Progress</span>
+    {% elif status == 'COMPLETE' %}<span class="status-badge implemented">Complete</span>
+    {% else %}<span class="status-badge archived">{{ status }}</span>{% endif %}
+  </div>
+  <div class="footer">
+    <div>{{ title }}</div>
+    <div class="pn">1</div>
+  </div>
+</div>
+
+<div class="page content">
+  {{ body | safe }}
+  <div class="footer">
+    <div>{{ title }}</div>
+    <div class="pn">2</div>
+  </div>
+</div>
+{% endblock %}

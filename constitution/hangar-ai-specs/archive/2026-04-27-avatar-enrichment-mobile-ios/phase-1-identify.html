@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phase 1 — Identify | Avatar Enrichment: Mobile iOS</title>
+  <style>
+    :root {
+      --aa-red:#c8102e; --aa-dark:#0a0d14; --aa-navy:#131825; --aa-blue:#0f3460;
+      --aa-teal:#0d9488; --aa-green:#22c55e; --aa-gold:#f5a623; --aa-surface:#f4f6fa;
+      --aa-border:#dde3ee; --aa-text:#1e293b; --aa-muted:#64748b; --r:9px;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--aa-surface); color:var(--aa-text); font-size:14px; line-height:1.6; }
+    header { background:linear-gradient(140deg,#070a12 0%,#0f3460 65%,#0d9488 100%); color:#fff; padding:32px 44px 26px; }
+    .h-eyebrow { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:6px; }
+    .h-title { font-size:26px; font-weight:800; letter-spacing:-.4px; }
+    .h-sub { font-size:13px; color:rgba(255,255,255,.6); margin-top:4px; }
+    .badges { display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
+    .badge { padding:3px 11px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; }
+    .b-phase { background:var(--aa-teal); color:#fff; }
+    .b-mode { background:#5b21b6; color:#fff; }
+    .b-pass { background:rgba(34,197,94,.25); color:#86efac; border:1px solid rgba(34,197,94,.4); }
+    .b-warn { background:rgba(245,166,35,.25); color:#fde68a; border:1px solid rgba(245,166,35,.4); }
+    main { max-width:900px; margin:32px auto; padding:0 24px 60px; }
+    .section { background:#fff; border:1px solid var(--aa-border); border-radius:var(--r); padding:24px 28px; margin-bottom:22px; }
+    .section-title { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--aa-muted); margin-bottom:16px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { background:#f8f9fc; font-weight:600; text-align:left; padding:9px 12px; border-bottom:2px solid var(--aa-border); color:var(--aa-muted); font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
+    td { padding:9px 12px; border-bottom:1px solid var(--aa-border); vertical-align:top; }
+    tr:last-child td { border-bottom:none; }
+    .pass { color:#16a34a; font-weight:700; }
+    .warn { color:#d97706; font-weight:700; }
+    .tag { display:inline-block; padding:2px 9px; border-radius:12px; font-size:11px; font-weight:600; margin:2px 2px 2px 0; }
+    .tag-product { background:#ede9fe; color:#5b21b6; }
+    .tag-tech { background:#e0f2fe; color:#0369a1; }
+    .notice { background:#fffbeb; border:1px solid #fcd34d; border-radius:var(--r); padding:14px 18px; font-size:13px; margin-bottom:22px; }
+    .notice strong { color:#92400e; }
+    footer { text-align:center; font-size:11px; color:var(--aa-muted); padding:20px; }
+    code { background:#f1f5f9; padding:1px 6px; border-radius:4px; font-size:12px; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="h-eyebrow">Hangar AI Constitution — Avatar Workflow</div>
+  <div class="h-title">Phase 1 — Identify</div>
+  <div class="h-sub">Codebase: hangar-w4-dp-mobile &nbsp;·&nbsp; Run date: 2026-04-27 &nbsp;·&nbsp; Clinic: Wave 4 Mobile</div>
+  <div class="badges">
+    <span class="badge b-phase">Phase 1 Complete</span>
+    <span class="badge b-mode">Mode 4 — Enrich</span>
+    <span class="badge b-pass">✓ No Duplicates Found</span>
+    <span class="badge b-warn">⚠ 1 Advisory</span>
+  </div>
+</header>
+<main>
+
+  <div class="notice">
+    <strong>Advisory — ID mismatch (Phase 2 will formalise):</strong> 4 of 5 product avatar manifest IDs do not match their <code>avatars/index.yaml</code> entries (e.g. manifest says <code>avatar-product-passenger-booking</code>, index says <code>avatar-passenger-booking</code>). Not a Phase 1 blocker — flagged for Phase 2 gap scan.
+  </div>
+
+  <div class="section">
+    <div class="section-title">Avatar Registry — Identity Confirmation</div>
+    <table>
+      <tr><th>Avatar</th><th>Type</th><th>Path</th><th>In Index</th><th>Manifest ID</th><th>Duplicate Risk</th></tr>
+      <tr>
+        <td><span class="tag tag-product">avatar-passenger-booking</span></td>
+        <td>product</td>
+        <td><code>product-type/passenger-booking/</code></td>
+        <td class="pass">✓ Yes</td>
+        <td><code>avatar-product-passenger-booking</code></td>
+        <td class="pass">✓ None</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-product">avatar-check-in-travel</span></td>
+        <td>product</td>
+        <td><code>product-type/check-in-travel/</code></td>
+        <td class="pass">✓ Yes</td>
+        <td><code>avatar-product-check-in</code></td>
+        <td class="pass">✓ None</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-product">avatar-schedule-change-self-serve</span></td>
+        <td>product</td>
+        <td><code>product-type/schedule-change-self-serve/</code></td>
+        <td class="pass">✓ Yes</td>
+        <td><code>avatar-product-schedule-change-self-serve</code></td>
+        <td class="pass">✓ None</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-product">avatar-customer-relations-ops</span></td>
+        <td>product</td>
+        <td><code>product-type/customer-relations-ops/</code></td>
+        <td class="pass">✓ Yes</td>
+        <td><code>avatar-product-customer-relations-ops</code></td>
+        <td class="pass">✓ None</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-tech">avatar-ios-swift</span></td>
+        <td>technology</td>
+        <td><code>technology/ios-swift/</code></td>
+        <td class="pass">✓ Yes</td>
+        <td><code>avatar-ios-swift</code></td>
+        <td class="pass">✓ None</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Phase 1 Gate</div>
+    <table>
+      <tr><th>Check</th><th>Result</th></tr>
+      <tr><td>All target avatar paths resolved</td><td class="pass">✓ PASS — 5/5</td></tr>
+      <tr><td>Avatar types match registry convention</td><td class="pass">✓ PASS — product &amp; technology types correct</td></tr>
+      <tr><td>Duplicate IDs or semantic name conflicts</td><td class="pass">✓ PASS — none found</td></tr>
+      <tr><td>Mode confirmed</td><td class="pass">✓ PASS — Mode 4 (Enrich) for all 5</td></tr>
+      <tr><td>Manifest ID consistency with index.yaml</td><td class="warn">⚠ ADVISORY — 4/5 mismatched (Phase 2 gap)</td></tr>
+    </table>
+  </div>
+
+</main>
+<footer>Hangar AI Constitution · Avatar Workflow v1.0.0 · Phase 1 of 6 · skill-avatar-workflow</footer>
+</body>
+</html>

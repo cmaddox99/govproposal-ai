@@ -1,0 +1,104 @@
+avatar:
+  id: avatar-product-crew-training-scheduling
+  type: product
+  name: "Crew Training & Scheduling"
+  version: "1.0.0"
+  created: "2026-03-31"
+  last_updated: "2026-03-31"
+
+domain:
+  category: "Crew Training & Scheduling"
+  description: |
+    Safety-critical systems governing crew qualification tracking, training compliance,
+    and scheduling against FAR Part 117 duty/rest limits. DO-178C software assurance
+    requirements apply to scheduling constraint engines used in flight operations.
+    FAA OE mandate and crew fatigue risk management are non-negotiable constraints.
+    Cross-references aviation-faa industry avatar for DO-178C/FAR-specific guidance.
+
+  personas:
+    - Crew Scheduler
+    - Training Program Manager
+    - Flight Operations Safety Officer
+    - Regulatory Compliance Analyst
+
+core_journeys:
+  - "Crew Qualification Tracking"
+  - "Training Schedule Assignment"
+  - "Duty/Rest Compliance Validation"
+  - "Fatigue Risk Assessment"
+  - "Regulatory Audit Evidence Collection"
+
+activates:
+  skills:
+    - skill-spec-governance
+    - skill-02-user-journey-mapping
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-10-security-review
+    - skill-14-technical-debt
+    - skill-27-constitution-compliance
+
+  workflows:
+    - legacy-rescue-decision-track
+    - legacy-rescue-rewrite
+    - greenfield-development
+
+  industry_avatar: avatar-industry-aviation-faa
+
+specializes_laws:
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: "FAR Part 117.23 (max 5 consecutive calendar days), 117.25(b) (10-hour minimum rest), 117.31 (flight time limits); DO-178C Level B/C for scheduling constraint engine; FAA OE mandate for training record systems"
+  - id: BUS-2.2
+    title: "Control Framework"
+    description: "DO-178C Level B: 69 objectives for scheduling constraint engine; independence of verification activities; bidirectional traceability from requirement → code → test"
+  - id: BUS-2.4
+    title: "Evidence Collection"
+    description: "Training record audit trail: instructor ID, date, sim/aircraft registration, regulatory reference (FAR Part 121 Appendix E/F). Duty/rest compliance evidence per scheduling decision"
+  - id: ENG-4.1
+    title: "Atomic TDD — DO-178C Verification"
+    description: "100% MC/DC structural coverage for scheduling constraint logic (DO-178C Level B). Every test cites the FAR section it verifies"
+  - id: ENG-4.6
+    title: "Coverage — Safety Level"
+    description: "DO-178C Level B: 100% statement coverage, 100% decision coverage required for duty/rest constraint evaluation"
+  - id: ENG-6.7
+    title: "Audit Trail"
+    description: "All scheduling decisions affecting crew duty/rest must be immutably logged with: FAR citation, constraint evaluated, scheduler ID, timestamp. Required for FAA audit response"
+
+compliance_domains:
+  - standard: "FAR Part 117"
+    scope: "Crew duty and rest periods"
+    key_rules:
+      - "117.23: Maximum 5 consecutive calendar days without rest"
+      - "117.25(b): Minimum 10-hour rest period"
+      - "117.31: 1,000-hour annual flight time limit"
+  - standard: "FAR Part 121 Subpart T"
+    scope: "Flight crew training requirements"
+    key_rules:
+      - "Appendix E: First officer qualification"
+      - "Appendix F: Extended envelope training"
+  - standard: "DO-178C"
+    scope: "Scheduling constraint engine software assurance"
+    levels: [B, C]
+    key_objectives: "Level B: 69 objectives including statement/decision/MC/DC coverage"
+  - standard: "FAA OE Mandate"
+    scope: "Training record system access and audit"
+
+dependencies:
+  - "Crew Management System (CMS)"
+  - "Flight Operations Quality Assurance (FOQA)"
+  - "Simulator Scheduling System"
+  - "FAA ATOS (Air Transportation Oversight System)"
+  - "Training Record Management System"
+
+tags:
+  - product
+  - crew-scheduling
+  - safety-critical
+  - do-178c
+  - far-part-117
+  - faa
+  - compliance

@@ -1,0 +1,190 @@
+test_cases:
+
+  # ── Legacy Rescue — Phase overview ─────────────────────────────────────
+
+  - id: tc-wf-lr-001
+    question: "What are the 7 phases of the Legacy Rescue workflow?"
+    expected_laws: [ENG-4.1, ENG-6.1, ENG-6.7, BUS-2.1]
+    expected_skills: [skill-sonarqube-compliance-gate, 09-refactoring.md, 06-atomic-tdd.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return the full phase table: Assess, Govern, Characterize, Remediate, Refactor, Certify, Harden"
+
+  - id: tc-wf-lr-002
+    question: "How do I start a legacy rescue engagement on a brownfield Java service?"
+    expected_laws: [ENG-12.1, BUS-2.1]
+    expected_skills: [skill-sonarqube-compliance-gate, 09-refactoring.md]
+    expected_avatars: [java-spring]
+    category: workflows
+
+  - id: tc-wf-lr-003
+    question: "What is the constitutional gate for each phase of legacy rescue?"
+    expected_laws: [ENG-12.1, ENG-12.3, ENG-4.11, ENG-4.12, ENG-6.1]
+    expected_skills: [skill-sonarqube-compliance-gate]
+    expected_avatars: []
+    category: workflows
+    notes: "Must surface HARD_BLOCK vs PHASE_GATE distinction and SonarQube as referee"
+
+  # ── Phase 3 — Characterization scope ────────────────────────────────────
+
+  - id: tc-wf-lr-004
+    question: "What is characterization scope declaration and why does it matter?"
+    expected_laws: [ENG-4.10, BUS-2.1]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return the Phase 3 Characterization Scope Protocol — IN_SCOPE/EXCLUDED/DEFERRED table, class inventory step, and Phase 4 cannot begin until SonarQube confirms 95%"
+
+  - id: tc-wf-lr-005
+    question: "How do I declare the characterization scope before writing tests in legacy rescue Phase 3?"
+    expected_laws: [ENG-4.10, BUS-2.1]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return the class inventory command and PROPOSAL.md scope table format"
+
+  - id: tc-wf-lr-006
+    question: "Which classes should be excluded from characterization coverage in a Spring Boot project?"
+    expected_laws: [ENG-4.10]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: [java-spring]
+    category: workflows
+    notes: "Must return: DTOs, Application.java, Repository interfaces, Config classes as EXCLUDED examples"
+
+  - id: tc-wf-lr-007
+    question: "Our characterization tests only cover 4 out of 29 classes, is that acceptable?"
+    expected_laws: [ENG-4.10, ENG-12.1, BUS-2.1]
+    expected_skills: [skill-sonarqube-compliance-gate, 06-atomic-tdd.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return HARD_BLOCK: Phase 3 gate requires 95% on full declared IN_SCOPE, not a subset of your choosing"
+
+  # ── Phase 5 — Refactor scope extension ──────────────────────────────────
+
+  - id: tc-wf-lr-008
+    question: "We extracted a god class into 3 services during refactoring. Do we need new tests?"
+    expected_laws: [ENG-4.1, ENG-4.11, ENG-4.10]
+    expected_skills: [09-refactoring.md, 06-atomic-tdd.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return Refactor Scope Extension Rule: extracted class is automatically IN_SCOPE; new_coverage >= 95% required; Phase 5 gate does not close without it"
+
+  - id: tc-wf-lr-009
+    question: "After extracting AccrualService from MileageService, what happens to the original characterization tests?"
+    expected_laws: [ENG-4.1, ENG-4.10, ENG-4.11]
+    expected_skills: [09-refactoring.md, 06-atomic-tdd.md]
+    expected_avatars: [java-spring]
+    category: workflows
+    notes: "Must return Test Level Migration Rule: original test becomes INTEGRATION-CHARACTERIZATION; new unit test written at extracted class; both kept; mutation score confirms level shift"
+
+  - id: tc-wf-lr-010
+    question: "When behavior moves from a god class to an extracted service, where should the unit tests live?"
+    expected_laws: [ENG-4.1, ENG-4.10]
+    expected_skills: [09-refactoring.md, 06-atomic-tdd.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return: tests follow behavior to its new home; original test promoted to integration characterization; do not delete original tests"
+
+  - id: tc-wf-lr-011
+    question: "What is the difference between a unit characterization test and an integration characterization test after refactoring?"
+    expected_laws: [ENG-4.1, ENG-4.10, ENG-4.2]
+    expected_skills: [06-atomic-tdd.md, 09-refactoring.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must explain: unit = behavior lives here; integration = tests wiring/delegation; level changes when behavior moves"
+
+  # ── Phase 7 — Mutation hardening ─────────────────────────────────────────
+
+  - id: tc-wf-lr-012
+    question: "What mutation score is required before the legacy rescue workflow is considered complete?"
+    expected_laws: [ENG-4.12]
+    expected_skills: [11-mutation-testing.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return: ENG-4.12 NON-NEGOTIABLE, mutation score >= 90%, coverageThreshold >= 95%, HARD_BLOCK"
+
+  - id: tc-wf-lr-013
+    question: "PIT mutation testing is blocking because coverage is below 95%. What should I do?"
+    expected_laws: [ENG-4.12, ENG-4.11, ENG-4.10]
+    expected_skills: [11-mutation-testing.md, 06-atomic-tdd.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return: reach 95% line coverage first (Phase 3/5 gates), then run PIT; mutation on uncovered code is meaningless"
+
+  - id: tc-wf-lr-014
+    question: "How do I handle surviving mutants in PIT that I cannot kill with a test?"
+    expected_laws: [ENG-4.12, BUS-7.1]
+    expected_skills: [11-mutation-testing.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return: surviving mutant register; each must be killed OR accepted with law citation; lead sign-off required"
+
+  # ── Tech stack agnosticism ────────────────────────────────────────────────
+
+  - id: tc-wf-lr-015
+    question: "How do I run mutation testing for a Python legacy project using the legacy rescue workflow?"
+    expected_laws: [ENG-4.12]
+    expected_skills: [11-mutation-testing.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return: mutmut tool, 'mutmut run && mutmut html' command from tech stack translation table"
+
+  - id: tc-wf-lr-016
+    question: "What tool do I use for mutation testing in a TypeScript project under legacy rescue?"
+    expected_laws: [ENG-4.12]
+    expected_skills: [11-mutation-testing.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return: Stryker, 'npx stryker run', reports/mutation/index.html"
+
+  - id: tc-wf-lr-017
+    question: "How do I import JaCoCo coverage into SonarQube for a legacy Java project?"
+    expected_laws: [ENG-4.11, ENG-4.6]
+    expected_skills: [skill-sonarqube-compliance-gate]
+    expected_avatars: [java-spring]
+    category: workflows
+    notes: "Must return: sonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml and the sonar.java.binaries=target/classes workaround for projects without compiled classes"
+
+  - id: tc-wf-lr-018
+    question: "Can the legacy rescue workflow be applied to a .NET C# project?"
+    expected_laws: [ENG-4.1, ENG-4.12]
+    expected_skills: [09-refactoring.md, 11-mutation-testing.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return: yes, same phases and gates; tech stack translation shows xUnit/NUnit + coverlet + Stryker.NET"
+
+  # ── SonarQube as constitutional referee ──────────────────────────────────
+
+  - id: tc-wf-lr-019
+    question: "Can the AI agent self-certify that a phase gate has passed?"
+    expected_laws: [ENG-12.1, ENG-12.3]
+    expected_skills: [skill-sonarqube-compliance-gate]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return: NO — ENG-12.3 prohibits self-certification; SonarQube is the referee; API pass != gate pass; human must review dashboard"
+
+  - id: tc-wf-lr-020
+    question: "What is the difference between a HARD_BLOCK and a PHASE_GATE in legacy rescue?"
+    expected_laws: [ENG-12.1, ENG-12.3]
+    expected_skills: [skill-sonarqube-compliance-gate]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return: HARD_BLOCK = no advance under any circumstance (security_rating, vulnerabilities, mutation score); PHASE_GATE = blocks with architect override possible"
+
+  # ── Known pitfalls ─────────────────────────────────────────────────────────
+
+  - id: tc-wf-lr-021
+    question: "We advanced to Phase 4 with only 21% coverage. What went wrong and how do we fix it?"
+    expected_laws: [ENG-4.10, ENG-12.1, BUS-2.1]
+    expected_skills: [06-atomic-tdd.md, skill-sonarqube-compliance-gate]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return: scope not declared before Phase 3; only high-risk classes tested; fix = go back, produce class inventory, register IN_SCOPE, write missing tests, re-scan SonarQube"
+
+  - id: tc-wf-lr-022
+    question: "After remediating hardcoded credentials, our code smells count increased. Is that a problem?"
+    expected_laws: [ENG-6.7, ENG-4.1]
+    expected_skills: [09-refactoring.md, 10-security-review.md]
+    expected_avatars: []
+    category: workflows
+    notes: "Must return: Phase 5 gate — code_smells must not increase; typed exceptions instead of bare RuntimeException during remediation; check smells before closing Phase 4"

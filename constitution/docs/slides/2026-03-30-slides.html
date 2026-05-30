@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic SDLC — AA Hangar AI Constitution Workshop</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --aa-blue: #0078D2;
+      --aa-dark-blue: #002244;
+      --aa-red: #D50032;
+      --aa-white: #FFFFFF;
+      --aa-light-gray: #F0F2F5;
+      --aa-medium-gray: #6B7280;
+      --aa-dark-gray: #1F2937;
+    }
+
+    .reveal {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 28px;
+      color: var(--aa-dark-blue);
+    }
+
+    .reveal .slides section {
+      text-align: left;
+      padding: 40px 60px;
+    }
+
+    .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      color: var(--aa-dark-blue);
+      text-transform: none;
+      letter-spacing: -0.02em;
+    }
+
+    .reveal h1 { font-size: 2.2em; }
+    .reveal h2 { font-size: 1.6em; margin-bottom: 0.6em; }
+    .reveal h3 { font-size: 1.2em; margin-bottom: 0.5em; }
+
+    .reveal p, .reveal li {
+      font-size: 0.75em;
+      line-height: 1.6;
+      color: var(--aa-dark-gray);
+    }
+
+    .reveal strong { color: var(--aa-dark-blue); }
+
+    .reveal code {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.85em;
+      background: var(--aa-light-gray);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--aa-dark-blue);
+    }
+
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      font-size: 0.55em;
+    }
+
+    .reveal pre code {
+      background: var(--aa-dark-blue);
+      color: #E5E7EB;
+      padding: 20px 24px;
+      border-radius: 8px;
+      line-height: 1.5;
+      max-height: 450px;
+    }
+
+    /* AA branded accent bar on top of each slide */
+    .reveal .slides section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--aa-blue) 0%, var(--aa-blue) 60%, var(--aa-red) 60%, var(--aa-red) 100%);
+    }
+
+    /* Title slide */
+    .reveal .slides section.title-slide {
+      text-align: center;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .title-slide h1 {
+      color: var(--aa-dark-blue);
+      font-weight: 800;
+      font-size: 2.4em;
+      margin-bottom: 0.1em;
+    }
+
+    .title-slide .subtitle {
+      color: var(--aa-blue);
+      font-size: 1.1em;
+      font-weight: 600;
+      margin-bottom: 0.5em;
+    }
+
+    .title-slide .workshop-type {
+      color: var(--aa-red);
+      font-size: 0.85em;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1em;
+    }
+
+    .title-slide .presenter {
+      color: var(--aa-medium-gray);
+      font-size: 0.7em;
+      margin-top: 1.5em;
+    }
+
+    /* Section divider slides */
+    .reveal .slides section.section-divider {
+      text-align: center;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: var(--aa-dark-blue);
+    }
+
+    .section-divider::before {
+      background: linear-gradient(90deg, var(--aa-red) 0%, var(--aa-red) 40%, var(--aa-blue) 40%, var(--aa-blue) 100%) !important;
+    }
+
+    .section-divider h2 {
+      color: var(--aa-white) !important;
+      font-size: 2em;
+    }
+
+    .section-divider p {
+      color: #94A3B8 !important;
+      font-size: 0.85em;
+    }
+
+    /* Tables */
+    .reveal table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.65em;
+      margin: 0.8em 0;
+    }
+
+    .reveal table thead th {
+      background: var(--aa-dark-blue);
+      color: var(--aa-white);
+      padding: 10px 14px;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .reveal table thead th:first-child { border-radius: 6px 0 0 0; }
+    .reveal table thead th:last-child { border-radius: 0 6px 0 0; }
+
+    .reveal table tbody td {
+      padding: 8px 14px;
+      border-bottom: 1px solid #E5E7EB;
+      color: var(--aa-dark-gray);
+    }
+
+    .reveal table tbody tr:nth-child(even) td {
+      background: var(--aa-light-gray);
+    }
+
+    /* Callout boxes */
+    .callout {
+      background: var(--aa-light-gray);
+      border-left: 4px solid var(--aa-blue);
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 0.8em 0;
+      font-size: 0.75em;
+    }
+
+    .callout.warning {
+      border-left-color: var(--aa-red);
+      background: #FFF5F5;
+    }
+
+    .callout.success {
+      border-left-color: #059669;
+      background: #F0FDF4;
+    }
+
+    /* Grid layout */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 0.5em;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      margin-top: 0.5em;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--aa-white);
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      padding: 16px 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .card h4 {
+      margin: 0 0 0.3em 0;
+      font-size: 0.8em;
+      color: var(--aa-blue);
+    }
+
+    .card p, .card li {
+      font-size: 0.65em;
+      margin: 0.2em 0;
+    }
+
+    /* Badge / pill */
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.6em;
+      font-weight: 600;
+    }
+
+    .badge-red { background: #FEE2E2; color: var(--aa-red); }
+    .badge-blue { background: #DBEAFE; color: var(--aa-blue); }
+    .badge-green { background: #D1FAE5; color: #059669; }
+    .badge-yellow { background: #FEF3C7; color: #D97706; }
+
+    /* Cycle diagram */
+    .cycle-step {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.7em;
+      margin: 4px;
+      color: var(--aa-white);
+    }
+
+    .cycle-step.red { background: var(--aa-red); }
+    .cycle-step.green { background: #059669; }
+    .cycle-step.refactor { background: var(--aa-blue); }
+    .cycle-step.verify { background: #7C3AED; }
+    .cycle-step.update { background: #D97706; }
+    .cycle-step.commit { background: var(--aa-dark-blue); }
+
+    /* Footer */
+    .slide-footer {
+      position: absolute;
+      bottom: 16px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.45em;
+      color: var(--aa-medium-gray);
+    }
+
+    /* Emphasis text */
+    .highlight { color: var(--aa-blue); font-weight: 600; }
+    .danger { color: var(--aa-red); font-weight: 600; }
+
+    /* Emoji sizing */
+    .emoji-large { font-size: 1.4em; }
+
+    /* List styling */
+    .reveal ul { list-style: none; padding-left: 0; }
+    .reveal ul li::before {
+      content: '▸';
+      color: var(--aa-blue);
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    .reveal ol { padding-left: 1.2em; }
+    .reveal ol li { padding-left: 0.3em; }
+    .reveal ol li::marker { color: var(--aa-blue); font-weight: 700; }
+
+    /* Fragment highlight */
+    .reveal .fragment.highlight-aa {
+      opacity: 1;
+      visibility: inherit;
+    }
+    .reveal .fragment.highlight-aa.visible {
+      color: var(--aa-blue);
+      font-weight: 600;
+    }
+
+    /* Comparison columns */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .compare .wrong {
+      border: 2px solid var(--aa-red);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .compare .right {
+      border: 2px solid #059669;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .compare h4 { margin-top: 0; }
+
+    /* Break slide */
+    .break-slide {
+      text-align: center;
+      background: var(--aa-light-gray);
+    }
+
+    .break-slide h2 {
+      font-size: 2.5em;
+    }
+
+    /* Q&A / Thank you */
+    .closing-slide {
+      text-align: center;
+    }
+
+    .closing-slide h2 {
+      color: var(--aa-dark-blue);
+    }
+
+    /* Hierarchy pyramid */
+    .hierarchy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin: 0.8em 0;
+    }
+
+    .hierarchy .level {
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.65em;
+      text-align: center;
+      color: var(--aa-white);
+    }
+
+    .hierarchy .level-1 { background: var(--aa-red); width: 50%; }
+    .hierarchy .level-2 { background: #EA580C; width: 62%; }
+    .hierarchy .level-3 { background: #D97706; width: 74%; }
+    .hierarchy .level-4 { background: #059669; width: 86%; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ============================================================ -->
+      <!-- TITLE SLIDE -->
+      <!-- ============================================================ -->
+      <section class="title-slide">
+        <div class="workshop-type">A 3-Hour Hands-On Workshop</div>
+        <h1>Agentic SDLC</h1>
+        <div class="subtitle">AA Hangar &middot; Constitutional AI for Enterprise Software Development</div>
+        <p class="presenter">Adeel Ali &middot; AI Coach &amp; Advisor &middot; The Hangar</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- AGENDA -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Workshop Agenda</h2>
+        <table>
+          <thead>
+            <tr><th></th><th>Module</th><th>Duration</th><th>Format</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>📜</td><td><strong>MODULE 1:</strong> Constitution Deep-Dive</td><td>35 min</td><td>Lecture</td></tr>
+            <tr><td></td><td>&nbsp;&nbsp;Laws, Skills, Workflows, Authority Hierarchy</td><td></td><td></td></tr>
+            <tr><td>🛠️</td><td><strong>MODULE 2:</strong> Brownfield Adoption</td><td>45 min</td><td>Exercise</td></tr>
+            <tr><td></td><td>&nbsp;&nbsp;Adopt Constitution to a Legacy Service</td><td></td><td></td></tr>
+            <tr><td>☕</td><td>Break</td><td>10 min</td><td></td></tr>
+            <tr><td>🚀</td><td><strong>MODULE 3:</strong> Greenfield Step-by-Step</td><td>50 min</td><td>Exercise</td></tr>
+            <tr><td></td><td>&nbsp;&nbsp;Full Agentic SDLC Workflow</td><td></td><td></td></tr>
+            <tr><td>🎯</td><td>Closing &amp; Next Steps</td><td>5 min</td><td></td></tr>
+          </tbody>
+        </table>
+        <p style="text-align:center; margin-top:0.5em;"><strong>Total Duration: ~3 Hours</strong></p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- LEARNING OBJECTIVES -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Learning Objectives</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h4>1. Understand Constitutional AI</h4>
+            <p>The Hangar framework: Laws → Skills → Workflows</p>
+            <p>Authority hierarchy &amp; NON-NEGOTIABLE laws</p>
+          </div>
+          <div class="card">
+            <h4>2. Adopt the Constitution</h4>
+            <p>7-step Brownfield adoption workflow</p>
+            <p>Generate constitutional artifacts with law citations</p>
+          </div>
+          <div class="card">
+            <h4>3. Build with Atomic TDD</h4>
+            <p>The 6-step cycle: RED → GREEN → REFACTOR → VERIFY</p>
+            <p>VERIFY = 3 Gates (Tests + Lint + Static Analysis)</p>
+          </div>
+          <div class="card">
+            <h4>4. Hands-On Practice</h4>
+            <p>Two exercises totaling <strong>95 minutes</strong> of practice!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- MODULE 1 DIVIDER -->
+      <!-- ============================================================ -->
+      <section class="section-divider">
+        <h2>📜 MODULE 1</h2>
+        <p>Constitution Deep-Dive &middot; 35 minutes</p>
+        <p>Laws &middot; Skills &middot; Workflows &middot; Authority Hierarchy</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- THE PROBLEM -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>The Problem</h2>
+        <h3>What Happens When AI Writes Code Without Guardrails?</h3>
+        <table>
+          <thead>
+            <tr><th></th><th>Issue</th><th>Impact</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>🎭</td><td><strong>Hallucinations</strong></td><td>AI confidently writes incorrect code</td></tr>
+            <tr><td>📊</td><td><strong>Inconsistent Quality</strong></td><td>Great code one moment, terrible next</td></tr>
+            <tr><td>🔍</td><td><strong>No Audit Trail</strong></td><td>"Why did it do that?" — No one knows</td></tr>
+            <tr><td>🎯</td><td><strong>Scope Creep</strong></td><td>Builds more than asked</td></tr>
+            <tr><td>🔒</td><td><strong>Security Blind Spots</strong></td><td>Forgets input validation</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warning">
+          <strong>"AI is powerful, but power without governance is chaos."</strong>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- THE SOLUTION -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>The Solution: Constitutional AI</h2>
+        <h3>"Explicit rules that AI agents MUST follow"</h3>
+        <div class="grid-2">
+          <div class="card">
+            <h4>📜 Laws</h4>
+            <p>What's allowed and forbidden</p>
+          </div>
+          <div class="card">
+            <h4>🛠️ Skills</h4>
+            <p>HOW to do things correctly</p>
+          </div>
+          <div class="card">
+            <h4>🔄 Workflows</h4>
+            <p>WHEN to apply which skills</p>
+          </div>
+          <div class="card">
+            <h4>🎯 Adoptions</h4>
+            <p>Customize for YOUR context</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- WHY CONSTITUTIONAL -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Why "Constitutional"?</h2>
+        <h3>The Governance Analogy</h3>
+        <table>
+          <thead>
+            <tr><th>Governance Concept</th><th></th><th>AI Constitution Equivalent</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Laws</td><td>→</td><td>ENG-*, PRD-*, BUS-* laws</td></tr>
+            <tr><td>Amendments</td><td>→</td><td>Law updates via committee review</td></tr>
+            <tr><td>Authority Hierarchy</td><td>→</td><td>Laws → AGENTS.md → Project Rules</td></tr>
+            <tr><td>Enforcement</td><td>→</td><td>constitution-lint, VERIFY gates</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          Just like a state constitution provides governance, our AI Constitution governs how agents behave — <strong>predictably and auditably</strong>.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- FOUR LAYERS -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>The AA Hangar AI Constitution</h2>
+        <h3>Four Layers of Governance</h3>
+        <div class="grid-3" style="margin-top:1em;">
+          <div class="card" style="border-top: 3px solid var(--aa-red);">
+            <h4>📜 Laws</h4>
+            <p>Rules the agent <strong>MUST</strong> follow</p>
+          </div>
+          <div class="card" style="border-top: 3px solid var(--aa-blue);">
+            <h4>🛠️ Skills</h4>
+            <p>Techniques the agent knows</p>
+          </div>
+          <div class="card" style="border-top: 3px solid #059669;">
+            <h4>🔄 Workflows</h4>
+            <p>Processes that chain skills</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- AUTHORITY HIERARCHY -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Authority Hierarchy</h2>
+        <h3>Who Wins When Rules Conflict?</h3>
+        <div class="hierarchy">
+          <div class="level level-1">LEVEL 1: Constitution Laws &nbsp;<span class="badge badge-red" style="color:#fff;background:rgba(255,255,255,0.2)">Highest</span><br><small>NON-NEGOTIABLE markers CANNOT be overridden</small></div>
+          <div class="level level-2">LEVEL 2: AGENTS.md &nbsp;<small>Project-level customization within law bounds</small></div>
+          <div class="level level-3">LEVEL 3: Project Rules &nbsp;<small>Team conventions, style guides</small></div>
+          <div class="level level-4">LEVEL 4: OpenSpec Proposals &nbsp;<small>Current work in progress</small></div>
+        </div>
+        <div class="callout warning">
+          <strong>Key:</strong> If a project rule conflicts with a constitutional law, the <strong>law ALWAYS wins</strong>.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- LAW CATEGORIES -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Law Categories</h2>
+        <h3>Three Pillars of Governance</h3>
+        <table>
+          <thead>
+            <tr><th>Category</th><th>Prefix</th><th>Focus</th><th>Examples</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Engineering</strong></td><td><code>ENG-*</code></td><td>How we build</td><td>TDD, Complexity</td></tr>
+            <tr><td><strong>Product</strong></td><td><code>PRD-*</code></td><td>What we build</td><td>User-first, OpenSpec</td></tr>
+            <tr><td><strong>Business</strong></td><td><code>BUS-*</code></td><td>Why we build</td><td>Compliance, Audit Trails</td></tr>
+          </tbody>
+        </table>
+        <pre><code># Example from laws/index.yaml
+- id: ENG-4.1
+  title: Atomic TDD Law
+  status: NON-NEGOTIABLE</code></pre>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- NON-NEGOTIABLE LAWS -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>NON-NEGOTIABLE Laws</h2>
+        <h3>These Cannot Be Overridden — Ever</h3>
+        <table>
+          <thead>
+            <tr><th>Law</th><th>Title</th><th>Why It's Absolute</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>ENG-4.1</code></td><td>Atomic TDD Law</td><td>"ONE test at a time" — Prevents untested code</td></tr>
+            <tr><td><code>ENG-6.5</code></td><td>Input Validation Law</td><td>Security cannot be optional</td></tr>
+            <tr><td><code>BUS-2.1</code></td><td>Aviation Compliance</td><td>FAA/TSA/DOT are federal law</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warning">
+          <strong>NON-NEGOTIABLE</strong> = No project rule, no deadline, no manager can override.<br>
+          The agent will <strong>REFUSE</strong>.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- TECH AVATARS -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Technology Avatars</h2>
+        <h3>Stack-Specific Guidance</h3>
+        <table>
+          <thead>
+            <tr><th>Avatar</th><th>Stack</th><th>Specializes In</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>java-spring</code></td><td>Java 21+, Spring 3.x</td><td>Testing, DDD</td></tr>
+            <tr><td><code>python-fastapi</code></td><td>Python 3.11+, FastAPI</td><td>Async, Pydantic</td></tr>
+            <tr><td><code>nodejs-typescript</code></td><td>TypeScript 5+, NestJS</td><td>Type safety</td></tr>
+            <tr><td><code>react-frontend</code></td><td>React 18+, Next.js</td><td>Component testing</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          Each avatar provides technology-specific <strong>law interpretations</strong> and code examples — both DOs and DON'Ts.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- ATOMIC TDD -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Atomic TDD Law (ENG-4.1)</h2>
+        <h3>The Core Practice — <span class="danger">NON-NEGOTIABLE</span></h3>
+        <div class="compare">
+          <div class="wrong">
+            <h4 class="danger">❌ WRONG</h4>
+            <ul>
+              <li>Write 5 tests</li>
+              <li>Then write code for all</li>
+              <li>Hope they all pass</li>
+            </ul>
+          </div>
+          <div class="right">
+            <h4 style="color:#059669;">✅ RIGHT</h4>
+            <ul>
+              <li>Write <strong>1 test</strong></li>
+              <li>Make it fail (RED)</li>
+              <li>Write minimum code (GREEN)</li>
+              <li>Refactor &amp; Repeat</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout" style="margin-top:0.8em;">
+          <strong>Why?</strong> One test at a time creates a tight feedback loop. You always know exactly what you're working on.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 6-STEP CYCLE -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>The 6-Step Cycle</h2>
+        <div style="text-align:center; margin: 1em 0;">
+          <span class="cycle-step red">1. RED</span>
+          <span style="font-size:0.7em;">→</span>
+          <span class="cycle-step green">2. GREEN</span>
+          <span style="font-size:0.7em;">→</span>
+          <span class="cycle-step refactor">3. REFACTOR</span>
+          <span style="font-size:0.7em;">→</span>
+          <span class="cycle-step verify">4. VERIFY</span>
+          <span style="font-size:0.7em;">→</span>
+          <span class="cycle-step update">5. UPDATE</span>
+          <span style="font-size:0.7em;">→</span>
+          <span class="cycle-step commit">6. COMMIT</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Step</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong class="danger">RED</strong></td><td>Write ONE failing test</td></tr>
+            <tr><td><strong style="color:#059669;">GREEN</strong></td><td>Write MINIMUM code to pass</td></tr>
+            <tr><td><strong class="highlight">REFACTOR</strong></td><td>Improve without changing behavior</td></tr>
+            <tr><td><strong style="color:#7C3AED;">VERIFY</strong></td><td>Pass 3 Gates (Tests + Lint + Static)</td></tr>
+            <tr><td><strong style="color:#D97706;">UPDATE</strong></td><td>Mark task complete in tasks.md</td></tr>
+            <tr><td><strong>COMMIT</strong></td><td>Conventional commit message</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warning">
+          <strong>Skipping steps breaks the cycle.</strong> The discipline IS the value.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- VERIFY = 3 GATES -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>VERIFY = 3 Gates</h2>
+        <h3>All Must Pass Before Commit</h3>
+        <div class="grid-3">
+          <div class="card" style="border-top: 3px solid #059669;">
+            <h4>Gate 1: Tests ✅</h4>
+            <ul>
+              <li>All tests pass (green)</li>
+              <li>Coverage ≥ 90% for new code</li>
+            </ul>
+          </div>
+          <div class="card" style="border-top: 3px solid var(--aa-blue);">
+            <h4>Gate 2: Constitution-Lint ✅</h4>
+            <ul>
+              <li><code>aa-constitution-lint .</code></li>
+              <li>No law violations</li>
+            </ul>
+          </div>
+          <div class="card" style="border-top: 3px solid #7C3AED;">
+            <h4>Gate 3: Static Analysis ✅</h4>
+            <ul>
+              <li>Cyclomatic complexity ≤ 10</li>
+              <li>Cognitive complexity ≤ 7</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout warning" style="text-align:center; margin-top:1em;">
+          <strong>ALL 3 GATES MUST PASS BEFORE COMMIT</strong>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- MODULE 1 RECAP -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Module 1 Recap</h2>
+        <ul>
+          <li>✅ <strong>Constitutional AI</strong> = Governance for AI-assisted development</li>
+          <li>✅ <strong>Four Components</strong> = Laws → Skills → Workflows → Adoptions</li>
+          <li>✅ <strong>Authority Hierarchy</strong> = Laws always win over project rules</li>
+          <li>✅ <strong>NON-NEGOTIABLE</strong> = Cannot be overridden, agent will refuse</li>
+          <li>✅ <strong>Atomic TDD</strong> = ONE test at a time, always</li>
+          <li>✅ <strong>VERIFY = 3 Gates</strong> = Tests + Lint + Static Analysis</li>
+        </ul>
+        <div class="callout" style="text-align:center;">
+          <strong>Questions before we move to the hands-on exercise?</strong>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- MODULE 2 DIVIDER -->
+      <!-- ============================================================ -->
+      <section class="section-divider">
+        <h2>🛠️ MODULE 2</h2>
+        <p>Brownfield &middot; 45 minutes</p>
+        <p>Adopt the Constitution to a Legacy Service</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- THE LEGACY SERVICE -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>The Legacy Service</h2>
+        <h3>Scenario: What You've Inherited</h3>
+        <div class="grid-2">
+          <div>
+            <ul>
+              <li>0% test coverage</li>
+              <li>270+ lines in a single controller</li>
+              <li>Critical financial calculations</li>
+              <li>No documentation</li>
+            </ul>
+            <div class="callout warning">
+              <strong>Your Mission:</strong> Adopt the Constitution<br>
+              <em>WITHOUT rewriting everything</em>
+            </div>
+          </div>
+          <div>
+            <pre><code>// LoyaltyController.java — 270+ lines
+
+@RestController
+public class LoyaltyController {
+  // ALL business logic here
+  // - Miles calculations
+  // - Tier status
+  // - Award redemption
+
+  @PostMapping("/earn-miles")
+  public ResponseEntity&lt;?&gt; earnMiles(...) {
+    // 50+ lines, no validation
+    // Magic numbers everywhere
+  }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- WHAT MAKES IT LEGACY -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>What Makes It "Legacy"?</h2>
+        <table>
+          <thead>
+            <tr><th>Smell</th><th>Impact</th><th>Violation</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0% test coverage</td><td>Can't refactor safely</td><td><code>ENG-4.1</code>, <code>ENG-4.6</code></td></tr>
+            <tr><td>All logic in controller</td><td>Untestable</td><td><code>ENG-2.2</code>, <code>ENG-2.3</code></td></tr>
+            <tr><td>No input validation</td><td>Security vulnerability</td><td><code>ENG-6.5</code></td></tr>
+            <tr><td>Magic numbers</td><td>Unclear business rules</td><td><code>ENG-3.1</code></td></tr>
+            <tr><td>No documentation</td><td>Knowledge silos</td><td><code>ENG-6.1</code></td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>"Legacy Code is code without tests"</strong> — Michael Feathers
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 7-STEP ADOPTION -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>The 7-Step Adoption Workflow</h2>
+        <table>
+          <thead>
+            <tr><th>#</th><th>Step</th><th>Output</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td><strong>ANALYZE</strong></td><td>AI reads and understands the codebase</td></tr>
+            <tr><td>2</td><td><strong>AGENTS.md</strong></td><td>Create agent entry point with law citations</td></tr>
+            <tr><td>3</td><td><strong>openspec/</strong></td><td>Create specification folder structure</td></tr>
+            <tr><td>4</td><td><strong>project.md</strong></td><td>Document current state and context</td></tr>
+            <tr><td>5</td><td><strong>proposal.md</strong></td><td>Change proposal with constitutional authority</td></tr>
+            <tr><td>6</td><td><strong>tasks.md</strong></td><td>Break into vertical slices with TDD cycles</td></tr>
+            <tr><td>7</td><td><strong class="danger">⛔ STOP</strong></td><td>Review before ANY implementation</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warning">
+          <strong>WHY STOP?</strong> The proposal is for REVIEW. We don't write code without human approval.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- TRIGGER PROMPT -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>The Trigger Prompt</h2>
+        <h3>Say This to Your AI Assistant</h3>
+        <pre><code># Setup
+Create an empty folder and clone the following repos into it:
+* https://github.com/AAInternal/hangar-ai-constitution
+* https://github.com/AAInternal/hangar-ai-constitution-brownfield</code></pre>
+        <p>Change directory to <code>hangar-ai-constitution-brownfield</code>.</p>
+        <pre><code>I want to adopt the Hangar AI Constitution to this codebase.
+Please read the Brownfield Adoption Guide and begin
+the process.
+
+Use demo mode — pause at each step for teaching.</code></pre>
+        <h3 style="margin-top:0.8em;">What Happens:</h3>
+        <ol>
+          <li>Agent reads the adoption guide</li>
+          <li>Analyzes the codebase</li>
+          <li>Pauses at each step for explanation</li>
+          <li>Generates artifacts with law citations</li>
+          <li>Stops at proposal for review</li>
+        </ol>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- EXPECTED OUTPUTS -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Expected Outputs</h2>
+        <pre><code>/
+├── AGENTS.md              → Agent entry point
+└── openspec/
+    ├── project.md         → Current state documentation
+    └── changes/
+        └── constitutional-adoption/
+            ├── proposal.md    → Why &amp; what changes
+            ├── design.md      → Architecture decisions
+            ├── specs/         → BDD specifications
+            └── tasks.md       → Vertical slices</code></pre>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- AGENTS.MD STRUCTURE -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>AGENTS.md Structure</h2>
+        <pre><code># AGENTS.md
+
+## Constitutional Authority
+This project operates under the AA Hangar AI Constitution.
+
+## Project Context
+- **Type:** Brownfield legacy service
+- **Stack:** Java 11, Spring Boot 2.7
+- **Current State:** 0% test coverage, monolithic controller
+
+## Active Laws
+| Law     | Status          | Adaptation                  |
+|---------|-----------------|-----------------------------|
+| ENG-4.1 | NON-NEGOTIABLE  | Characterization tests first|
+| ENG-2.3 | ACTIVE          | Vertical slices for new     |
+
+## Guardrails
+- NEVER refactor without characterization tests
+- ALWAYS cite constitutional authority for changes</code></pre>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- PROPOSAL STRUCTURE -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Proposal Structure</h2>
+        <pre><code># Proposal: Constitutional Adoption for Loyalty Service
+
+## Constitutional Authority
+This proposal implements the following laws:
+
+| Law ID  | Title                  | Relevance                    |
+|---------|------------------------|------------------------------|
+| ENG-4.1 | Atomic TDD Law         | Characterization tests first |
+| ENG-1.3 | Continuous Refactoring | Strangler Fig for migration  |
+| ENG-4.6 | Coverage Requirements  | Critical paths need 100%     |
+| ENG-2.3 | Vertical Slice Law     | New features as slices       |
+
+## Why This Change
+The current codebase violates 5 constitutional laws...</code></pre>
+        <div class="callout">
+          Every proposal establishes <strong>which laws mandate this change</strong>.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- EXERCISE: BROWNFIELD -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>🚀 Exercise: Brownfield Adoption</h2>
+        <h3>45 Minutes</h3>
+        <pre><code># SETUP
+If it doesn't already exist, clone
+https://github.com/AAInternal/hangar-ai-constitution
+
+Clone https://github.com/AAInternal/hangar-ai-constitution-brownfield
+
+cd hangar-ai-constitution-brownfield
+
+# TRIGGER
+"Adopt the Hangar AI Constitution to this codebase.
+Read the Brownfield Adoption Guide and begin
+the process. Use demo mode — pause at each step."
+
+GOAL
+Generate all 7 artifacts with law citations
+STOP at proposal for review</code></pre>
+        <div class="callout success">
+          <strong>GOAL:</strong> Generate all 7 artifacts with law citations. <strong>STOP</strong> at proposal for review.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- EXERCISE DEBRIEF: BROWNFIELD -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Exercise Debrief</h2>
+        <h3>Discussion Questions</h3>
+        <ol>
+          <li>What <strong>surprised</strong> you about the adoption process?</li>
+          <li>Where did the agent <strong>cite laws</strong> that you wouldn't have thought of?</li>
+          <li>Why do we <strong>stop before implementation</strong>?</li>
+          <li>How does this compare to how you <strong>usually approach</strong> legacy code?</li>
+        </ol>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- BREAK -->
+      <!-- ============================================================ -->
+      <section class="section-divider break-slide" style="background: var(--aa-dark-blue);">
+        <h2>☕ BREAK</h2>
+        <p>10 Minutes — Stretch, grab coffee, check messages</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- MODULE 3 DIVIDER -->
+      <!-- ============================================================ -->
+      <section class="section-divider">
+        <h2>🚀 MODULE 3</h2>
+        <p>Greenfield Step-by-Step &middot; 50 minutes</p>
+        <p>Full Agentic SDLC Workflow &middot; Target: 2 Vertical Slices</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 5-PHASE FLOW -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>The 5-Phase Flow</h2>
+        <table>
+          <thead>
+            <tr><th>Phase</th><th>Activity</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="badge badge-blue">Phase 1</span></td><td><strong>Adopt the Constitution</strong> — Clone repo, create AGENTS.md, run linter</td></tr>
+            <tr><td><span class="badge badge-blue">Phase 2</span></td><td><strong>Select Domain &amp; Tech Stack</strong> — Product + Technology avatars</td></tr>
+            <tr><td><span class="badge badge-blue">Phase 3</span></td><td><strong>Choose a Specification</strong> — AI generates 3 options + custom</td></tr>
+            <tr><td><span class="badge badge-blue">Phase 4</span></td><td><strong>Generate Constitutional Proposal</strong> — proposal.md, design.md, specs/, tasks.md</td></tr>
+            <tr><td><span class="badge badge-blue">Phase 5</span></td><td><strong>Implement with Atomic TDD</strong> — RED → GREEN → REFACTOR → VERIFY</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SELECT AVATARS -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Phase 2: Select Avatars</h2>
+        <div class="grid-2">
+          <div>
+            <h3>Product Avatars (Domain)</h3>
+            <div class="card" style="margin-bottom:8px;"><h4>Cargo</h4><p>Freight booking, tracking, capacity</p></div>
+            <div class="card" style="margin-bottom:8px;"><h4>Loyalty</h4><p>AAdvantage miles, tier status, awards</p></div>
+            <div class="card"><h4>Flight Ops</h4><p>Scheduling, crew, maintenance</p></div>
+          </div>
+          <div>
+            <h3>Technology Avatars (Stack)</h3>
+            <div class="card" style="margin-bottom:8px;"><h4>Python / FastAPI</h4><p>Async, Pydantic, pytest</p></div>
+            <div class="card" style="margin-bottom:8px;"><h4>Java / Spring</h4><p>Spring Boot, JUnit, DDD patterns</p></div>
+            <div class="card"><h4>TypeScript / Node</h4><p>NestJS, Jest, decorators</p></div>
+          </div>
+        </div>
+        <div class="callout">
+          Choose based on what's most relevant to <strong>YOUR</strong> work.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- CHOOSE SPECIFICATION -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Phase 3: Choose a Specification</h2>
+        <h3>AI presents options based on your avatars</h3>
+        <div class="grid-2">
+          <div class="card">
+            <h4>1. Weather Dashboard</h4>
+            <p>Real-time weather data with caching and alerts</p>
+            <p><em>Slices: Fetch → Cache → Display → Alert</em></p>
+          </div>
+          <div class="card">
+            <h4>2. Cargo Tracking API</h4>
+            <p>Shipment status with event sourcing</p>
+            <p><em>Slices: Create → Track → Notify → Report</em></p>
+          </div>
+          <div class="card">
+            <h4>3. Miles Calculator</h4>
+            <p>Earn/redeem with tier multipliers</p>
+            <p><em>Slices: Earn → Redeem → Tier → History</em></p>
+          </div>
+          <div class="card" style="border: 2px dashed var(--aa-blue);">
+            <h4>4. Custom</h4>
+            <p>Describe your own feature</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- CONSTITUTIONAL PROPOSAL OUTPUT -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Phase 4: Constitutional Proposal</h2>
+        <pre><code>openspec/
+└── changes/
+    └── weather-dashboard/
+        ├── proposal.md        # Constitutional authority
+        ├── design.md          # Architecture decisions
+        ├── specs/
+        │   ├── fetch-weather.feature
+        │   ├── cache-data.feature
+        │   └── display-dashboard.feature
+        └── tasks.md           # Implementation roadmap</code></pre>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- TASKS.MD STRUCTURE -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Understanding tasks.md</h2>
+        <pre><code># Tasks — Weather Dashboard
+
+## Status: Ready for Implementation
+*Per ENG-1.4 (Vertical Slice) and ENG-4.1 (Atomic TDD)*
+
+### Slice 1: Fetch Weather Data
+[ ] 1.1 RED    — Write failing test for WeatherService.fetch()
+[ ] 1.2 GREEN  — Implement minimum fetch logic
+[ ] 1.3 REFACTOR — Extract WeatherData value object
+[ ] 1.4 VERIFY — All 3 gates pass
+[ ] 1.5 COMMIT — feat(weather): add fetch capability</code></pre>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- EXERCISE: GREENFIELD -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>🚀 Exercise: Greenfield Step-by-Step</h2>
+        <h3>50 Minutes</h3>
+        <pre><code># SETUP
+If it doesn't already exist, clone
+https://github.com/AAInternal/hangar-ai-constitution
+
+Clone https://github.com/AAInternal/hangar-ai-constitution-greenfield
+
+cd hangar-ai-constitution-greenfield
+
+# TRIGGER
+"Help me run the Hangar AI Constitution Greenfield Workshop
+from WORKSHOP-GUIDE.md"</code></pre>
+        <div class="callout success">
+          <strong>GOAL:</strong> Complete all 5 phases. Implement at least 2 vertical slices. Pass all 3 VERIFY gates for each slice.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- EXERCISE DEBRIEF: GREENFIELD -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Exercise Debrief</h2>
+        <h3>Discussion Questions</h3>
+        <ol>
+          <li>How did the 8-step cycle <strong>feel</strong>? Natural or awkward?</li>
+          <li>Where did <strong>VERIFY</strong> catch issues you might have missed?</li>
+          <li>How does <strong>task tracking</strong> change your awareness of progress?</li>
+          <li>What would you do <strong>differently</strong> in your real projects?</li>
+        </ol>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- CLOSING DIVIDER -->
+      <!-- ============================================================ -->
+      <section class="section-divider">
+        <h2>🎯 CLOSING</h2>
+        <p>5 Minutes &middot; Metrics, Next Steps, Resources</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- METRICS -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>The 4 Metrics That Matter</h2>
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Measures</th><th>Target</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Defect Escape Rate</strong></td><td>Bugs reaching production</td><td>&lt; 5%</td></tr>
+            <tr><td><strong>Time to Productivity</strong></td><td>New dev to first commit</td><td>&lt; 2 weeks</td></tr>
+            <tr><td><strong>Agentic SDLC Compliance</strong></td><td>Constitutional adherence</td><td>&gt; 90%</td></tr>
+            <tr><td><strong>"AI Off" Competency</strong></td><td>Skills without AI</td><td>Maintained</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          These track <strong>quality and sustainability</strong>, not just speed.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- ANTI-METRICS -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>⚠️ Anti-Metrics to Avoid</h2>
+        <table>
+          <thead>
+            <tr><th>Anti-Metric</th><th>Why It's Harmful</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Lines of code</td><td>Incentivizes bloat</td></tr>
+            <tr><td>Story points velocity</td><td>Goodhart's Law — becomes target</td></tr>
+            <tr><td>AI usage rate</td><td>Quantity over quality</td></tr>
+            <tr><td>Time to first commit</td><td>Skips verification</td></tr>
+            <tr><td>Features per sprint</td><td>Ignores completeness</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warning">
+          <strong>"When a measure becomes a target, it ceases to be good."</strong> — Goodhart
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- RESOURCES -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Take-Home Resources</h2>
+        <div class="grid-2">
+          <div>
+            <h3>Practice Guides <small>(~30 min each)</small></h3>
+            <ul>
+              <li>Atomic TDD practice guide</li>
+              <li>Vertical Slice practice guide</li>
+              <li>Token Optimization guide</li>
+            </ul>
+            <h3 style="margin-top:0.8em;">Technology Avatars</h3>
+            <ul>
+              <li><code>java-spring</code></li>
+              <li><code>python-fastapi</code></li>
+              <li><code>react-frontend</code></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Community</h3>
+            <ul>
+              <li>AI Community of Practice Slack channel</li>
+              <li>Monthly Constitution Office Hours</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- NEXT STEPS -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Your Next Steps</h2>
+        <div class="grid-3">
+          <div class="card" style="border-top: 3px solid var(--aa-blue);">
+            <h4>Week 1</h4>
+            <ul>
+              <li>Adopt Constitution to ONE real project</li>
+              <li>Complete Atomic TDD practice guide</li>
+              <li>Run constitution-lint on your codebase</li>
+            </ul>
+          </div>
+          <div class="card" style="border-top: 3px solid #059669;">
+            <h4>Week 2</h4>
+            <ul>
+              <li>Implement ONE vertical slice with full cycle</li>
+              <li>Share experience in AI CoP channel</li>
+              <li>Review your team's AGENTS.md</li>
+            </ul>
+          </div>
+          <div class="card" style="border-top: 3px solid #7C3AED;">
+            <h4>Month 1</h4>
+            <ul>
+              <li>Track Defect Escape Rate before/after</li>
+              <li>Mentor a colleague through adoption</li>
+              <li>Propose one law improvement</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- Q&A -->
+      <!-- ============================================================ -->
+      <section>
+        <h2>Q&amp;A</h2>
+        <h3>Common Questions</h3>
+        <ul>
+          <li>"How do I get my team onboarded?"</li>
+          <li>"What if my manager wants to skip tests?"</li>
+          <li>"How do I handle deadline pressure?"</li>
+          <li>"What about legacy systems with no tests?"</li>
+          <li>"How do I contribute to the Constitution?"</li>
+        </ul>
+        <div class="callout" style="text-align:center; margin-top:1em;">
+          <strong>What questions do you have?</strong>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- THANK YOU -->
+      <!-- ============================================================ -->
+      <section class="closing-slide title-slide">
+        <h1>Thank You!</h1>
+        <div style="text-align:left; max-width:600px; margin:1em auto;">
+          <h3>What You Learned Today</h3>
+          <ul>
+            <li>✅ Constitutional AI &amp; the Hangar framework</li>
+            <li>✅ Adopting Constitution into existing and new applications</li>
+            <li>✅ Atomic TDD &amp; VERIFY = 3 Gates</li>
+          </ul>
+        </div>
+        <p class="presenter" style="margin-top:1.5em;">
+          <strong>AA-Hangar-AI-Constitution</strong> repository<br>
+          AI Community of Practice channel<br><br>
+          <strong>Contact:</strong> ai-cop@aa.com
+        </p>
+        <p style="margin-top:1em; font-size:0.9em; color: var(--aa-blue); font-weight:600;">Go forth and build with Constitutional AI! 🚀</p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      center: false,
+      controls: true,
+      progress: true,
+      history: true,
+    });
+  </script>
+</body>
+</html>

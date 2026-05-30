@@ -1,0 +1,100 @@
+avatar:
+  id: avatar-industry-aviation-faa
+  type: industry
+  name: "American Airlines Aviation / FAA Compliance"
+  version: "1.0.0"
+  created: "2026-03-31"
+  last_updated: "2026-03-31"
+
+domain:
+  category: "Aviation Regulatory Compliance"
+  description: |
+    Specializes the Hangar AI Constitution for FAA-regulated software and
+    aviation-safety-critical systems at American Airlines. Enforces DO-178C
+    software assurance levels, FAR Part 117/121 operational constraints, and
+    DOT consumer protection requirements across all governed workflows.
+
+  personas:
+    - Flight Operations Engineer
+    - Safety Systems Developer
+    - Compliance Analyst (FAA/DOT)
+    - Crew Scheduling Systems Engineer
+
+activates:
+  skills:
+    - skill-spec-governance
+    - skill-27-constitution-compliance
+    - skill-10-security-review
+    - skill-06-atomic-tdd
+    - skill-04-business-domain-modeling
+    - skill-14-technical-debt
+
+  workflows:
+    - legacy-rescue-decision-track
+    - legacy-rescue-refactor
+    - legacy-rescue-rewrite
+    - greenfield-development
+
+specializes_laws:
+  - id: BUS-2.1
+    title: "Regulatory Mapping Law"
+    description: "Map all applicable FAA regulations: FAR Part 117 (crew duty/rest), Part 121 (operations), DO-178C (airborne software), DO-326A (cybersecurity)"
+    example_file: "ADOPTION.md"
+  - id: BUS-2.2
+    title: "Control Framework Law"
+    description: "DO-178C objectives by software level (A=71, B=69, C=62, D=26 objectives); independence requirements per level"
+    example_file: "ADOPTION.md"
+  - id: BUS-2.4
+    title: "Evidence Collection Law"
+    description: "All FAR citations must be traceable: regulation → constraint method → test → commit. Traceability matrix required for DO-178C certification."
+    example_file: "ADOPTION.md"
+  - id: ENG-4.1
+    title: "Atomic TDD — DO-178C Verification"
+    description: "DO-178C Level A: 100% MC/DC structural coverage required. All tests must cite the FAR section they verify."
+    example_file: "ADOPTION.md"
+  - id: ENG-4.6
+    title: "Coverage Requirements — Aviation Safety Level"
+    description: "Level A: 100% statement, decision, MC/DC coverage. Level B: 100% statement + decision. Level C: 100% statement. Level D: 26 objectives minimum."
+    example_file: "ADOPTION.md"
+  - id: ENG-6.1
+    title: "Security by Design — DO-326A Airborne Security"
+    description: "DO-326A cybersecurity process required for airborne systems. Threat conditions identified per DO-356A. Security assurance level aligned with DAL."
+    example_file: "ADOPTION.md"
+  - id: ENG-6.7
+    title: "Audit Trail — FAA Traceability"
+    description: "All safety-critical changes must have complete audit trail: FAR citation, change rationale, verification evidence, DER approval where required."
+    example_file: "ADOPTION.md"
+
+compliance_domains:
+  - standard: DO-178C
+    scope: "Airborne software assurance"
+    levels: [A, B, C, D]
+    applies_to: ["flight-control", "engine-control", "navigation", "crew-scheduling-safety-constraints"]
+  - standard: "FAR Part 117"
+    scope: "Crew duty and rest regulations"
+    key_rules:
+      - "117.23: Maximum 5 consecutive calendar days"
+      - "117.25(b): Minimum 10-hour rest"
+      - "117.31: Flight time limitations"
+  - standard: "FAR Part 121"
+    scope: "Air carrier operations"
+    applies_to: ["operations-systems", "dispatch", "crew-management"]
+  - standard: "DOT 14 CFR Part 260"
+    scope: "Consumer protection — fare transparency"
+  - standard: "DO-326A"
+    scope: "Airborne security process"
+
+dependencies:
+  - "FAA ATOS (Air Transportation Oversight System)"
+  - "ACARS (Aircraft Communications Addressing and Reporting System)"
+  - "CCS (Crew Coordination System)"
+  - "FAA NOTAM system"
+
+tags:
+  - industry
+  - aviation
+  - faa
+  - do-178c
+  - far-part-117
+  - compliance
+  - safety-critical

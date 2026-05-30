@@ -1,0 +1,75 @@
+# Playwright E2E Testing Avatar Manifest
+
+avatar:
+  id: avatar-playwright-e2e-testing
+  type: technology
+  name: Playwright E2E/UI Testing
+  version: "1.0.0"
+
+stack:
+  language: TypeScript 5+ (primary), Java 11+ (secondary), Python 3.11+ (tertiary)
+  framework: Playwright (all languages)
+  testing:
+    - "@playwright/test (TypeScript)"
+    - "com.microsoft.playwright + TestNG/Cucumber (Java)"
+    - "pytest-playwright (Python)"
+  tools:
+    agent_cli: playwright-cli
+    mcp: "@playwright/mcp"
+
+activates:
+  skills:
+    - 06-atomic-tdd
+    - 08-code-review
+  workflows:
+    - greenfield-development
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-4.2
+    title: Test Pyramid Law
+    example_file: examples/ENG-4.2-test-pyramid.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-6.1
+    title: Security by Design Law
+    example_file: examples/ENG-6.1-security.md
+  - id: ENG-6.4
+    title: Data Protection Law
+    example_file: examples/ENG-6.4-data-protection.md
+  - id: ENG-6.7
+    title: Audit Trail Law
+    example_file: examples/ENG-6.7-audit-trail.md
+
+commands:
+  test:
+    all_ts: "npx playwright test"
+    headed_ts: "npx playwright test --headed"
+    ui_ts: "npx playwright test --ui"
+    all_java: "./mvnw test"
+    all_python: "pytest --browser chromium"
+  dev:
+    codegen: "npx playwright codegen"
+    report: "npx playwright show-report"
+    agent_cli: "playwright-cli open --headed"
+
+project_structure: |
+  # TypeScript
+  tests/
+  ├── auth.setup.ts              # SSO authentication setup
+  ├── *.spec.ts                  # Test specifications
+  ├── config/test.config.ts      # Environment configuration
+  └── helpers/                   # Auth + utility helpers
+  playwright.config.ts           # Playwright configuration
+  playwright/.auth/              # Saved auth state (.gitignored)
+
+  # Java (Maven)
+  src/
+  ├── main/java/.../PageObjects/ # Page Object Model classes
+  │   └── LoginPageObjects.java
+  ├── main/java/.../utils/       # PlaywrightFactory, Utilities
+  └── test/java/.../stepdefs/    # Step definitions (Cucumber)
+  pom.xml

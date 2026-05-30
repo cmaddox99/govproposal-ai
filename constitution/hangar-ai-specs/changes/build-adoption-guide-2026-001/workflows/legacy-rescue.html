@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en"
+  data-page-id="P9-LR"
+  data-registry-version="2.0.0"
+  data-render-timestamp="2026-05-07T18:00:00Z">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legacy Rescue Workflow — Hangar AI Constitution Adoption Guide</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   ADOPTION GUIDE DESIGN SYSTEM v2 — ENG-13.1 ⛔ COMPLIANT
+   Zero external deps. System fonts only. Inner pages.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── RESET & TOKENS ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #132033;
+  background:
+    radial-gradient(circle at top right, rgba(199,155,44,0.12), transparent 30%),
+    radial-gradient(circle at left 20%, rgba(0,51,102,0.06), transparent 25%),
+    linear-gradient(180deg, #fdfcf8 0%, #f2f5fa 50%, #f8f2ea 100%);
+  min-height: 100vh;
+}
+a { color: inherit; }
+h1,h2,h3,h4 {
+  margin: 0;
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-weight: 700;
+  line-height: 1.08;
+}
+p { margin: 0 0 1rem; }
+ul, ol { margin: 0 0 1rem; padding-left: 1.4rem; }
+li { margin-bottom: 0.4rem; }
+code {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88em;
+  background: rgba(0,51,102,0.07);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+pre {
+  background: #0f1f3d;
+  color: #e8f0f8;
+  padding: 20px;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────────────── */
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+main { padding-bottom: 72px; }
+section { margin-top: 56px; }
+.section-head { margin-bottom: 28px; }
+.section-head h2 {
+  font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+  letter-spacing: -0.03em;
+  color: #132033;
+}
+.section-head p {
+  margin: 12px 0 0;
+  max-width: 680px;
+  color: #566579;
+  font-size: 1rem;
+}
+
+/* ── STICKY NAV ──────────────────────────────────────────────────── */
+.site-nav {
+  background: #001a40;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+  gap: 16px;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.88);
+  text-decoration: none;
+}
+.nav-brand-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fff, #f7ca66);
+  flex-shrink: 0;
+}
+.nav-links { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.nav-link {
+  color: rgba(255,255,255,0.68);
+  text-decoration: none;
+  font-size: 0.83rem;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+.nav-link:hover { color: #fff; }
+.btn-nav-home {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: #fff;
+  font-size: 0.80rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btn-nav-home:hover { background: rgba(255,255,255,0.18); }
+
+/* ── PAGE HERO ───────────────────────────────────────────────────── */
+.page-hero-wrap { padding: 36px 0 28px; }
+.page-hero {
+  padding: 44px 44px 40px;
+  border-radius: 30px;
+  background: linear-gradient(140deg, #001a40 0%, #003366 58%, #0d4080 100%);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 20px 60px rgba(0,26,64,0.22);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: auto -8% -40% 55%;
+  height: 280px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+  transform: rotate(-8deg);
+}
+.page-hero::after {
+  content: "";
+  position: absolute;
+  right: -50px; top: -50px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.07);
+  pointer-events: none;
+}
+.eyebrow {
+  display: inline-block;
+  color: #ffd880;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.page-hero h1 {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-top: 14px;
+  text-shadow: 0 2px 20px rgba(0,26,64,0.30);
+}
+.page-hero .subtitle {
+  margin: 16px 0 0;
+  max-width: 680px;
+  color: rgba(255,255,255,0.80);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+.persona-routing { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.routing-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* ── CONTENT CARDS ───────────────────────────────────────────────── */
+.card {
+  padding: 28px 26px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  box-shadow: 0 14px 36px rgba(0,26,64,0.09);
+  margin-bottom: 16px;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 20px 48px rgba(0,26,64,0.14); }
+.card h3 { font-size: 1.25rem; letter-spacing: -0.02em; color: #132033; margin-bottom: 10px; }
+
+/* ── CALLOUTS ────────────────────────────────────────────────────── */
+.callout-warning, .callout-amber {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(255,215,0,0.08); border-left: 4px solid #c79b2c;
+  margin: 12px 0;
+}
+.callout-danger, .callout-red {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(204,0,0,0.06); border-left: 4px solid #cc0000;
+  margin: 12px 0;
+}
+.callout-info, .callout-blue {
+  padding: 16px 20px; border-radius: 14px;
+  background: #eaf0f7; border-left: 4px solid #0066cc;
+  margin: 12px 0;
+}
+.callout-success, .callout-green {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(0,153,76,0.07); border-left: 4px solid #009934;
+  margin: 12px 0;
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex; align-items: center; min-height: 46px;
+  padding: 0 22px; border-radius: 999px; font-weight: 700; font-size: 0.95rem;
+  background: #003366; color: #fff; text-decoration: none; border: none;
+  cursor: pointer; font-family: inherit; transition: background 0.15s, transform 0.15s;
+}
+.btn-primary:hover { background: #001a40; transform: translateY(-1px); }
+.btn-copy {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px;
+  border-radius: 8px; background: rgba(0,51,102,0.08); border: 1px solid rgba(0,51,102,0.14);
+  color: #003366; font-size: 0.82rem; font-weight: 700; cursor: pointer;
+  font-family: inherit; transition: background 0.15s;
+}
+.btn-copy:hover { background: rgba(0,51,102,0.14); }
+.btn-copy.copied { background: rgba(0,153,76,0.12); border-color: rgba(0,153,76,0.20); color: #007a2e; }
+
+/* ── ACCORDIONS ──────────────────────────────────────────────────── */
+details {
+  border-radius: 14px; background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09); overflow: hidden; margin-bottom: 10px;
+}
+details[open] { box-shadow: 0 8px 24px rgba(0,26,64,0.09); }
+summary {
+  padding: 18px 20px; cursor: pointer; font-weight: 700; color: #132033;
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  list-style: none; display: flex; align-items: center;
+  justify-content: space-between; user-select: none; gap: 12px;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after {
+  content: "▾"; color: #566579; font-size: 0.9rem;
+  transition: transform 0.2s; font-family: sans-serif; flex-shrink: 0;
+}
+details[open] summary::after { transform: rotate(180deg); }
+.details-body { padding: 4px 20px 20px; }
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+th {
+  background: #003366; color: #fff; padding: 12px 14px; font-size: 0.83rem;
+  text-align: left; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+td {
+  padding: 12px 14px; border-bottom: 1px solid rgba(0,51,102,0.09);
+  vertical-align: top; font-size: 0.92rem; color: #132033;
+}
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: rgba(0,51,102,0.03); }
+
+/* ── TAGS / PILLS ────────────────────────────────────────────────── */
+.tag {
+  display: inline-flex; align-items: center; padding: 4px 10px;
+  border-radius: 999px; font-size: 0.75rem; font-weight: 700;
+  background: #eaf0f7; color: #003366; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.tag-gold { background: rgba(199,155,44,0.15); color: #7a5800; }
+.tag-red  { background: rgba(204,0,0,0.08); color: #cc0000; }
+.tag-green { background: rgba(0,153,76,0.10); color: #007a2e; }
+.tag-navy { background: rgba(0,51,102,0.12); color: #003366; }
+
+/* ── PHASE STEPS (workflow pages) ────────────────────────────────── */
+.phase-step {
+  padding: 28px; border-radius: 22px; background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09); box-shadow: 0 14px 36px rgba(0,26,64,0.08); margin-bottom: 20px;
+}
+.phase-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 50%; background: #003366; color: #fff;
+  font-weight: 800; font-size: 1rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,26,64,0.20);
+}
+.phase-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.phase-header h3 { font-size: 1.25rem; letter-spacing: -0.02em; color: #132033; }
+
+/* ── GRID HELPERS ────────────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 820px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* ── FOOTER ──────────────────────────────────────────────────────── */
+footer {
+  background: #003366; color: rgba(255,255,255,0.55); font-size: 0.82rem;
+  padding: 36px 24px; text-align: center; line-height: 2; border-top: 2px solid #001a40;
+}
+.footer-inner { max-width: 1180px; margin: 0 auto; }
+.footer-title { color: rgba(255,255,255,0.82); font-weight: 700; font-size: 0.92rem; margin-bottom: 4px; }
+footer a { color: rgba(106,171,221,0.90); text-decoration: none; font-weight: 600; }
+footer a:hover { text-decoration: underline; color: #fff; }
+.footer-links {
+  display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap; gap: 6px 20px; margin-top: 12px;
+}
+.footer-sep { color: rgba(255,255,255,0.20); }
+
+/* ══════════════════════════════════════════════════════════════════
+   LEGACY AA TOKENS — used by page-specific components below
+   ══════════════════════════════════════════════════════════════════ */
+:root {
+  --aa-navy:         #003366;
+  --aa-red:          #cc0000;
+  --aa-silver:       #d0d6de;
+  --aa-blue:         #0066cc;
+  --aa-green:        #1a6b3a;
+  --aa-amber:        #7a4f00;
+  --aa-amber-bg:     #fffbea;
+  --aa-amber-border: #f0b429;
+  --aa-green-bg:     #e8f5ed;
+  --aa-green-border: #2d9a53;
+  --card-shadow:     0 2px 8px rgba(0,0,0,.08);
+  --radius:          10px;
+  --font:            'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ── MAIN LAYOUT ── */
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 72px;
+}
+
+/* ── PERSONA ROW (DC-12) ── */
+.persona-row {
+  background: #fff;
+  border: 1px solid var(--aa-silver);
+  border-radius: var(--radius);
+  padding: 12px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  box-shadow: var(--card-shadow);
+}
+.persona-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #5a6a7a;
+}
+.persona-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--aa-navy);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+/* ── WHEN TO USE (DC-08) ── */
+.when-to-use-box {
+  background: #fff;
+  border: 2px solid var(--aa-navy);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--card-shadow);
+}
+.when-to-use-box h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--aa-navy);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.when-to-use-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 680px) { .when-to-use-cols { grid-template-columns: 1fr; } }
+.wtu-section h3 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  margin-bottom: 8px;
+}
+.wtu-section.use h3  { color: var(--aa-green); }
+.wtu-section.avoid h3 { color: var(--aa-red); }
+.wtu-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.wtu-list li { font-size: 13px; display: flex; align-items: flex-start; gap: 6px; }
+.wtu-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+.badge-dc { background: #e8f0ff; color: #003387; }
+
+/* ── NON-DETERMINISM CALLOUT (DC-11) ── */
+.nondeterminism-box {
+  background: var(--aa-green-bg);
+  border: 2px solid var(--aa-green-border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+.nondeterminism-box p {
+  font-size: 13px;
+  color: #0f4020;
+  line-height: 1.6;
+}
+.nondeterminism-box strong { color: var(--aa-green); }
+
+/* ── SCOPE CALLOUT (DC-07 amber) ── */
+.scope-box {
+  background: var(--aa-amber-bg);
+  border: 2px solid var(--aa-amber-border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+.scope-box p {
+  font-size: 13px;
+  color: var(--aa-amber);
+  line-height: 1.6;
+}
+.scope-box strong { color: #5a3400; }
+
+/* ── PIPELINE TIMELINE ── */
+.pipeline-section { margin-bottom: 28px; }
+.pipeline-section h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--aa-navy);
+  margin-bottom: 14px;
+}
+.pipeline {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.pipeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 90px;
+  position: relative;
+}
+.pipeline-step:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  right: -10px;
+  top: 18px;
+  font-size: 16px;
+  color: #7a8898;
+  z-index: 1;
+}
+.pipe-bubble {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--aa-navy);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  border: 3px solid transparent;
+  transition: transform .15s;
+}
+.pipe-bubble.cert { background: var(--aa-red); border-color: #ff6666; }
+.pipe-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  color: #2a3a4a;
+  line-height: 1.3;
+}
+.cert-badge {
+  font-size: 9px;
+  font-weight: 700;
+  background: var(--aa-red);
+  color: #fff;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-top: 3px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+/* ── TRIGGER BOX ── */
+.trigger-box {
+  background: #fff;
+  border: 1px solid var(--aa-silver);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 28px;
+  box-shadow: var(--card-shadow);
+}
+.trigger-box h2 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #5a6a7a;
+  margin-bottom: 10px;
+}
+.trigger-code-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.trigger-code {
+  font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  font-size: 13px;
+  background: #f0f4f8;
+  border: 1px solid #c8d0da;
+  border-radius: 6px;
+  padding: 8px 14px;
+  color: var(--aa-navy);
+  flex: 1;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* ── COPY BUTTON ── */
+.copy-btn {
+  background: var(--aa-blue);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+  white-space: nowrap;
+  font-family: var(--font);
+}
+.copy-btn:hover, .copy-btn:focus { background: #0052aa; outline: 2px solid #0066cc; outline-offset: 2px; }
+
+/* ── PHASE CARDS ── */
+.phases-section { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+
+.phase-card {
+  background: #fff;
+  border: 1px solid var(--aa-silver);
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+.phase-card.collapsed .phase-body { display: none; }
+
+.phase-header-btn {
+  width: 100%;
+  background: var(--aa-navy);
+  color: #fff;
+  border: none;
+  padding: 14px 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font);
+  text-align: left;
+  transition: background .15s;
+}
+.phase-header-btn:hover, .phase-header-btn:focus {
+  background: #004488;
+  outline: 2px solid #4a8ccc;
+  outline-offset: -2px;
+}
+.phase-num-pill {
+  background: var(--aa-red);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.phase-title-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.phase-name {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -.2px;
+}
+.phase-purpose {
+  font-size: 11px;
+  color: #9ab0cc;
+  font-weight: 400;
+}
+.expand-icon {
+  font-size: 16px;
+  color: #8aabcc;
+  flex-shrink: 0;
+  transition: transform .2s;
+}
+.phase-card.collapsed .expand-icon { transform: rotate(-90deg); }
+
+.phase-body { padding: 20px 20px 24px; }
+
+/* ── PROMPT LIBRARY (DC-09) ── */
+.prompt-library { margin-bottom: 20px; }
+.prompt-library-hdr {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  color: var(--aa-blue);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.prompt-tabs { display: flex; flex-direction: column; gap: 8px; }
+.prompt-row {
+  background: #f7f9fc;
+  border: 1px solid #dde4ed;
+  border-radius: 7px;
+  padding: 10px 14px;
+}
+.prompt-type-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: #4a5a6a;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.type-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+.type-cli  { background: #e8f0ff; color: #003387; }
+.type-ide  { background: #fff0e8; color: #7a3300; }
+.type-yaml { background: #e8f8e8; color: #0f4020; }
+.prompt-code {
+  font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  font-size: 12px;
+  background: #edf1f7;
+  border: 1px solid #c8d0da;
+  border-radius: 5px;
+  padding: 8px 10px;
+  color: #1a2332;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+.prompt-copy-row { display: flex; justify-content: flex-end; }
+
+/* ── PHASE GATE EVIDENCE (DC-10) ── */
+.gate-evidence {
+  background: #f4f6f9;
+  border: 1px solid #c8d4e0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 0;
+}
+.gate-evidence-hdr {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  color: #5a3400;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fffbea;
+  border: 1px solid var(--aa-amber-border);
+  border-radius: 6px;
+  padding: 7px 12px;
+}
+.gate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+@media (max-width: 680px) { .gate-grid { grid-template-columns: 1fr; } }
+.gate-item { display: flex; flex-direction: column; gap: 2px; }
+.gate-item-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: #6a7a8a;
+}
+.gate-item-value {
+  font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  font-size: 12px;
+  color: #1a2332;
+}
+.gate-item-value.plain {
+  font-family: var(--font);
+  font-size: 13px;
+}
+.drift-box {
+  background: #fff8f0;
+  border: 1px solid #f0b429;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+.drift-box-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--aa-amber);
+  margin-bottom: 4px;
+}
+.drift-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+.drift-list li { font-size: 12px; color: #3a2a00; display: flex; align-items: flex-start; gap: 5px; }
+.drift-list li::before { content: '⚠️'; flex-shrink: 0; }
+
+/* ── DECISIONS TABLE WRAPPER ── */
+.decisions-section {
+  background: #fff;
+  border: 1px solid var(--aa-silver);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  box-shadow: var(--card-shadow);
+}
+.decisions-section h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--aa-navy);
+  margin-bottom: 14px;
+}
+.phase-tag {
+  display: inline-block;
+  background: var(--aa-red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.consequence-warn { color: var(--aa-red); font-weight: 600; }
+
+/* ── SECTION DIVIDER LABEL (override design system) ── */
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #7a8898;
+  margin: 28px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::before, .section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--aa-silver);
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Site navigation">
+  <div class="nav-inner">
+    <a href="../p1-landing.html" class="nav-brand" aria-label="Adoption Guide Home">
+      <div class="nav-brand-dot" aria-hidden="true"></div>
+      Hangar AI · Adoption Guide
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">All Workflows</a>
+      <a href="../phase-gate-guide.html" class="nav-link">Phase Gate Guide</a>
+      <a href="../p1-landing.html" class="btn-nav-home">← Guide Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="page-hero-wrap">
+    <div class="page-hero">
+      <div class="eyebrow">WORKFLOW · LEGACY RESCUE</div>
+      <h1>Legacy Rescue Workflow</h1>
+      <p class="subtitle">Seven phases to bring a legacy codebase under constitutional AI governance — bounded-context first, delivery uninterrupted.</p>
+      <div class="persona-routing" aria-label="Intended audiences">
+        <span class="routing-chip">🎓 Coach ✅</span>
+        <span class="routing-chip">🏗️ Architect ✅</span>
+        <span class="routing-chip">⚙️ Engineer ✅</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+
+  <!-- DC-12 Persona Badge Row (VISIBLE) -->
+  <div class="persona-row" aria-label="DC-12 persona routing">
+    <span class="persona-label">👥 Who uses this:</span>
+    <span class="persona-pill">Technical Coach ✅</span>
+    <span class="persona-pill">Senior Architect ✅</span>
+    <span class="persona-pill">Engineer ✅</span>
+    <span class="wtu-badge badge-dc" style="margin-left:auto">DC-12</span>
+  </div>
+
+  <!-- DC-08 When to Use (VISIBLE — NOT in accordion) -->
+  <div class="when-to-use-box" aria-label="DC-08 when to use this workflow">
+    <h2>
+      <span aria-hidden="true">📋</span>
+      When to Use Legacy Rescue
+      <span class="wtu-badge badge-dc">DC-08</span>
+    </h2>
+    <div class="when-to-use-cols">
+      <div class="wtu-section use">
+        <h3>✅ Use Legacy Rescue when:</h3>
+        <ul class="wtu-list">
+          <li><span>✅</span> Existing codebase has high cyclomatic complexity (&gt; 10 per method)</li>
+          <li><span>✅</span> Test coverage below 60%</li>
+          <li><span>✅</span> SonarQube shows &gt; 50 code smells or &gt; 10 bugs</li>
+          <li><span>✅</span> Architecture violates DDD bounded context principles (ENG-2.1)</li>
+          <li><span>✅</span> You need to modernise before adding new features</li>
+        </ul>
+      </div>
+      <div class="wtu-section avoid">
+        <h3>❌ Do NOT run Legacy Rescue if:</h3>
+        <ul class="wtu-list">
+          <li><span>❌</span> The repo is not yet adopted — run <strong>Adoption</strong> first</li>
+          <li><span>❌</span> You're building from scratch — use <strong>Greenfield</strong> instead</li>
+          <li><span>❌</span> You want to fix everything at once — scope to <strong>one bounded context per run</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- DC-11 Non-Determinism Callout (VISIBLE green box) -->
+  <div class="nondeterminism-box" aria-label="DC-11 non-determinism notice">
+    <p>
+      <strong>🎲 DC-11 · Legacy Rescue is highly non-deterministic</strong> — the agent analyses your specific codebase.
+      Phase 3 characterization tests will differ for every repo. Phase 5 refactoring proposals vary based on complexity detected.
+      <strong>YOU decide the scope at every gate.</strong>
+      Start with one package or one service. The constitution supports iterative rescue — you do not have to rescue the entire codebase in one run.
+    </p>
+  </div>
+
+  <!-- DC-07 Bounded-Context Scoping Callout (VISIBLE amber) -->
+  <div class="scope-box" aria-label="DC-07 scoping guidance">
+    <p>
+      <strong>⚡ Scope this workflow to ONE bounded context.</strong>
+      Running Legacy Rescue on a large repo all at once is a known pain point.
+      The constitutional recommendation: pick one package (e.g., <code>com.aa.loyalty.mileage</code>),
+      scope the proposal to that package only, rescue it completely, then start a new proposal for the next package.
+      Your phase artifacts accumulate into a full rescue trail over time.
+    </p>
+  </div>
+
+  <!-- PIPELINE TIMELINE -->
+  <div class="pipeline-section">
+    <h2>7-Phase Rescue Pipeline</h2>
+    <div class="pipeline" role="list" aria-label="7-phase workflow pipeline">
+      <div class="pipeline-step" role="listitem">
+        <div class="pipe-bubble" aria-hidden="true">1</div>
+        <div class="pipe-label">Assess</div>
+      </div>
+      <div class="pipeline-step" role="listitem">
+        <div class="pipe-bubble" aria-hidden="true">2</div>
+        <div class="pipe-label">Govern</div>
+      </div>
+      <div class="pipeline-step" role="listitem">
+        <div class="pipe-bubble" aria-hidden="true">3</div>
+        <div class="pipe-label">Characterize</div>
+      </div>
+      <div class="pipeline-step" role="listitem">
+        <div class="pipe-bubble" aria-hidden="true">4</div>
+        <div class="pipe-label">Remediate</div>
+      </div>
+      <div class="pipeline-step" role="listitem">
+        <div class="pipe-bubble" aria-hidden="true">5</div>
+        <div class="pipe-label">Refactor</div>
+      </div>
+      <div class="pipeline-step" role="listitem">
+        <div class="pipe-bubble cert" aria-hidden="true">6</div>
+        <div class="pipe-label">Certify</div>
+        <div class="cert-badge">Constitutional Certification</div>
+      </div>
+      <div class="pipeline-step" role="listitem">
+        <div class="pipe-bubble cert" aria-hidden="true">7</div>
+        <div class="pipe-label">Harden</div>
+        <div class="cert-badge">Constitutional Certification</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- YAML TRIGGER PHRASE BOX -->
+  <div class="trigger-box" aria-label="Workflow YAML trigger phrase">
+    <h2>YAML Trigger Phrase</h2>
+    <div class="trigger-code-row">
+      <div class="trigger-code" id="trigger-phrase">workflow: legacy-rescue-refactor</div>
+      <button class="copy-btn"
+        aria-label="Copy legacy rescue trigger phrase"
+        onclick="copyPrompt(this, 'workflow: legacy-rescue-refactor')">📋 Copy</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ PHASE CARDS -->
+  <div class="section-label">7 Phases — Expand / Collapse Each</div>
+  <div class="phases-section">
+
+    <!-- ════════ PHASE 1: ASSESS ════════ -->
+    <div class="phase-card" id="phase-1">
+      <button class="phase-header-btn"
+        onclick="togglePhase(this)"
+        aria-expanded="true"
+        aria-controls="phase-1-body">
+        <span class="phase-num-pill" aria-hidden="true">Phase 1</span>
+        <span class="phase-title-text">
+          <span class="phase-name">Assess</span>
+          <span class="phase-purpose">Complexity analysis, SonarQube baseline, bounded context identification</span>
+        </span>
+        <span class="expand-icon" aria-hidden="true">▼</span>
+      </button>
+      <div class="phase-body" id="phase-1-body">
+
+        <!-- DC-09 Prompt Library -->
+        <div class="prompt-library">
+          <div class="prompt-library-hdr">📚 DC-09 Prompt Library</div>
+          <div class="prompt-tabs">
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-cli">CLI</span> gh copilot ask</div>
+              <div class="prompt-code" id="p1-cli">gh copilot ask "Read the Hangar AI Constitution legacy rescue workflow. Run Phase 1 Assess on this repo: analyse cyclomatic complexity, identify bounded contexts, run SonarQube baseline, and produce a phase-1-assess.html artifact."</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 1 CLI prompt"
+                  onclick="copyPrompt(this, document.getElementById('p1-cli').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-ide">IDE</span> Chat</div>
+              <div class="prompt-code" id="p1-ide">Run Legacy Rescue Phase 1 Assess. Analyse this codebase for complexity, bounded contexts, and SonarQube violations. Produce a phase artifact.</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 1 IDE prompt"
+                  onclick="copyPrompt(this, document.getElementById('p1-ide').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-yaml">YAML</span> Trigger</div>
+              <div class="prompt-code" id="p1-yaml">workflow: legacy-rescue-refactor
+phase: 1
+action: assess</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 1 YAML trigger"
+                  onclick="copyPrompt(this, document.getElementById('p1-yaml').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- DC-10 Phase Gate Evidence -->
+        <div class="gate-evidence">
+          <div class="gate-evidence-hdr">🔍 DC-10 Phase Gate Evidence</div>
+          <div class="gate-grid">
+            <div class="gate-item">
+              <span class="gate-item-label">Artifact</span>
+              <span class="gate-item-value">phase-1-assess.html</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">What to Read</span>
+              <span class="gate-item-value plain">Complexity table + SonarQube baseline</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">Decision</span>
+              <span class="gate-item-value plain">Is this bounded context the right scope?</span>
+            </div>
+          </div>
+          <div class="drift-box">
+            <div class="drift-box-label">Drift Signals</div>
+            <ul class="drift-list">
+              <li>"Phase shows whole repo, not one package" → scope down</li>
+              <li>"Complexity numbers missing" → re-run assessment</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════ PHASE 2: GOVERN ════════ -->
+    <div class="phase-card" id="phase-2">
+      <button class="phase-header-btn"
+        onclick="togglePhase(this)"
+        aria-expanded="true"
+        aria-controls="phase-2-body">
+        <span class="phase-num-pill" aria-hidden="true">Phase 2</span>
+        <span class="phase-title-text">
+          <span class="phase-name">Govern</span>
+          <span class="phase-purpose">Create governing spec in hangar-ai-specs/changes/, constitutional gate setup</span>
+        </span>
+        <span class="expand-icon" aria-hidden="true">▼</span>
+      </button>
+      <div class="phase-body" id="phase-2-body">
+
+        <div class="prompt-library">
+          <div class="prompt-library-hdr">📚 DC-09 Prompt Library</div>
+          <div class="prompt-tabs">
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-cli">CLI</span> gh copilot ask</div>
+              <div class="prompt-code" id="p2-cli">gh copilot ask "Run Legacy Rescue Phase 2 Govern: create a constitutional governing proposal in hangar-ai-specs/changes/ for the [bounded-context — e.g. com.aa.loyalty.mileage] package. Include law citations, kill-if criteria, and scope boundaries."</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 2 CLI prompt"
+                  onclick="copyPrompt(this, document.getElementById('p2-cli').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-ide">IDE</span> Chat</div>
+              <div class="prompt-code" id="p2-ide">Create a constitutional governing proposal for this rescue. Scope it to [package name — e.g. com.aa.loyalty.mileage]. Cite the applicable ENG laws.</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 2 IDE prompt"
+                  onclick="copyPrompt(this, document.getElementById('p2-ide').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-yaml">YAML</span> Trigger</div>
+              <div class="prompt-code" id="p2-yaml">workflow: legacy-rescue-refactor
+phase: 2
+action: govern</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 2 YAML trigger"
+                  onclick="copyPrompt(this, document.getElementById('p2-yaml').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="gate-evidence">
+          <div class="gate-evidence-hdr">🔍 DC-10 Phase Gate Evidence</div>
+          <div class="gate-grid">
+            <div class="gate-item">
+              <span class="gate-item-label">Artifact</span>
+              <span class="gate-item-value">phase-2-govern.html</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">What to Read</span>
+              <span class="gate-item-value plain">Scope section + law citations</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">Decision</span>
+              <span class="gate-item-value plain">Do the cited laws apply to this codebase?</span>
+            </div>
+          </div>
+          <div class="drift-box">
+            <div class="drift-box-label">Drift Signals</div>
+            <ul class="drift-list">
+              <li>"No ENG-2.x citations" → proposal didn't read the laws</li>
+              <li>"Scope includes multiple packages" → reduce scope</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════ PHASE 3: CHARACTERIZE ════════ -->
+    <div class="phase-card" id="phase-3">
+      <button class="phase-header-btn"
+        onclick="togglePhase(this)"
+        aria-expanded="true"
+        aria-controls="phase-3-body">
+        <span class="phase-num-pill" aria-hidden="true">Phase 3</span>
+        <span class="phase-title-text">
+          <span class="phase-name">Characterize</span>
+          <span class="phase-purpose">Write characterization tests for existing behaviour — no refactoring yet</span>
+        </span>
+        <span class="expand-icon" aria-hidden="true">▼</span>
+      </button>
+      <div class="phase-body" id="phase-3-body">
+
+        <div class="prompt-library">
+          <div class="prompt-library-hdr">📚 DC-09 Prompt Library</div>
+          <div class="prompt-tabs">
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-cli">CLI</span> gh copilot ask</div>
+              <div class="prompt-code" id="p3-cli">gh copilot ask "Run Legacy Rescue Phase 3 Characterize: write characterization tests for [class/package — e.g. MilesCalculator] that document existing behaviour without changing it. Tests must pass against the current (unchanged) code."</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 3 CLI prompt"
+                  onclick="copyPrompt(this, document.getElementById('p3-cli').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-ide">IDE</span> Chat</div>
+              <div class="prompt-code" id="p3-ide">Write characterization tests for [class name]. Tests must document existing behaviour and pass against current code without any refactoring.</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 3 IDE prompt"
+                  onclick="copyPrompt(this, document.getElementById('p3-ide').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-yaml">YAML</span> Trigger</div>
+              <div class="prompt-code" id="p3-yaml">workflow: legacy-rescue-refactor
+phase: 3
+action: characterize</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 3 YAML trigger"
+                  onclick="copyPrompt(this, document.getElementById('p3-yaml').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="gate-evidence">
+          <div class="gate-evidence-hdr">🔍 DC-10 Phase Gate Evidence</div>
+          <div class="gate-grid">
+            <div class="gate-item">
+              <span class="gate-item-label">Artifact</span>
+              <span class="gate-item-value">phase-3-characterize.html</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">What to Read</span>
+              <span class="gate-item-value plain">Test list + coverage report</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">Decision</span>
+              <span class="gate-item-value plain">Do tests describe existing behaviour accurately?</span>
+            </div>
+          </div>
+          <div class="drift-box">
+            <div class="drift-box-label">Drift Signals</div>
+            <ul class="drift-list">
+              <li>"Tests all pass without any implementation" → tests may not be testing anything real</li>
+              <li>"0 tests generated" → characterization failed</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════ PHASE 4: REMEDIATE ════════ -->
+    <div class="phase-card" id="phase-4">
+      <button class="phase-header-btn"
+        onclick="togglePhase(this)"
+        aria-expanded="true"
+        aria-controls="phase-4-body">
+        <span class="phase-num-pill" aria-hidden="true">Phase 4</span>
+        <span class="phase-title-text">
+          <span class="phase-name">Remediate</span>
+          <span class="phase-purpose">Fix violations that block characterization — minimal changes, preserve behaviour</span>
+        </span>
+        <span class="expand-icon" aria-hidden="true">▼</span>
+      </button>
+      <div class="phase-body" id="phase-4-body">
+
+        <div class="prompt-library">
+          <div class="prompt-library-hdr">📚 DC-09 Prompt Library</div>
+          <div class="prompt-tabs">
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-cli">CLI</span> gh copilot ask</div>
+              <div class="prompt-code" id="p4-cli">gh copilot ask "Run Legacy Rescue Phase 4 Remediate: fix only the violations that are blocking the characterization test suite. Minimal changes — preserve all existing behaviour. No refactoring yet."</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 4 CLI prompt"
+                  onclick="copyPrompt(this, document.getElementById('p4-cli').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-ide">IDE</span> Chat</div>
+              <div class="prompt-code" id="p4-ide">Fix only the violations blocking the characterization tests. Minimal changes. Preserve existing behaviour. No refactoring.</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 4 IDE prompt"
+                  onclick="copyPrompt(this, document.getElementById('p4-ide').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-yaml">YAML</span> Trigger</div>
+              <div class="prompt-code" id="p4-yaml">workflow: legacy-rescue-refactor
+phase: 4
+action: remediate</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 4 YAML trigger"
+                  onclick="copyPrompt(this, document.getElementById('p4-yaml').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="gate-evidence">
+          <div class="gate-evidence-hdr">🔍 DC-10 Phase Gate Evidence</div>
+          <div class="gate-grid">
+            <div class="gate-item">
+              <span class="gate-item-label">Artifact</span>
+              <span class="gate-item-value">phase-4-remediate.html</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">What to Read</span>
+              <span class="gate-item-value plain">Change list</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">Decision</span>
+              <span class="gate-item-value plain">Are these truly minimal? Any refactoring snuck in?</span>
+            </div>
+          </div>
+          <div class="drift-box">
+            <div class="drift-box-label">Drift Signals</div>
+            <ul class="drift-list">
+              <li>"Class restructuring in Phase 4" → this is Phase 5 work, OBJECT</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════ PHASE 5: REFACTOR ════════ -->
+    <div class="phase-card" id="phase-5">
+      <button class="phase-header-btn"
+        onclick="togglePhase(this)"
+        aria-expanded="true"
+        aria-controls="phase-5-body">
+        <span class="phase-num-pill" aria-hidden="true">Phase 5</span>
+        <span class="phase-title-text">
+          <span class="phase-name">Refactor</span>
+          <span class="phase-purpose">Constitutional refactoring guided by laws (DDD, clean arch, ENG-2.x)</span>
+        </span>
+        <span class="expand-icon" aria-hidden="true">▼</span>
+      </button>
+      <div class="phase-body" id="phase-5-body">
+
+        <div class="prompt-library">
+          <div class="prompt-library-hdr">📚 DC-09 Prompt Library</div>
+          <div class="prompt-tabs">
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-cli">CLI</span> gh copilot ask</div>
+              <div class="prompt-code" id="p5-cli">gh copilot ask "Run Legacy Rescue Phase 5 Refactor: apply constitutional refactoring to [package/class — e.g. com.aa.loyalty.mileage] guided by ENG-2.1 through ENG-2.3. All characterization tests must remain green. Produce a refactoring proposal first — wait for APPROVE before implementing."</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 5 CLI prompt"
+                  onclick="copyPrompt(this, document.getElementById('p5-cli').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-ide">IDE</span> Chat</div>
+              <div class="prompt-code" id="p5-ide">Propose constitutional refactoring for [class/package — e.g. MilesCalculator] following ENG-2.1–ENG-2.3. All characterization tests must stay green.</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 5 IDE prompt"
+                  onclick="copyPrompt(this, document.getElementById('p5-ide').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-yaml">YAML</span> Trigger</div>
+              <div class="prompt-code" id="p5-yaml">workflow: legacy-rescue-refactor
+phase: 5
+action: refactor</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 5 YAML trigger"
+                  onclick="copyPrompt(this, document.getElementById('p5-yaml').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="gate-evidence">
+          <div class="gate-evidence-hdr">🔍 DC-10 Phase Gate Evidence</div>
+          <div class="gate-grid">
+            <div class="gate-item">
+              <span class="gate-item-label">Artifact</span>
+              <span class="gate-item-value">phase-5-refactor.html</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">What to Read</span>
+              <span class="gate-item-value plain">Law-citation table + design rationale</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">Decision</span>
+              <span class="gate-item-value plain">Does the new design follow DDD and clean arch?</span>
+            </div>
+          </div>
+          <div class="drift-box">
+            <div class="drift-box-label">Drift Signals</div>
+            <ul class="drift-list">
+              <li>"All characterization tests now fail" → refactor broke behaviour</li>
+              <li>"Law citations invented" → check against laws/</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════ PHASE 6: CERTIFY ════════ -->
+    <div class="phase-card" id="phase-6">
+      <button class="phase-header-btn"
+        onclick="togglePhase(this)"
+        aria-expanded="true"
+        aria-controls="phase-6-body">
+        <span class="phase-num-pill" aria-hidden="true" style="background:#cc0000">Phase 6</span>
+        <span class="phase-title-text">
+          <span class="phase-name">Certify <span style="font-size:11px;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:999px;font-weight:600;margin-left:6px">Constitutional Certification ★</span></span>
+          <span class="phase-purpose">SonarQube gate, mutation testing, coverage verification</span>
+        </span>
+        <span class="expand-icon" aria-hidden="true">▼</span>
+      </button>
+      <div class="phase-body" id="phase-6-body">
+
+        <div class="prompt-library">
+          <div class="prompt-library-hdr">📚 DC-09 Prompt Library</div>
+          <div class="prompt-tabs">
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-cli">CLI</span> gh copilot ask</div>
+              <div class="prompt-code" id="p6-cli">gh copilot ask "Run Legacy Rescue Phase 6 Certify: run the SonarQube constitutional gate, mutation testing, and coverage verification for the refactored [package]. Produce a certification artifact showing before/after metrics."</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 6 CLI prompt"
+                  onclick="copyPrompt(this, document.getElementById('p6-cli').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-ide">IDE</span> Chat</div>
+              <div class="prompt-code" id="p6-ide">Run the constitutional certification gate: SonarQube delta, mutation score, coverage. Show me before/after metrics.</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 6 IDE prompt"
+                  onclick="copyPrompt(this, document.getElementById('p6-ide').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-yaml">YAML</span> Trigger</div>
+              <div class="prompt-code" id="p6-yaml">workflow: legacy-rescue-refactor
+phase: 6
+action: certify</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 6 YAML trigger"
+                  onclick="copyPrompt(this, document.getElementById('p6-yaml').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="gate-evidence">
+          <div class="gate-evidence-hdr">🔍 DC-10 Phase Gate Evidence</div>
+          <div class="gate-grid">
+            <div class="gate-item">
+              <span class="gate-item-label">Artifact</span>
+              <span class="gate-item-value">phase-6-certify.html</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">What to Read</span>
+              <span class="gate-item-value plain">Before/after SonarQube table + mutation score</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">Decision</span>
+              <span class="gate-item-value plain">Mutation score ≥ 70%? No new violations?</span>
+            </div>
+          </div>
+          <div class="drift-box">
+            <div class="drift-box-label">Drift Signals</div>
+            <ul class="drift-list">
+              <li>"Mutation score 0%" → mutation tests not configured</li>
+              <li>"Coverage dropped" → tests removed</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════ PHASE 7: HARDEN ════════ -->
+    <div class="phase-card" id="phase-7">
+      <button class="phase-header-btn"
+        onclick="togglePhase(this)"
+        aria-expanded="true"
+        aria-controls="phase-7-body">
+        <span class="phase-num-pill" aria-hidden="true" style="background:#cc0000">Phase 7</span>
+        <span class="phase-title-text">
+          <span class="phase-name">Harden <span style="font-size:11px;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:999px;font-weight:600;margin-left:6px">Constitutional Certification ★</span></span>
+          <span class="phase-purpose">Production-readiness, security review, final constitutional certification</span>
+        </span>
+        <span class="expand-icon" aria-hidden="true">▼</span>
+      </button>
+      <div class="phase-body" id="phase-7-body">
+
+        <div class="prompt-library">
+          <div class="prompt-library-hdr">📚 DC-09 Prompt Library</div>
+          <div class="prompt-tabs">
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-cli">CLI</span> gh copilot ask</div>
+              <div class="prompt-code" id="p7-cli">gh copilot ask "Run Legacy Rescue Phase 7 Harden: apply production-readiness and security hardening to [package]. Review against BUS laws and security laws. Produce the final constitutional certification artifact."</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 7 CLI prompt"
+                  onclick="copyPrompt(this, document.getElementById('p7-cli').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-ide">IDE</span> Chat</div>
+              <div class="prompt-code" id="p7-ide">Run Phase 7 Harden: production-readiness, security review, final constitutional certification.</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 7 IDE prompt"
+                  onclick="copyPrompt(this, document.getElementById('p7-ide').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-type-label"><span class="type-tag type-yaml">YAML</span> Trigger</div>
+              <div class="prompt-code" id="p7-yaml">workflow: legacy-rescue-refactor
+phase: 7
+action: harden</div>
+              <div class="prompt-copy-row">
+                <button class="copy-btn" aria-label="Copy Phase 7 YAML trigger"
+                  onclick="copyPrompt(this, document.getElementById('p7-yaml').textContent)">📋 Copy</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="gate-evidence">
+          <div class="gate-evidence-hdr">🔍 DC-10 Phase Gate Evidence</div>
+          <div class="gate-grid">
+            <div class="gate-item">
+              <span class="gate-item-label">Artifact</span>
+              <span class="gate-item-value">phase-7-harden.html</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">What to Read</span>
+              <span class="gate-item-value plain">Security findings + BUS law compliance</span>
+            </div>
+            <div class="gate-item">
+              <span class="gate-item-label">Decision</span>
+              <span class="gate-item-value plain">Is this package production-ready?</span>
+            </div>
+          </div>
+          <div class="drift-box">
+            <div class="drift-box-label">Drift Signals</div>
+            <ul class="drift-list">
+              <li>"No BUS law citations" → hardening incomplete</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /phases-section -->
+
+  <!-- ═════════════════════════════ KEY DECISIONS TRACK -->
+  <div class="decisions-section">
+    <h2>🧭 Key Decisions Track — Coaches &amp; Architects</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Key Human Decision</th>
+          <th>Consequence of Wrong Decision</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="phase-tag">1 Assess</span></td>
+          <td>Is this the right bounded context &amp; scope?</td>
+          <td class="consequence-warn">Wasted rescue of wrong package; metrics meaningless</td>
+        </tr>
+        <tr>
+          <td><span class="phase-tag">2 Govern</span></td>
+          <td>Do the cited ENG laws apply here?</td>
+          <td class="consequence-warn">Refactoring guided by irrelevant laws; proposal rejected at gate</td>
+        </tr>
+        <tr>
+          <td><span class="phase-tag">3 Characterize</span></td>
+          <td>Do characterization tests actually capture real behaviour?</td>
+          <td class="consequence-warn">Refactoring in Phase 5 silently breaks production behaviour</td>
+        </tr>
+        <tr>
+          <td><span class="phase-tag">4 Remediate</span></td>
+          <td>Are changes truly minimal — no refactoring snuck in?</td>
+          <td class="consequence-warn">Phase boundary violated; characterization baseline invalidated</td>
+        </tr>
+        <tr>
+          <td><span class="phase-tag">5 Refactor</span></td>
+          <td>Does the new design follow DDD + clean architecture?</td>
+          <td class="consequence-warn">Technical debt re-accumulates; constitution compliance still fails</td>
+        </tr>
+        <tr>
+          <td><span class="phase-tag">6 Certify</span></td>
+          <td>Mutation score ≥ 70%? No new violations introduced?</td>
+          <td class="consequence-warn">Certification issued for under-tested code; risk carried forward</td>
+        </tr>
+        <tr>
+          <td><span class="phase-tag">7 Harden</span></td>
+          <td>Is the package genuinely production-ready?</td>
+          <td class="consequence-warn">Security or BUS law gaps reach production; compliance failure</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-title">Hangar AI Constitution — Adoption Guide</div>
+    <div>American Airlines · Hangar AI Program · Adoption Guide v1.0.0</div>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="../p1-landing.html">Guide Home</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="index.html">All Workflows</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="adoption.html">Adoption</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="greenfield.html">Greenfield</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="../phase-gate-guide.html">Phase Gate Guide</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  function copyPrompt(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✅ Copied!';
+      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    }).catch(() => {
+      btn.innerHTML = '⚠️ Copy manually';
+      setTimeout(() => { btn.innerHTML = '📋 Copy'; }, 3000);
+    });
+  }
+
+  function togglePhase(btn) {
+    const card = btn.closest('.phase-card');
+    card.classList.toggle('collapsed');
+    btn.setAttribute('aria-expanded', !card.classList.contains('collapsed'));
+  }
+</script>
+</body>
+</html>

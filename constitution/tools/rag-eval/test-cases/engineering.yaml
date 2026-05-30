@@ -1,0 +1,217 @@
+test_cases:
+
+  # --- Atomic TDD (ENG-4.1) ---
+
+  - id: tc-eng-001
+    question: "How do I implement TDD in my project?"
+    expected_laws: [ENG-4.1]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-002
+    question: "How do I write a failing test first before any implementation?"
+    expected_laws: [ENG-4.1]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-003
+    question: "Explain the red green refactor cycle"
+    expected_laws: [ENG-4.1]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-004
+    question: "What does atomic TDD mean and how do I practice it?"
+    expected_laws: [ENG-4.1]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: []
+    category: engineering
+
+  # --- Security by Design (ENG-6.1) ---
+
+  - id: tc-eng-005
+    question: "What are the security requirements I must include in every feature?"
+    expected_laws: [ENG-6.1]
+    expected_skills: [10-security-review.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-006
+    question: "How do I do threat modeling for a new service?"
+    expected_laws: [ENG-6.1]
+    expected_skills: [10-security-review.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-007
+    question: "How do I check for OWASP Top 10 vulnerabilities in my code?"
+    expected_laws: [ENG-6.1]
+    expected_skills: [10-security-review.md]
+    expected_avatars: []
+    category: engineering
+
+  # --- Data Protection (ENG-6.4) ---
+
+  - id: tc-eng-008
+    question: "How should I handle PII in my application?"
+    expected_laws: [ENG-6.4]
+    expected_skills: [10-security-review.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-009
+    question: "What is the data classification policy for passenger data?"
+    expected_laws: [ENG-6.4]
+    expected_skills: [10-security-review.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-010
+    question: "How do I encrypt sensitive data at rest and in transit?"
+    expected_laws: [ENG-6.4]
+    expected_skills: [10-security-review.md]
+    expected_avatars: []
+    category: engineering
+
+  # --- Audit Trail (ENG-6.7) ---
+
+  - id: tc-eng-011
+    question: "How do I create an immutable audit log for all operations?"
+    expected_laws: [ENG-6.7]
+    expected_skills: [13-observability.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-012
+    question: "What fields must be in every audit log entry?"
+    expected_laws: [ENG-6.7]
+    expected_skills: [13-observability.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-013
+    question: "How do I add correlation ID tracing to my service?"
+    expected_laws: [ENG-6.7]
+    expected_skills: [13-observability.md]
+    expected_avatars: []
+    category: engineering
+
+  # --- Code Quality (ENG-3.1) ---
+
+  - id: tc-eng-014
+    question: "What is the maximum cyclomatic complexity allowed per function?"
+    expected_laws: [ENG-3.1]
+    expected_skills: [09-refactoring.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-015
+    question: "How do I refactor a method that is too complex?"
+    expected_laws: [ENG-3.1]
+    expected_skills: [09-refactoring.md]
+    expected_avatars: []
+    category: engineering
+
+  # --- Architecture (ENG-2.1) ---
+
+  - id: tc-eng-016
+    question: "How do I design a DDD aggregate root for a booking domain?"
+    expected_laws: [ENG-2.1]
+    expected_skills: [04-business-domain-modeling.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-017
+    question: "What is a bounded context and how do I define one?"
+    expected_laws: [ENG-2.1]
+    expected_skills: [04-business-domain-modeling.md]
+    expected_avatars: []
+    category: engineering
+
+  # --- Test Pyramid (ENG-4.2) ---
+
+  - id: tc-eng-018
+    question: "What is the correct ratio of unit to integration to E2E tests?"
+    expected_laws: [ENG-4.2]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-019
+    question: "How much end-to-end testing is appropriate per the test pyramid?"
+    expected_laws: [ENG-4.2]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: []
+    category: engineering
+
+  # --- Legacy Rescue Commit Rhythm (ENG-4.14) ---
+
+  - id: tc-eng-020
+    question: "How do I make atomic commits during legacy rescue refactoring?"
+    expected_laws: [ENG-4.14, ENG-4.1]
+    expected_skills: [12-legacy-refactor-rhythm.md, 06-atomic-tdd.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-021
+    question: "What is the commit rhythm for characterization tests?"
+    expected_laws: [ENG-4.14]
+    expected_skills: [12-legacy-refactor-rhythm.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-022
+    question: "How do I verify my git staging before committing?"
+    expected_laws: [ENG-4.14]
+    expected_skills: [12-legacy-refactor-rhythm.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-023
+    question: "What is substrate engineering for commit hygiene?"
+    expected_laws: [ENG-4.14, ENG-4.1]
+    expected_skills: [12-legacy-refactor-rhythm.md, 06-atomic-tdd.md]
+    expected_avatars: []
+    category: engineering
+
+  # --- SOLID Principles (ENG-3.9, ENG-3.10, ENG-3.11) ---
+
+  - id: tc-eng-024
+    question: "Explain the Open/Closed Principle"
+    expected_laws: [ENG-3.9]
+    expected_skills: [09-refactoring.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-025
+    question: "What is the Liskov Substitution Principle and why does it matter?"
+    expected_laws: [ENG-3.10]
+    expected_skills: [09-refactoring.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-026
+    question: "How do I apply Interface Segregation Principle in my code?"
+    expected_laws: [ENG-3.11]
+    expected_skills: [09-refactoring.md]
+    expected_avatars: []
+    category: engineering
+
+  - id: tc-eng-027
+    question: "What are all the SOLID principles in the constitution?"
+    expected_laws: [ENG-3.4, ENG-3.9, ENG-3.10, ENG-3.11, ENG-2.5]
+    expected_skills: [09-refactoring.md]
+    expected_avatars: []
+    category: engineering
+
+  # --- Spec-Driven Development (ENG-11.1) ---
+
+  - id: tc-eng-028
+    question: "How do I scaffold a new proposal in hangar-ai-specs?"
+    expected_laws: [ENG-11.1]
+    expected_skills: [spec-governance.md]
+    expected_avatars: []
+    category: engineering

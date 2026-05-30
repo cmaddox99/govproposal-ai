@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  
+
+  <title>Stage A — Initialize | disc-2026-004 | Gate Management Platform — Operations Intelligence Discovery</title>
+  <style>
+    :root {
+      --aa-red:#c8102e; --aa-dark:#0a0d14; --aa-navy:#131825; --aa-blue:#0f3460;
+      --aa-accent:#e94560; --aa-gold:#f5a623; --aa-green:#22c55e; --aa-green-dk:#16a34a;
+      --aa-purple:#7c3aed; --aa-surface:#f4f6fa; --aa-border:#dde3ee;
+      --aa-text:#1e293b; --aa-muted:#64748b; --r:9px; --sh:0 2px 10px rgba(0,0,0,.07);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--aa-surface);color:var(--aa-text);font-size:14px;line-height:1.6}
+    header{background:linear-gradient(140deg,#070a12 0%,#0f3460 65%,#1a4f8a 100%);color:#fff;padding:32px 44px 26px;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;right:-60px;bottom:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(200,16,46,.18) 0%,transparent 70%);border-radius:50%}
+    .h-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px}
+    .h-title{font-size:28px;font-weight:800;letter-spacing:-.5px}
+    .h-sub{font-size:14px;color:rgba(255,255,255,.6);margin-top:4px;margin-bottom:18px}
+    .h-badges{display:flex;flex-wrap:wrap;gap:7px}
+    .hb{padding:3px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+    .hb-stage{background:var(--aa-red);color:#fff}
+    .hb-mode{background:rgba(124,58,237,.35);color:#c4b5fd;border:1px solid rgba(124,58,237,.4)}
+    .hb-tier{background:rgba(245,166,35,.2);color:var(--aa-gold);border:1px solid rgba(245,166,35,.3)}
+    .hb-law{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.18)}
+    .hb-warn{background:#c8102e;color:#fff}
+    .hb-new{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .hb-ok{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .hb-cond{background:rgba(245,166,35,.25);color:var(--aa-gold);border:1px solid rgba(245,166,35,.35)}
+    .hb-fail{background:#c8102e;color:#fff}
+    nav.stages{background:var(--aa-navy);padding:0 44px;display:flex;overflow-x:auto}
+    .st{padding:13px 18px;font-size:12px;font-weight:600;color:rgba(255,255,255,.3);border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:8px}
+    .st.done{color:rgba(255,255,255,.55);border-bottom-color:var(--aa-green-dk)}
+    .st.active{color:#fff;border-bottom-color:var(--aa-red)}
+    .st.locked{color:rgba(255,255,255,.18);cursor:not-allowed}
+    .st-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;background:rgba(255,255,255,.07);flex-shrink:0}
+    .st.done .st-n{background:var(--aa-green-dk);color:#fff}
+    .st.active .st-n{background:var(--aa-red);color:#fff}
+    .body{max-width:1200px;margin:0 auto;padding:26px 20px;display:grid;grid-template-columns:1fr 320px;gap:22px}
+    @media(max-width:900px){.body{grid-template-columns:1fr}}
+    .main{display:flex;flex-direction:column;gap:18px}
+    .side{display:flex;flex-direction:column;gap:18px}
+    .card{background:#fff;border:1px solid var(--aa-border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+    .ch{padding:13px 18px 11px;border-bottom:1px solid var(--aa-border);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+    .ci{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+    .ct{font-weight:700;font-size:13px;color:var(--aa-dark);flex:1}
+    .cb{padding:18px}
+    .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--aa-muted);margin-bottom:6px}
+    .law{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle}
+    .law:hover .tt{display:block}
+    .tt{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .tt::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .lp{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .lb{background:#fffbeb;color:#b45309;border-color:#fde68a}
+    .le{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin:2px 2px 0 0}
+    .tg{background:#dcfce7;color:#166534}
+    .tr{background:#fee2e2;color:#991b1b}
+    .ty{background:#fef3c7;color:#92400e}
+    .tb{background:#dbeafe;color:#1d4ed8}
+    .tp{background:#ede9fe;color:#5b21b6}
+    .mt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:600px){.mt-grid{grid-template-columns:1fr}}
+    .mt-box{border-radius:8px;padding:14px 16px;border:2px solid}
+    .mt-selected{background:#f5f3ff;border-color:#7c3aed}
+    .mt-gold{background:#fffbeb;border-color:var(--aa-gold)}
+    .mt-inactive{background:#f8fafc;border-color:var(--aa-border);opacity:.6}
+    .mt-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--aa-muted);margin-bottom:4px}
+    .mt-value{font-size:15px;font-weight:800;color:var(--aa-dark)}
+    .mt-desc{font-size:12px;color:var(--aa-muted);margin-top:5px}
+    .rubric{width:100%;border-collapse:collapse;font-size:12px}
+    .rubric th{background:var(--aa-surface);padding:7px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .rubric td{padding:8px 12px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .rubric tr:last-child td{border-bottom:none}
+    .yes{color:var(--aa-green-dk);font-weight:700}
+    .no{color:#991b1b;font-weight:700}
+    .tbd{color:#92400e;font-weight:700}
+    .gate-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:600px){.gate-row{grid-template-columns:1fr}}
+    .gate{border-radius:8px;padding:13px 15px;display:flex;gap:10px}
+    .ge{background:#eff6ff;border:1px solid #bfdbfe}
+    .gx{background:#f0fdf4;border:1px solid #bbf7d0}
+    .gp{background:#fffbeb;border:1px solid #fde68a}
+    .gi{font-size:18px;flex-shrink:0}
+    .gl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:2px}
+    .gtt{font-size:13px;line-height:1.5}
+    .prd-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:600px){.prd-grid{grid-template-columns:1fr}}
+    .prd-box{border-radius:8px;padding:12px 14px;border:1px solid}
+    .prd-ok{background:#f0fdf4;border-color:#bbf7d0}
+    .prd-warn{background:#fffbeb;border-color:#fde68a}
+    .prd-fail{background:#fef2f2;border-color:#fecaca}
+    .prd-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:4px}
+    .prd-txt{font-size:12px;line-height:1.5;color:var(--aa-text)}
+    .dom-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:11px}
+    .dom{border-radius:8px;border:1px solid var(--aa-border);overflow:hidden}
+    .dh{padding:9px 13px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:7px}
+    .db{padding:11px 13px;background:#fff;font-size:12px;display:flex;flex-direction:column;gap:5px}
+    .dr{display:flex;justify-content:space-between;align-items:baseline}
+    .dk{color:var(--aa-muted)}
+    .dv{font-weight:600}
+    .arch{background:var(--aa-navy);border-radius:8px;padding:18px;font-family:'Cascadia Code','Fira Code','Courier New',monospace;font-size:11.5px;color:rgba(255,255,255,.82);line-height:1.9;overflow-x:auto;white-space:pre}
+    .arch .dim{color:rgba(255,255,255,.3)}
+    .arch .hi{color:var(--aa-gold);font-weight:700}
+    .arch .grn{color:#4ade80}
+    .arch .red{color:#f87171}
+    .cl{list-style:none;display:flex;flex-direction:column;gap:8px}
+    .cli{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface)}
+    .cli.done{background:#f0fdf4;border-color:#86efac}
+    .cli.pend{background:#fff;border-color:var(--aa-border)}
+    .cli.wait{background:#fffbeb;border-color:#fde68a}
+    .cbox{width:19px;height:19px;flex-shrink:0;border:2px solid var(--aa-border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:2px}
+    .cli.done .cbox{background:var(--aa-green-dk);border-color:var(--aa-green-dk);color:#fff}
+    .cli.wait .cbox{background:var(--aa-gold);border-color:var(--aa-gold);color:#fff}
+    .ctitle{font-weight:600;font-size:13px}
+    .cdesc{font-size:12px;color:var(--aa-muted);margin-top:2px}
+    .clw{font-size:11px;font-weight:700;color:var(--aa-accent);margin-top:3px}
+    .at{width:100%;border-collapse:collapse;font-size:12px}
+    .at th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .at td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .at tr:last-child td{border-bottom:none}
+    .ao{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+    .ao-ok{background:#dcfce7;color:#166534}
+    .ao-ip{background:#fef3c7;color:#92400e}
+    .ao-wait{background:#fef3c7;color:#92400e}
+    .ao-fail{background:#fee2e2;color:#991b1b}
+    .rg{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%);border-radius:9px;padding:16px 18px;color:#fff;margin-bottom:14px}
+    .rg-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c4b5fd;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+    .rg-desc{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:12px}
+    .rg-btns{display:flex;gap:8px;flex-wrap:wrap}
+    .rgb{padding:7px 16px;border-radius:7px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+    .rgb-approve{background:#22c55e;color:#fff}.rgb-approve:hover{background:#16a34a}
+    .rgb-enhance{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25)}.rgb-enhance:hover{background:rgba(255,255,255,.22)}
+    .rgb-reject{background:#ef4444;color:#fff}.rgb-reject:hover{background:#dc2626}
+    #rg-decision{font-size:12px;margin-top:10px;padding:8px 12px;border-radius:7px;display:none}
+    .rg-persist{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);color:#86efac;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    .rg-persist-pend{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);color:#fbbf24;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    .sf{display:flex;align-items:center;gap:8px;padding:8px 11px;background:var(--aa-surface);border:1px dashed var(--aa-border);border-radius:7px;font-family:'Cascadia Code','Fira Code',monospace;font-size:11.5px;color:#1d4ed8;margin-bottom:7px}
+    .ss{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap}
+    .ss-ok{background:#dcfce7;color:#166534}
+    .ss-wait{background:#fef3c7;color:#92400e}
+    .ss-pend{background:#fee2e2;color:#991b1b}
+    .av{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;background:#f0f4ff;border:1px solid #c7d2fe;font-size:12px;font-weight:600;color:#4338ca;margin-bottom:6px}
+    .ev-panel{border-radius:0}
+    .ev-header{padding:12px 18px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--aa-border)}
+    .ev-header.ok{background:#f0fdf4;color:#166534}
+    .ev-header.cond{background:#fffbeb;color:#92400e}
+    .ev-header.fail{background:#fef2f2;color:#991b1b}
+    .ev-body{padding:0}
+    .ev-row{display:flex;gap:10px;align-items:flex-start;padding:10px 18px;border-bottom:1px solid #f1f5f9}
+    .ev-row:last-child{border-bottom:none}
+    .ev-persona{font-weight:700;font-size:12px}
+    .ev-law{font-size:10px;color:var(--aa-accent);font-weight:700;margin-top:1px}
+    .ev-note{font-size:11.5px;color:var(--aa-muted);margin-top:4px;line-height:1.5}
+    .ev-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;flex-shrink:0}
+    .ev-pass{background:#dcfce7;color:#166534}
+    .ev-warn{background:#fef3c7;color:#92400e}
+    .ev-fail{background:#fee2e2;color:#991b1b}
+    code{font-family:'Cascadia Code','Fira Code',monospace;background:#f1f5f9;padding:1px 5px;border-radius:4px;font-size:11.5px;color:#0f3460}
+    hr{border:none;border-top:1px solid var(--aa-border);margin:13px 0}
+    footer{background:var(--aa-dark);color:rgba(255,255,255,.45);padding:11px 44px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;font-size:11px}
+    .ft-dot{width:7px;height:7px;border-radius:50%;background:var(--aa-gold);animation:pulse 2s infinite;flex-shrink:0}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .prose h1,.prose h2,.prose h3{margin:12px 0 8px}
+    .prose p{margin:8px 0}
+    .prose ul,.prose ol{margin:8px 0 8px 22px}
+    .prose table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+    .prose table th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:11px;font-weight:700;border-bottom:1px solid var(--aa-border)}
+    .prose table td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    /* Fix badge contrast — Exploratory/Tier readable on dark header */
+    .hb-mode{background:#5b21b6;color:#fff;border:1px solid #7c3aed}
+    .hb-tier{background:#92400e;color:#fef3c7;border:1px solid #b45309}
+    /* Law citation spans injected by citation resolver into prose body */
+    .law-cite{display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle;background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .law-cite[data-non-negotiable="false"]{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .law-tooltip{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .law-tooltip::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .law-cite:hover .law-tooltip{display:block}
+    /* Markdown checkbox items rendered by the citation resolver */
+    .task-done,.task-pending{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface);margin:4px 0}
+    .task-done{background:#f0fdf4;border-color:#86efac}
+    .task-done .cb{width:18px;height:18px;flex-shrink:0;border-radius:4px;background:var(--aa-green-dk);border:2px solid var(--aa-green-dk);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700;padding:0!important;margin-top:2px}
+    .task-done .cb::after{content:'✓'}
+    .task-pending .cb{width:18px;height:18px;flex-shrink:0;border-radius:4px;background:#fff;border:2px solid var(--aa-border);padding:0!important;margin-top:2px}
+    .task-text{font-size:12px;line-height:1.5;flex:1}
+    .prose li:has(.task-done),.prose li:has(.task-pending){list-style:none;margin-left:-22px}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="h-eye">product-discovery-stage-a-f · disc-2026-004</div>
+  <div class="h-title">Stage A &nbsp;·&nbsp; Initialize</div>
+  <div class="h-sub">Gate Management Platform — Operations Intelligence Discovery &nbsp;·&nbsp; Workflow v2.0.0</div>
+  <div class="h-badges">
+    <span class="hb hb-stage">Stage A of 6</span>
+    <span class="hb hb-mode">🔭 Exploratory</span>
+    <span class="hb hb-tier">⚡ Tier 2</span>
+    <span class="hb hb-law">PRD-2.1</span><span class="hb hb-law">PRD-2.5</span><span class="hb hb-law">BUS-7.1</span><span class="hb hb-law">ENG-13.1</span><span class="hb hb-law">ENG-11.1</span>
+    
+  </div>
+</header>
+
+
+<nav class="stages" aria-label="Discovery stages">
+    <div class="st active">
+      <div class="st-n">A</div>
+      Initialize
+    </div>
+    <div class="st active">
+      <div class="st-n">B</div>
+      Field Study
+    </div>
+    <div class="st locked">
+      <div class="st-n">C</div>
+      Code Evidence
+    </div>
+    <div class="st locked">
+      <div class="st-n">D</div>
+      Validation
+    </div>
+    <div class="st locked">
+      <div class="st-n">E</div>
+      Metrics
+    </div>
+    <div class="st locked">
+      <div class="st-n">F</div>
+      Roadmap Lock
+    </div>
+</nav>
+
+
+<div class="body">
+  <div class="main">
+
+    
+    <!-- Stage Gates -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#eff6ff">🚦</div>
+        <div class="ct">Stage Gates</div>
+        <span class="law lp">PRD-2.1<span class="tt"><strong>Problem Validation Law — all 4 dimensions required before solution design</strong></span></span><span class="law lb">PRD-2.5<span class="tt"><strong>Discovery Stage-Gate Law · NON-NEGOTIABLE — stages advance only when exit criteria are fully met and filed</strong></span></span><span class="law le">BUS-7.1<span class="tt"><strong>Audit Trail Law · NON-NEGOTIABLE — every stage transition logged with who/what/when/why/outcome</strong></span></span>
+      </div>
+      <div class="cb">
+        <div class="gate-row">
+          
+          <div class="gate ge">
+            <div class="gi">📥</div>
+            <div><div class="gl">Entry Gate — ✅ Met</div>
+            <div class="gtt">Gate Management product avatar (avatar-product-gate-management) fully validated and committed (Phase 6 complete, commit 635f30a, 2026-04-22). RAG recall 5/5 across all four sub-domains: DSS Display, Biometric Boarding, Carry-On Compliance, Connect Me. Three supporting tech avatars also validated: dss-event-driven, apigee-azure. Discovery triggered by absence of a validated problem statement — avatar intelligence surfaced four distinct operational failure modes requiring structured discovery before any solution design proceeds.
+</div></div>
+          </div>
+          
+          
+          <div class="gate gp">
+            <div class="gi">📤</div>
+            <div><div class="gl">Exit Gate — ⏳ PENDING</div>
+            <div class="gtt">Awaiting §Stakeholder Approval from named Director+ approver. Self-certification prohibited by PRD-2.5.
+</div></div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    
+    <!-- Mode & Tier -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f5f3ff">🧭</div>
+        <div class="ct">Discovery Mode &amp; Tier</div>
+        <span class="hb hb-mode" style="font-size:11px;">Exploratory</span>
+        <span class="hb hb-tier" style="font-size:11px;">Tier 2</span>
+      </div>
+      <div class="cb">
+        
+        <div class="mt-grid" style="margin-bottom:16px;">
+          
+          <div class="mt-box mt-selected">
+            <div class="mt-label">✅ Selected Mode</div>
+            <div class="mt-value">🔭 Exploratory</div>
+            <div class="mt-desc">No prior validated problem statement exists for Gate Management. All four sub-domain problem hypotheses (display staleness, biometric false non-match, carry-on rule drift, Connect Me alert latency) are avatar-sourced hypotheses — not field-validated. Baselines for staleness_ms, false non-match rate, gate-check rate, and alert delivery latency are explicitly flagged as UNKNOWN in the avatar use cases. Exploratory mode is required.
+</div>
+          </div>
+          
+          
+          <div class="mt-box mt-gold">
+            <div class="mt-label">✅ Selected Tier</div>
+            <div class="mt-value" style="color:#92400e;">⚡ Tier 2</div>
+            <div class="mt-desc">Gate Management spans four bounded contexts (DSS, Biometrics, Carry-On, Connect Me), each backed by distinct microservice clusters. Three regulatory regimes apply (FAA/DOT, TSA/CBP, GDPR/CCPA). Stakeholder groups include gate agents, ramp crews, FLCs, station managers, ops controllers, and airline + CBP partner systems. Implementation will require cross-team coordination across at least three engineering teams and a multi-quarter timeline. All five Tier 2 rubric criteria are met.
+</div>
+          </div>
+          
+        </div>
+        
+        
+        <div class="lbl">Tier Complexity Rubric</div>
+        <table class="rubric">
+          <thead><tr><th>#</th><th>Question</th><th>Answer</th><th>Evidence</th></tr></thead>
+          <tbody>
+            
+            <tr>
+              <td>1</td>
+              <td>Does the discovery span 3+ services or bounded contexts?</td>
+              <td class="yes">Yes</td>
+              <td></td>
+            </tr>
+            
+            <tr>
+              <td>2</td>
+              <td>Are there 3+ stakeholder groups with distinct needs?</td>
+              <td class="yes">Yes</td>
+              <td></td>
+            </tr>
+            
+            <tr>
+              <td>3</td>
+              <td>Does the domain involve regulatory or compliance constraints?</td>
+              <td class="yes">Yes</td>
+              <td></td>
+            </tr>
+            
+            <tr>
+              <td>4</td>
+              <td>Is the expected implementation timeline &gt; 1 quarter?</td>
+              <td class="yes">Yes</td>
+              <td></td>
+            </tr>
+            
+            <tr>
+              <td>5</td>
+              <td>Does the discovery require cross-team coordination (2+ teams)?</td>
+              <td class="yes">Yes</td>
+              <td></td>
+            </tr>
+            
+          </tbody>
+        </table>
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- PRD-2.1 Problem Validation -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#fff1f2">📝</div>
+        <div class="ct">Problem Statement — PRD-2.1 Validation</div>
+        <span class="law lp">PRD-2.1<span class="tt"><strong>Problem Validation Law</strong><br>All problems MUST be validated before solution design. All 4 dimensions required.</span></span>
+      </div>
+      <div class="cb">
+        <div class="prd-grid">
+          
+            
+            
+            <div class="prd-box prd-warn">
+              <div class="prd-lbl">🟡 1. Problem Exists</div>
+              <div class="prd-txt">Gate operations staff — agents, ramp crews, FLCs, station managers, ops controllers — are making time-critical decisions (gate changes, IROPs, boarding clearances, load approvals) using information that may be stale, inconsistently displayed, or undelivered. Four documented failure patterns: (1) GIDS/FIDS not updated before agent decision window closes, (2) biometric non-match causing boarding line backup or undetected false positives, (3) carry-on decisions made against an outdated or unpropagated rule version, (4) Teams alerts arriving after the actionable window or remaining unread. Evidence source: avatar use-case READMEs, exception-path documentation, non-negotiables.
+</div>
+            </div>
+            
+          
+            
+            
+            <div class="prd-box prd-warn">
+              <div class="prd-lbl">🟡 2. Problem Matters</div>
+              <div class="prd-txt">Operational risk is high across all four domains. DSS staleness carries DOT 14 CFR Part 259 tarmac timer compliance exposure — a tarmac timer displayed incorrectly or late is a regulatory violation. Biometric false non-match causes boarding throughput degradation and potential CBP audit findings. Carry-on rule drift creates DOT consumer protection liability (inconsistent enforcement, denied boarding disputes). Connect Me delivery failure leaves ramp crews and FLCs operating on stale information during IROPs — the highest-consequence operational windows. Cost of inaction: regulatory findings, operational inefficiency, and passenger-facing disruption compounding across all four domains.
+</div>
+            </div>
+            
+          
+            
+            
+            <div class="prd-box prd-ok">
+              <div class="prd-lbl">✅ 3. Problem Is Solvable</div>
+              <div class="prd-txt">Three validated tech avatars confirm the infrastructure exists. Azure Service Bus, Azure App Insights, Apigee OAuth 2.0, DisplayHub event consumers, and Teams bot integration are all operational. The engineering surface is understood. What is missing is instrumentation, baseline measurement, and product-defined SLAs tied to measured behaviour — not missing capability. This is a product intelligence and engineering instrumentation problem, not a greenfield build.
+</div>
+            </div>
+            
+          
+            
+            
+            <div class="prd-box prd-warn">
+              <div class="prd-lbl">🟡 4. Users Will Exchange Value</div>
+              <div class="prd-txt">Gate agents, FLCs, and ramp crews are captive users — adoption is mandated, not optional. Station managers have direct administrative pain (rule propagation visibility gap). Ops controllers are motivated by compliance exposure. CBP and TSA mandate biometric exit programs — external adoption pressure is regulatory, not commercial. Willingness to change behaviour is high where the alternative is regulatory non-compliance or operational failure. However, usability debt (opt-out path, agent scanner UI, Teams card design) may create adoption friction that field study must surface.
+</div>
+            </div>
+            
+          
+        </div>
+      </div>
+    </div>
+    
+
+    
+
+    
+    <!-- Findings -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#fffbeb">🔍</div>
+        <div class="ct">Discovery Findings</div>
+      </div>
+      <div class="cb">
+        <ul class="cl">
+          
+          <li class="cli pend">
+            <div class="cbox"></div>
+            <div>
+              <div class="ctitle">Display staleness baseline is unestablished</div>
+              <div class="cdesc">No instrumentation exists for dss.display.staleness_ms across GIDS, FIDS, BIDS, WIDS surfaces. The 5,000ms AOC-to-display SLA is an operational target — not a measured baseline.
+</div>
+              <div class="clw">PRD-2.1</div>
+            </div>
+          </li>
+          
+          <li class="cli pend">
+            <div class="cbox"></div>
+            <div>
+              <div class="ctitle">Biometric false non-match rate is unmeasured</div>
+              <div class="cdesc">The 1.5% false non-match target is a design hypothesis. No production measurement exists at any AA pilot gate. Boarding throughput (target ≥22 pax/min) is similarly unverified.
+</div>
+              <div class="clw">PRD-2.1</div>
+            </div>
+          </li>
+          
+          <li class="cli pend">
+            <div class="cbox"></div>
+            <div>
+              <div class="ctitle">Carry-on rule propagation and override rates are unknown</div>
+              <div class="cdesc">Gate-check rate, override rate, and policy propagation time (target ≤60s) have no current measurement. Rule version compliance across station gates is unverified.
+</div>
+              <div class="clw">PRD-2.1</div>
+            </div>
+          </li>
+          
+          <li class="cli pend">
+            <div class="cbox"></div>
+            <div>
+              <div class="ctitle">Connect Me alert latency and unread rate are unbaselined</div>
+              <div class="cdesc">Alert delivery latency (target ≤30,000ms p95) and unread alert rate (threshold &gt;5% in 5min) are operational targets with no production data confirming today&#39;s actual performance.
+</div>
+              <div class="clw">PRD-2.1</div>
+            </div>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+    
+
+    
+    <!-- Prose body from markdown (catch-all) -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#eff6ff">📄</div><div class="ct">Narrative &amp;amp; Rationale</div></div>
+      <div class="cb prose"><h1>Discovery Proposal: Gate Management Platform — Operations Intelligence Discovery</h1>
+<p><strong>ID:</strong> disc-2026-004 | <strong>Mode:</strong> Exploratory | <strong>Tier:</strong> Tier 2
+<strong>Created:</strong> 2026-04-22 | <strong>Discovery Sponsor:</strong> Adeel Ali</p>
+<hr />
+<h2>Problem Statement</h2>
+<blockquote>
+<p><strong><span class="law-cite" data-law-id="PRD-2.1" data-non-negotiable="false">PRD-2.1<span class="law-tooltip"><strong>Problem Validation Law</strong></span></span> — Problem Validation Law:</strong> All problems MUST be validated before solution design.
+All four dimensions are required before Stage B begins.</p>
+</blockquote>
+<h3>1. Problem Exists</h3>
+<p>Gate operations at American Airlines relies on four interconnected systems — DSS Display, Biometric Boarding, Carry-On Compliance, and Connect Me alerts — to move information from operational sources (AOC, CBP TIS, load systems) to frontline staff in time for decisions to be made.</p>
+<p><strong>The problem is decision latency and information integrity failure.</strong> In each domain:</p>
+<ul>
+<li><strong>DSS Display:</strong> Gate Information Display Systems (GIDS) and Flight Information Display Systems (FIDS) may not reflect AOC gate or flight changes within the 5-second operational SLA. Tarmac timer display compliance is at risk if the rendering pipeline lags.</li>
+<li><strong>Biometric Boarding:</strong> False non-matches create boarding line backups. Opt-out path obscurity creates CBP compliance exposure. Biometric PII boundaries in operational logs are unverified in production.</li>
+<li><strong>Carry-On Compliance:</strong> Gate agents may be enforcing carry-on rules against stale or unpropagated rule versions. Override paths lack consistent supervisor authentication enforcement evidence. Gate-check rate and override rate are untracked.</li>
+<li><strong>Connect Me:</strong> Teams alerts for gate changes and FLC load approvals may arrive after the actionable decision window or go unread. No production alert latency or unread rate measurement exists.</li>
+</ul>
+<p><strong>Who experiences it:</strong> Gate agents, ramp crews, Flight Load Controllers (FLCs), station managers, and ops controllers — across all AA domestic and international stations with gate display infrastructure and biometric pilot programs.</p>
+<h3>2. Problem Matters</h3>
+<p>The cost of inaction is regulatory and operational:</p>
+<ul>
+<li><strong>DOT 14 CFR Part 259</strong> tarmac timer regulations require accurate, timely display — a rendering pipeline that doesn't meet the 5s SLA is a compliance exposure, not just a UX issue.</li>
+<li><strong>TSA 49 CFR Part 1542 / CBP Biometric Exit mandate</strong> require that opt-out is always accessible and that biometric PII retention complies with a ≤12h post-departure deletion mandate. Non-compliance is an audit finding with federal consequences.</li>
+<li><strong>DOT consumer protection regulations (14 CFR Part 259)</strong> govern carry-on baggage disclosure and denied boarding. Inconsistent rule enforcement across gates — caused by rule version drift — creates direct liability.</li>
+<li><strong>Operational disruption compounds:</strong> Stale displays, boarding throughput degradation, and unread alerts all cascade during IROP events — the highest-consequence operational windows where errors multiply.</li>
+</ul>
+<p>Failure to address these four failure patterns means operating with unquantified compliance exposure and unmeasured operational degradation across the gate estate.</p>
+<h3>3. Problem Is Solvable</h3>
+<p>The technology infrastructure exists and is validated:</p>
+<ul>
+<li>Azure Service Bus event pipelines are operational for DSS and Connect Me.</li>
+<li>Apigee OAuth 2.0 gateway is live for Biometrics and Carry-On.</li>
+<li>DisplayHub consumer services are deployed and processing events.</li>
+<li>Teams bot integration (Connect Me) is running in production.</li>
+<li>Azure App Insights is available for custom metric instrumentation.</li>
+</ul>
+<p>Three tech avatars (product-gate-management, dss-event-driven, apigee-azure) confirm the stack is understood and operable. The gap is <strong>measurement and product intelligence</strong> — not greenfield capability. SLAs exist as targets; production baselines do not.</p>
+<p>This is a <strong>product instrumentation and validation problem</strong> — the engineering surface is known; what is missing is field evidence, measured baselines, and product-defined acceptance criteria tied to real data.</p>
+<h3>4. Users Will Exchange Value</h3>
+<p>Frontline adoption is mandated (gate agents, FLCs, ramp crews operate within AA's systems by role requirement), which removes commercial adoption friction but introduces usability adoption risk. Field study must probe:</p>
+<ul>
+<li>Whether the opt-out path on biometric podiums is actually accessible without agent involvement in practice.</li>
+<li>Whether gate agents consult the rule version on the scanner UI — or whether they have workarounds.</li>
+<li>Whether FLCs read Teams task cards before acting — or whether they have offline habits that bypass the system.</li>
+<li>Whether ops controllers trust GIDS staleness indicators when they are displayed.</li>
+</ul>
+<p>External adoption pressure from CBP and TSA (regulatory mandate for biometric exit programs) and DOT (consumer protection) creates a compliance floor. The discovery must determine whether operational users are aligned with that floor — or working around it.</p>
+<hr />
+<h2>Scope</h2>
+<table>
+<thead>
+<tr>
+<th>In Scope</th>
+<th>Out of Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DSS DisplayHub pipeline: GIDS, FIDS, BIDS, WIDS display staleness measurement</td>
+<td>Upstream AOC systems — fire-and-forget is the DSS contract</td>
+</tr>
+<tr>
+<td>Tarmac timer compliance display chain (door-close → GIDS render)</td>
+<td>Gate agent scheduling or rostering systems</td>
+</tr>
+<tr>
+<td>Biometric boarding: CBP TIS match flow, opt-out path, false non-match rate</td>
+<td>Biometric enrolment (pre-gate; separate product domain)</td>
+</tr>
+<tr>
+<td>Biometric PII log boundary verification</td>
+<td>Passport / document scanning (separate flow)</td>
+</tr>
+<tr>
+<td>Carry-On: bag matrix rule engine, Apigee proxy, admin propagation UI</td>
+<td>Checked baggage systems (separate domain)</td>
+</tr>
+<tr>
+<td>Carry-On: override audit completeness and supervisor auth enforcement</td>
+<td>Revenue management pricing for gate-checked bags</td>
+</tr>
+<tr>
+<td>Connect Me: Teams alert delivery latency, FLC load plan sign-off flow</td>
+<td>Non-gate Teams bots or notification systems</td>
+</tr>
+<tr>
+<td>Connect Me: unread alert rate measurement and escalation workflow</td>
+<td>Connect Me integrations outside flight ops events</td>
+</tr>
+<tr>
+<td>Azure App Insights custom metric instrumentation (all four domains)</td>
+<td>Infrastructure SRE/capacity planning</td>
+</tr>
+<tr>
+<td>Baseline measurement for all four domains (Sprint 0 instrumentation)</td>
+<td>Post-discovery solution design and build</td>
+</tr>
+<tr>
+<td>Regulatory compliance evidence collection (FAA, TSA, CBP, DOT)</td>
+<td>Legal proceedings or audit response (owned by Legal/Compliance teams)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Discovery Questions</h2>
+<p>These are the questions this discovery must answer before any solution design begins. Each maps to a <span class="law-cite" data-law-id="PRD-2.1" data-non-negotiable="false">PRD-2.1<span class="law-tooltip"><strong>Problem Validation Law</strong></span></span> dimension gap or a known open baseline.</p>
+<h3>DSS Display</h3>
+<ol>
+<li>What is the current p95 latency from AOC event publish to GIDS render across the estate — not the target, the measurement?</li>
+<li>Under what conditions does the 5s SLA break — Service Bus lag, DisplayHub render contention, or network?</li>
+<li>Has the tarmac timer ever been in a sub-screen or behind a tab in any station? Is there audit evidence?</li>
+</ol>
+<h3>Biometric Boarding</h3>
+<ol start="4">
+<li>What is the measured false non-match rate at the current pilot gate(s)?</li>
+<li>What is the boarding throughput with biometrics vs. manual scan — does biometrics slow or accelerate boarding today?</li>
+<li>Can a passenger reach the opt-out path at the gate podium without agent involvement in under 2 taps? Field-test evidence?</li>
+<li>Are biometric deletion jobs confirmed running and purging within 12h post-departure in production?</li>
+</ol>
+<h3>Carry-On Compliance</h3>
+<ol start="8">
+<li>What is today's gate-check rate by station and flight type?</li>
+<li>What is the override rate — how often do agents successfully override without supervisor auth?</li>
+<li>What is today's measured rule propagation time from admin submit to all-gates confirmed?</li>
+</ol>
+<h3>Connect Me</h3>
+<ol start="11">
+<li>What is today's p95 Teams alert delivery latency from AOC publish to device delivery?</li>
+<li>What percentage of gate change alerts go unread within 5 minutes in production?</li>
+<li>Do FLCs confirm load plan task cards before departures, or do they have offline workarounds?</li>
+</ol>
+<hr />
+<h2>Avatars Activated</h2>
+<table>
+<thead>
+<tr>
+<th>Avatar</th>
+<th>Type</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>avatar-product-gate-management</code></td>
+<td>Product</td>
+<td>Gate operations domain intelligence — 4 use cases, 7 personas, 7 laws. RAG validated 2026-04-22.</td>
+</tr>
+<tr>
+<td><code>avatar-tech-dss-event-driven</code></td>
+<td>Technology</td>
+<td>DSS DisplayHub event-driven microservices — Azure Service Bus, TypeScript/Node, Java, .NET. RAG validated 2026-04-22.</td>
+</tr>
+<tr>
+<td><code>avatar-tech-apigee-azure</code></td>
+<td>Technology</td>
+<td>Apigee API gateway + Azure infrastructure — Biometrics, Carry-On OAuth proxy. RAG validated 2026-04-22.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Open Questions for Bhavita and Derek</h2>
+<p>Before we lock Stage A and open Stage B, the following questions need your product expertise:</p>
+<ol>
+<li>
+<p><strong>Approval authority:</strong> Adeel is listed as Discovery Sponsor. <span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span> requires a named Director+ approver who is not self-certifying. Is Adeel the formal approver for this discovery, or is there another stakeholder who should co-sign?</p>
+</li>
+<li>
+<p><strong>Scope boundary — biometric enrolment:</strong> We've scoped out biometric enrolment (pre-gate). Is the enrolment funnel actually a discovery question for this run — e.g., if opt-out rates are driven by enrolment friction — or does it stay out of scope?</p>
+</li>
+<li>
+<p><strong>Priority ordering:</strong> All four domains have open baselines. If Stage B field study resources are constrained, which domain is highest-priority for depth? Our recommendation based on regulatory risk is: <strong>Biometrics (CBP exposure) → DSS (DOT tarmac timer) → Carry-On (DOT consumer protection) → Connect Me (operational).</strong></p>
+</li>
+<li>
+<p><strong>Trio peer-check confirmation:</strong> Adeel referenced trio laws as session-established principles. We are treating this as: Amal frames problem/product, Amaya frames technical feasibility, Willem calls governance gates. Bhavita and Derek, does this working protocol match your expectations for the session, or should we formalise it differently?</p>
+</li>
+</ol>
+<hr />
+<h2>Stage A Exit Checklist</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Gate</th>
+<th>Law</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Discovery ID assigned (disc-2026-004)</td>
+<td><span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>✅ Done</td>
+</tr>
+<tr>
+<td>2</td>
+<td>stage-a-initialize.md created from template</td>
+<td><span class="law-cite" data-law-id="ENG-11.2" data-non-negotiable="false">ENG-11.2<span class="law-tooltip"><strong>Proposal Completeness Law</strong></span></span></td>
+<td>✅ Done</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Problem statement — all 4 <span class="law-cite" data-law-id="PRD-2.1" data-non-negotiable="false">PRD-2.1<span class="law-tooltip"><strong>Problem Validation Law</strong></span></span> dimensions filled</td>
+<td><span class="law-cite" data-law-id="PRD-2.1" data-non-negotiable="false">PRD-2.1<span class="law-tooltip"><strong>Problem Validation Law</strong></span></span></td>
+<td>✅ Done</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Scope defined (in/out table populated)</td>
+<td><span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>✅ Done</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Mode declared (Exploratory)</td>
+<td><span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>✅ Done</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Tier declared (Tier 2)</td>
+<td><span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>✅ Done</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Product + Technology avatars activated and recorded</td>
+<td><span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span>, <span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>✅ Done</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Stakeholder approval — named Director+ (<span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span>, no self-cert)</td>
+<td><span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>⏳ Pending your approval</td>
+</tr>
+<tr>
+<td>9</td>
+<td>HTML rendered and APPROVED in browser</td>
+<td><span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>⏳ Pending render</td>
+</tr>
+<tr>
+<td>10</td>
+<td><span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> audit event filed — Stage A → B</td>
+<td><span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>⏳ After render approval</td>
+</tr>
+</tbody>
+</table>
+</div>
+    </div>
+    
+
+    
+    <!-- Exit Gate Checklist -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f0fdf4">✅</div>
+        <div class="ct">Exit Gate Checklist — Stage A → Next</div>
+        <span class="law lp">PRD-2.5 ⚠<span class="tt"><strong>Stage-Gate Law — NON-NEGOTIABLE</strong><br>ALL items must be checked before advancing.</span></span>
+      </div>
+      <div class="cb">
+        <ul class="cl">
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Discovery ID assigned in disc-YYYY-NNN format</div>
+              
+              <div class="clw">ENG-11.1 · PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">stage-a-initialize.md created from template</div>
+              
+              <div class="clw">ENG-11.2 · PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Problem statement complete — all 4 PRD-2.1 dimensions filled</div>
+              
+              <div class="clw">PRD-2.1</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Scope defined (in/out table populated)</div>
+              
+              <div class="clw">PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Mode declared (Exploratory) in frontmatter</div>
+              
+              <div class="clw">PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Tier declared (Tier 2) in frontmatter</div>
+              
+              <div class="clw">PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Product and Technology avatars activated and recorded</div>
+              
+              <div class="clw">PRD-2.5 · BUS-7.1</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Stakeholder approval obtained from named Director+ approver</div>
+              <div class="cdesc">Self-certification prohibited by PRD-2.5.</div>
+              <div class="clw">PRD-2.1 · PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">stage-a-initialize.md rendered via aa-artifact-render and APPROVED in browser</div>
+              
+              <div class="clw">ENG-13.1</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">BUS-7.1 audit event filed — Stage A → B transition</div>
+              
+              <div class="clw">BUS-7.1</div>
+            </div>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+    
+
+    
+    <!-- Audit Log -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f1f5f9">📋</div>
+        <div class="ct">Audit Log</div>
+        <span class="law lb">BUS-7.1 ⚠<span class="tt"><strong>Audit Trail — NON-NEGOTIABLE</strong><br>Every stage transition: who / what / when / where / why / outcome.</span></span>
+      </div>
+      <div class="cb">
+        <table class="at">
+          <thead><tr><th>Event</th><th>Actor</th><th>Role</th><th>System</th><th>Timestamp</th><th>Outcome</th></tr></thead>
+          <tbody>
+            
+            <tr>
+              <td>Stage A — Initialized</td>
+              <td>Amal (Copilot CLI) + Adeel Ali</td>
+              <td>Product Coach + Discovery Sponsor</td>
+              <td>GitHub Copilot CLI</td>
+              <td>2026-04-22T16:55:00Z</td>
+              <td><span class="ao ao-wait">IN_PROGRESS</span></td>
+            </tr>
+            
+            <tr>
+              <td>Stage A — Avatar activation recorded</td>
+              <td>Amal (Copilot CLI)</td>
+              <td>Product Coach</td>
+              <td>GitHub Copilot CLI</td>
+              <td>2026-04-22T16:55:00Z</td>
+              <td><span class="ao ao-ip">3 avatars activated (product-gate-management, dss-event-driven, apigee-azure)</span></td>
+            </tr>
+            
+            <tr>
+              <td>Stage A — HTML rendered and reviewed</td>
+              <td>Bhavita + Derek</td>
+              <td>Product Coaches / Human-in-the-Loop Reviewers</td>
+              <td>GitHub Copilot CLI</td>
+              <td>2026-04-22T18:54:17Z</td>
+              <td><span class="ao ao-ok">APPROVED</span></td>
+            </tr>
+            
+            <tr>
+              <td>Stage A — Stakeholder approval</td>
+              <td>Ram</td>
+              <td>Director of Product Agility — Leader, Hangar</td>
+              <td>GitHub Copilot CLI</td>
+              <td>2026-04-22T18:54:17Z</td>
+              <td><span class="ao ao-ok">APPROVED</span></td>
+            </tr>
+            
+            <tr>
+              <td>Stage A → B</td>
+              <td>Willem (Copilot CLI)</td>
+              <td>Constitutional Architect</td>
+              <td>GitHub Copilot CLI</td>
+              <td>2026-04-22T18:54:17Z</td>
+              <td><span class="ao ao-ip">GATE PASSED — Stage B unlocked</span></td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+
+  </div><!-- end main -->
+
+  <div class="side">
+
+    <!-- ENG-13.1 Render Gate -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#1e1b4b;font-size:16px;">🖥️</div>
+        <div class="ct" style="color:#4f46e5;">ENG-13.1 Render Gate</div>
+        <span class="hb hb-fail" style="font-size:9px;">NON-NEG</span>
+      </div>
+      <div class="cb">
+        
+          <div class="rg-persist-pend">⏳ <strong>PENDING</strong> — awaiting reviewer decision in the source artifact</div>
+        
+        <div class="rg">
+          <div class="rg-title">🖥️ Human Browser Review</div>
+          <div class="rg-desc">Source-of-truth is the §Render Gate checkbox in the source artifact. Button clicks are reminders only — tick the checkbox to record.</div>
+          <div class="rg-btns">
+            <button class="rgb rgb-approve" onclick="rgDecision('APPROVE')">✅ APPROVE</button>
+            <button class="rgb rgb-enhance" onclick="rgDecision('ENHANCE')">🔄 ENHANCE</button>
+            <button class="rgb rgb-reject" onclick="rgDecision('REJECT')">❌ REJECT</button>
+          </div>
+          <div id="rg-decision"></div>
+        </div>
+        <p style="font-size:12px;color:var(--aa-muted);">Stage does not advance until §Render Gate in the source artifact carries a ticked APPROVE row. (PRD-2.5 NON-NEGOTIABLE)</p>
+      </div>
+    </div>
+
+    
+
+    
+    <!-- Participating Avatars -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f5f3ff">🤖</div><div class="ct">Participating Avatars</div></div>
+      <div class="cb">
+        
+          
+          <div class="av">🎯 avatar-product-gate-management <span style="color:#6366f1;font-weight:400;font-size:11px;">· Gate operations product avatar — DSS · Biometrics · Carry-On · Connect Me. RAG validated 2026-04-22. Governs PRD laws: PRD-1.2, PRD-5.1. Business laws: BUS-2.1, BUS-2.2, BUS-2.4. Engineering: ENG-6.7, ENG-6.1.</span></div>
+          
+        
+          
+          <div class="av">⚙️ avatar-tech-dss-event-driven <span style="color:#6366f1;font-weight:400;font-size:11px;">· DSS DisplayHub event-driven microservices — TypeScript/Node, Java, .NET. Azure Service Bus event pipeline. RAG validated 2026-04-22.</span></div>
+          
+        
+          
+          <div class="av">🔗 avatar-tech-apigee-azure <span style="color:#6366f1;font-weight:400;font-size:11px;">· Apigee API gateway + Azure cloud infrastructure — Biometrics boarding API, Carry-On apigee proxy, OAuth 2.0, Azure App Insights. RAG validated 2026-04-22.</span></div>
+          
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- Spec Artifacts -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📂</div><div class="ct">Spec Artifacts</div></div>
+      <div class="cb">
+        
+        <div class="sf">📄 stage-a-initialize.md<span class="ss ss-ok">DRAFTED</span></div>
+        
+        <div class="sf">🌐 stage-a-initialize.html<span class="ss ss-wait">PENDING</span></div>
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- Stakeholder Approval -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0fdf4">✅</div><div class="ct">Stakeholder Approval</div></div>
+      <div class="cb">
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;">
+          <div><span class="lbl">Approver</span><div style="font-weight:700;">Ram</div></div>
+          <div><span class="lbl">Title</span><div>Director of Product Agility — Leader, Hangar</div></div>
+          <div><span class="lbl">Date</span><div>2026-04-22</div></div>
+          <div><span class="lbl">Method</span><div>In-session approval — Copilot CLI session</div></div>
+          <div><span class="lbl">Self-cert?</span><div style="color:#166534;font-weight:700;">✅ No</div></div>
+        </div>
+      </div>
+    </div>
+    
+
+    
+    <!-- Active Laws -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#fff1f2">⚖️</div><div class="ct">Active Laws — Stage A</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:7px;">
+        
+          <span class="law le" style="width:fit-content">
+            PRD-2.1<span class="tt"><strong>Problem Validation Law — all 4 dimensions required before solution design</strong></span>
+          </span>
+        
+          <span class="law lp" style="width:fit-content">
+            PRD-2.5 ⚠<span class="tt"><strong>Discovery Stage-Gate Law · NON-NEGOTIABLE — stages advance only when exit criteria are fully met and filed</strong></span>
+          </span>
+        
+          <span class="law lp" style="width:fit-content">
+            BUS-7.1 ⚠<span class="tt"><strong>Audit Trail Law · NON-NEGOTIABLE — every stage transition logged with who/what/when/why/outcome</strong></span>
+          </span>
+        
+          <span class="law lp" style="width:fit-content">
+            ENG-13.1 ⚠<span class="tt"><strong>Artifact Rendering Standard · NON-NEGOTIABLE — all governance artifacts rendered as HTML before stakeholder presentation</strong></span>
+          </span>
+        
+          <span class="law le" style="width:fit-content">
+            ENG-11.1<span class="tt"><strong>Hangar SDD Law — governed spec-driven development workflow</strong></span>
+          </span>
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- Artifact Info -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📎</div><div class="ct">Artifact Info</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:9px;font-size:12px;">
+        <div><div class="lbl">Status</div><span class="ao ao-ok">APPROVED</span></div>
+        
+        
+        
+        
+      </div>
+    </div>
+    
+
+  </div><!-- end side -->
+</div><!-- end body -->
+
+<footer>
+  <div style="display:flex;align-items:center;gap:8px;"><div class="ft-dot"></div>disc-2026-004 · Stage A</div>
+  <div>Gate Management Platform — Operations Intelligence Discovery</div>
+  <div>branch: main</div>
+</footer>
+
+<script>
+function rgDecision(d) {
+  var el = document.getElementById('rg-decision');
+  el.style.display = 'block';
+  if (d === 'APPROVE') {
+    el.style.cssText = 'background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x2705; <strong>APPROVE</strong> — This button is a reminder. To actually record approval, tick <code>- [x] APPROVE</code> in the PROPOSAL.md §Render Gate section.';
+  } else if (d === 'ENHANCE') {
+    el.style.cssText = 'background:rgba(124,58,237,.15);color:#c4b5fd;border:1px solid rgba(124,58,237,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x1F504; <strong>ENHANCE</strong> — Describe the enhancement needed in PROPOSAL.md §Render Gate.';
+  } else {
+    el.style.cssText = 'background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x274C; <strong>REJECT</strong> — Document the blocker in PROPOSAL.md §Render Gate. Stage does NOT advance.';
+  }
+}
+</script>
+
+</body>
+</html>

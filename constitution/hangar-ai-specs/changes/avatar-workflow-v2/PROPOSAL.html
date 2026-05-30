@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avatar Workflow V2 — Quality Strengthening — Hangar AI Constitution</title>
+<style>
+/* ── AA Constitutional Design System ── */
+@page { size: 1088px 1408px; margin: 0; }
+
+:root {
+  --aa-blue: #003087;
+  --aa-red:  #C8102E;
+  --ink:     #17202a;
+  --muted:   #5f6d7a;
+  --line:    #d9e1ea;
+  --soft:    #f3f7fb;
+  --soft-2:  #eef3f8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* ── Page layout ── */
+.page {
+  width: 1088px;
+  min-height: 1408px;
+  padding: 94px 88px 100px;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  page-break-after: always;
+}
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 12px;
+  background: linear-gradient(90deg, var(--aa-blue), var(--aa-red));
+}
+.page::after {
+  content: "✈";
+  position: absolute;
+  right: 34px; bottom: -10px;
+  font-size: 240px;
+  color: var(--aa-blue);
+  opacity: .03;
+  transform: rotate(18deg);
+  pointer-events: none;
+}
+.page.cover {
+  background:
+    radial-gradient(circle at 85% 16%, rgba(0,48,135,.08), transparent 22%),
+    linear-gradient(180deg, #fbfcfe 0%, #f1f6fa 100%);
+}
+.footer {
+  position: absolute;
+  left: 88px; right: 88px; bottom: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5ebf1;
+  padding-top: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #7f8b97;
+}
+.footer .pn { color: var(--aa-blue); font-weight: 800; }
+
+/* ── Typography ── */
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--aa-red);
+}
+h1 {
+  margin-top: 22px;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--aa-blue);
+  font-weight: 850;
+  max-width: 820px;
+}
+h2 {
+  margin-top: 32px;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -.6px;
+  color: var(--aa-blue);
+  font-weight: 800;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+h3 { margin-top: 20px; font-size: 19px; color: var(--aa-blue); font-weight: 700; }
+h4 { margin-top: 16px; font-size: 16px; color: var(--ink); font-weight: 700; }
+p  { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #32404d; }
+ul, ol { margin-top: 10px; padding-left: 24px; }
+li { font-size: 15px; line-height: 1.55; color: #32404d; margin-top: 4px; }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  background: var(--soft-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+pre {
+  margin-top: 14px;
+  background: #1e2832;
+  color: #c9d1d9;
+  padding: 16px 18px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.4; }
+th { border-top: 0; background: var(--soft); color: var(--aa-blue); font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+blockquote { border-left: 4px solid var(--aa-blue); margin-top: 14px; padding: 10px 16px; background: var(--soft); color: var(--muted); font-size: 14px; }
+
+/* ── Meta / stat cards ── */
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; max-width: 820px; }
+.meta-card { border: 1px solid var(--line); background: #fff; padding: 16px 18px; }
+.meta-card .k { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: var(--aa-red); font-weight: 800; }
+.meta-card .v { margin-top: 7px; font-size: 17px; line-height: 1.4; color: #23303d; }
+.summary-band { margin-top: 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card { border: 1px solid var(--line); background: #fff; padding: 14px; }
+.stat-card .n { font-size: 34px; line-height: 1; color: var(--aa-blue); font-weight: 850; letter-spacing: -1px; }
+.stat-card .l { margin-top: 7px; font-size: 13px; line-height: 1.35; color: #52606d; }
+
+/* ── Status badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.status-badge.proposed  { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.implemented { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.archived  { background: var(--soft-2); color: var(--muted); border: 1px solid var(--line); }
+.status-badge.accepted  { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.deprecated { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.high   { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.medium { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.low    { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+
+/* ── Chip row ── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--aa-blue);
+  letter-spacing: .3px;
+}
+
+/* ── ADR header ── */
+.adr-header {
+  border: 2px solid var(--aa-blue);
+  padding: 20px 24px;
+  margin-top: 24px;
+  background: var(--soft);
+}
+.adr-header .adr-num { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); font-weight: 700; }
+.adr-header h1 { margin-top: 8px; font-size: 32px; }
+.adr-header .adr-meta { display: flex; gap: 20px; margin-top: 14px; align-items: center; flex-wrap: wrap; }
+.adr-header .adr-meta-item { font-size: 13px; color: var(--muted); }
+.adr-header .adr-meta-item strong { color: var(--ink); }
+
+/* ── Confidence band ── */
+.confidence-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-left: 6px solid var(--aa-blue);
+  background: var(--soft);
+  margin-top: 24px;
+}
+.confidence-band .cb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.confidence-band.high  { border-left-color: #1b7a2b; }
+.confidence-band.medium { border-left-color: #b36b00; }
+.confidence-band.low   { border-left-color: var(--aa-red); }
+
+/* ── Tasks / checklist ── */
+.task-done, .task-pending {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 5px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.task-done .cb   { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; background: #1b7a2b; border: 2px solid #1b7a2b; display: flex; align-items: center; justify-content: center; }
+.task-done .cb::after { content: "✓"; color: #fff; font-size: 11px; font-weight: 900; }
+.task-pending .cb { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; border: 2px solid var(--aa-blue); }
+.task-done .task-text   { color: #52606d; text-decoration: line-through; }
+.task-pending .task-text { color: #32404d; }
+.phase-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+.phase-num {
+  background: var(--aa-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+.progress-table { margin-top: 20px; }
+
+/* ── Law citation tooltips (Task 4.4) ── */
+.law-cite {
+  position: relative;
+  display: inline;
+  color: var(--aa-blue);
+  font-weight: 700;
+  border-bottom: 1px dashed var(--aa-blue);
+  cursor: help;
+  white-space: nowrap;
+}
+.law-cite[data-non-negotiable="true"] {
+  color: var(--aa-red);
+  border-bottom-color: var(--aa-red);
+}
+.law-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 9999;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2832;
+  color: #e8edf2;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: normal;
+  min-width: 220px;
+  max-width: 340px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: opacity .15s ease, visibility .15s ease;
+  text-align: left;
+  font-weight: 400;
+}
+.law-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e2832;
+}
+.law-tooltip .law-summary { font-size: 12px; color: #9aaab8; margin-top: 4px; display: block; }
+.law-tooltip em { color: #f0a500; font-style: normal; font-size: 11px; font-weight: 700; }
+.law-cite:hover .law-tooltip,
+.law-cite:focus .law-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+/* Flip tooltip below when near top of viewport */
+.law-cite.flip-below .law-tooltip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.law-cite.flip-below .law-tooltip::after {
+  top: auto; bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1e2832;
+}
+
+@media print {
+  .law-tooltip { display: none; }
+  .law-cite { border-bottom: none; color: inherit; font-weight: inherit; }
+}
+</style>
+</head>
+<body>
+
+
+<div class="page cover">
+  <div class="eyebrow">Hangar AI Constitution</div>
+  <h1>Avatar Workflow V2 — Quality Strengthening</h1>
+  <div class="footer"><div>Avatar Workflow V2 — Quality Strengthening</div><div class="pn">1</div></div>
+</div>
+<div class="page content">
+  <h1>Avatar Workflow V2 — Quality Strengthening</h1>
+<h2>Problem Statement</h2>
+<p>The avatar workflow (v1.0.0) governs single-avatar lifecycles well across six modes. Three quality gaps exist that mirror problems already solved in the discovery workflow: evidence artifacts are committed as raw Markdown without a render gate (violating <span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span> NON-NEGOTIABLE today), artifact templates carry no structured frontmatter, and the avatar workflow produces no handoff that feeds Discovery Stage A — requiring manual copy-paste of avatar IDs into every discovery run.</p>
+<hr />
+<h2>Gap 1 — No Render Gate at Phase 6</h2>
+<p><strong>Severity:</strong> 🔴 BLOCKING — <span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span> NON-NEGOTIABLE</p>
+<p><span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span> (Artifact Rendering Standard, NON-NEGOTIABLE) requires all human-facing governance artifacts to be rendered as self-contained HTML before stakeholder presentation. The avatar workflow commits RAG validation reports and blast radius reports as raw Markdown — no HTML render step before the Phase 6 commit gate.</p>
+<p><strong>This is an active law violation.</strong> Every avatar committed under Modes 1, 2, or 4 since the workflow shipped has breached <span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span>.</p>
+<p><strong>Fix:</strong> Add a render gate to Phase 6. Before <code>index.yaml</code> is updated and the commit is made, run <code>aa-artifact-render</code> on every evidence artifact and confirm the rendered output reads correctly in browser.</p>
+<pre><code>RENDER GATE — Phase 6 (ENG-13.1 NON-NEGOTIABLE)
+─────────────────────────────────────────────────────
+aa-artifact-render hangar-ai-specs/changes/{spec-id}/rag-validation-{avatar-id}.md
+open hangar-ai-specs/changes/{spec-id}/rag-validation-{avatar-id}.html
+→ Human confirms: yes / no
+→ If no: return to Phase 5 and resolve
+→ If yes: proceed to index.yaml update and commit
+</code></pre>
+<hr />
+<h2>Gap 2 — No Structured Frontmatter on Evidence Templates</h2>
+<p><strong>Severity:</strong> 🟡 WARNING</p>
+<p>Discovery workflow stage templates carry structured YAML frontmatter — <code>exit_checklist</code>, <code>audit_log</code>, <code>stakeholder</code>, <code>laws_applied</code>, <code>spec_artifacts</code> — which renders as navigable structured cards via <code>aa-artifact-render</code>. Avatar workflow templates in <code>docs/templates/avatars/</code> carry none of this structure, making them:</p>
+<ul>
+<li>Visually inconsistent with discovery workflow output</li>
+<li>Missing the audit trail required by <span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span></li>
+<li>Not renderable as proper structured HTML evidence cards (feeds Gap 1)</li>
+</ul>
+<p><strong>Fix:</strong> Update two existing templates and add one new template:</p>
+<table>
+<thead>
+<tr>
+<th>Template</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>example-template.md</code></td>
+<td>Add structured frontmatter (laws_applied, exit_checklist, audit_log)</td>
+</tr>
+<tr>
+<td><code>use-case-template.md</code></td>
+<td>Add structured frontmatter (laws_applied, audit_log)</td>
+</tr>
+<tr>
+<td><code>rag-validation-template.md</code> <em>(new)</em></td>
+<td>Full structured frontmatter — 5 RAG query checklist items, audit log, stakeholder sign-off</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>rag-validation-template.md</code> is the primary artifact flowing through the Phase 6 render gate. It needs structured frontmatter to render correctly as a structured evidence card.</p>
+<hr />
+<h2>Gap 3 — No Discovery Handoff Protocol</h2>
+<p><strong>Severity:</strong> 🟡 WARNING</p>
+<p>Avatars are activated in Discovery Stage A (<code>avatars[]</code> and <code>avatar_path</code> frontmatter fields). Today these are filled manually — the engineer copy-pastes avatar IDs from <code>avatars/index.yaml</code> into the Stage A template. There is no governed link from avatar workflow output to Discovery Stage A.</p>
+<p><strong>Fix:</strong> At the end of Phase 6 (after commit), the avatar workflow produces a <code>discovery-handoff.md</code> alongside the evidence artifacts:</p>
+<pre><code class="language-yaml">---
+title: &quot;{Domain} — Avatar Handoff for Discovery Stage A&quot;
+status: &quot;READY&quot;
+avatars:
+  - &quot;{technology-avatar-id}&quot;
+  - &quot;{product-avatar-id}&quot;
+avatar_path: &quot;avatars/{type}/{slug}/&quot;
+rag_validated: true
+rag_validation_date: &quot;{YYYY-MM-DD}&quot;
+ready_for_discovery: true
+---
+</code></pre>
+<p>This file is the authoritative source for <code>avatars[]</code> and <code>avatar_path</code> in Discovery Stage A frontmatter. Rendered via <code>aa-artifact-render</code> as part of the Phase 6 render gate batch. No manual fill.</p>
+<hr />
+<h2>Deliverables</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Deliverable</th>
+<th>File</th>
+<th>Effort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Render gate step in Phase 6</td>
+<td><code>workflows/avatar-workflow.md</code></td>
+<td>S</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Render gate step in skill</td>
+<td><code>skill-avatar-workflow.md</code></td>
+<td>XS</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>rag-validation-template.md</code> with structured frontmatter</td>
+<td><code>docs/templates/avatars/</code></td>
+<td>S</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>discovery-handoff-template.md</code></td>
+<td><code>docs/templates/avatars/</code></td>
+<td>S</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Update <code>example-template.md</code> + <code>use-case-template.md</code></td>
+<td><code>docs/templates/avatars/</code></td>
+<td>S</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Laws</h2>
+<table>
+<thead>
+<tr>
+<th>Law</th>
+<th>Title</th>
+<th>Relevance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>Hangar SDD Law (NON-NEGOTIABLE)</td>
+<td>This proposal follows PROPOSE→IMPLEMENT→ARCHIVE</td>
+</tr>
+<tr>
+<td><span class="law-cite" data-law-id="ENG-11.2" data-non-negotiable="false">ENG-11.2<span class="law-tooltip"><strong>Proposal Completeness Law</strong></span></span></td>
+<td>Proposal Completeness Law</td>
+<td>Law citations satisfied above</td>
+</tr>
+<tr>
+<td><span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span></td>
+<td>Artifact Rendering Standard (NON-NEGOTIABLE)</td>
+<td>Gap 1 is an active violation of this law</td>
+</tr>
+<tr>
+<td><span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span></td>
+<td>Citation Transparency Law</td>
+<td>Structured frontmatter enables citation card rendering</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Success Criteria</h2>
+<ol>
+<li>Every avatar workflow run ends with at least one rendered HTML artifact reviewed in browser before commit</li>
+<li><code>rag-validation-{avatar}.md</code> uses structured frontmatter and renders as a structured evidence card</li>
+<li>A <code>discovery-handoff.md</code> is produced after every Phase 6 commit — Stage A <code>avatars[]</code> is never manually filled again</li>
+<li>Gate management and ballot trading avatar runs on Monday 2026-04-21 use this protocol</li>
+</ol>
+
+  <div class="footer"><div>Avatar Workflow V2 — Quality Strengthening</div><div class="pn">2</div></div>
+</div>
+
+<script>
+// Flip tooltip below the citation when it would overflow the top of the viewport
+document.querySelectorAll('.law-cite').forEach(function(el) {
+  el.addEventListener('mouseenter', function() {
+    var rect = el.getBoundingClientRect();
+    var tooltip = el.querySelector('.law-tooltip');
+    if (!tooltip) return;
+    var tipH = tooltip.offsetHeight || 80;
+    if (rect.top < tipH + 12) {
+      el.classList.add('flip-below');
+    } else {
+      el.classList.remove('flip-below');
+    }
+  });
+  // Keyboard accessibility
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  el.setAttribute('aria-describedby', 'tooltip-' + el.dataset.lawId);
+  var tip = el.querySelector('.law-tooltip');
+  if (tip) tip.id = 'tooltip-' + el.dataset.lawId;
+});
+</script>
+</body>
+</html>

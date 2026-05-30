@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 1 — Assess · AAdvantage Legacy Rescue</title>
+<style>
+@page { size: 1088px 1408px; margin: 0; }
+:root { --aa-blue:#003087; --aa-red:#C8102E; --ink:#17202a; --muted:#5f6d7a; --line:#d9e1ea; --soft:#f3f7fb; --soft-2:#eef3f8; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:#fff;}
+.page{width:1088px;min-height:1408px;padding:94px 88px 100px;position:relative;overflow:hidden;background:#fff;page-break-after:always;}
+.page::before{content:"";position:absolute;top:0;left:0;width:100%;height:12px;background:linear-gradient(90deg,var(--aa-blue),var(--aa-red));}
+.page::after{content:"✈";position:absolute;right:34px;bottom:-10px;font-size:240px;color:var(--aa-blue);opacity:.03;transform:rotate(18deg);pointer-events:none;}
+.page.cover{background:radial-gradient(circle at 85% 16%,rgba(0,48,135,.08),transparent 22%),linear-gradient(180deg,#fbfcfe 0%,#f1f6fa 100%);}
+.footer{position:absolute;left:88px;right:88px;bottom:42px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e5ebf1;padding-top:14px;font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:#7f8b97;}
+.footer .pn{color:var(--aa-blue);font-weight:800;}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;font-weight:800;color:var(--aa-red);}
+h1{margin-top:22px;font-size:52px;line-height:1.05;letter-spacing:-1.5px;color:var(--aa-blue);font-weight:850;max-width:820px;}
+h2{margin-top:32px;font-size:28px;line-height:1.1;letter-spacing:-.6px;color:var(--aa-blue);font-weight:800;padding-bottom:8px;border-bottom:2px solid var(--line);}
+h3{margin-top:20px;font-size:19px;color:var(--aa-blue);font-weight:700;}
+h4{margin-top:16px;font-size:16px;color:var(--ink);font-weight:700;}
+p{margin-top:12px;font-size:15px;line-height:1.6;color:#32404d;}
+ul,ol{margin-top:10px;padding-left:24px;}
+li{font-size:15px;line-height:1.55;color:#32404d;margin-top:4px;}
+code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;font-size:13px;background:var(--soft-2);border:1px solid var(--line);border-radius:3px;padding:1px 5px;}
+pre{margin-top:14px;background:#1e2832;color:#c9d1d9;padding:16px 18px;border-radius:4px;overflow-x:auto;font-size:13px;line-height:1.5;}
+pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
+table{width:100%;border-collapse:collapse;margin-top:14px;}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-top:1px solid var(--line);font-size:13.5px;line-height:1.4;}
+th{border-top:0;background:var(--soft);color:var(--aa-blue);font-size:11px;text-transform:uppercase;letter-spacing:.8px;}
+blockquote{border-left:4px solid var(--aa-blue);margin-top:14px;padding:10px 16px;background:var(--soft);color:var(--muted);font-size:14px;}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:32px;max-width:820px;}
+.meta-card{border:1px solid var(--line);background:#fff;padding:16px 18px;}
+.meta-card .k{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--aa-red);font-weight:800;}
+.meta-card .v{margin-top:7px;font-size:17px;line-height:1.4;color:#23303d;}
+.summary-band{margin-top:28px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.stat-card{border:1px solid var(--line);background:#fff;padding:14px;}
+.stat-card .n{font-size:34px;line-height:1;color:var(--aa-blue);font-weight:850;letter-spacing:-1px;}
+.stat-card .l{margin-top:7px;font-size:13px;line-height:1.35;color:#52606d;}
+.stat-card.danger .n{color:var(--aa-red);}
+.stat-card.warn .n{color:#b36b00;}
+.stat-card.ok .n{color:#1b7a2b;}
+.status-badge{display:inline-block;padding:4px 12px;border-radius:3px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;}
+.status-badge.fail{background:#fde8ec;color:var(--aa-red);border:1px solid #f8bbd0;}
+.status-badge.pass{background:#e8f5e9;color:#1b7a2b;border:1px solid #a5d6a7;}
+.status-badge.warn{background:#fff8e1;color:#b36b00;border:1px solid #ffe082;}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.chip{display:inline-block;padding:3px 10px;background:var(--soft);border:1px solid var(--line);border-radius:3px;font-size:12px;font-weight:700;color:var(--aa-blue);letter-spacing:.3px;}
+.phase-hdr{display:flex;align-items:center;gap:12px;margin-top:28px;margin-bottom:8px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+.phase-num{background:var(--aa-blue);color:#fff;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:3px 10px;border-radius:2px;}
+.law-cite{position:relative;display:inline;color:var(--aa-blue);font-weight:700;border-bottom:1px dashed var(--aa-blue);cursor:help;white-space:nowrap;}
+.law-cite[data-non-negotiable="true"]{color:var(--aa-red);border-bottom-color:var(--aa-red);}
+.law-tooltip{visibility:hidden;opacity:0;pointer-events:none;position:absolute;z-index:9999;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e2832;color:#e8edf2;padding:10px 14px;border-radius:4px;font-size:13px;line-height:1.5;white-space:normal;min-width:220px;max-width:340px;box-shadow:0 4px 16px rgba(0,0,0,.25);transition:opacity .15s ease,visibility .15s ease;text-align:left;font-weight:400;}
+.law-tooltip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#1e2832;}
+.law-tooltip .law-summary{font-size:12px;color:#9aaab8;margin-top:4px;display:block;}
+.law-cite:hover .law-tooltip,.law-cite:focus .law-tooltip{visibility:visible;opacity:1;}
+.law-cite.flip-below .law-tooltip{bottom:auto;top:calc(100% + 6px);}
+.law-cite.flip-below .law-tooltip::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:#1e2832;}
+.gate-block{margin-top:24px;border:2px solid var(--aa-red);padding:18px 22px;background:#fdf2f4;}
+.gate-block .gate-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--aa-red);font-weight:800;margin-bottom:8px;}
+.gate-block .gate-row{display:flex;gap:24px;align-items:center;flex-wrap:wrap;margin-top:6px;}
+.gate-block .gate-item{font-size:14px;color:var(--ink);}
+.gate-block .gate-item strong{color:var(--aa-red);}
+td.critical{color:var(--aa-red);font-weight:700;}
+td.high-sev{color:#b36b00;font-weight:700;}
+.sev-p0{display:inline-block;padding:2px 8px;border-radius:2px;font-size:11px;font-weight:800;background:#fde8ec;color:var(--aa-red);border:1px solid #f8bbd0;}
+.sev-p1{display:inline-block;padding:2px 8px;border-radius:2px;font-size:11px;font-weight:800;background:#fff8e1;color:#b36b00;border:1px solid #ffe082;}
+.sev-p2{display:inline-block;padding:2px 8px;border-radius:2px;font-size:11px;font-weight:800;background:#f3f7fb;color:#003087;border:1px solid #d9e1ea;}
+</style>
+</head>
+<body>
+
+<div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#fef3c7;border-bottom:2px solid #f59e0b;padding:6px 16px;display:flex;align-items:center;gap:10px;font-family:sans-serif;font-size:0.8rem;color:#78350f;">
+  <span style="font-size:1rem;">&#9888;&#65039;</span>
+  <strong>AI-GENERATED DEMO REPO</strong> &mdash; This codebase (<code>aa-loyalty-legacy</code>) is entirely AI-generated for illustration purposes. It is <strong>not</strong> real AA production code and does not represent any AA system.
+</div>
+<div style="height:38px;"></div>
+
+<!-- PAGE 1: COVER -->
+<div class="page cover">
+  <div class="eyebrow">Legacy Rescue · AAdvantage Loyalty Platform</div>
+  <h1>Phase 1 — Assess</h1>
+  <div class="meta" style="margin-top:48px;max-width:680px;">
+    <div class="meta-card"><div class="k">Project</div><div class="v">AA AAdvantage Loyalty Platform — Legacy Rescue</div></div>
+    <div class="meta-card"><div class="k">Codebase</div><div class="v"><code>aa-loyalty-legacy — Java 21 Spring Boot Monolith</code></div></div>
+    <div class="meta-card"><div class="k">SonarQube Project Key</div><div class="v"><code>aa-loyalty-legacy</code></div></div>
+    <div class="meta-card"><div class="k">Phase</div><div class="v">1 of 7 — Constitutional Audit &amp; Baseline Snapshot</div></div>
+    <div class="meta-card"><div class="k">Date</div><div class="v">2026-05-05</div></div>
+    <div class="meta-card"><div class="k">Workflow</div><div class="v">Legacy Rescue Refactor · <code>legacy-rescue-refactor.md</code></div></div>
+  </div>
+  <div class="chip-row" style="margin-top:40px;">
+    <span class="chip">Miles Accrual</span>
+    <span class="chip">Award Redemption</span>
+    <span class="chip">Partner Integration</span>
+    <span class="chip">Member Profile</span>
+    <span class="chip">Tier Calculation</span>
+    <span class="chip">Notifications</span>
+  </div>
+  <div class="gate-block" style="margin-top:52px;max-width:680px;">
+    <div class="gate-label">Constitutional Gate — Phase 1 Result</div>
+    <div class="gate-row">
+      <div class="gate-item">SonarQube Security Rating: <strong>E (Rating 5)</strong></div>
+      <div class="gate-item">Constitutional Gate: <strong>NOT MET</strong></div>
+      <div class="gate-item">Disposition: <strong>PROCEED TO PHASE 2 — Violations Inventoried</strong></div>
+    </div>
+  </div>
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 1 — Assess</div><div class="pn">1</div></div>
+</div>
+
+<!-- PAGE 2: SONARQUBE BASELINE -->
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 1</span>
+    <span style="font-size:20px;font-weight:800;color:var(--aa-blue);">SonarQube Baseline Snapshot</span>
+  </div>
+  <p>SonarQube scan executed against unmodified codebase. These metrics form the constitutional baseline — every subsequent phase gate is measured as a delta from this point. Per <span class="law-cite" data-law-id="ENG-12.3" data-non-negotiable="false">ENG-12.3<span class="law-tooltip"><strong>No Self-Certification</strong><span class="law-summary">The agent cannot self-certify compliance. SonarQube is the referee.</span></span></span>, these numbers are authoritative.</p>
+
+  <div class="summary-band">
+    <div class="stat-card danger"><div class="n">E</div><div class="l">Security Rating<br><span style="color:var(--aa-red);font-size:11px;font-weight:700;">Target: A · FAIL</span></div></div>
+    <div class="stat-card danger"><div class="n">1</div><div class="l">Vulnerabilities<br><span style="color:var(--aa-red);font-size:11px;font-weight:700;">Target: 0 · FAIL</span></div></div>
+    <div class="stat-card danger"><div class="n">0%</div><div class="l">Coverage<br><span style="color:var(--aa-red);font-size:11px;font-weight:700;">Target: ≥95% · FAIL</span></div></div>
+    <div class="stat-card warn"><div class="n">42</div><div class="l">Code Smells<br><span style="color:#b36b00;font-size:11px;font-weight:700;">Must not increase</span></div></div>
+  </div>
+  <div class="summary-band" style="margin-top:12px;">
+    <div class="stat-card warn"><div class="n">1</div><div class="l">Security Hotspots<br><span style="color:#b36b00;font-size:11px;font-weight:700;">Unreviewed</span></div></div>
+    <div class="stat-card danger"><div class="n">365</div><div class="l">Cyclomatic Complexity<br><span style="color:var(--aa-red);font-size:11px;font-weight:700;">ENG-3.1 violated</span></div></div>
+    <div class="stat-card"><div class="n">1,515</div><div class="l">Lines of Code<br><span style="font-size:11px;">27 classes · Java 21</span></div></div>
+    <div class="stat-card"><div class="n">0</div><div class="l">Bugs<br><span style="font-size:11px;color:#1b7a2b;font-weight:700;">OK</span></div></div>
+  </div>
+
+  <h3 style="margin-top:28px;">Regulatory Scope — Applicable Compliance Frameworks</h3>
+  <p>Per <span class="law-cite" data-law-id="BUS-2.1" data-non-negotiable="false">BUS-2.1<span class="law-tooltip"><strong>Regulatory Compliance</strong><span class="law-summary">Every bounded context must identify applicable regulatory frameworks before remediation begins.</span></span></span>, the following regulations apply to this codebase:</p>
+  <table>
+    <thead><tr><th>Regulation</th><th>Bounded Context</th><th>Implication</th></tr></thead>
+    <tbody>
+      <tr><td><strong>PCI-DSS</strong></td><td>Miles Redemption (award payments), Partner billing</td><td class="critical">Hardcoded credentials = PCI scope violation. Immediate remediation required.</td></tr>
+      <tr><td><strong>GDPR / CCPA</strong></td><td>Member Profile — PII (name, DOB, email, address)</td><td class="high-sev">Member data exposed via unauthenticated endpoints. No access controls.</td></tr>
+      <tr><td><strong>DOT</strong></td><td>Miles Accrual / Redemption (frequent flyer obligations)</td><td>Calculation logic must be auditable. Current silent failures violate audit requirements.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 1 — Assess</div><div class="pn">2</div></div>
+</div>
+
+<!-- PAGE 3: VIOLATION INVENTORY -->
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 1</span>
+    <span style="font-size:20px;font-weight:800;color:var(--aa-blue);">Constitutional Violation Inventory</span>
+  </div>
+  <p>All violations are cited against Hangar AI Constitution law IDs. Severity is ordered by constitutional priority: Security &gt; Correctness &gt; Reliability &gt; Maintainability.</p>
+
+  <table>
+    <thead><tr><th>ID</th><th>Violation</th><th>Location</th><th>Sev</th><th>Law</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>V-01</td>
+        <td>Production DB credentials hardcoded in source &amp; committed to VCS</td>
+        <td><code>DatabaseConfig.java:20</code><br><code>MileageService.java:33-35</code><br><code>application.properties:12-13</code></td>
+        <td class="critical"><span class="sev-p0">P0</span></td>
+        <td><span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7 ⛔<span class="law-tooltip"><strong>Credentials &amp; Secrets Law</strong><span class="law-summary">No credentials, tokens, or secrets in source code or version control. Non-negotiable.</span></span></span></td>
+      </tr>
+      <tr>
+        <td>V-02</td>
+        <td>SMTP password and partner API keys hardcoded in application.properties</td>
+        <td><code>application.properties:24,31-33</code></td>
+        <td class="critical"><span class="sev-p0">P0</span></td>
+        <td><span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7 ⛔<span class="law-tooltip"><strong>Credentials &amp; Secrets Law</strong><span class="law-summary">No credentials, tokens, or secrets in source code or version control. Non-negotiable.</span></span></span></td>
+      </tr>
+      <tr>
+        <td>V-03</td>
+        <td>Wildcard CORS — <code>allowedOrigins("*")</code> allows any origin to call the API</td>
+        <td><code>AppConfig.java:16</code></td>
+        <td class="critical"><span class="sev-p0">P0</span></td>
+        <td><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1 ⛔<span class="law-tooltip"><strong>Security by Design</strong><span class="law-summary">Security must be the first design constraint. Wildcard CORS violates this principle.</span></span></span></td>
+      </tr>
+      <tr>
+        <td>V-04</td>
+        <td>Unauthenticated endpoints expose member PII — <code>/members/search</code>, <code>/members/{id}</code> return full entity including DOB, address</td>
+        <td><code>MemberController.java:23,52</code></td>
+        <td class="critical"><span class="sev-p0">P0</span></td>
+        <td><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1 ⛔<span class="law-tooltip"><strong>Security by Design</strong><span class="law-summary">Authentication and authorisation must be enforced at every sensitive endpoint.</span></span></span></td>
+      </tr>
+      <tr>
+        <td>V-05</td>
+        <td><code>MileageService</code> god class — 264 lines, 5 bounded contexts, 13 public methods. Accrual, redemption, expiry, admin, reporting in one class.</td>
+        <td><code>MileageService.java:1-264</code></td>
+        <td class="high-sev"><span class="sev-p1">P1</span></td>
+        <td><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Law</strong><span class="law-summary">Cyclomatic complexity must not exceed 10 per method. Classes must have a single responsibility.</span></span></span></td>
+      </tr>
+      <tr>
+        <td>V-06</td>
+        <td><code>MileageCalculator.calculateAccruedMiles</code> — cyclomatic complexity ~35, 120-line single method, elite bonus logic duplicated in <code>calculatePartnerMiles</code></td>
+        <td><code>MileageCalculator.java:38-142</code></td>
+        <td class="high-sev"><span class="sev-p1">P1</span></td>
+        <td><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Law</strong><span class="law-summary">Cyclomatic complexity must not exceed 10 per method.</span></span></span></td>
+      </tr>
+      <tr>
+        <td>V-07</td>
+        <td>Direct JDBC inside JPA service — <code>getMileageSummaryReport</code> opens raw connection using hardcoded credentials, bypassing transaction context</td>
+        <td><code>MileageService.java:150-182</code></td>
+        <td class="high-sev"><span class="sev-p1">P1</span></td>
+        <td><span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7 ⛔<span class="law-tooltip"><strong>Credentials Law</strong><span class="law-summary">Credentials must not appear in code. DB_URL/DB_USER/DB_PASS constants are a direct violation.</span></span></span></td>
+      </tr>
+      <tr>
+        <td>V-08</td>
+        <td>Swallowed exceptions — notification failures logged and dropped; silent <code>return 0</code> on missing account. Failures disappear without trace.</td>
+        <td><code>MileageService.java:106-110, 72</code></td>
+        <td><span class="sev-p2">P2</span></td>
+        <td><span class="law-cite" data-law-id="ENG-5.1" data-non-negotiable="false">ENG-5.1<span class="law-tooltip"><strong>Reliability Law</strong><span class="law-summary">Errors must be surfaced, not suppressed. Silent failures mask production defects.</span></span></span></td>
+      </tr>
+      <tr>
+        <td>V-09</td>
+        <td>Zero test coverage — 0% across all 27 classes. No safety net for any refactoring.</td>
+        <td>Entire codebase</td>
+        <td class="critical"><span class="sev-p0">P0</span></td>
+        <td><span class="law-cite" data-law-id="ENG-4.10" data-non-negotiable="true">ENG-4.10 ⛔<span class="law-tooltip"><strong>Test Evolution Law</strong><span class="law-summary">Characterization tests must be written before any legacy code is modified.</span></span></span></td>
+      </tr>
+      <tr>
+        <td>V-10</td>
+        <td>Business logic in service layer — eligibility rules belong in <code>MileageAccount</code> domain object, not in service</td>
+        <td><code>MileageService.java:244-258</code></td>
+        <td><span class="sev-p2">P2</span></td>
+        <td><span class="law-cite" data-law-id="ENG-2.1" data-non-negotiable="false">ENG-2.1<span class="law-tooltip"><strong>Domain Model Law</strong><span class="law-summary">Business logic belongs in the domain model, not in service or controller layers.</span></span></span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="gate-block" style="margin-top:28px;">
+    <div class="gate-label">Human Gate — Phase 1 Review Required (ENG-12.1 ⛔)</div>
+    <div class="gate-row">
+      <div class="gate-item">SonarQube: <strong>http://localhost:9000/dashboard?id=aa-loyalty-legacy</strong></div>
+      <div class="gate-item">10 violations inventoried — 4× P0, 3× P1, 3× P2</div>
+      <div class="gate-item">Agent awaits human sign-off before Phase 2</div>
+    </div>
+  </div>
+
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 1 — Assess</div><div class="pn">3</div></div>
+</div>
+
+<script>
+document.querySelectorAll('.law-cite').forEach(function(el){
+  el.addEventListener('mouseenter',function(){
+    var rect=el.getBoundingClientRect();
+    var tooltip=el.querySelector('.law-tooltip');
+    if(!tooltip)return;
+    var tipH=tooltip.offsetHeight||80;
+    if(rect.top<tipH+12){el.classList.add('flip-below');}else{el.classList.remove('flip-below');}
+  });
+  el.setAttribute('tabindex','0');el.setAttribute('role','button');
+  var tip=el.querySelector('.law-tooltip');
+  if(tip)tip.id='tooltip-'+el.dataset.lawId;
+});
+</script>
+</body>
+</html>

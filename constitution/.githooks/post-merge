@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Constitutional AGENTS.md drift check — opt-in post-merge hook.
+#
+# Install: git config core.hooksPath .githooks
+#
+# Stage 0 policy: check-only. Reports drift; never writes.
+# To write fixes: aa-agents-sync --dry-run AGENTS.md  (review diff, then run manually)
+command -v aa-agents-sync &>/dev/null && aa-agents-sync --check "$PWD/AGENTS.md"; exit 0

@@ -1,0 +1,7 @@
+# T3.1a — sonar token MUST NOT be committed (ENG-6.3)
+.sonar-token
+.sonarqube/
+# Node artifacts
+node_modules/
+stryker-report/
+coverage/

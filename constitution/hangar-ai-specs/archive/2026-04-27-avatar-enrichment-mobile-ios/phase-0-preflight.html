@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phase 0 — Pre-flight | Avatar Enrichment: Mobile iOS</title>
+  <style>
+    :root {
+      --aa-red:#c8102e; --aa-dark:#0a0d14; --aa-navy:#131825; --aa-blue:#0f3460;
+      --aa-teal:#0d9488; --aa-green:#22c55e; --aa-gold:#f5a623; --aa-surface:#f4f6fa;
+      --aa-border:#dde3ee; --aa-text:#1e293b; --aa-muted:#64748b; --r:9px;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--aa-surface); color:var(--aa-text); font-size:14px; line-height:1.6; }
+    header { background:linear-gradient(140deg,#070a12 0%,#0f3460 65%,#0d9488 100%); color:#fff; padding:32px 44px 26px; }
+    .h-eyebrow { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:6px; }
+    .h-title { font-size:26px; font-weight:800; letter-spacing:-.4px; }
+    .h-sub { font-size:13px; color:rgba(255,255,255,.6); margin-top:4px 0 16px; }
+    .badges { display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
+    .badge { padding:3px 11px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; }
+    .b-phase { background:var(--aa-teal); color:#fff; }
+    .b-mode { background:#5b21b6; color:#fff; }
+    .b-pass { background:rgba(34,197,94,.25); color:#86efac; border:1px solid rgba(34,197,94,.4); }
+    .b-reject { background:rgba(239,68,68,.22); color:#fca5a5; border:1px solid rgba(239,68,68,.35); }
+    main { max-width:900px; margin:32px auto; padding:0 24px 60px; }
+    .section { background:#fff; border:1px solid var(--aa-border); border-radius:var(--r); padding:24px 28px; margin-bottom:22px; }
+    .section-title { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--aa-muted); margin-bottom:16px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { background:#f8f9fc; font-weight:600; text-align:left; padding:9px 12px; border-bottom:2px solid var(--aa-border); color:var(--aa-muted); font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
+    td { padding:9px 12px; border-bottom:1px solid var(--aa-border); vertical-align:top; }
+    tr:last-child td { border-bottom:none; }
+    .pass { color:#16a34a; font-weight:700; }
+    .reject { color:#dc2626; font-weight:700; }
+    .tag { display:inline-block; padding:2px 9px; border-radius:12px; font-size:11px; font-weight:600; margin:2px 2px 2px 0; }
+    .tag-product { background:#ede9fe; color:#5b21b6; }
+    .tag-tech { background:#e0f2fe; color:#0369a1; }
+    .tag-new { background:#dcfce7; color:#15803d; }
+    .tag-enrich { background:#fef9c3; color:#92400e; }
+    .verdict { background:linear-gradient(135deg,#0f3460,#0d9488); color:#fff; border-radius:var(--r); padding:20px 28px; margin-bottom:22px; }
+    .verdict-label { font-size:10px; text-transform:uppercase; letter-spacing:2px; color:rgba(255,255,255,.5); margin-bottom:4px; }
+    .verdict-text { font-size:18px; font-weight:800; }
+    .verdict-sub { font-size:13px; color:rgba(255,255,255,.7); margin-top:6px; }
+    .seq-item { display:flex; gap:14px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--aa-border); }
+    .seq-item:last-child { border-bottom:none; }
+    .seq-num { width:28px; height:28px; border-radius:50%; background:var(--aa-blue); color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
+    .seq-body { flex:1; }
+    .seq-title { font-weight:700; font-size:14px; }
+    .seq-detail { font-size:12px; color:var(--aa-muted); margin-top:2px; }
+    footer { text-align:center; font-size:11px; color:var(--aa-muted); padding:20px; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="h-eyebrow">Hangar AI Constitution — Avatar Workflow</div>
+  <div class="h-title">Phase 0 — Pre-flight Contract</div>
+  <div class="h-sub">Codebase: hangar-w4-dp-mobile &nbsp;·&nbsp; Run date: 2026-04-27 &nbsp;·&nbsp; Clinic: Wave 4 Mobile</div>
+  <div class="badges">
+    <span class="badge b-phase">Phase 0 Complete</span>
+    <span class="badge b-mode">Mode 4 — Enrich</span>
+    <span class="badge b-pass">✓ Pre-flight Passed</span>
+  </div>
+</header>
+<main>
+
+  <div class="verdict">
+    <div class="verdict-label">Taxonomy Decision</div>
+    <div class="verdict-text">REJECT "mobile" as a product taxon — remap to canonical product domains</div>
+    <div class="verdict-sub">"hangar-w4-dp-mobile" is a Wave 4 delivery-channel aggregation repo, not a product domain. All 5 taxonomy gates failed for a "mobile" avatar.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Taxonomy Gates — Label: "mobile"</div>
+    <table>
+      <tr><th>Gate</th><th>Question</th><th>Result</th></tr>
+      <tr><td>Domain</td><td>Is "mobile" a durable business capability?</td><td class="reject">❌ FAIL — delivery channel</td></tr>
+      <tr><td>User Journey</td><td>Does it define distinct users &amp; flows?</td><td class="reject">❌ FAIL — spans dozens of journeys</td></tr>
+      <tr><td>Boundary</td><td>No overlap with existing avatars?</td><td class="reject">❌ FAIL — overlaps booking, check-in, loyalty, recovery</td></tr>
+      <tr><td>Stability</td><td>Independent of org chart?</td><td class="reject">❌ FAIL — "w4" = Wave 4 cohort label</td></tr>
+      <tr><td>Retrieval</td><td>Improves RAG precision?</td><td class="reject">❌ FAIL — too broad</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Capability → Product Avatar Mapping</div>
+    <table>
+      <tr><th>iOS Module</th><th>Canonical Product Avatar</th><th>Mode</th></tr>
+      <tr><td>booking-ios, changetrip-ios, payments-ios, seats-ios, bags-ios, instantupsell-ios</td><td><span class="tag tag-product">avatar-passenger-booking</span></td><td><span class="tag tag-enrich">Enrich</span></td></tr>
+      <tr><td>checkin-ios, flightboarding-ios, flightinfo-ios, flightstatusnotification-ios</td><td><span class="tag tag-product">avatar-check-in-travel</span></td><td><span class="tag tag-enrich">Enrich</span></td></tr>
+      <tr><td>managetrip-ios, trips-ios, schedulechange-ios</td><td><span class="tag tag-product">avatar-schedule-change-self-serve</span></td><td><span class="tag tag-enrich">Enrich</span></td></tr>
+      <tr><td>servicerecovery-ios</td><td><span class="tag tag-product">avatar-customer-relations-ops</span></td><td><span class="tag tag-enrich">Enrich</span></td></tr>
+      <tr><td>All iOS modules (delivery layer)</td><td><span class="tag tag-tech">avatar-ios-swift</span></td><td><span class="tag tag-enrich">Enrich</span></td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Pre-flight Contract</div>
+    <table>
+      <tr><th>Item</th><th>Answer</th></tr>
+      <tr><td>Codebase root</td><td><code>/Users/aali/repos/american-airlines/codebases/hangar-w4-dp-mobile</code></td></tr>
+      <tr><td>Platform layers in scope</td><td>iOS (this run) → Android → BFF (subsequent runs)</td></tr>
+      <tr><td>All target avatars confirmed in registry?</td><td class="pass">✓ Yes — all 5 present in avatars/index.yaml</td></tr>
+      <tr><td>Any duplicate risk?</td><td class="pass">✓ None — no "mobile" avatar exists or will be created</td></tr>
+      <tr><td>Submodules initialised?</td><td>To verify in Phase 1</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Clinic Run Order</div>
+    <div class="seq-item">
+      <div class="seq-num">1</div>
+      <div class="seq-body">
+        <div class="seq-title">iOS — Product &amp; Tech Avatar Enrichment <span class="tag tag-enrich" style="font-size:11px">Today</span></div>
+        <div class="seq-detail">Enrich 4 product avatars + avatar-ios-swift from ~40 iOS feature modules</div>
+      </div>
+    </div>
+    <div class="seq-item">
+      <div class="seq-num">2</div>
+      <div class="seq-body">
+        <div class="seq-title">Android — Product &amp; Tech Avatar Enrichment</div>
+        <div class="seq-detail">Same 4 product avatars get additional evidence from androidapps monorepo + avatar-android-kotlin enriched</div>
+      </div>
+    </div>
+    <div class="seq-item">
+      <div class="seq-num">3</div>
+      <div class="seq-body">
+        <div class="seq-title">BFF — Stack Identification + Tech Avatar</div>
+        <div class="seq-detail">Identify BFF stack (Node.js/TypeScript likely), generate or enrich BFF tech avatar, add API/contract evidence to product avatars</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+<footer>Hangar AI Constitution · Avatar Workflow v1.0.0 · Phase 0 of 6 · skill-avatar-workflow + skill-30-taxonomy-governed-avatar-enrichment</footer>
+</body>
+</html>

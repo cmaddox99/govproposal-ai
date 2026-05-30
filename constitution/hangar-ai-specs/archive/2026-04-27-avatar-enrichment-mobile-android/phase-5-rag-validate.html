@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 5 — RAG Validate | Android Avatar Clinic</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 960px; margin: 40px auto; padding: 0 24px; color: #1a1a2e; background: #f8f9fa; }
+  h1 { color: #0d47a1; border-bottom: 3px solid #0d47a1; padding-bottom: 12px; }
+  h2 { color: #1565c0; margin-top: 32px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78em; font-weight: 700; margin-left: 4px; }
+  .pass { background: #e8f5e9; color: #2e7d32; }
+  .ok { background: #e3f2fd; color: #1565c0; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th { background: #1565c0; color: #fff; padding: 10px 14px; text-align: left; font-size: 0.88em; }
+  td { padding: 9px 14px; border-bottom: 1px solid #e0e0e0; font-size: 0.9em; vertical-align: top; }
+  tr:hover td { background: #e8eaf6; }
+  .section { background: #fff; border-radius: 8px; padding: 20px 24px; margin: 20px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .verdict { font-size: 1.05em; font-weight: 700; padding: 14px 18px; border-radius: 6px; margin: 16px 0; }
+  .verdict.green { background: #e8f5e9; border-left: 5px solid #43a047; color: #2e7d32; }
+  .phase-header { background: linear-gradient(135deg, #004d40 0%, #00796b 100%); color: #fff; padding: 24px; border-radius: 10px; margin-bottom: 28px; }
+  .phase-header p { margin: 6px 0 0 0; opacity: 0.88; }
+  code { background: #f1f3f4; padding: 2px 6px; border-radius: 3px; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 0.87em; }
+  .metric-row { display: flex; gap: 16px; margin: 16px 0; }
+  .metric-card { flex: 1; text-align: center; padding: 18px; border-radius: 8px; background: #e8f5e9; }
+  .metric-card .num { font-size: 2em; font-weight: 800; color: #2e7d32; }
+  .metric-card .lbl { font-size: 0.85em; color: #388e3c; margin-top: 4px; }
+  .token-bar { height: 8px; background: #e0e0e0; border-radius: 4px; margin-top: 4px; }
+  .token-fill { height: 8px; background: #43a047; border-radius: 4px; }
+  pre { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 14px; font-size: 0.83em; overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<div class="phase-header">
+  <h1 style="border:none;color:#fff;margin:0">Phase 5 — RAG Validate</h1>
+  <p>Avatar Clinic · Android Session · Hangar AI Constitution</p>
+  <p style="font-size:0.85em; opacity:0.75">avatar-android-kotlin v1.1.0 · 5 canonical queries · 2026-04-27</p>
+</div>
+
+<div class="section">
+  <h2>Metrics Summary</h2>
+  <div class="metric-row">
+    <div class="metric-card"><div class="num">5/5</div><div class="lbl">Recall (100%)</div></div>
+    <div class="metric-card"><div class="num">830</div><div class="lbl">Max tokens (ENG-2.2)</div></div>
+    <div class="metric-card"><div class="num">100%</div><div class="lbl">Precision — no phantom laws</div></div>
+    <div class="metric-card" style="background:#e3f2fd"><div class="num" style="color:#0d47a1">0</div><div class="lbl" style="color:#1565c0">Failures</div></div>
+  </div>
+  <table>
+    <thead><tr><th>Metric</th><th>Target</th><th>Hard Stop</th><th>Actual</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Recall (queries answered)</td><td>≥ 95% (5/5)</td><td>&lt; 80% (&lt; 4/5)</td><td><strong>100% (5/5)</strong></td><td><span class="badge pass">PASS</span></td></tr>
+      <tr><td>Tokens per query response</td><td>≤ 3,500</td><td>&gt; 3,500</td><td><strong>830 max</strong></td><td><span class="badge pass">PASS</span></td></tr>
+      <tr><td>Precision (no hallucinated laws)</td><td>≥ 90%</td><td>&lt; 80%</td><td><strong>100%</strong> — all 10 law IDs verified in Phase 3</td><td><span class="badge pass">PASS</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>5 Canonical Query Results</h2>
+  <table>
+    <thead><tr><th>Query</th><th>File Resolved</th><th>Tokens</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Q1</strong> — "What laws govern Android/Kotlin development at AA?"</td>
+        <td><code>manifest.yaml</code> → 10 laws returned with titles (ENG-4.1, ENG-6.1, ENG-6.4, ENG-6.7, ENG-4.2, ENG-3.1, ENG-3.2, ENG-2.2, ENG-10.1, ENG-11.1)</td>
+        <td>~200</td>
+        <td><span class="badge pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q2</strong> — "Show me an Android Kotlin example for ENG-4.1 Atomic TDD"</td>
+        <td><code>examples/ENG-4.1-atomic-tdd.md</code> → COMPLIANT (JUnit5 + MockK + Turbine) and VIOLATION patterns returned</td>
+        <td>250</td>
+        <td><span class="badge pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q3</strong> — "How do I set up an Android Kotlin project at AA?"</td>
+        <td><code>guidance.md</code> → Stack reality (Dagger 2 note), authorities, AA codebase facts, key patterns returned</td>
+        <td>339</td>
+        <td><span class="badge pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q4</strong> — "How do I migrate from Dagger 2 to Hilt in Android?"</td>
+        <td><code>use-cases/dagger2-hilt-migration/README.md</code> → 5-step migration pattern + AA-specific DataModule strategy returned</td>
+        <td>597</td>
+        <td><span class="badge pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q5</strong> — "What skills are activated by the android-kotlin avatar?"</td>
+        <td><code>manifest.yaml</code> → 4 skills (06-atomic-tdd, 07-vertical-slice-dev, 08-code-review, 25-ux-design) + greenfield-development workflow</td>
+        <td>~60</td>
+        <td><span class="badge pass">PASS</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Token Budget — All Files</h2>
+  <table>
+    <thead><tr><th>File</th><th>Words</th><th>Tokens (est)</th><th>Budget</th><th>Utilisation</th></tr></thead>
+    <tbody>
+      <tr><td><code>guidance.md</code></td><td>255w</td><td>339</td><td>450</td><td><div class="token-bar"><div class="token-fill" style="width:75%"></div></div></td></tr>
+      <tr><td><code>examples/ENG-2.2-layers.md</code></td><td>624w</td><td>830</td><td>850</td><td><div class="token-bar"><div class="token-fill" style="width:98%"></div></div></td></tr>
+      <tr><td><code>examples/ENG-3.1-complexity.md</code></td><td>302w</td><td>402</td><td>850</td><td><div class="token-bar"><div class="token-fill" style="width:47%"></div></div></td></tr>
+      <tr><td><code>examples/ENG-3.2-immutability.md</code></td><td>447w</td><td>595</td><td>850</td><td><div class="token-bar"><div class="token-fill" style="width:70%"></div></div></td></tr>
+      <tr><td><code>examples/ENG-4.1-atomic-tdd.md</code></td><td>188w</td><td>250</td><td>850</td><td><div class="token-bar"><div class="token-fill" style="width:29%"></div></div></td></tr>
+      <tr><td><code>examples/ENG-6.1-security.md</code></td><td>177w</td><td>235</td><td>850</td><td><div class="token-bar"><div class="token-fill" style="width:28%"></div></div></td></tr>
+      <tr><td><code>examples/ENG-6.4-data-protection.md</code></td><td>156w</td><td>207</td><td>850</td><td><div class="token-bar"><div class="token-fill" style="width:24%"></div></div></td></tr>
+      <tr><td><code>examples/ENG-6.7-audit-trail.md</code></td><td>251w</td><td>334</td><td>850</td><td><div class="token-bar"><div class="token-fill" style="width:39%"></div></div></td></tr>
+      <tr><td><code>use-cases/dagger2-hilt-migration/README.md</code></td><td>449w</td><td>597</td><td>1,500</td><td><div class="token-bar"><div class="token-fill" style="width:40%"></div></div></td></tr>
+      <tr><td><code>use-cases/sealed-state-machine/README.md</code></td><td>511w</td><td>680</td><td>1,500</td><td><div class="token-bar"><div class="token-fill" style="width:45%"></div></div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Integrity Checks</h2>
+  <table>
+    <thead><tr><th>Check</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Phantom law scan (ENG-9.x, ENG-8.x in non-detail files)</td><td><span class="badge pass">CLEAN — 0 phantom references</span></td></tr>
+      <tr><td><code>skill-</code> prefix in guidance.md</td><td><span class="badge pass">CLEAN</span></td></tr>
+      <tr><td><code>skill-</code> prefix in manifest.yaml</td><td><span class="badge pass">CLEAN</span></td></tr>
+      <tr><td>All <code>example_file:</code> references in manifest resolve to actual files</td><td><span class="badge pass">7/7 resolve ✓</span></td></tr>
+      <tr><td>All 10 law IDs in <code>specializes_laws</code> verified in laws/index.yaml</td><td><span class="badge pass">10/10 confirmed in Phase 3 ✓</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>RAG Validation Report</h2>
+  <pre>AVATAR RAG VALIDATION REPORT
+─────────────────────────────────────────────────────────
+Avatar:        avatar-android-kotlin
+Type:          technology
+Date:          2026-04-27
+Validator:     Amaya (Hangar AI Constitution Clinic — Android session)
+
+Q1 — Law coverage:          [ PASS ] (10 laws returned)
+Q2 — Example retrieval:     [ PASS ] (ENG-4.1 example found — 250 tokens)
+Q3 — Setup guidance:        [ PASS ] (guidance.md accessible — 339 tokens)
+Q4 — Use case retrieval:    [ PASS ] (dagger2-hilt-migration found — 597 tokens)
+Q5 — Skill activation:      [ PASS ] (4 skills returned)
+
+Recall:     5/5 (100%)   → PASS
+Max tokens: 830          → PASS (limit: 3,500)
+Precision:  100%         → PASS (0 phantom laws)
+
+VERDICT: PASS — proceed to Phase 6</pre>
+  <div class="verdict green">✅ PASS — 5/5 queries, 100% precision, max 830 tokens. Proceeding to Phase 6 — Commit.</div>
+</div>
+
+
+<div class="section" style="border-top: 3px solid #1565c0; margin-top: 32px;">
+  <h2>Product Avatar Supplemental Validation (Android Enrichment)</h2>
+  <p>Two product avatars received Android-grounded additions after the tech avatar RAG pass. Validated inline.</p>
+  <table>
+    <thead><tr><th>Avatar</th><th>File Added / Modified</th><th>Words</th><th>Tokens</th><th>Law IDs Verified</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>avatar-passenger-booking</code> v1.2.0</td>
+        <td><code>use-cases/search-and-book/README.md</code> — Android BookingViewModel note added (parallel to existing iOS note)</td>
+        <td>358w</td><td>476</td>
+        <td>ENG-11.1 ✓</td>
+        <td><span class="badge pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td><code>avatar-check-in-travel</code> v1.2.0</td>
+        <td><code>use-cases/android-app-checkin/README.md</code> — NEW: CheckInManagerV2/V3 critical bug evidence as product risk; roadmap implication</td>
+        <td>578w</td><td>769</td>
+        <td>PRD-1.1 ✓ PRD-3.1 ✓ PRD-4.1 ✓ ENG-6.4 ✓ ENG-6.7 ✓ ENG-11.1 ✓</td>
+        <td><span class="badge pass">PASS</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p><strong>Version bumps:</strong> Both product avatars bumped 1.1.0 → 1.2.0 (new use case / use case enrichment = MINOR). Manifests and index.yaml updated.</p>
+  <div class="verdict green" style="margin-top:12px">✅ All product avatar additions within budget · All law IDs verified · Ready for Phase 6</div>
+</div>
+
+<footer style="margin-top:40px; padding-top:16px; border-top:1px solid #e0e0e0; color:#757575; font-size:0.82em">
+  Hangar AI Constitution Avatar Clinic — Android Session · Phase 5 of 6 · Generated 2026-04-27
+</footer>
+</body>
+</html>

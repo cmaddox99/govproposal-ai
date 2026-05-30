@@ -1,0 +1,116 @@
+test_cases:
+
+  # --- FAA Compliance (BUS-2.1) ---
+
+  - id: tc-bus-001
+    question: "What FAA regulations apply to our flight dispatch software?"
+    expected_laws: [BUS-2.1]
+    expected_skills: []
+    expected_avatars: []
+    category: business
+
+  - id: tc-bus-002
+    question: "How do we comply with DO-178C for avionics software?"
+    expected_laws: [BUS-2.1]
+    expected_skills: []
+    expected_avatars: []
+    category: business
+
+  - id: tc-bus-003
+    question: "What aviation regulations govern FAR Part 121 operations?"
+    expected_laws: [BUS-2.1]
+    expected_skills: []
+    expected_avatars: []
+    category: business
+
+  - id: tc-bus-004
+    question: "How do I map all applicable FAA and aviation regulatory requirements?"
+    expected_laws: [BUS-2.1]
+    expected_skills: []
+    expected_avatars: []
+    category: business
+
+  # --- DOT Consumer Protection (BUS-2.3) ---
+
+  - id: tc-bus-005
+    question: "What are the DOT refund requirements when a flight is cancelled?"
+    expected_laws: [BUS-2.3]
+    expected_skills: []
+    expected_avatars: []
+    category: business
+
+  - id: tc-bus-006
+    question: "How much compensation must we pay for an involuntary denied boarding?"
+    expected_laws: [BUS-2.3]
+    expected_skills: []
+    expected_avatars: []
+    category: business
+
+  - id: tc-bus-007
+    question: "What does 14 CFR 260 require for passenger notifications?"
+    expected_laws: [BUS-2.3]
+    expected_skills: []
+    expected_avatars: []
+    category: business
+
+  # --- Data Subject Rights (BUS-4.3) ---
+
+  - id: tc-bus-008
+    question: "How do we handle a passenger's request to delete their personal data?"
+    expected_laws: [BUS-4.3]
+    expected_skills: []
+    expected_avatars: []
+    category: business
+
+  - id: tc-bus-009
+    question: "What is the process for responding to a GDPR data subject access request?"
+    expected_laws: [BUS-4.3]
+    expected_skills: []
+    expected_avatars: []
+    category: business
+
+  - id: tc-bus-010
+    question: "How do I implement the right to erasure for customer accounts?"
+    expected_laws: [BUS-4.3]
+    expected_skills: []
+    expected_avatars: []
+    category: business
+
+  # --- Audit Trail (BUS-7.1) ---
+
+  - id: tc-bus-011
+    question: "What audit trail records do we need to retain for compliance?"
+    expected_laws: [BUS-7.1]
+    expected_skills: [13-observability.md]
+    expected_avatars: []
+    category: business
+
+  - id: tc-bus-012
+    question: "How do I ensure our audit evidence collection is tamper-evident?"
+    expected_laws: [BUS-7.1]
+    expected_skills: [13-observability.md]
+    expected_avatars: []
+    category: business
+
+  - id: tc-bus-013
+    question: "What fields are required in an audit log for traceability?"
+    expected_laws: [BUS-7.1]
+    expected_skills: [13-observability.md]
+    expected_avatars: []
+    category: business
+
+  # --- Breach Notification (BUS-9.3) ---
+
+  - id: tc-bus-014
+    question: "What is our obligation when a data breach occurs involving passenger PII?"
+    expected_laws: [BUS-9.3]
+    expected_skills: [11-incident-response.md]
+    expected_avatars: []
+    category: business
+
+  - id: tc-bus-015
+    question: "How quickly must we report a data breach under GDPR breach notification rules?"
+    expected_laws: [BUS-9.3]
+    expected_skills: [11-incident-response.md]
+    expected_avatars: []
+    category: business

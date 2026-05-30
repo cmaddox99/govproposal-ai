@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ Avatar Restructuring Options</title>
+  <style>
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px; line-height: 1.6; color: #24292e;
+  max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem;
+  background: #fff;
+}
+h1 { font-size: 2em; border-bottom: 2px solid #e1e4e8; padding-bottom: .4em; margin-top: 0; }
+h2 { font-size: 1.5em; border-bottom: 1px solid #e1e4e8; padding-bottom: .3em; margin-top: 2em; }
+h3 { font-size: 1.15em; margin-top: 1.5em; color: #0366d6; }
+h4 { font-size: 1em; margin-top: 1.2em; color: #586069; }
+
+/* Scrollable table wrapper — wide tables scroll instead of overflowing */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1em 0; }
+
+table {
+  border-collapse: collapse;
+  width: auto;          /* size entirely to content — no stretching */
+  font-size: 0.88em;
+}
+th, td {
+  border: 1px solid #d1d5da;
+  padding: .45em .8em;
+  vertical-align: top;
+  white-space: nowrap;  /* every cell stays on one line → columns always align */
+}
+th { background: #f6f8fa; font-weight: 600; text-align: left; }
+tr:nth-child(even) td { background: #f6f8fa; }
+code {
+  background: #f3f4f6; border-radius: 3px; padding: .1em .3em;
+  font-size: 0.88em; font-family: "SFMono-Regular", Consolas, monospace;
+  white-space: nowrap;
+}
+
+pre {
+  background: #f6f8fa; border: 1px solid #e1e4e8; border-radius: 6px;
+  padding: 1em 1.2em; overflow-x: auto; font-size: 0.88em;
+}
+pre code { background: none; padding: 0; font-size: 1em; white-space: pre; }
+blockquote {
+  border-left: 4px solid #0366d6; margin: 1em 0;
+  padding: .5em 1em; background: #f1f8ff; color: #444;
+}
+blockquote p { margin: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 2em 0; }
+.toc-wrapper {
+  background: #f6f8fa; border: 1px solid #e1e4e8;
+  border-radius: 6px; padding: 1em 1.5em; margin-bottom: 2em;
+}
+.toc-wrapper ul { margin: .3em 0; padding-left: 1.4em; }
+.toc-wrapper li { margin: .2em 0; }
+footer {
+  margin-top: 3em; font-size: 0.82em; color: #586069;
+  border-top: 1px solid #e1e4e8; padding-top: 1em;
+}
+</style>
+</head>
+<body>
+
+<p>﻿# Restructuring Options — C++ Avatar Version-Sensitivity</p>
+<blockquote>
+<p>This document evaluates options to address C++ avatar version-sensitivity. <strong>Option F (Reference File Split) is a prerequisite</strong> that must be implemented before adopting any of Options A–E. All evaluations below assume Option F is already complete. The post-Option-F baseline replaces the original baseline throughout this document.</p>
+</blockquote>
+<hr />
+<h2 id="prerequisite-option-f-reference-file-split">⚙️ Prerequisite — Option F: Reference File Split</h2>
+<blockquote>
+<p><strong>Status: PREREQUISITE — Complete this before implementing any option below.</strong>
+The 14 token-target violations are an independent structural defect. Completing Option F raises the baseline version-appropriate retrieval from ~50% to ~65% <em>(est.)</em> and doubles the reference content per RAG query.</p>
+</blockquote>
+<h3 id="description">Description</h3>
+<p>Split all 14 reference files that exceed the documented ≤3,500-token RAG target into smaller
+files at natural H2 section boundaries. Where a natural boundary also aligns with a C++ version
+boundary, use that split — gaining partial version routing at no extra cost.</p>
+<p>This option is <strong>independent of Options A–E</strong> and should be pursued regardless of which
+version-sensitivity option is adopted, since the token target violation is an existing structural
+defect in the avatar.</p>
+<h3 id="full-split-plan-measured-from-actual-file-content">Full Split Plan (Measured from Actual File Content)</h3>
+<p>Files below the 3,500-token target — <strong>no split required:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Tokens</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ref-getting-started.md</code></td>
+<td>2,318</td>
+<td>Keep as-is</td>
+</tr>
+<tr>
+<td><code>ref-infrastructure.md</code></td>
+<td>3,082</td>
+<td>Keep as-is</td>
+</tr>
+</tbody>
+</table></div>
+<p>Files requiring splits — <strong>measured section-by-section:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Current File</th>
+<th>Tokens</th>
+<th>Proposed Split</th>
+<th>File A</th>
+<th>Tokens A</th>
+<th>File B</th>
+<th>Tokens B</th>
+<th>File C</th>
+<th>Tokens C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ref-testing-ci.md</code></td>
+<td>6,975</td>
+<td>3-way</td>
+<td><code>ref-testing-ci-policy.md</code></td>
+<td>2,730</td>
+<td><code>ref-testing-gtest-core.md</code></td>
+<td>2,816</td>
+<td><code>ref-testing-gtest-advanced.md</code></td>
+<td>1,407</td>
+</tr>
+<tr>
+<td><code>ref-brownfield-config.md</code></td>
+<td>6,203</td>
+<td>2-way</td>
+<td><code>ref-brownfield-migration.md</code></td>
+<td>2,996</td>
+<td><code>ref-brownfield-project-config.md</code></td>
+<td>3,183</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ref-migration-playbooks.md</code> ★</td>
+<td>5,483</td>
+<td>2-way <strong>VERSION</strong></td>
+<td><code>ref-migration-pre-cpp17.md</code></td>
+<td>2,162</td>
+<td><code>ref-migration-cpp17-plus.md</code></td>
+<td>3,321</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ref-object-design.md</code></td>
+<td>5,112</td>
+<td>2-way (H3 split)</td>
+<td><code>ref-object-design-vectors-a.md</code></td>
+<td>~2,400</td>
+<td><code>ref-object-design-vectors-b.md</code></td>
+<td>~2,712</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ref-concurrency.md</code> ★</td>
+<td>5,261</td>
+<td>2-way <strong>VERSION</strong></td>
+<td><code>ref-concurrency-threading.md</code></td>
+<td>1,858</td>
+<td><code>ref-concurrency-async.md</code></td>
+<td>3,412</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ref-advanced-cpp.md</code></td>
+<td>5,100</td>
+<td>2-way</td>
+<td><code>ref-templates-metaprogramming.md</code></td>
+<td>2,351</td>
+<td><code>ref-advanced-patterns.md</code></td>
+<td>2,730</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ref-core-language.md</code> ★</td>
+<td>4,830</td>
+<td>2-way <strong>VERSION</strong></td>
+<td><code>ref-core-type-safety.md</code></td>
+<td>2,701</td>
+<td><code>ref-core-modern-idioms.md</code></td>
+<td>2,108</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ref-domain-modeling.md</code></td>
+<td>4,766</td>
+<td>2-way</td>
+<td><code>ref-domain-patterns.md</code></td>
+<td>2,207</td>
+<td><code>ref-domain-quality.md</code></td>
+<td>2,530</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ref-legacy-smells.md</code></td>
+<td>4,809</td>
+<td>2-way (H3 split)</td>
+<td><code>ref-legacy-smells-structural.md</code></td>
+<td>~2,405</td>
+<td><code>ref-legacy-smells-patterns.md</code></td>
+<td>~2,404</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ref-legacy-mental-models.md</code></td>
+<td>4,706</td>
+<td>2-way (H3 split)</td>
+<td><code>ref-mental-models-memory.md</code></td>
+<td>~2,353</td>
+<td><code>ref-mental-models-lang.md</code></td>
+<td>~2,353</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ref-build-toolchain.md</code> ★</td>
+<td>4,736</td>
+<td>2-way <strong>VERSION</strong></td>
+<td><code>ref-build-packages.md</code></td>
+<td>1,441</td>
+<td><code>ref-build-ubsan-msvc.md</code></td>
+<td>3,277</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ref-safety-aviation.md</code></td>
+<td>4,274</td>
+<td>2-way</td>
+<td><code>ref-safety-jni-abi.md</code></td>
+<td>1,035</td>
+<td><code>ref-safety-far117-cwr.md</code></td>
+<td>3,174</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ref-safety-memory.md</code></td>
+<td>4,251</td>
+<td>2-way</td>
+<td><code>ref-safety-misra-do178.md</code></td>
+<td>2,401</td>
+<td><code>ref-safety-memory-lifetime.md</code></td>
+<td>1,873</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ref-legacy-navigation.md</code></td>
+<td>4,247</td>
+<td>2-way</td>
+<td><code>ref-legacy-orientation.md</code></td>
+<td>3,918</td>
+<td><code>ref-legacy-priorities.md</code></td>
+<td>312</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>★ = Split boundary also aligns with a <strong>C++ version boundary</strong> — version routing benefit is
+gained for free alongside the token reduction.</p>
+</blockquote>
+<h4 id="version-natural-splits-explained">Version-natural splits explained</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Split</th>
+<th>File A covers</th>
+<th>File B covers</th>
+<th>Version boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ref-migration-playbooks.md</code></td>
+<td>C++98→11, C++11→14, C++14→17</td>
+<td>C++17→20, survival patterns, ActiveTest migration</td>
+<td>C++17</td>
+</tr>
+<tr>
+<td><code>ref-concurrency.md</code></td>
+<td><code>std::thread</code>, <code>std::mutex</code>, <code>std::atomic</code>, <code>std::lock_guard</code>, exception safety</td>
+<td>Coroutines (<code>co_await</code>), <code>std::stop_token</code>, resiliency patterns</td>
+<td>C++20</td>
+</tr>
+<tr>
+<td><code>ref-core-language.md</code></td>
+<td>Const correctness, cast governance, implicit conversions (all versions)</td>
+<td>Designated initializers (C++20), <code>std::variant</code> (C++17), null safety</td>
+<td>C++17/20</td>
+</tr>
+<tr>
+<td><code>ref-build-toolchain.md</code></td>
+<td>vcpkg, CMake, reproducible builds (all versions)</td>
+<td>C++20 modules, UBSan/MSVC gap</td>
+<td>C++20</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="post-split-corpus-structure">Post-Split Corpus Structure</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Before Split</th>
+<th>After Split</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reference file count</td>
+<td>16</td>
+<td><strong>31</strong></td>
+<td>+15 files</td>
+</tr>
+<tr>
+<td>Total reference tokens</td>
+<td>76,152</td>
+<td>76,152</td>
+<td>unchanged</td>
+</tr>
+<tr>
+<td>Average tokens per file</td>
+<td>4,760</td>
+<td><strong>2,456</strong></td>
+<td>−48%</td>
+</tr>
+<tr>
+<td>Files exceeding 3,500-token target</td>
+<td>14 of 16</td>
+<td><strong>0 of 31</strong></td>
+<td>−14 violations</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>The total corpus remains <strong>130,052 tokens</strong> — splitting does not add or remove content.
+The improvement is entirely in retrieval granularity.</p>
+</blockquote>
+<h3 id="rag-window-impact">RAG Window Impact</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Retrieval Budget</th>
+<th>Reference files fit (before split)</th>
+<th>Reference files fit (after split)</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8K tokens</td>
+<td>1.36</td>
+<td><strong>2.64</strong></td>
+<td>+94%</td>
+</tr>
+<tr>
+<td>12K tokens</td>
+<td>2.20</td>
+<td><strong>4.27</strong></td>
+<td>+94%</td>
+</tr>
+<tr>
+<td>16K tokens</td>
+<td>3.04</td>
+<td><strong>5.90</strong></td>
+<td>+94%</td>
+</tr>
+<tr>
+<td>32K tokens</td>
+<td>5.51</td>
+<td><strong>10.68</strong></td>
+<td>+94%</td>
+</tr>
+</tbody>
+</table></div>
+<p>The improvement is consistent at all window sizes because it is driven entirely by the file size
+reduction (4,760 → 2,456 avg tokens). At an 8K retrieval budget, a developer now gets roughly
+<strong>2.6 focused reference files</strong> instead of 1.4 large ones — and the focused files match the
+query topic more precisely.</p>
+<h3 id="evaluation">Evaluation</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Rating</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Version-sensitivity improvement</td>
+<td><code>[PARTIAL]</code></td>
+<td>4/14 splits have version-aligned boundaries; 10 are topic-only</td>
+</tr>
+<tr>
+<td>Token budget improvement</td>
+<td><code>[HIGH]</code></td>
+<td>+94% reference content per query; 14 target violations eliminated</td>
+</tr>
+<tr>
+<td>Maintenance cost</td>
+<td><code>[MEDIUM]</code></td>
+<td>31 files to maintain vs 16; reference-index.md requires full rewrite</td>
+</tr>
+<tr>
+<td>Implementation risk</td>
+<td><code>[LOW–MEDIUM]</code></td>
+<td>Content unchanged; only restructuring + index update</td>
+</tr>
+<tr>
+<td>Status</td>
+<td><code>[PREREQUISITE — COMPLETE FIRST]</code></td>
+<td>Must be done before any option below is adopted</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="interaction-with-options-d-and-e">Interaction with Options D and E</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Combination</th>
+<th>Per-query version-appropriate %</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baseline (no changes)</td>
+<td>~50%</td>
+<td>version-mixed retrieval</td>
+</tr>
+<tr>
+<td>Option F alone</td>
+<td><strong>~65% <em>(est.)</em></strong></td>
+<td>better granularity, 4 version-natural splits, no metadata filtering</td>
+</tr>
+<tr>
+<td>Option E (post-F baseline)</td>
+<td><strong>~95% <em>(est.)</em></strong></td>
+<td>filtered examples + declaration, with F as baseline</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="version-sensitivity-options-evaluated-post-option-f-baseline">Version-Sensitivity Options (Evaluated Post-Option-F Baseline)</h2>
+<blockquote>
+<p>All options below assume Option F has been implemented: 31 reference files at avg 2,456 tokens, 4 version-natural splits active, ~65% <em>(est.)</em> version-appropriate baseline.</p>
+</blockquote>
+<hr />
+<h2 id="option-a-inline-version-tags">Option A: Inline Version Tags</h2>
+<h3 id="description_1">Description</h3>
+<p>Add version tags directly within existing content without restructuring files.</p>
+<p><strong>Changes Required:</strong>
+1. Add inline version notes to all code examples
+2. Add <code>cpp_version_min</code> frontmatter to example files
+3. Add version badges to reference file sections</p>
+<p><strong>Example Implementation:</strong></p>
+<p>Before (current):</p>
+<pre><code class="language-cpp">auto plan = std::make_unique&lt;FlightPlan&gt;(origin, dest);
+</code></pre>
+<p>After:</p>
+<pre><code class="language-cpp">// [C++14+] — requires std::make_unique; for C++11 use: std::unique_ptr&lt;FlightPlan&gt;(new FlightPlan(...))
+auto plan = std::make_unique&lt;FlightPlan&gt;(origin, dest);
+</code></pre>
+<h3 id="post-option-f-impact">Post-Option-F Impact</h3>
+<p>Inline tags are now applied to 31 focused files instead of 16 large ones — the same tagging
+work is required, but tags are more targeted because each file covers a narrower topic scope.
+Small improvement over standalone A because reference content is already more granular; the
+4 version-natural split files already carry implicit version boundaries at the file level.</p>
+<h3 id="evaluation_1">Evaluation</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Rating</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Effectiveness</td>
+<td><code>[LOW]</code></td>
+<td>RAG still retrieves all content; developer must parse version notes</td>
+</tr>
+<tr>
+<td>Token Impact</td>
+<td><code>[MINIMAL]</code></td>
+<td>~5-10% increase from inline notes</td>
+</tr>
+<tr>
+<td>Maintenance Cost</td>
+<td><code>[MEDIUM]</code></td>
+<td>Slightly less per-file effort than before F, but 31 files (vs 16) to maintain</td>
+</tr>
+<tr>
+<td>Implementation Risk</td>
+<td><code>[LOW]</code></td>
+<td>No structural changes; additive only</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Version-appropriate retrieval (post-F): ~57% <em>(est.)</em></strong> (was ~55% standalone; granularity improves tag precision slightly)</p>
+<h3 id="pros">Pros</h3>
+<ul>
+<li>Non-breaking change</li>
+<li>Can be implemented incrementally</li>
+<li>No RAG infrastructure changes needed</li>
+</ul>
+<h3 id="cons">Cons</h3>
+<ul>
+<li>Doesn't solve RAG routing problem</li>
+<li>Clutters code examples</li>
+<li>Version notes can become stale</li>
+</ul>
+<h3 id="recommendation-not-recommended-as-standalone-solution">Recommendation: <code>[NOT RECOMMENDED]</code> as standalone solution</h3>
+<hr />
+<h2 id="option-b-version-segmented-sections">Option B: Version-Segmented Sections</h2>
+<h3 id="description_2">Description</h3>
+<p>Restructure each reference file to have explicit version sections.</p>
+<p><strong>Changes Required:</strong>
+1. Reorganize each <code>ref-*.md</code> into version sections
+2. Update <code>reference-index.md</code> to link version sections
+3. Add version anchors for RAG retrieval</p>
+<p><strong>Example Implementation:</strong></p>
+<pre><code class="language-markdown"># ref-safety-memory.md
+
+## C++98/03 Patterns
+### RAII Without Smart Pointers
+...manual guard classes...
+
+## C++11/14 Patterns  
+### unique_ptr and shared_ptr
+...std::unique_ptr, std::shared_ptr...
+
+## C++17+ Patterns
+### PMR Allocators
+...std::pmr::...
+
+## C++20+ Patterns
+### Concepts for Memory Safety
+...memory concepts...
+</code></pre>
+<h3 id="post-option-f-impact_1">Post-Option-F Impact</h3>
+<p><strong>4 of the 31 reference files are already version-split</strong> by Option F (the ★ files):
+- <code>ref-migration-pre-cpp17.md</code> / <code>ref-migration-cpp17-plus.md</code> — boundary at C++17
+- <code>ref-concurrency-threading.md</code> / <code>ref-concurrency-async.md</code> — boundary at C++20
+- <code>ref-core-type-safety.md</code> / <code>ref-core-modern-idioms.md</code> — boundary at C++17/20
+- <code>ref-build-packages.md</code> / <code>ref-build-ubsan-msvc.md</code> — boundary at C++20</p>
+<p>These 4 file pairs already have their version boundaries at the file level, so Option B only
+needs to add internal version sections to the remaining 27 files. This reduces Option B's
+implementation effort by ~25% and means the most critical version-boundary content is already
+routable from F alone.</p>
+<h3 id="evaluation_2">Evaluation</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Rating</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Effectiveness</td>
+<td><code>[MEDIUM-HIGH]</code> <em>(est.)</em></td>
+<td>4 version boundaries already in place from F; B adds internal sections to 27 remaining files</td>
+</tr>
+<tr>
+<td>Token Impact</td>
+<td><code>[MODERATE]</code></td>
+<td>~20-30% increase from version sections in 27 remaining files, plus the 4 already split</td>
+</tr>
+<tr>
+<td>Maintenance Cost</td>
+<td><code>[MEDIUM-HIGH]</code></td>
+<td>Slightly less than before (4 files already handled by F)</td>
+</tr>
+<tr>
+<td>Implementation Risk</td>
+<td><code>[MEDIUM]</code></td>
+<td>Major restructure of 27 files; section coherence risk</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Version-appropriate retrieval (post-F): ~77% <em>(est.)</em></strong> (was ~75% standalone; 4 boundaries already done by F)</p>
+<h3 id="pros_1">Pros</h3>
+<ul>
+<li>Clear version boundaries</li>
+<li>RAG can retrieve specific version sections</li>
+<li>Good for manual navigation</li>
+<li>4 most critical version boundaries already handled by prerequisite F</li>
+</ul>
+<h3 id="cons_1">Cons</h3>
+<ul>
+<li>Significant content duplication in remaining 27 files</li>
+<li>Maintenance burden: fix in one version section, forget another</li>
+<li>File sizes increase substantially (for the 27 un-split files)</li>
+</ul>
+<h3 id="recommendation-partial-good-for-migration-playbooks-with-f-done-the-most-critical-version-boundaries-are-already-handled">Recommendation: <code>[PARTIAL]</code> — Good for migration playbooks; with F done, the most critical version boundaries are already handled</h3>
+<hr />
+<h2 id="option-c-separate-version-avatars">Option C: Separate Version Avatars</h2>
+<h3 id="description_3">Description</h3>
+<p>Create distinct avatars for major C++ version ranges.</p>
+<p><strong>Changes Required:</strong>
+1. Create <code>avatars/technology/cpp-legacy/</code> (C++98/03/11)
+2. Create <code>avatars/technology/cpp-modern/</code> (C++17/20/23)
+3. Keep <code>avatars/technology/cpp/</code> for C++14 (transition standard)
+4. Update guidance.md to route by project standard</p>
+<p><strong>Directory Structure:</strong></p>
+<pre><code>avatars/technology/
+├── cpp/                # C++14 baseline (current)
+│   ├── manifest.yaml
+│   └── ...
+├── cpp-legacy/         # C++98/03/11 brownfield
+│   ├── manifest.yaml
+│   ├── guidance.md
+│   └── ref-*.md        # Legacy-specific patterns
+└── cpp-modern/         # C++20/23 greenfield
+    ├── manifest.yaml
+    ├── guidance.md
+    └── ref-*.md        # Modern-only patterns
+</code></pre>
+<h3 id="post-option-f-impact_2">Post-Option-F Impact</h3>
+<p>Option F does not fundamentally change the picture for Option C — the content split across
+avatars still requires massive duplication across three avatar trees. The 4 version-natural
+split files provide slightly cleaner starting points for per-avatar content, but the maintenance
+burden remains the dominant concern regardless.</p>
+<h3 id="evaluation_3">Evaluation</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Rating</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Effectiveness</td>
+<td><code>[HIGH]</code></td>
+<td>Complete RAG isolation by version</td>
+</tr>
+<tr>
+<td>Token Impact</td>
+<td><code>[MAJOR]</code></td>
+<td>3x content; but per-query tokens same</td>
+</tr>
+<tr>
+<td>Maintenance Cost</td>
+<td><code>[VERY HIGH]</code></td>
+<td>Three avatars to maintain; drift risk</td>
+</tr>
+<tr>
+<td>Implementation Risk</td>
+<td><code>[HIGH]</code></td>
+<td>Major restructure; shared content sync</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Version-appropriate retrieval (post-F): ~95% <em>(per avatar)</em></strong> (unchanged from standalone)</p>
+<h3 id="pros_2">Pros</h3>
+<ul>
+<li>RAG retrieves version-appropriate content only</li>
+<li>Clean separation of concerns</li>
+<li>Each avatar can have version-specific best practices</li>
+</ul>
+<h3 id="cons_2">Cons</h3>
+<ul>
+<li>Content duplication across avatars</li>
+<li>Synchronization nightmare (bug fix in one, miss in others)</li>
+<li>Unclear boundary between "legacy" and "modern"</li>
+</ul>
+<h3 id="recommendation-not-recommended-maintenance-cost-too-high">Recommendation: <code>[NOT RECOMMENDED]</code> — Maintenance cost too high</h3>
+<hr />
+<h2 id="option-d-project-standard-declaration">Option D: Project Standard Declaration</h2>
+<h3 id="description_4">Description</h3>
+<p>Add a mechanism for projects to declare their C++ standard, enabling version-aware RAG routing.</p>
+<p><strong>Changes Required:</strong>
+1. Add <code>cpp_standard</code> field to project metadata schema
+2. Update RAG retrieval to filter by project standard
+3. Add version metadata to avatar content for filtering
+4. Update guidance.md to explain declaration mechanism</p>
+<p><strong>Implementation:</strong></p>
+<p><strong>manifest.yaml additions:</strong></p>
+<pre><code class="language-yaml">project_declaration:
+  cpp_standard:
+    field: &quot;project.cpp_standard&quot;
+    discovery:
+      - type: &quot;cmake&quot;
+        path: &quot;CMakeLists.txt&quot;
+        regex: &quot;CMAKE_CXX_STANDARD\\s+(\\d+)&quot;
+      - type: &quot;yaml&quot;
+        path: &quot;project.yaml&quot;
+        key: &quot;cpp_standard&quot;
+    valid_values: [98, 11, 14, 17, 20, 23]
+    default: 20
+</code></pre>
+<p><strong>project.yaml template:</strong></p>
+<pre><code class="language-yaml"># Project-level C++ configuration
+project:
+  name: &quot;flight-pricing-engine&quot;
+  cpp_standard: 17
+  cpp_migration_target: 20
+  avatar: cpp
+</code></pre>
+<p><strong>Example file metadata:</strong></p>
+<pre><code class="language-yaml">---
+law_id: ENG-6.1
+avatar: cpp
+cpp_version_min: 14
+cpp_version_max: null  # no upper bound
+features_used: [&quot;std::make_unique&quot;, &quot;move semantics&quot;]
+---
+</code></pre>
+<h3 id="post-option-f-impact_3">Post-Option-F Impact</h3>
+<p><strong>Key improvement:</strong> With 31 granular reference files, version filtering now operates at the
+<strong>file level</strong> for 4 version-natural pairs. A C++14 project can now exclude entire files:
+- <code>ref-migration-cpp17-plus.md</code> (~3,321 tokens) fully excluded
+- <code>ref-concurrency-async.md</code> (~3,412 tokens) fully excluded
+- <code>ref-core-modern-idioms.md</code> (~2,108 tokens) partially/fully excluded
+- <code>ref-build-ubsan-msvc.md</code> (~3,277 tokens) partially/fully excluded</p>
+<p>This is approximately <strong>~12,118 tokens</strong> fully excludable at the file level — vs ~8K from
+section-level filtering before F. Pool reduction improves from ~13% to <strong>~20% <em>(est.)</em></strong></p>
+<h3 id="evaluation_4">Evaluation</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Rating</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Effectiveness</td>
+<td><code>[HIGH]</code></td>
+<td>RAG routes based on declared standard; file-level exclusion of 4 version pairs more precise than before F</td>
+</tr>
+<tr>
+<td>Token Impact</td>
+<td><code>[MINIMAL]</code></td>
+<td>Only metadata additions</td>
+</tr>
+<tr>
+<td>Maintenance Cost</td>
+<td><code>[LOW]</code></td>
+<td>One-time metadata tagging</td>
+</tr>
+<tr>
+<td>Implementation Risk</td>
+<td><code>[MEDIUM]</code></td>
+<td>Requires RAG infrastructure changes</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Version-appropriate retrieval (post-F): ~78% <em>(est.)</em></strong> (was ~70% before F; file-level filtering on 4 version pairs more effective than section-level)</p>
+<h3 id="pros_3">Pros</h3>
+<ul>
+<li>Single avatar, version-aware routing</li>
+<li>Minimal content duplication</li>
+<li>Projects control their own standard declaration</li>
+<li>Enables "migration mode" (show target version patterns)</li>
+<li>File-level exclusion of 4 version-natural reference pairs (post-F)</li>
+</ul>
+<h3 id="cons_3">Cons</h3>
+<ul>
+<li>Requires RAG infrastructure changes</li>
+<li>All content needs version metadata (one-time effort)</li>
+<li>Projects must adopt declaration mechanism</li>
+</ul>
+<h3 id="recommendation-recommended-best-balance-of-effectiveness-and-maintainability-more-effective-post-f-than-before">Recommendation: <code>[RECOMMENDED]</code> — Best balance of effectiveness and maintainability; more effective post-F than before</h3>
+<hr />
+<h2 id="option-e-hybrid-d-segmented-examples">Option E: Hybrid (D + Segmented Examples)</h2>
+<h3 id="description_5">Description</h3>
+<p>Combine project standard declaration (Option D) with version-segmented example files.</p>
+<p><strong>Changes Required:</strong>
+1. Implement Option D (project declaration mechanism)
+2. Create version-variant example files where patterns differ significantly
+3. Keep reference files unified with inline version notes</p>
+<p><strong>Implementation:</strong></p>
+<p><strong>Example file variants:</strong></p>
+<pre><code>examples/
+├── ENG-6.1-smart-pointers.md           # C++14+ (current)
+├── ENG-6.1-smart-pointers-cpp11.md     # C++11 variant
+├── ENG-6.1-smart-pointers-cpp98.md     # C++98 RAII workarounds
+├── ENG-6.1-thread-safety.md            # C++17+ (current)
+├── ENG-6.1-thread-safety-cpp11.md      # C++11 variant
+└── ENG-6.1-comparison-cpp14.md         # Pre-C++20 comparison patterns (NEW)
+</code></pre>
+<p><strong>Example frontmatter:</strong></p>
+<pre><code class="language-yaml">---
+law_id: ENG-6.1
+avatar: cpp
+cpp_version_min: 98
+cpp_version_max: 11
+superseded_by: &quot;ENG-6.1-smart-pointers.md&quot;  # for C++14+
+---
+</code></pre>
+<h3 id="post-option-f-impact_4">Post-Option-F Impact</h3>
+<p>With F as baseline, Option E now achieves approximately <strong>~95% <em>(est.)</em></strong> on its own — the
+same target that previously required both F AND E together. The gap noted previously ("reference
+file sections still mixed") is now partially addressed by F's 4 version-natural splits. Option
+E's variant examples complete the picture by ensuring example files are also version-targeted,
+closing the remaining ~30 pp gap from the post-F ~65% baseline.</p>
+<h3 id="evaluation_5">Evaluation</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Rating</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Effectiveness</td>
+<td><code>[OPTIMAL]</code> <em>(est.)</em></td>
+<td>Achieves ~95% version-appropriate retrieval standalone (post-F); previously required F+E</td>
+</tr>
+<tr>
+<td>Token Impact</td>
+<td><code>[MODERATE]</code></td>
+<td>~50% increase in example files</td>
+</tr>
+<tr>
+<td>Maintenance Cost</td>
+<td><code>[MEDIUM]</code></td>
+<td>Variant files need sync; reference files unchanged</td>
+</tr>
+<tr>
+<td>Implementation Risk</td>
+<td><code>[MEDIUM]</code></td>
+<td>Moderate restructure; clear variant naming</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Version-appropriate retrieval (post-F): ~95% <em>(est.)</em></strong> (was ~90% before F; now equals old F+E combined target)</p>
+<h3 id="pros_4">Pros</h3>
+<ul>
+<li>Best RAG accuracy for version-sensitive patterns</li>
+<li>Reference files remain unified (no duplication)</li>
+<li>Example variants only where patterns truly differ</li>
+<li>Clear upgrade path (superseded_by metadata)</li>
+<li>Achieves ~95% post-F without requiring further structural changes to reference files</li>
+</ul>
+<h3 id="cons_4">Cons</h3>
+<ul>
+<li>More files to maintain</li>
+<li>Naming convention must be consistent</li>
+<li>Some duplication in example variants</li>
+</ul>
+<h3 id="recommendation-strongly-recommended-optimal-balance-achieves-maximum-version-sensitivity-post-f">Recommendation: <code>[STRONGLY RECOMMENDED]</code> — Optimal balance; achieves maximum version-sensitivity post-F</h3>
+<hr />
+<h2 id="comparison-matrix">Comparison Matrix</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Version-Appropriate %</th>
+<th>Token Impact</th>
+<th>Maintenance</th>
+<th>Risk</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Post-F Baseline</td>
+<td>~65% <em>(est.)</em></td>
+<td>— (F complete)</td>
+<td>—</td>
+<td>—</td>
+<td>Prerequisite done</td>
+</tr>
+<tr>
+<td>A: Inline Tags</td>
+<td>~57% <em>(est.)</em></td>
+<td>Minimal</td>
+<td>Medium</td>
+<td>Low</td>
+<td>Not Recommended</td>
+</tr>
+<tr>
+<td>B: Version Sections</td>
+<td>~77% <em>(est.)</em></td>
+<td>Moderate</td>
+<td>Medium-High</td>
+<td>Medium</td>
+<td>Partial Use Only</td>
+</tr>
+<tr>
+<td>C: Separate Avatars</td>
+<td>~95% <em>(per avatar)</em></td>
+<td>Major ×3</td>
+<td>Very High</td>
+<td>High</td>
+<td>Not Recommended</td>
+</tr>
+<tr>
+<td>D: Project Declaration</td>
+<td>~78% <em>(est.)</em></td>
+<td>Minimal</td>
+<td>Low</td>
+<td>Medium</td>
+<td>Recommended</td>
+</tr>
+<tr>
+<td><strong>E: Hybrid (D + Examples)</strong></td>
+<td><strong>~95% <em>(est.)</em></strong></td>
+<td><strong>Moderate</strong></td>
+<td><strong>Medium</strong></td>
+<td><strong>Medium</strong></td>
+<td><strong>⭐ Strongly Recommended</strong></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="detailed-recommendation-option-e-hybrid">Detailed Recommendation: Option E (Hybrid)</h2>
+<p><strong>Option E (Hybrid)</strong> remains the recommended implementation path. With Option F already
+complete (Phase 0), the following 4 phases deliver progressive improvements:</p>
+<h3 id="phase-0-option-f-prerequisite-already-complete">Phase 0: ✅ Option F (Prerequisite — Already Complete)</h3>
+<p>Reference file split complete: 16 → 31 files, avg 4,760 → 2,456 tokens/file, 4 version-natural
+splits active. Post-F baseline: ~65% <em>(est.)</em> version-appropriate retrieval.</p>
+<h3 id="phase-1-project-declaration-infrastructure">Phase 1: Project Declaration Infrastructure</h3>
+<p><strong>manifest.yaml changes:</strong></p>
+<pre><code class="language-yaml"># Add to avatars/technology/cpp/manifest.yaml
+
+project_declaration:
+  cpp_standard:
+    field: &quot;project.cpp_standard&quot;
+    discovery:
+      - type: &quot;cmake&quot;
+        path: &quot;CMakeLists.txt&quot;
+        pattern: &quot;set\\(CMAKE_CXX_STANDARD\\s+(\\d+)\\)&quot;
+      - type: &quot;cmake&quot;
+        path: &quot;CMakeLists.txt&quot;
+        pattern: &quot;target_compile_features.*cxx_std_(\\d+)&quot;
+      - type: &quot;yaml&quot;
+        path: &quot;project.yaml&quot;
+        key: &quot;cpp_standard&quot;
+      - type: &quot;yaml&quot;
+        path: &quot;.copilot/project.yaml&quot;
+        key: &quot;cpp.standard&quot;
+    valid_values: [98, 11, 14, 17, 20, 23]
+    default: 20
+
+version_routing:
+  query_param: &quot;cpp_standard&quot;
+  filter_logic: |
+    Include content where:
+      cpp_version_min &lt;= project.cpp_standard
+      AND (cpp_version_max IS NULL OR cpp_version_max &gt;= project.cpp_standard)
+</code></pre>
+<h3 id="phase-2-example-file-variants">Phase 2: Example File Variants</h3>
+<p><strong>Priority order for variant creation:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Domain</th>
+<th>Files to Create</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Memory</td>
+<td><code>ENG-6.1-smart-pointers-cpp11.md</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Concurrency</td>
+<td><code>ENG-6.1-thread-safety-cpp11.md</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Comparison</td>
+<td><code>ENG-6.1-comparison-cpp14.md</code> (NEW topic)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Templates</td>
+<td><code>ENG-3.1-sfinae-cpp11.md</code> (SFINAE without concepts)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>I/O</td>
+<td><code>ENG-3.1-formatting-cpp14.md</code> (fmtlib patterns)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="phase-3-metadata-tagging">Phase 3: Metadata Tagging</h3>
+<p><strong>Add to ALL example files:</strong></p>
+<pre><code class="language-yaml">---
+law_id: ENG-6.1
+avatar: cpp
+cpp_version_min: 14        # ADD THIS
+cpp_version_max: null      # ADD THIS (null = no upper bound)
+features_used:             # ADD THIS (for RAG enrichment)
+  - std::make_unique
+  - move semantics
+---
+</code></pre>
+<h3 id="phase-4-guidancemd-version-dispatch">Phase 4: Guidance.md Version Dispatch</h3>
+<p><strong>Update <code>guidance.md</code> to include:</strong></p>
+<pre><code class="language-markdown">## Version-Aware Navigation
+
+This avatar adapts guidance based on your project's C++ standard.
+
+### Declaring Your Standard
+
+Add to your project's `.copilot/project.yaml`:
+```yaml
+cpp:
+  standard: 17           # Your project's C++ standard
+  migration_target: 20   # Optional: target for modernization
+```
+
+Or ensure your `CMakeLists.txt` declares:
+```cmake
+set(CMAKE_CXX_STANDARD 17)
+```
+
+### What Happens
+
+- **C++98/11 projects**: Receive brownfield patterns, RAII workarounds, migration guidance
+- **C++14/17 projects**: Receive transitional patterns, modernization priorities
+- **C++20+ projects**: Receive full modern C++ guidance, concepts, ranges, coroutines
+</code></pre>
+<hr />
+<h2 id="token-budget-impact-analysis">Token Budget Impact Analysis</h2>
+<h3 id="actual-corpus-measurement">Actual Corpus Measurement</h3>
+<blockquote>
+<p>The previously-cited figure of ~85,000 tokens was an estimate. The table below reflects
+actual character counts from all avatar files, converted at 4 chars/token (GPT-4 / Claude
+approximation for mixed prose + code content). The <strong>baseline state</strong> described here reflects
+the post-Option-F corpus: 31 reference files at avg 2,456 tokens/file.</p>
+</blockquote>
+<h4 id="index-and-anchor-files-always-loaded">Index and Anchor Files (always loaded)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Measured Tokens</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>guidance.md</code></td>
+<td>583</td>
+<td>Always-loaded RAG anchor</td>
+</tr>
+<tr>
+<td><code>reference-index.md</code></td>
+<td>934</td>
+<td>Navigation hub; loaded with guidance</td>
+</tr>
+<tr>
+<td><code>manifest.yaml</code></td>
+<td>4,255</td>
+<td>Stack config; may be loaded as context</td>
+</tr>
+<tr>
+<td><strong>Anchor subtotal</strong></td>
+<td><strong>5,772</strong></td>
+<td>Consumed before any retrieval begins</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="reference-files-31-files-post-option-f">Reference Files (31 files, post-Option-F)</h4>
+<blockquote>
+<p>✅ <strong>Finding:</strong> After Option F, all 31 reference files are within the ≤3,500-token target.
+Average: 2,456 tokens/file.</p>
+</blockquote>
+<p>The table below shows the <strong>original 16 files before Option F split</strong> for historical reference.
+See the Option F section above for the full post-split file list.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Tokens</th>
+<th>Over Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ref-testing-ci.md</code></td>
+<td>6,975</td>
+<td>+3,475</td>
+</tr>
+<tr>
+<td><code>ref-brownfield-config.md</code></td>
+<td>6,203</td>
+<td>+2,703</td>
+</tr>
+<tr>
+<td><code>ref-migration-playbooks.md</code></td>
+<td>5,483</td>
+<td>+1,983</td>
+</tr>
+<tr>
+<td><code>ref-advanced-cpp.md</code></td>
+<td>5,100</td>
+<td>+1,600</td>
+</tr>
+<tr>
+<td><code>ref-object-design.md</code></td>
+<td>5,112</td>
+<td>+1,612</td>
+</tr>
+<tr>
+<td><code>ref-concurrency.md</code></td>
+<td>5,261</td>
+<td>+1,761</td>
+</tr>
+<tr>
+<td><code>ref-core-language.md</code></td>
+<td>4,830</td>
+<td>+1,330</td>
+</tr>
+<tr>
+<td><code>ref-domain-modeling.md</code></td>
+<td>4,766</td>
+<td>+1,266</td>
+</tr>
+<tr>
+<td><code>ref-legacy-smells.md</code></td>
+<td>4,809</td>
+<td>+1,309</td>
+</tr>
+<tr>
+<td><code>ref-legacy-mental-models.md</code></td>
+<td>4,706</td>
+<td>+1,206</td>
+</tr>
+<tr>
+<td><code>ref-build-toolchain.md</code></td>
+<td>4,736</td>
+<td>+1,236</td>
+</tr>
+<tr>
+<td><code>ref-safety-aviation.md</code></td>
+<td>4,274</td>
+<td>+774</td>
+</tr>
+<tr>
+<td><code>ref-safety-memory.md</code></td>
+<td>4,251</td>
+<td>+751</td>
+</tr>
+<tr>
+<td><code>ref-legacy-navigation.md</code></td>
+<td>4,247</td>
+<td>+747</td>
+</tr>
+<tr>
+<td><code>ref-getting-started.md</code></td>
+<td>2,318</td>
+<td>within target</td>
+</tr>
+<tr>
+<td><code>ref-infrastructure.md</code></td>
+<td>3,082</td>
+<td>within target</td>
+</tr>
+<tr>
+<td><strong>Reference subtotal</strong></td>
+<td><strong>76,152</strong></td>
+<td>31 files post-F, avg 2,456/file</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="example-files-56-files">Example Files (56 files)</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File count</td>
+<td>56</td>
+</tr>
+<tr>
+<td>Total tokens</td>
+<td>48,128</td>
+</tr>
+<tr>
+<td>Average per file</td>
+<td>~860</td>
+</tr>
+<tr>
+<td>Smallest</td>
+<td><code>ENG-3.1-designated-initializers.md</code> — 480</td>
+</tr>
+<tr>
+<td>Largest</td>
+<td><code>ENG-5.2-project-structure.md</code> — 1,257</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="total-corpus">Total Corpus</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Files</th>
+<th>Tokens</th>
+<th>% of Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Anchor files</td>
+<td>3</td>
+<td>5,772</td>
+<td>4.4%</td>
+</tr>
+<tr>
+<td>Reference files</td>
+<td>31</td>
+<td>76,152</td>
+<td>58.6%</td>
+</tr>
+<tr>
+<td>Example files</td>
+<td>56</td>
+<td>48,128</td>
+<td>37.0%</td>
+</tr>
+<tr>
+<td><strong>Grand total</strong></td>
+<td><strong>90</strong></td>
+<td><strong>130,052</strong></td>
+<td>100%</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="rag-window-fit-analysis">RAG Window Fit Analysis</h3>
+<p>A RAG system retrieves a subset of the corpus into the model's context window. Anchor files
+(<code>guidance.md</code> + <code>reference-index.md</code>, 1,517 tokens) are typically loaded first; <code>manifest.yaml</code>
+(4,255 tokens) may also be included depending on implementation.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Retrieval Budget</th>
+<th>Anchors Consumed</th>
+<th>Remaining for Retrieved Content</th>
+<th>Reference Files That Fit</th>
+<th>Example Files That Fit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8K tokens</td>
+<td>1,517</td>
+<td>6,483</td>
+<td>~2.64 (at avg 2,456)</td>
+<td>~7–8 (at avg 860)</td>
+</tr>
+<tr>
+<td>12K tokens</td>
+<td>1,517</td>
+<td>10,483</td>
+<td>~4.27</td>
+<td>~12</td>
+</tr>
+<tr>
+<td>16K tokens</td>
+<td>1,517</td>
+<td>14,483</td>
+<td>~5.90</td>
+<td>~17</td>
+</tr>
+<tr>
+<td>32K tokens</td>
+<td>5,772 (+ manifest)</td>
+<td>26,228</td>
+<td>~10.68</td>
+<td>~30</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Key finding:</strong> After Option F, the 8K retrieval window now fits <strong>~2.6 reference files</strong> vs
+~1.4 before — a 94% improvement in reference coverage per query. At the 32K budget, over 10
+reference files fit. Without version filtering, retrieval is still subject to semantic similarity
+alone; Options D and E add the filtering layer that ensures version-appropriate content is
+prioritised.</p>
+<hr />
+<h3 id="option-d-project-standard-declaration-detailed-token-analysis">Option D: Project Standard Declaration — Detailed Token Analysis</h3>
+<p><strong>Corpus size change:</strong> +~500 tokens (manifest additions + guidance instructions) → <strong>~130,552 tokens (+0.4%)</strong></p>
+<p>The corpus grows negligibly. The value of Option D is entirely in <strong>retrieval filtering</strong>, not
+corpus reduction.</p>
+<h4 id="how-filtering-changes-the-eligible-retrieval-pool">How filtering changes the eligible retrieval pool</h4>
+<p>For a <strong>C++14</strong> project asking <em>"how do I implement thread-safe code?"</em>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Content layer</th>
+<th>Without filtering</th>
+<th>With Option D filtering</th>
+<th>Tokens excluded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reference files</td>
+<td>All 31 (~76K tokens)</td>
+<td>~27 files (~64K tokens) <em>(est.)</em></td>
+<td>~12K (4 C++17/20+ files excluded) <em>(est.)</em></td>
+</tr>
+<tr>
+<td>Example files</td>
+<td>All 56 (~48K tokens)</td>
+<td>~46 files (~40K tokens)</td>
+<td>~8K (C++20+ only examples)</td>
+</tr>
+<tr>
+<td><strong>Eligible pool</strong></td>
+<td><strong>~124,280</strong></td>
+<td><strong>~104,000</strong> <em>(est.)</em></td>
+<td><strong>~20,280 (~20%) <em>(est.)</em></strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Examples excluded from the C++14-filtered pool (approximate):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Min Version</th>
+<th>Tokens Excluded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ENG-3.1-concepts.md</code></td>
+<td>C++20</td>
+<td>942</td>
+</tr>
+<tr>
+<td><code>ENG-3.1-coroutines.md</code></td>
+<td>C++20</td>
+<td>937</td>
+</tr>
+<tr>
+<td><code>ENG-3.1-pmr-allocators.md</code></td>
+<td>C++17</td>
+<td>822</td>
+</tr>
+<tr>
+<td><code>ENG-3.1-designated-initializers.md</code></td>
+<td>C++20</td>
+<td>480</td>
+</tr>
+<tr>
+<td><code>ENG-6.1-expected-errors.md</code></td>
+<td>C++23</td>
+<td>764</td>
+</tr>
+<tr>
+<td><em>(additional C++17/20 example files)</em></td>
+<td>—</td>
+<td>~4,000</td>
+</tr>
+<tr>
+<td><code>ref-migration-cpp17-plus.md</code> (ref)</td>
+<td>C++17+</td>
+<td>~3,321</td>
+</tr>
+<tr>
+<td><code>ref-concurrency-async.md</code> (ref)</td>
+<td>C++20+</td>
+<td>~3,412</td>
+</tr>
+<tr>
+<td><code>ref-core-modern-idioms.md</code> (ref)</td>
+<td>C++17/20+</td>
+<td>~2,108</td>
+</tr>
+<tr>
+<td><code>ref-build-ubsan-msvc.md</code> (ref)</td>
+<td>C++20+</td>
+<td>~3,277</td>
+</tr>
+<tr>
+<td><strong>Subtotal excluded</strong></td>
+<td></td>
+<td><strong>~20,063 <em>(est.)</em></strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>The pool reduction is <strong>~20% <em>(est.)</em></strong> (up from ~13% before Option F) because the 4
+version-natural reference file pairs are now separately excludable at the file level. This makes
+Option D substantially more effective post-F.</p>
+<h4 id="per-query-token-budget-efficiency-option-d">Per-query token budget efficiency (Option D)</h4>
+<p>At an <strong>8K retrieval window</strong> (1,517 anchor tokens consumed):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Retrieved tokens</th>
+<th>Version-appropriate %</th>
+<th>Wasted tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No filtering (post-F baseline)</td>
+<td>6,483</td>
+<td>~65% <em>(est.)</em></td>
+<td>~2,269</td>
+</tr>
+<tr>
+<td>Option D filtering (C++14 post-F)</td>
+<td>6,483</td>
+<td>~78% <em>(est.)</em></td>
+<td>~1,426</td>
+</tr>
+<tr>
+<td>Improvement</td>
+<td>—</td>
+<td>+13 pp <em>(est.)</em></td>
+<td>-843 tokens saved</td>
+</tr>
+</tbody>
+</table></div>
+<p>The 13-percentage-point relevance improvement (post-F) comes from file-level exclusion of 4
+version-split reference pairs plus example demotion, building on the 65% baseline established
+by Option F.</p>
+<hr />
+<h3 id="option-e-hybrid-declaration-segmented-examples-detailed-token-analysis">Option E: Hybrid (Declaration + Segmented Examples) — Detailed Token Analysis</h3>
+<p><strong>Corpus size change:</strong> +~9,000 tokens (10 new variant example files × ~900 tokens avg) → <strong>~139,052 tokens (+6.9%)</strong></p>
+<h4 id="new-variant-files-and-their-token-budget">New variant files and their token budget</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>New File</th>
+<th>Replaces Pattern</th>
+<th>Est. Tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td><code>ENG-6.1-smart-pointers-cpp11.md</code></td>
+<td><code>unique_ptr</code> without <code>make_unique</code></td>
+<td>~850</td>
+</tr>
+<tr>
+<td>P2</td>
+<td><code>ENG-6.1-thread-safety-cpp11.md</code></td>
+<td><code>lock_guard</code> instead of <code>scoped_lock</code></td>
+<td>~900</td>
+</tr>
+<tr>
+<td>P3</td>
+<td><code>ENG-6.1-comparison-cpp14.md</code></td>
+<td>Manual 6-operator + <code>std::tie</code></td>
+<td>~950</td>
+</tr>
+<tr>
+<td>P4</td>
+<td><code>ENG-3.1-sfinae-cpp11.md</code></td>
+<td><code>enable_if</code> without Concepts</td>
+<td>~880</td>
+</tr>
+<tr>
+<td>P5</td>
+<td><code>ENG-3.1-formatting-cpp14.md</code></td>
+<td><code>{fmt}</code> library patterns</td>
+<td>~820</td>
+</tr>
+<tr>
+<td>P6</td>
+<td><code>ENG-6.1-smart-pointers-cpp98.md</code></td>
+<td>Manual RAII guard (pre-C++11)</td>
+<td>~750</td>
+</tr>
+<tr>
+<td>P7</td>
+<td><code>ENG-6.1-thread-safety-cpp98.md</code></td>
+<td><code>pthread_*</code> RAII wrappers</td>
+<td>~870</td>
+</tr>
+<tr>
+<td>P8</td>
+<td><code>ENG-3.1-io-streams-cpp98.md</code></td>
+<td><code>printf</code>/<code>iostream</code> guidance + security</td>
+<td>~900</td>
+</tr>
+<tr>
+<td>P9</td>
+<td><code>ENG-3.1-io-streams-cpp14.md</code></td>
+<td><code>{fmt}</code> vs <code>iostream</code> comparison</td>
+<td>~850</td>
+</tr>
+<tr>
+<td>P10</td>
+<td><code>ENG-3.1-io-streams-cpp23.md</code></td>
+<td><code>std::format</code> / <code>std::print</code></td>
+<td>~800</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td></td>
+<td></td>
+<td><strong>~8,570</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="per-query-token-budget-efficiency-option-e">Per-query token budget efficiency (Option E)</h4>
+<p>The critical difference from Option D: with version-segmented examples, the <strong>right variant
+is an exact semantic match</strong> for the query. A C++14 developer asking about thread safety
+will retrieve <code>ENG-6.1-thread-safety-cpp11.md</code> (which uses <code>lock_guard</code>) rather than the
+current <code>ENG-6.1-thread-safety.md</code> (which uses <code>scoped_lock</code>, C++17).</p>
+<p>At an <strong>8K retrieval window</strong> (1,517 anchor tokens consumed):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Retrieved tokens</th>
+<th>Version-appropriate %</th>
+<th>Wasted tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No filtering (post-F baseline)</td>
+<td>6,483</td>
+<td>~65% <em>(est.)</em></td>
+<td>~2,269</td>
+</tr>
+<tr>
+<td>Option D only (post-F)</td>
+<td>6,483</td>
+<td>~78% <em>(est.)</em></td>
+<td>~1,426</td>
+</tr>
+<tr>
+<td><strong>Option E (post-F)</strong></td>
+<td><strong>6,483</strong></td>
+<td><strong>~95% <em>(est.)</em></strong></td>
+<td><strong>~324</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>The additional 17-percentage-point gain over Option D (post-F) comes from:
+1. Version-specific example variants are exact matches for the query intent
+2. The <code>superseded_by</code> metadata chain guides RAG to the right variant
+3. The 4 version-natural reference file splits (from F) reduce mixed-content noise in reference retrieval</p>
+<h4 id="index-file-token-cost-of-option-e-metadata-additions">Index file token cost of Option E metadata additions</h4>
+<p>Each example file gains ~50 tokens of version metadata in frontmatter:</p>
+<pre><code class="language-yaml">cpp_version_min: 14        # ~10 tokens
+cpp_version_max: null      # ~8 tokens
+features_used:             # ~12 tokens
+  - std::make_unique       # ~8 tokens
+  - move semantics         # ~6 tokens
+superseded_by: null        # ~8 tokens
+</code></pre>
+<p>For 56 existing files + 10 new variants = 66 files × ~50 tokens = <strong>~3,300 tokens</strong> of metadata
+overhead added to the corpus. This is negligible (2.4%) but improves retrieval precision
+significantly.</p>
+<hr />
+<h3 id="revised-summary-table">Revised Summary Table</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Option (post-F baseline)</th>
+<th>Actual Corpus (tokens)</th>
+<th>Change from Baseline</th>
+<th>Per-Query Retrieval (8K window)</th>
+<th>Version-Appropriate %</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Post-F Baseline</td>
+<td>130,052</td>
+<td>— (F complete)</td>
+<td>~6,483 usable</td>
+<td>~65% <em>(est.)</em></td>
+</tr>
+<tr>
+<td>A: Inline Tags</td>
+<td>~133,352</td>
+<td>+3,300 (+2.5%)</td>
+<td>~6,483 usable</td>
+<td>~57% <em>(est.)</em> (developer must parse)</td>
+</tr>
+<tr>
+<td>B: Version Sections</td>
+<td>~169,068</td>
+<td>+39,016 (+30%)</td>
+<td>~6,483 usable</td>
+<td>~77% <em>(est.)</em> (section anchors help)</td>
+</tr>
+<tr>
+<td>C: Separate Avatars</td>
+<td>~390,156</td>
+<td>×3</td>
+<td>~6,483 usable (per avatar)</td>
+<td>~95% <em>(per avatar)</em> (isolated corpus)</td>
+</tr>
+<tr>
+<td>D: Declaration</td>
+<td>~130,552</td>
+<td>+500 (+0.4%)</td>
+<td>~6,483 usable</td>
+<td>~78% <em>(est.)</em> (filtered pool)</td>
+</tr>
+<tr>
+<td><strong>E: Hybrid</strong></td>
+<td><strong>~139,052</strong></td>
+<td><strong>+9,000 (+6.9%)</strong></td>
+<td><strong>~6,483 usable</strong></td>
+<td><strong>~95% <em>(est.)</em> (filtered + targeted)</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Option E is the optimal path:</strong> The same corpus growth as before (+6.9%), but with reference
+files now granular enough (post-F) that version filtering can operate at the file level rather
+than fighting through large mixed-content files. The 4 version-natural reference splits provide
+routing benefit at zero additional content cost.</p>
+<blockquote>
+<p><strong>Secondary finding:</strong> The reference-index.md ≤3,500-token per-file target was violated by
+14 of 16 reference files (average overage: +1,480 tokens). This defect is resolved by Option F
+(prerequisite). All 31 post-split reference files are within budget. The larger the reference
+files, the fewer can fit in a single RAG window — Option F directly addresses this defect.</p>
+</blockquote>
+<hr />
+<h2 id="risk-mitigation">Risk Mitigation</h2>
+<h3 id="risk-option-f-scope-underestimation">Risk: Option F Scope Underestimation</h3>
+<p><strong>Mitigation:</strong>
+- Section-by-section token measurements already done (see split plan table)
+- 4 version-natural splits are mechanical file divisions — no content rewriting
+- reference-index.md rewrite is the most complex task (requires updating 14 → 31 file entries)
+- Recommend completing F in isolation before starting any other option</p>
+<h3 id="risk-rag-infrastructure-changes">Risk: RAG Infrastructure Changes</h3>
+<p><strong>Mitigation:</strong>
+- Phase 1 can be documentation-only (manual version declaration)
+- RAG filtering can be implemented incrementally
+- Fallback: retrieve all content if version unknown</p>
+<h3 id="risk-maintenance-drift">Risk: Maintenance Drift</h3>
+<p><strong>Mitigation:</strong>
+- Create CI check for version consistency across variants
+- Use <code>superseded_by</code> metadata to link variants
+- Quarterly review of variant sync status</p>
+<h3 id="risk-incomplete-tagging">Risk: Incomplete Tagging</h3>
+<p><strong>Mitigation:</strong>
+- Start with new files (require metadata in PR template)
+- Backfill existing files over 2-3 sprints
+- Default <code>cpp_version_min: 14</code> for untagged files (matches current implicit assumption)</p>
+<hr />
+<p><em>Document generated as part of C++ Avatar Version-Sensitivity Analysis.</em></p>
+<footer>Generated from <code>hangar-ai-specs/changes/cpp-version-sensitivity-analysis/restructuring-options.md</code> &mdash; branch: analysis/cpp-version-sensitivity &mdash; 2026-04-25</footer>
+</body>
+</html>

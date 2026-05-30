@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>MileageAccount.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package com.aa.loyalty.mileage;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import javax.persistence.*;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Date;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.List;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.ArrayList;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@Entity</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@Table(name = &#34;MILEAGE_ACCOUNT&#34;)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class MileageAccount {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Id</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = &#34;mileage_seq&#34;)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @SequenceGenerator(name = &#34;mileage_seq&#34;, sequenceName = &#34;MILEAGE_SEQ&#34;, allocationSize = 1)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private Long id;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Column(name = &#34;MEMBER_NUMBER&#34;, nullable = false, unique = true, length = 12)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private String memberNumber;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    @Column(name = &#34;TOTAL_MILES&#34;)</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    private Long totalMiles = 0L;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    @Column(name = &#34;QUALIFYING_MILES&#34;)</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    private Long qualifyingMiles = 0L;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    @Column(name = &#34;ELITE_QUALIFYING_MILES&#34;)</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    private Long eliteQualifyingMiles = 0L;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    @Column(name = &#34;ELITE_QUALIFYING_SEGMENTS&#34;)</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    private Integer eliteQualifyingSegments = 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Column(name = &#34;MILES_EXPIRY_DATE&#34;)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Temporal(TemporalType.DATE)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private Date milesExpiryDate;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Column(name = &#34;LAST_ACTIVITY_DATE&#34;)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Temporal(TemporalType.TIMESTAMP)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private Date lastActivityDate;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Column(name = &#34;CREATED_DATE&#34;)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Temporal(TemporalType.TIMESTAMP)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private Date createdDate;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    @Column(name = &#34;STATUS&#34;, length = 20)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private String status = &#34;ACTIVE&#34;;  // VIOLATION: magic string, no enum</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    @OneToMany(mappedBy = &#34;account&#34;, cascade = CascadeType.ALL, fetch = FetchType.EAGER) // VIOLATION: EAGER fetch on collection</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private List&#60;MileageTransaction&#62; transactions = new ArrayList&#60;&#62;();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // VIOLATION: no-arg constructor leaks - status not validated on set</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public MileageAccount() {}</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public MileageAccount(String memberNumber) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.memberNumber = memberNumber;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_55'/>
+55
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_55'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.createdDate = new Date();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_56'/>
+56
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_56'>1</a>
+<span>
+1. &#60;init&#62; : Replaced long addition with subtraction &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        this.milesExpiryDate = new Date(System.currentTimeMillis() + (365L * 24 * 60 * 60 * 1000 * 2));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // VIOLATION: mutable Date returned directly &#8212; exposes internal state</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_60'/>
+60
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_60'>1</a>
+<span>
+1. getId : replaced Long return value with 0L for com/aa/loyalty/mileage/MileageAccount::getId &rarr; NO_COVERAGE<br/>
+
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>    public Long getId() { return id; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_61'/>
+61
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_61'>1</a>
+<span>
+1. getMemberNumber : replaced return value with &#34;&#34; for com/aa/loyalty/mileage/MileageAccount::getMemberNumber &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    public String getMemberNumber() { return memberNumber; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_62'/>
+62
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_62'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public void setMemberNumber(String memberNumber) { this.memberNumber = memberNumber; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_63'/>
+63
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_63'>1</a>
+<span>
+1. getTotalMiles : replaced Long return value with 0L for com/aa/loyalty/mileage/MileageAccount::getTotalMiles &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    public Long getTotalMiles() { return totalMiles; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_64'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public void setTotalMiles(Long totalMiles) { this.totalMiles = totalMiles; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_65'/>
+65
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_65'>1</a>
+<span>
+1. getQualifyingMiles : replaced Long return value with 0L for com/aa/loyalty/mileage/MileageAccount::getQualifyingMiles &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    public Long getQualifyingMiles() { return qualifyingMiles; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_66'/>
+66
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_66'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public void setQualifyingMiles(Long qualifyingMiles) { this.qualifyingMiles = qualifyingMiles; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_67'/>
+67
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_67'>1</a>
+<span>
+1. getEliteQualifyingMiles : replaced Long return value with 0L for com/aa/loyalty/mileage/MileageAccount::getEliteQualifyingMiles &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    public Long getEliteQualifyingMiles() { return eliteQualifyingMiles; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_68'/>
+68
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_68'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public void setEliteQualifyingMiles(Long eliteQualifyingMiles) { this.eliteQualifyingMiles = eliteQualifyingMiles; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_69'/>
+69
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_69'>1</a>
+<span>
+1. getEliteQualifyingSegments : replaced Integer return value with 0 for com/aa/loyalty/mileage/MileageAccount::getEliteQualifyingSegments &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    public Integer getEliteQualifyingSegments() { return eliteQualifyingSegments; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_70'/>
+70
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_70'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public void setEliteQualifyingSegments(Integer eliteQualifyingSegments) { this.eliteQualifyingSegments = eliteQualifyingSegments; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_71'/>
+71
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_71'>1</a>
+<span>
+1. getMilesExpiryDate : replaced return value with null for com/aa/loyalty/mileage/MileageAccount::getMilesExpiryDate &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    public Date getMilesExpiryDate() { return milesExpiryDate; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_72'/>
+72
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_72'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public void setMilesExpiryDate(Date milesExpiryDate) { this.milesExpiryDate = milesExpiryDate; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_73'/>
+73
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_73'>1</a>
+<span>
+1. getLastActivityDate : replaced return value with null for com/aa/loyalty/mileage/MileageAccount::getLastActivityDate &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    public Date getLastActivityDate() { return lastActivityDate; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_74'/>
+74
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_74'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public void setLastActivityDate(Date lastActivityDate) { this.lastActivityDate = lastActivityDate; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_75'/>
+75
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_75'>1</a>
+<span>
+1. getCreatedDate : replaced return value with null for com/aa/loyalty/mileage/MileageAccount::getCreatedDate &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    public Date getCreatedDate() { return createdDate; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_76'/>
+76
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_76'>1</a>
+<span>
+1. getStatus : replaced return value with &#34;&#34; for com/aa/loyalty/mileage/MileageAccount::getStatus &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    public String getStatus() { return status; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_77'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public void setStatus(String status) { this.status = status; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_78'/>
+78
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_78'>1</a>
+<span>
+1. getTransactions : replaced return value with Collections.emptyList for com/aa/loyalty/mileage/MileageAccount::getTransactions &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    public List&#60;MileageTransaction&#62; getTransactions() { return transactions; }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_79'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public void setTransactions(List&#60;MileageTransaction&#62; transactions) { this.transactions = transactions; }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@17a77a7e_80'/>
+80
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_80'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@17a77a7e_56'>56</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_56'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>&#60;init&#62;<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:paramConstructor_setsExpiryTwoYearsOut()]</span></span> Replaced long addition with subtraction &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@17a77a7e_60'>60</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_60'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getId<br/><b>Killed by : </b>none</span></span> replaced Long return value with 0L for com/aa/loyalty/mileage/MileageAccount::getId &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@17a77a7e_61'>61</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_61'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getMemberNumber<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setMemberNumber_updatesValue()]</span></span> replaced return value with &#34;&#34; for com/aa/loyalty/mileage/MileageAccount::getMemberNumber &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@17a77a7e_63'>63</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_63'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTotalMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setTotalMiles_updatesValue()]</span></span> replaced Long return value with 0L for com/aa/loyalty/mileage/MileageAccount::getTotalMiles &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@17a77a7e_65'>65</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_65'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getQualifyingMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:accrueFlightMiles_incrementsMilesCorrectly()]</span></span> replaced Long return value with 0L for com/aa/loyalty/mileage/MileageAccount::getQualifyingMiles &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@17a77a7e_67'>67</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_67'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getEliteQualifyingMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setEliteQualifyingMiles_updatesValue()]</span></span> replaced Long return value with 0L for com/aa/loyalty/mileage/MileageAccount::getEliteQualifyingMiles &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@17a77a7e_69'>69</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_69'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getEliteQualifyingSegments<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setEliteQualifyingSegments_updatesValue()]</span></span> replaced Integer return value with 0 for com/aa/loyalty/mileage/MileageAccount::getEliteQualifyingSegments &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@17a77a7e_71'>71</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_71'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getMilesExpiryDate<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:paramConstructor_setsExpiryTwoYearsOut()]</span></span> replaced return value with null for com/aa/loyalty/mileage/MileageAccount::getMilesExpiryDate &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@17a77a7e_73'>73</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_73'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getLastActivityDate<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setLastActivityDate_updatesDate()]</span></span> replaced return value with null for com/aa/loyalty/mileage/MileageAccount::getLastActivityDate &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@17a77a7e_75'>75</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_75'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getCreatedDate<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:paramConstructor_setsMemberNumberAndDates()]</span></span> replaced return value with null for com/aa/loyalty/mileage/MileageAccount::getCreatedDate &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@17a77a7e_76'>76</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_76'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getStatus<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:defaultConstructor_setsDefaultValues()]</span></span> replaced return value with &#34;&#34; for com/aa/loyalty/mileage/MileageAccount::getStatus &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@17a77a7e_78'>78</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@17a77a7e_78'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTransactions<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setTransactions_updatesValue()]</span></span> replaced return value with Collections.emptyList for com/aa/loyalty/mileage/MileageAccount::getTransactions &rarr; KILLED</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>EXPERIMENTAL_SWITCH</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_ELSE</li>
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_IF</li>
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_ELSE</li>
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_IF</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:paramConstructor_setsExpiryTwoYearsOut()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:paramConstructor_setsMemberNumberAndDates()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setEliteQualifyingSegments_updatesValue()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setStatus_updatesStatus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setLastActivityDate_updatesDate()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setMemberNumber_updatesValue()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setTotalMiles_updatesValue()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setEliteQualifyingMiles_updatesValue()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setTransactions_updatesValue()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:setMilesExpiryDate_updatesValue()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageServiceTest]/[method:getOrCreateAccount_delegatesToAccrualService()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageServiceTest]/[method:getAccountByMemberNumber_delegatesToAccrualService()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:getAccountByMemberNumber_delegatesToRepository()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:getOrCreateAccount_existing_returnsExisting()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageServiceTest]/[method:getAllActiveAccounts_delegatesToAccrualService()] (0 ms)</li><li>com.aa.loyalty.tier.TierServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierServiceTest]/[method:recalculateTier_memberNullAccountNotNull_doesNothing()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:isEligibleForUpgrade_insufficientMiles_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:getAllActiveAccounts_delegatesToRepository()] (1 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:isEligibleForGoldStatus_meetsThreshold_returnsTrue()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:getOrCreateAccount_notFound_createsNew()] (1 ms)</li><li>com.aa.loyalty.mileage.MileageServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageServiceTest]/[method:redeemMiles_insufficientMiles_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:isEligibleForUpgrade_justBelowMilesThreshold_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:getTotalMiles_accountFound_returnsMiles()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:isEligibleForUpgrade_insufficientSegments_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:isEligibleForGoldStatus_justBelowMilesThreshold_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:isEligibleForGoldStatus_insufficientSegments_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageServiceTest]/[method:redeemMiles_oneMoreThanAvailable_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.tier.TierServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierServiceTest]/[method:recalculateTier_tierUnchanged_doesNotSaveOrNotify()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:isEligibleForUpgrade_inactiveAccount_returnsFalse()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:isEligibleForUpgrade_meetsThreshold_returnsTrue()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAdminServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAdminServiceTest]/[method:adminAdjustMiles_negativeResultClampedToZero()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAdminServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAdminServiceTest]/[method:adminAdjustMiles_positiveAdjustment_addsMiles()] (0 ms)</li><li>com.aa.loyalty.tier.TierServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierServiceTest]/[method:recalculateTier_tierChanged_savesAndNotifies()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageServiceTest]/[method:redeemMiles_exactMilesAvailable_succeeds()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAdminServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAdminServiceTest]/[method:expireMiles_oneAccount_zerosMilesAndSetsExpiredStatus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageServiceTest]/[method:redeemMiles_notificationFailure_stillReturnsTrue()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAdminServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAdminServiceTest]/[method:adminAdjustMiles_exactlyZeroResult_staysZero()] (0 ms)</li><li>com.aa.loyalty.tier.TierServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.tier.TierServiceTest]/[method:recalculateTier_tierChanged_notificationFailure_doesNotRethrow()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageAdminServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAdminServiceTest]/[method:expireMiles_notificationFailure_doesNotRethrow()] (1 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:accrueFlightMiles_memberNotFound_usesGeneralTier()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:accrueFlightMiles_verifiesTransactionFields()] (0 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:accrueFlightMiles_memberFound_calculatesAndSaves()] (1 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:accrueFlightMiles_incrementsMilesCorrectly()] (1 ms)</li><li>com.aa.loyalty.mileage.AccrualServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.AccrualServiceTest]/[method:accrueFlightMiles_notificationFailure_doesNotRethrow()] (2 ms)</li><li>com.aa.loyalty.mileage.MileageServiceTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageServiceTest]/[method:redeemMiles_sufficientMiles_deductsAndReturnsTrue()] (7 ms)</li><li>com.aa.loyalty.mileage.MileageAccountTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageAccountTest]/[method:defaultConstructor_setsDefaultValues()] (0 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.15.3
+
+</body>
+</html>

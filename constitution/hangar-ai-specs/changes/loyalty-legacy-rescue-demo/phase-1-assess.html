@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 1 — Assess — AAdvantage Legacy Rescue</title>
+<style>
+/* ── AA Constitutional Design System ── */
+@page { size: 1088px 1408px; margin: 0; }
+
+:root {
+  --aa-blue: #003087;
+  --aa-red:  #C8102E;
+  --ink:     #17202a;
+  --muted:   #5f6d7a;
+  --line:    #d9e1ea;
+  --soft:    #f3f7fb;
+  --soft-2:  #eef3f8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* ── Page layout ── */
+.page {
+  width: 1088px;
+  min-height: 1408px;
+  padding: 94px 88px 100px;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  page-break-after: always;
+}
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 12px;
+  background: linear-gradient(90deg, var(--aa-blue), var(--aa-red));
+}
+.page::after {
+  content: "✈";
+  position: absolute;
+  right: 34px; bottom: -10px;
+  font-size: 240px;
+  color: var(--aa-blue);
+  opacity: .03;
+  transform: rotate(18deg);
+  pointer-events: none;
+}
+.page.cover {
+  background:
+    radial-gradient(circle at 85% 16%, rgba(0,48,135,.08), transparent 22%),
+    linear-gradient(180deg, #fbfcfe 0%, #f1f6fa 100%);
+}
+.footer {
+  position: absolute;
+  left: 88px; right: 88px; bottom: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5ebf1;
+  padding-top: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #7f8b97;
+}
+.footer .pn { color: var(--aa-blue); font-weight: 800; }
+
+/* ── Typography ── */
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--aa-red);
+}
+h1 {
+  margin-top: 22px;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--aa-blue);
+  font-weight: 850;
+  max-width: 820px;
+}
+h2 {
+  margin-top: 32px;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -.6px;
+  color: var(--aa-blue);
+  font-weight: 800;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+h3 { margin-top: 20px; font-size: 19px; color: var(--aa-blue); font-weight: 700; }
+h4 { margin-top: 16px; font-size: 16px; color: var(--ink); font-weight: 700; }
+p  { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #32404d; }
+ul, ol { margin-top: 10px; padding-left: 24px; }
+li { font-size: 15px; line-height: 1.55; color: #32404d; margin-top: 4px; }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  background: var(--soft-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+pre {
+  margin-top: 14px;
+  background: #1e2832;
+  color: #c9d1d9;
+  padding: 16px 18px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.4; }
+th { border-top: 0; background: var(--soft); color: var(--aa-blue); font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+blockquote { border-left: 4px solid var(--aa-blue); margin-top: 14px; padding: 10px 16px; background: var(--soft); color: var(--muted); font-size: 14px; }
+
+/* ── Meta / stat cards ── */
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; max-width: 820px; }
+.meta-card { border: 1px solid var(--line); background: #fff; padding: 16px 18px; }
+.meta-card .k { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: var(--aa-red); font-weight: 800; }
+.meta-card .v { margin-top: 7px; font-size: 17px; line-height: 1.4; color: #23303d; }
+.summary-band { margin-top: 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card { border: 1px solid var(--line); background: #fff; padding: 14px; }
+.stat-card .n { font-size: 34px; line-height: 1; color: var(--aa-blue); font-weight: 850; letter-spacing: -1px; }
+.stat-card .l { margin-top: 7px; font-size: 13px; line-height: 1.35; color: #52606d; }
+.stat-card.danger .n { color: var(--aa-red); }
+.stat-card.warn .n { color: #b36b00; }
+
+/* ── Status badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.status-badge.proposed  { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.implemented { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.archived  { background: var(--soft-2); color: var(--muted); border: 1px solid var(--line); }
+.status-badge.accepted  { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.deprecated { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.pass   { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.fail   { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.warn   { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.critical { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.high   { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+
+/* ── Chip row ── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--aa-blue);
+  letter-spacing: .3px;
+}
+
+/* ── Confidence band ── */
+.confidence-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-left: 6px solid var(--aa-blue);
+  background: var(--soft);
+  margin-top: 24px;
+}
+.confidence-band .cb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.confidence-band.high  { border-left-color: #1b7a2b; }
+.confidence-band.medium { border-left-color: #b36b00; }
+.confidence-band.low   { border-left-color: var(--aa-red); }
+
+/* ── Phase header ── */
+.phase-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+.phase-num {
+  background: var(--aa-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+
+/* ── Law citation tooltips ── */
+.law-cite {
+  position: relative;
+  display: inline;
+  color: var(--aa-blue);
+  font-weight: 700;
+  border-bottom: 1px dashed var(--aa-blue);
+  cursor: help;
+  white-space: nowrap;
+}
+.law-cite[data-non-negotiable="true"] {
+  color: var(--aa-red);
+  border-bottom-color: var(--aa-red);
+}
+.law-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 9999;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2832;
+  color: #e8edf2;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: normal;
+  min-width: 220px;
+  max-width: 340px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: opacity .15s ease, visibility .15s ease;
+  text-align: left;
+  font-weight: 400;
+}
+.law-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e2832;
+}
+.law-tooltip .law-summary { font-size: 12px; color: #9aaab8; margin-top: 4px; display: block; }
+.law-cite:hover .law-tooltip,
+.law-cite:focus .law-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+.law-cite.flip-below .law-tooltip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.law-cite.flip-below .law-tooltip::after {
+  top: auto; bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1e2832;
+}
+
+.gate-block {
+  margin-top: 24px;
+  border: 2px solid var(--aa-red);
+  padding: 18px 22px;
+  background: #fdf2f4;
+}
+.gate-block .gate-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--aa-red); font-weight: 800; margin-bottom: 8px; }
+.gate-block .gate-row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+.gate-block .gate-item { font-size: 14px; color: var(--ink); }
+.gate-block .gate-item strong { color: var(--aa-red); }
+
+td.critical { color: var(--aa-red); font-weight: 700; }
+td.high-sev { color: #b36b00; font-weight: 700; }
+
+@media print {
+  .law-tooltip { display: none; }
+  .law-cite { border-bottom: none; color: inherit; font-weight: inherit; }
+}
+</style>
+</head>
+<body>
+
+<!-- AI-GENERATED DEMO REPO BANNER — copy exactly, do not omit -->
+<div style="position:fixed; top:0; left:0; right:0; z-index:9999; background:#fef3c7; border-bottom:2px solid #f59e0b; padding:6px 16px; display:flex; align-items:center; gap:10px; font-family:sans-serif; font-size:0.8rem; color:#78350f;">
+  <span style="font-size:1rem;">&#9888;&#65039;</span>
+  <strong>AI-GENERATED DEMO REPO</strong> &mdash; This codebase (<code>aa-loyalty-legacy</code>) is entirely AI-generated for illustration purposes. It is <strong>not</strong> real AA production code and does not represent any AA system.
+</div>
+<div style="height:38px;"></div>
+
+<!-- PAGE 1: COVER -->
+<div class="page cover">
+  <div class="eyebrow">Legacy Rescue · AAdvantage Loyalty Platform</div>
+  <h1>Phase 1 — Assess</h1>
+  <div class="meta" style="margin-top:48px; max-width:680px;">
+    <div class="meta-card"><div class="k">Project</div><div class="v">AA AAdvantage Loyalty Platform — Legacy Rescue</div></div>
+    <div class="meta-card"><div class="k">Codebase</div><div class="v"><code>aa-loyalty-legacy — Java 8 / Spring Boot 2.3 / Maven</code></div></div>
+    <div class="meta-card"><div class="k">SonarQube Project Key</div><div class="v"><code>aa-loyalty-legacy</code></div></div>
+    <div class="meta-card"><div class="k">Phase</div><div class="v">1 of 6 — Constitutional Audit &amp; Baseline</div></div>
+    <div class="meta-card"><div class="k">Date</div><div class="v">2026-05-05</div></div>
+  </div>
+  <div class="chip-row" style="margin-top:40px;">
+    <span class="chip">Miles Accrual</span><span class="chip">Award Redemption</span>
+    <span class="chip">Partner Integration</span><span class="chip">Member Profile</span>
+    <span class="chip">Tier Calculation</span><span class="chip">Notification</span>
+  </div>
+  <div class="gate-block" style="margin-top:52px; max-width:680px; border-color:var(--aa-red); background:#fdf2f4;">
+    <div class="gate-label">Constitutional Gate — Phase 1 Result</div>
+    <div class="gate-row">
+      <div class="gate-item">SonarQube Quality Gate: <strong>🔴 RED — NOT MET</strong></div>
+      <div class="gate-item">Constitutional Gate: <strong>NOT MET</strong></div>
+      <div class="gate-item">Disposition: <strong>PROCEED TO PHASE 2</strong></div>
+    </div>
+    <p style="margin-top:10px; font-size:13px; color:#5a1a22;">10 violations detected (3 P0 blockers). HB-5 and PG-1 gates firing. This RED state is the problem statement — constitutional rescue required.</p>
+  </div>
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 1 — Assess</div><div class="pn">1</div></div>
+</div>
+
+<!-- PAGE 2: BOUNDED CONTEXT MAP -->
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 1</span>
+    <span style="font-size:20px; font-weight:800; color:var(--aa-blue);">Bounded Context Map &amp; Tech Debt Inventory</span>
+  </div>
+  <div class="summary-band">
+    <div class="stat-card danger"><div class="n">10</div><div class="l">Total Violations<br><span style="color:var(--aa-red);font-size:11px;font-weight:700;">ENG-2.1 · ENG-3.1 · ENG-6.1 · ENG-6.7</span></div></div>
+    <div class="stat-card danger"><div class="n">35</div><div class="l">Max Cyclomatic CC<br><span style="color:var(--aa-red);font-size:11px;font-weight:700;">ENG-3.1 Gate: ≤10 · FAIL</span></div></div>
+    <div class="stat-card danger"><div class="n">0%</div><div class="l">Test Coverage<br><span style="color:var(--aa-red);font-size:11px;font-weight:700;">Gate: ≥95% · FAIL</span></div></div>
+    <div class="stat-card"><div class="n">6</div><div class="l">Bounded Contexts<br><span style="font-size:11px;">Identified for rescue scope</span></div></div>
+  </div>
+  <h2>Bounded Context Map</h2>
+  <table>
+    <thead><tr><th>Context</th><th>Responsibilities</th><th>Key Classes</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><strong>member</strong></td><td>Enrollment, profile, tier status</td><td>Member, MemberService, MemberController, EnrollmentRequest, ProfileUpdateRequest</td><td><span class="status-badge fail">VIOLATIONS</span></td></tr>
+      <tr><td><strong>mileage</strong></td><td>Accrual, calculation, admin, expiry</td><td>MileageService (god class), MileageCalculator, MileageAdminService, MileageAccount, MileageTransaction, MileageController</td><td><span class="status-badge fail">P0 VIOLATIONS</span></td></tr>
+      <tr><td><strong>tier</strong></td><td>Tier calculation, year-end reset</td><td>TierCalculator, TierService, TierController</td><td><span class="status-badge warn">DUPLICATE LOGIC</span></td></tr>
+      <tr><td><strong>redemption</strong></td><td>Award flight bookings, cancellations</td><td>RedemptionService, Redemption, RedemptionController</td><td><span class="status-badge fail">P0 VIOLATIONS</span></td></tr>
+      <tr><td><strong>partner</strong></td><td>Partner registrations, lookups</td><td>PartnerService, Partner, PartnerController</td><td><span class="status-badge warn">LOW COVERAGE</span></td></tr>
+      <tr><td><strong>notification</strong></td><td>Email sending, member communications</td><td>NotificationService</td><td><span class="status-badge pass">CLEAN</span></td></tr>
+    </tbody>
+  </table>
+  <h2 style="margin-top:24px;">Violation Summary by Severity</h2>
+  <table>
+    <thead><tr><th>Severity</th><th>Count</th><th>Laws</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td class="critical">P0 — Blocker</td><td class="critical">3</td><td>ENG-6.1, ENG-6.7</td><td>Resource leak (FileWriter), idempotency gap (bookAwardFlight), missing email validation</td></tr>
+      <tr><td class="high-sev">P1 — Critical</td><td class="high-sev">5</td><td>ENG-3.1</td><td>God class (MileageService 300+ lines), CC=35 (MileageCalculator), hardcoded route table, raw SQL in service layer, magic number constants</td></tr>
+      <tr><td>P2 — Major</td><td>2</td><td>ENG-2.1</td><td>Elite bonus logic duplicated across MileageCalculator and TierCalculator; tier update duplicated across MemberService and TierService</td></tr>
+    </tbody>
+  </table>
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 1 — Assess</div><div class="pn">2</div></div>
+</div>
+
+<!-- PAGE 3: VIOLATION INVENTORY -->
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 1</span>
+    <span style="font-size:20px; font-weight:800; color:var(--aa-blue);">Violation Inventory — V-01 through V-10</span>
+  </div>
+  <table>
+    <thead><tr><th>ID</th><th>Violation</th><th>Location</th><th>Sev</th><th>Law</th><th>Phase</th></tr></thead>
+    <tbody>
+      <tr><td><strong>V-01</strong></td><td>Cyclomatic complexity ~35 — 120+ line method mixing distance lookup, multipliers, tier bonuses, caps, floors</td><td><code>MileageCalculator.java</code></td><td class="critical">P0</td>
+        <td><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="true">ENG-3.1 ⛔<span class="law-tooltip"><strong>Complexity Law</strong><span class="law-summary">No method shall exceed cyclomatic complexity of 10.</span></span></span></td><td>Phase 5</td></tr>
+      <tr><td><strong>V-02</strong></td><td>Elite bonus calculation duplicated verbatim from MileageCalculator into TierCalculator</td><td><code>TierCalculator.java</code></td><td class="high-sev">P1</td>
+        <td><span class="law-cite" data-law-id="ENG-2.1" data-non-negotiable="false">ENG-2.1<span class="law-tooltip"><strong>DRY Law</strong><span class="law-summary">Every piece of knowledge must have a single, unambiguous representation.</span></span></span></td><td>Phase 5</td></tr>
+      <tr><td><strong>V-03</strong></td><td>FileWriter opened for audit log, never closed — resource leak on exception path</td><td><code>RedemptionService.java</code></td><td class="critical">P0</td>
+        <td><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1 ⛔<span class="law-tooltip"><strong>Resource Safety Law</strong><span class="law-summary">All closeable resources must be managed with try-with-resources.</span></span></span></td><td>Phase 4</td></tr>
+      <tr><td><strong>V-04</strong></td><td>Tier update logic duplicated between MemberService and TierService</td><td><code>MemberService.java</code></td><td class="high-sev">P1</td>
+        <td><span class="law-cite" data-law-id="ENG-2.1" data-non-negotiable="false">ENG-2.1<span class="law-tooltip"><strong>DRY Law</strong><span class="law-summary">Every piece of knowledge must have a single, unambiguous representation.</span></span></span></td><td>Phase 4</td></tr>
+      <tr><td><strong>V-05</strong></td><td>God class — 300+ lines mixing accrual, redemption, admin, expiry, and reporting concerns</td><td><code>MileageService.java</code></td><td class="critical">P0</td>
+        <td><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="true">ENG-3.1 ⛔<span class="law-tooltip"><strong>Complexity Law</strong><span class="law-summary">Classes must have a single responsibility. God classes must be decomposed.</span></span></span></td><td>Phase 5</td></tr>
+      <tr><td><strong>V-06</strong></td><td>Raw SQL via JDBC in service layer, bypassing repository abstraction</td><td><code>MileageAdminService.java</code></td><td class="high-sev">P1</td>
+        <td><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="true">ENG-3.1 ⛔<span class="law-tooltip"><strong>Complexity Law</strong><span class="law-summary">Service layer must not contain persistence logic.</span></span></span></td><td>Phase 5</td></tr>
+      <tr><td><strong>V-07</strong></td><td>Hardcoded route distance table (14 routes) embedded in method body as magic map literal</td><td><code>MileageCalculator.java</code></td><td class="high-sev">P1</td>
+        <td><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="true">ENG-3.1 ⛔<span class="law-tooltip"><strong>Complexity Law</strong><span class="law-summary">Configuration data must not be hardcoded inline.</span></span></span></td><td>Phase 5</td></tr>
+      <tr><td><strong>V-08</strong></td><td>No idempotency on bookAwardFlight — duplicate submissions create duplicate redemptions</td><td><code>RedemptionService.java</code></td><td class="critical">P0</td>
+        <td><span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7 ⛔<span class="law-tooltip"><strong>Idempotency Law</strong><span class="law-summary">Mutating endpoints must be idempotent. Duplicate state changes are prohibited.</span></span></span></td><td>Phase 4</td></tr>
+      <tr><td><strong>V-09</strong></td><td>No email format validation in updateProfile — invalid emails persist to database</td><td><code>MemberService.java</code></td><td class="critical">P0</td>
+        <td><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1 ⛔<span class="law-tooltip"><strong>Input Validation Law</strong><span class="law-summary">All user-supplied inputs must be validated before persistence.</span></span></span></td><td>Phase 4</td></tr>
+      <tr><td><strong>V-10</strong></td><td>Hardcoded 100,000-mile cap and 500-mile floor as inline magic numbers</td><td><code>MileageCalculator.java</code></td><td class="high-sev">P1</td>
+        <td><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="true">ENG-3.1 ⛔<span class="law-tooltip"><strong>Complexity Law</strong><span class="law-summary">Magic numbers must be named constants or externalized configuration.</span></span></span></td><td>Phase 5</td></tr>
+    </tbody>
+  </table>
+  <div class="gate-block" style="margin-top:20px;">
+    <div class="gate-label">SonarQube Gate — Phase 1 Baseline Status</div>
+    <div class="gate-row">
+      <div class="gate-item">HB-5 (reliability_rating &gt; A): <strong>🔴 FIRING</strong></div>
+      <div class="gate-item">PG-1 (coverage &lt; 95%): <strong>🔴 FIRING</strong></div>
+      <div class="gate-item">Blocker violations: <strong>3</strong></div>
+      <div class="gate-item">Critical violations: <strong>5</strong></div>
+    </div>
+    <p style="margin-top:8px; font-size:13px; color:#5a1a22;">🔴 RED — HB-5 (reliability_rating &gt; A) and PG-1 (coverage &lt; 95%) firing. This RED state is the problem statement. Phase 2 (Govern) must be initiated before any fixes are applied.</p>
+  </div>
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 1 — Assess</div><div class="pn">3</div></div>
+</div>
+
+<script>
+document.querySelectorAll('.law-cite').forEach(function(el) {
+  el.addEventListener('mouseenter', function() {
+    var rect = el.getBoundingClientRect();
+    var tooltip = el.querySelector('.law-tooltip');
+    if (!tooltip) return;
+    var tipH = tooltip.offsetHeight || 80;
+    if (rect.top < tipH + 12) { el.classList.add('flip-below'); } else { el.classList.remove('flip-below'); }
+  });
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  var tip = el.querySelector('.law-tooltip');
+  if (tip) tip.id = 'tooltip-' + el.dataset.lawId;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+# .NET Core Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-dotnet-core
+  type: technology
+  name: .NET Core
+  version: "2.0.0"
+
+stack:
+  language: C# 12+
+  framework: .NET 8+ / ASP.NET Core
+  testing:
+    - xUnit
+    - Moq
+  orm:
+    - Entity Framework Core
+    - Dapper
+  tools:
+    formatter: dotnet format
+    linter: .NET Analyzers + StyleCop
+    type_checker: built-in
+
+dependencies:
+  required:
+    - Microsoft.NET.Sdk.Web
+    - TargetFramework: net8.0
+  dev:
+    - xunit: "^2.6.0"
+    - Moq: "^4.20.0"
+    - coverlet.collector: "^6.0.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+    - greenfield-development
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-3.2
+    title: Immutability Law
+    example_file: examples/ENG-3.2-immutability.md
+  - id: ENG-3.3
+    title: Law of Demeter
+    example_file: examples/ENG-3.3-demeter.md
+  - id: ENG-2.1
+    title: DDD Aggregate Root
+    example_file: examples/ENG-2.1-aggregates.md
+  - id: ENG-2.2
+    title: Layered Architecture
+    example_file: examples/ENG-2.2-layers.md
+  - id: ENG-3.5
+    title: Naming Conventions
+    example_file: examples/ENG-3.5-naming.md
+
+conventions:
+  naming:
+    classes: PascalCase
+    methods: PascalCase
+    properties: PascalCase
+    private_fields: _camelCase
+    parameters: camelCase
+    interfaces: IPascalCase
+    test_methods: Method_Scenario_Expected
+
+  patterns:
+    value_object: "record"
+    entity: "class with private setters"
+    repository: "Interface + EF Core implementation"
+    service: "Constructor injection"
+    dto: "record or class"
+
+commands:
+  test:
+    all: dotnet test
+    verbose: dotnet test --verbosity normal
+    project: dotnet test tests/Orders.UnitTests
+    filter: dotnet test --filter "FullyQualifiedName~OrderTests"
+    coverage: dotnet test --collect:"XPlat Code Coverage"
+  dev:
+    build: dotnet build
+    run: dotnet run --project src/Orders.Api
+    watch: dotnet watch run --project src/Orders.Api
+    add_package: dotnet add package <PackageName>
+  lint:
+    format: dotnet format
+    analyze: dotnet build --warnaserrors
+
+project_structure: |
+  src/
+  ├── Orders.Domain/           # Domain layer
+  │   ├── Entities/
+  │   ├── ValueObjects/
+  │   ├── Events/
+  │   └── Exceptions/
+  ├── Orders.Application/      # Application layer
+  │   ├── Commands/
+  │   ├── Queries/
+  │   └── Services/
+  ├── Orders.Infrastructure/   # Infrastructure layer
+  │   ├── Persistence/
+  │   └── External/
+  └── Orders.Api/              # API layer
+      ├── Controllers/
+      └── Program.cs
+  tests/
+  ├── Orders.UnitTests/
+  └── Orders.IntegrationTests/

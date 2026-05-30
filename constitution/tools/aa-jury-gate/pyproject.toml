@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aa-jury-gate"
+version = "1.0.0"
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.1",
+    "PyYAML>=6.0",
+]
+
+[project.scripts]
+aa-jury-gate = "aa_jury_gate.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7",
+    "pytest-cov",
+    "mutmut",
+    "ruff",
+    "click",
+    "pyyaml",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["aa_jury_gate"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=aa_jury_gate --cov-report=term-missing"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "B", "S"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S603", "S607"]  # assert is expected; subprocess calls git directly
+"aa_jury_gate/models.py" = ["S105"]  # PASS/FAIL/SKIP are gate verdicts, not passwords
+"aa_jury_gate/git_probe.py" = ["S603", "S607"]  # subprocess calls hardcoded git binary

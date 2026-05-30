@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wave 4 Mobile — Constitutional Learning in Practice · Hangar Sync</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --aa-blue:    #0078D2;
+    --aa-navy:    #003057;
+    --aa-red:     #C8102E;
+    --aa-sky:     #e8f4fd;
+    --aa-gold:    #F0A500;
+    --white:      #ffffff;
+    --gray-50:    #f8f9fa;
+    --gray-100:   #f0f2f5;
+    --gray-200:   #e0e4ea;
+    --gray-600:   #555e6e;
+    --gray-800:   #1a2332;
+    --green:      #1b7a3e;
+    --green-bg:   #e8f5ee;
+    --yellow:     #b45309;
+    --yellow-bg:  #fef9e7;
+    --red-bg:     #fce8ec;
+    --slide-w:    960px;
+  }
+
+  html, body { height: 100vh; overflow: hidden; }
+  html { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: #1a1a2a; }
+
+  /* ── NAVIGATION ─────────────────────────────────────────────────── */
+  #nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(0,48,87,0.96); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 24px; gap: 12px;
+  }
+  #nav .brand { color: #fff; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+  #nav .controls { display: flex; align-items: center; gap: 8px; }
+  #nav button {
+    background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 6px;
+    padding: 5px 14px; font-size: 0.8rem; cursor: pointer; transition: background 0.15s;
+  }
+  #nav button:hover { background: rgba(255,255,255,0.28); }
+  #nav button:disabled { opacity: 0.3; cursor: default; }
+  #slide-counter { color: rgba(255,255,255,0.65); font-size: 0.78rem; min-width: 52px; text-align: center; }
+  #progress-bar { position: fixed; top: 42px; left: 0; height: 3px; background: var(--aa-gold); transition: width 0.3s; z-index: 999; }
+
+  /* ── SLIDE CONTAINER ─────────────────────────────────────────────── */
+  #deck {
+    position: fixed; top: 45px; left: 0; right: 0; bottom: 28px;
+    display: flex; align-items: flex-start; justify-content: center;
+    overflow: hidden; padding: 8px 16px 0;
+  }
+  .slide {
+    display: none;
+    width: var(--slide-w);
+    flex-shrink: 0;
+    background: var(--white);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.45);
+    transform-origin: top center;
+  }
+  .slide.active { display: block; }
+
+  /* ── SLIDE HEADER BANDS ──────────────────────────────────────────── */
+  .slide-header {
+    padding: 32px 44px 28px;
+    background: linear-gradient(135deg, var(--aa-navy) 0%, #005b9f 100%);
+    color: #fff;
+  }
+  .slide-header.dark   { background: linear-gradient(135deg, #0d1b2a 0%, var(--aa-navy) 100%); }
+  .slide-header.red    { background: linear-gradient(135deg, var(--aa-red) 0%, #8b0d1e 100%); }
+  .slide-header.gold   { background: linear-gradient(135deg, #7c4d00 0%, var(--aa-gold) 100%); }
+  .slide-header.teal   { background: linear-gradient(135deg, #005f6b 0%, #0097a7 100%); }
+  .slide-header .eyebrow { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.75; margin-bottom: 6px; }
+  .slide-header h1 { font-size: 2rem; font-weight: 800; line-height: 1.15; }
+  .slide-header h2 { font-size: 1.35rem; font-weight: 700; line-height: 1.2; }
+  .slide-header .sub { margin-top: 10px; opacity: 0.88; font-size: 0.92rem; line-height: 1.55; }
+
+  /* ── SLIDE BODY ──────────────────────────────────────────────────── */
+  .slide-body { padding: 28px 44px 36px; }
+
+  /* ── UTILITY ─────────────────────────────────────────────────────── */
+  h3  { font-size: 1.05rem; font-weight: 700; color: var(--aa-navy); margin: 20px 0 8px; }
+  h4  { font-size: 0.9rem; font-weight: 700; color: var(--aa-navy); margin: 14px 0 6px; }
+  p   { font-size: 0.9rem; color: var(--gray-600); line-height: 1.6; margin-bottom: 10px; }
+  ul  { padding-left: 20px; }
+  li  { font-size: 0.88rem; color: var(--gray-600); line-height: 1.6; margin-bottom: 4px; }
+
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em;
+  }
+  .badge.blue   { background: #dbeafe; color: #1e40af; }
+  .badge.green  { background: var(--green-bg); color: var(--green); }
+  .badge.yellow { background: var(--yellow-bg); color: var(--yellow); }
+  .badge.red    { background: var(--red-bg); color: #b91c1c; }
+  .badge.gray   { background: var(--gray-100); color: var(--gray-600); }
+  .badge.navy   { background: #dbeafe; color: var(--aa-navy); }
+  .badge.gold   { background: #fef3c7; color: #92400e; }
+
+  /* ── GRID LAYOUTS ────────────────────────────────────────────────── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+  /* ── CARD ────────────────────────────────────────────────────────── */
+  .card {
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+    border-radius: 10px; padding: 18px 20px;
+  }
+  .card.blue-border { border-left: 4px solid var(--aa-blue); }
+  .card.navy-border { border-left: 4px solid var(--aa-navy); }
+  .card.green-border { border-left: 4px solid var(--green); }
+  .card.red-border  { border-left: 4px solid var(--aa-red); }
+  .card.gold-border { border-left: 4px solid var(--aa-gold); }
+  .card h4 { margin-top: 0; }
+
+  /* ── STAT BOX ────────────────────────────────────────────────────── */
+  .stat-row { display: flex; gap: 14px; flex-wrap: wrap; margin: 16px 0; }
+  .stat-box {
+    flex: 1; min-width: 110px;
+    background: var(--aa-sky); border-radius: 10px;
+    padding: 14px 16px; text-align: center;
+  }
+  .stat-box .num  { font-size: 1.9rem; font-weight: 800; color: var(--aa-navy); line-height: 1; }
+  .stat-box .lbl  { font-size: 0.72rem; color: var(--gray-600); margin-top: 5px; line-height: 1.3; }
+  .stat-box.warn  { background: var(--red-bg); }
+  .stat-box.warn .num { color: #b91c1c; }
+  .stat-box.ok    { background: var(--green-bg); }
+  .stat-box.ok .num { color: var(--green); }
+
+  /* ── PHASE PILLS ─────────────────────────────────────────────────── */
+  .phase-row { display: flex; gap: 0; margin: 20px 0; align-items: stretch; }
+  .phase-pill {
+    flex: 1; text-align: center; padding: 12px 8px;
+    background: var(--gray-100); border: 1px solid var(--gray-200);
+    font-size: 0.73rem; font-weight: 600; line-height: 1.3; color: var(--gray-600);
+    position: relative;
+  }
+  .phase-pill:first-child { border-radius: 8px 0 0 8px; }
+  .phase-pill:last-child  { border-radius: 0 8px 8px 0; }
+  .phase-pill.done  { background: var(--green-bg);  color: var(--green);  border-color: #a7d7b8; }
+  .phase-pill.active{ background: #dbeafe; color: var(--aa-blue);  border-color: #93c5fd; }
+  .phase-pill.locked{ background: var(--gray-100);  color: #999; }
+  .phase-pill .icon { font-size: 1.1rem; display: block; margin-bottom: 4px; }
+  .phase-pill .lbl  { font-size: 0.68rem; }
+
+  /* ── ARROW FLOW ──────────────────────────────────────────────────── */
+  .flow-row { display: flex; align-items: center; gap: 0; margin: 20px 0; flex-wrap: wrap; }
+  .flow-step {
+    flex: 1; min-width: 100px; background: var(--aa-sky); border-radius: 8px;
+    padding: 12px 10px; text-align: center; font-size: 0.78rem; font-weight: 700;
+    color: var(--aa-navy); line-height: 1.3; border: 2px solid transparent;
+  }
+  .flow-step.highlight { background: var(--aa-navy); color: #fff; }
+  .flow-step .icon { font-size: 1.3rem; display: block; margin-bottom: 4px; }
+  .flow-arrow { font-size: 1.2rem; color: var(--gray-600); padding: 0 4px; flex-shrink: 0; }
+
+  /* ── TABLE ───────────────────────────────────────────────────────── */
+  table { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin: 12px 0; }
+  th { background: var(--aa-navy); color: #fff; padding: 8px 12px; text-align: left; font-size: 0.8rem; }
+  td { padding: 7px 12px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* ── DIVIDER ─────────────────────────────────────────────────────── */
+  .divider { border: none; border-top: 1px solid var(--gray-200); margin: 20px 0; }
+
+  /* ── TITLE SLIDE SPECIAL ─────────────────────────────────────────── */
+  .title-slide .slide-header {
+    background: linear-gradient(145deg, #003057 0%, #00509e 60%, #0078D2 100%);
+    padding: 56px 44px 48px;
+    min-height: 380px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .title-slide .slide-header h1 { font-size: 2.6rem; line-height: 1.1; }
+  .title-slide .slide-header .tag { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .title-slide .slide-header .tag span {
+    background: rgba(255,255,255,0.18); border-radius: 20px;
+    padding: 5px 16px; font-size: 0.78rem; font-weight: 600; color: #fff;
+  }
+  .title-slide .slide-body { background: var(--aa-navy); padding: 24px 44px; }
+  .title-slide .slide-body p { color: rgba(255,255,255,0.75); font-size: 0.88rem; }
+
+  /* ── CLOSING SLIDE ───────────────────────────────────────────────── */
+  .closing-slide .slide-header {
+    background: linear-gradient(145deg, #0d1b2a 0%, #003057 100%);
+    padding: 56px 44px 48px; min-height: 400px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .closing-slide .slide-header h1 { font-size: 2.3rem; line-height: 1.15; }
+
+  /* ── HIGHLIGHT BLOCK ─────────────────────────────────────────────── */
+  .highlight-block {
+    background: linear-gradient(135deg, #003057 0%, #005b9f 100%);
+    color: #fff; border-radius: 10px; padding: 18px 22px; margin: 16px 0;
+  }
+  .highlight-block p { color: rgba(255,255,255,0.88); margin: 0; }
+  .highlight-block strong { color: #fff; }
+
+  /* ── QUOTE ───────────────────────────────────────────────────────── */
+  .quote {
+    border-left: 4px solid var(--aa-gold); padding: 12px 18px;
+    background: var(--yellow-bg); border-radius: 0 8px 8px 0; margin: 16px 0;
+  }
+  .quote p { color: #78350f; font-style: italic; margin: 0; }
+
+  /* ── SLIDE NUMBER FOOTER ─────────────────────────────────────────── */
+  .slide-footer {
+    background: var(--gray-50); border-top: 1px solid var(--gray-200);
+    padding: 8px 44px; display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.72rem; color: var(--gray-600);
+  }
+
+  /* ── KEYBOARD HINT ───────────────────────────────────────────────── */
+  #keyboard-hint {
+    position: fixed; bottom: 4px; left: 0; right: 0;
+    text-align: center; color: rgba(255,255,255,0.4);
+    font-size: 0.72rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 680px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .slide-header, .slide-body, .slide-footer { padding-left: 22px; padding-right: 22px; }
+    .title-slide .slide-header, .closing-slide .slide-header { padding: 36px 22px; }
+    .slide-header h1 { font-size: 1.5rem; }
+    .title-slide .slide-header h1 { font-size: 1.8rem; }
+    .flow-row { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    .phase-row { flex-direction: column; }
+    .phase-pill:first-child { border-radius: 8px 8px 0 0; }
+    .phase-pill:last-child  { border-radius: 0 0 8px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="nav">
+  <div class="brand">✈️ Hangar Sync · Wave 4 Mobile · April 2026</div>
+  <div class="controls">
+    <button id="btn-prev" onclick="changeSlide(-1)">← Prev</button>
+    <span id="slide-counter">1 / 15</span>
+    <button id="btn-next" onclick="changeSlide(1)">Next →</button>
+  </div>
+</div>
+<div id="progress-bar"></div>
+
+<div id="deck">
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 1 ══ -->
+<div class="slide active title-slide" id="slide-1">
+  <div class="slide-header">
+    <div class="eyebrow">Hangar Sync · American Airlines · April 2026</div>
+    <h1>Wave 4 Mobile<br>Constitutional Learning<br>in Practice</h1>
+    <div class="tag">
+      <span>Discovery ✓</span>
+      <span>Teach — Starting Now</span>
+      <span>Engage — 12 Weeks</span>
+      <span>Wave 5 Vision</span>
+    </div>
+  </div>
+  <div class="slide-body">
+    <p><strong style="color:#fff;">Presenters:</strong> <span style="color:rgba(255,255,255,0.75);">Hangar Coaching Team — Wave 4 Mobile</span></p>
+    <p style="color:rgba(255,255,255,0.55); font-size:0.8rem; margin-top:6px;">Charles · Willem · Adeel · Shayne · Griff &nbsp;|&nbsp; Sponsored by Ram Santhanam, Director of Product Agility</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 2 ══ -->
+<div class="slide" id="slide-2">
+  <div class="slide-header">
+    <div class="eyebrow">Context</div>
+    <h2>The Hangar: What We Do &amp; Why Constitutional Learning Changes It</h2>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:24px; align-items:start;">
+      <div>
+        <h3>The Hangar Model</h3>
+        <div class="card navy-border" style="margin-bottom:12px;">
+          <h4>🎯 Our Charter</h4>
+          <p>Product teams come to the Hangar in <strong>Waves</strong>. We work with them through a Hangar Plan — establishing product &amp; technical OKRs, then helping teams achieve measurable outcomes over 12 weeks, setting them on a sustainable path of continuous improvement.</p>
+        </div>
+        <div class="card blue-border">
+          <h4>📅 The Three Phases</h4>
+          <div class="flow-row" style="margin:10px 0 0;">
+            <div class="flow-step highlight"><span class="icon">🔍</span>Discovery<br><span style="font-size:0.7rem;font-weight:400;opacity:0.8;">2 weeks</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step highlight"><span class="icon">📚</span>Teach<br><span style="font-size:0.7rem;font-weight:400;opacity:0.8;">2 weeks</span></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step highlight"><span class="icon">🚀</span>Engage<br><span style="font-size:0.7rem;font-weight:400;opacity:0.8;">12 weeks</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3>Why Constitutional Learning?</h3>
+        <p style="margin-bottom:12px;">The <strong>Hangar AI Constitution</strong> is not just a governance document — it is a <em>living framework</em> that coaches can use to accelerate every phase of the model.</p>
+        <div class="card green-border" style="margin-bottom:10px;">
+          <h4>Before</h4>
+          <ul>
+            <li>Domain knowledge lived in coach heads</li>
+            <li>Teach was lecture + exercises</li>
+            <li>Discovery was manual codebase archaeology</li>
+            <li>Coaching plans took weeks to form</li>
+          </ul>
+        </div>
+        <div class="card gold-border">
+          <h4>With the Constitution</h4>
+          <ul>
+            <li>Domain intelligence is <em>committed</em> in avatars</li>
+            <li>Teach is guided by AI agents enforcing laws</li>
+            <li>Discovery runs agentically in hours, not weeks</li>
+            <li>Teams leave with durable governance artifacts</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>2 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 3 ══ -->
+<div class="slide" id="slide-3">
+  <div class="slide-header">
+    <div class="eyebrow">Wave 4 Mobile — Journey Overview</div>
+    <h2>Where We Are &amp; Where We're Going</h2>
+    <div class="sub">iOS · Android · BFF — 78+ repositories · Coaches: Charles, Willem, Adeel, Shayne, Griff</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-3" style="margin-bottom:20px;">
+      <div class="card green-border">
+        <h4>🔍 Discovery <span class="badge green" style="margin-left:6px;">IN PROGRESS</span></h4>
+        <p><strong>2-week period before Teach.</strong> Running constitutional workflows agentically to build domain intelligence &amp; a coaching plan grounded in real evidence.</p>
+        <ul style="margin-top:8px;">
+          <li>✅ Avatar Clinic completed (Apr 27)</li>
+          <li>✅ disc-2026-001: Code quality evidence base (COMPLETE)</li>
+          <li>🔄 disc-2026-002: Coaching programme discovery (Stage A — awaiting Ram approval)</li>
+        </ul>
+      </div>
+      <div class="card blue-border">
+        <h4>📚 Teach <span class="badge blue" style="margin-left:6px;">STARTING SOON</span></h4>
+        <p><strong>2-week classroom period.</strong> Teaching the mobile teams — but reimagined as <em>Constitutional Learning</em>: AI-agent-driven, law-enforced, artifact-producing.</p>
+        <ul style="margin-top:8px;">
+          <li>Topics surfaced directly from mobile codebase analysis</li>
+          <li>Mix of constitutional + traditional formats</li>
+          <li>Custom curriculum, not a generic syllabus</li>
+        </ul>
+      </div>
+      <div class="card navy-border">
+        <h4>🚀 Engage <span class="badge gray" style="margin-left:6px;">12 WEEKS</span></h4>
+        <p><strong>The dojo in action.</strong> Working alongside teams on real pain points using the three constitutional workflows.</p>
+        <ul style="margin-top:8px;">
+          <li>Legacy Rescue: impl-2026-001 (in motion)</li>
+          <li>Greenfield: new builds under constitutional governance</li>
+          <li>Adoption: team-level constitutional onboarding for 78+ repos</li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight-block">
+      <p>⏱️ <strong>Timeline reality:</strong> We have <strong>2.5 weeks</strong> to prepare Teach. This session is about aligning all coaches on the approach so we can move together — and previewing the Wave 5 certification model that turns this into a scalable program.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>3 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 4 ══ -->
+<div class="slide" id="slide-4">
+  <div class="slide-header teal">
+    <div class="eyebrow">Discovery Phase — Step 1</div>
+    <h2>The Avatar Workflow: Domain Intelligence That Powers Everything</h2>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:22px; align-items:start;">
+      <div>
+        <h3>What Is an Avatar?</h3>
+        <p>An <strong>avatar</strong> is a constitutional intelligence file that tells AI agents <em>exactly</em> who they are working with — the product domain, the technology stack, the laws that apply, the known patterns, and the real codebase evidence.</p>
+        <div class="quote">
+          <p>"Without avatars, every AI response is generic. With avatars, the agent is a constitutional expert in <em>your</em> domain — Check-In, Booking, Android Kotlin — before you type a single prompt."</p>
+        </div>
+        <h4>Two Types of Avatars</h4>
+        <div class="grid-2" style="gap:10px; margin-top:8px;">
+          <div class="card blue-border" style="padding:12px 14px;">
+            <h4 style="color:var(--aa-blue);">🏷️ Product Type</h4>
+            <p style="font-size:0.8rem;">What the product does — journeys, personas, laws, OKR patterns, domain objects</p>
+          </div>
+          <div class="card navy-border" style="padding:12px 14px;">
+            <h4>⚙️ Technology</h4>
+            <p style="font-size:0.8rem;">How it's built — stack patterns, known antipatterns, TDD conventions, CI requirements</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3>The Avatar Clinic: 6-Phase Workflow</h3>
+        <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+          <div style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--green-bg); border-radius:7px; border-left:3px solid var(--green);">
+            <span style="font-weight:700; color:var(--green); min-width:80px; font-size:0.78rem;">Phase 0</span>
+            <span style="font-size:0.82rem; color:var(--gray-600);">Preflight — identity &amp; registry checks</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--green-bg); border-radius:7px; border-left:3px solid var(--green);">
+            <span style="font-weight:700; color:var(--green); min-width:80px; font-size:0.78rem;">Phase 1</span>
+            <span style="font-size:0.82rem; color:var(--gray-600);">Identify — confirm all 5 target avatars in registry</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--green-bg); border-radius:7px; border-left:3px solid var(--green);">
+            <span style="font-weight:700; color:var(--green); min-width:80px; font-size:0.78rem;">Phase 2</span>
+            <span style="font-size:0.82rem; color:var(--gray-600);">Scan — compliance audit against constitutional schema</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--green-bg); border-radius:7px; border-left:3px solid var(--green);">
+            <span style="font-weight:700; color:var(--green); min-width:80px; font-size:0.78rem;">Phase 3</span>
+            <span style="font-size:0.82rem; color:var(--gray-600);">Discover — surface domain patterns from real codebase</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--green-bg); border-radius:7px; border-left:3px solid var(--green);">
+            <span style="font-weight:700; color:var(--green); min-width:80px; font-size:0.78rem;">Phase 4</span>
+            <span style="font-size:0.82rem; color:var(--gray-600);">Enrich — embed real code evidence into avatar guidance</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--green-bg); border-radius:7px; border-left:3px solid var(--green);">
+            <span style="font-weight:700; color:var(--green); min-width:80px; font-size:0.78rem;">Phase 5</span>
+            <span style="font-size:0.82rem; color:var(--gray-600);">RAG Validate — confirm AI retrieves correct context (≥85%)</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--green-bg); border-radius:7px; border-left:3px solid var(--green);">
+            <span style="font-weight:700; color:var(--green); min-width:80px; font-size:0.78rem;">Phase 6</span>
+            <span style="font-size:0.82rem; color:var(--gray-600);">Commit — index.yaml stamped, artifacts rendered &amp; committed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>4 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 5 ══ -->
+<div class="slide" id="slide-5">
+  <div class="slide-header teal">
+    <div class="eyebrow">Discovery Phase — Avatar Clinic Results · April 27, 2026</div>
+    <h2>What We Built for Wave 4 Mobile</h2>
+    <div class="sub">5 avatars validated · RAG recall 5/5 · Commits: 1bf64cf (iOS) · 484e737 (Android)</div>
+  </div>
+  <div class="slide-body">
+    <div class="stat-row">
+      <div class="stat-box ok"><div class="num">5</div><div class="lbl">Avatars<br>Validated</div></div>
+      <div class="stat-box ok"><div class="num">5/5</div><div class="lbl">RAG Recall<br>Score</div></div>
+      <div class="stat-box ok"><div class="num">2</div><div class="lbl">Tech Avatars<br>Enriched</div></div>
+      <div class="stat-box ok"><div class="num">4</div><div class="lbl">Product Type<br>Avatars Active</div></div>
+    </div>
+    <h3>Avatars Now Active for Mobile</h3>
+    <table>
+      <tr><th>Avatar</th><th>Type</th><th>Version</th><th>Key Enrichment</th></tr>
+      <tr><td><strong>android-kotlin</strong></td><td><span class="badge navy">Technology</span></td><td>v1.0.0 → <strong>v1.1.0</strong></td><td>God-class inventory, Coroutines/RxJava/LiveData patterns, BookingViewModel bug evidence, DI anti-patterns</td></tr>
+      <tr><td><strong>ios-swift</strong></td><td><span class="badge navy">Technology</span></td><td>v1.0.0 → <strong>v1.1.0</strong></td><td>52-repo fleet quality map, boolean state machine patterns, MVVM/Combine patterns, fleet tier distribution</td></tr>
+      <tr><td><strong>check-in-travel</strong></td><td><span class="badge blue">Product Type</span></td><td>v1.1.0</td><td>Check-in journeys, TSA biometric use-cases, disruption flows, mobile-specific laws</td></tr>
+      <tr><td><strong>passenger-booking</strong></td><td><span class="badge blue">Product Type</span></td><td>v1.1.0</td><td>Booking &amp; award flows, loyalty integration, fare transparency (DOT BUS-2.3)</td></tr>
+      <tr><td><strong>schedule-change-self-serve</strong></td><td><span class="badge blue">Product Type</span></td><td>v1.1.0</td><td>Self-serve disruption handling, state machine patterns, passenger notification flows</td></tr>
+    </table>
+    <div class="highlight-block" style="margin-top:16px;">
+      <p>💡 <strong>What this means for coaching:</strong> Every AI agent conversation with these avatars active is now a <em>Mobile-specific constitutional expert</em>. The agent knows about BookingViewModel, knows TSA biometric laws, knows the check-in crash paths. We didn't hand it a manual — we committed real evidence into the constitution.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>5 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 6 ══ -->
+<div class="slide" id="slide-6">
+  <div class="slide-header red">
+    <div class="eyebrow">Discovery Phase — Code Intelligence · disc-2026-001 COMPLETE</div>
+    <h2>What the Data Says: Android</h2>
+    <div class="sub">androidapps · Kotlin · 3,226 source files · 289K LOC · 90-day analysis window</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:22px; align-items:start;">
+      <div>
+        <div class="stat-row">
+          <div class="stat-box warn"><div class="num">4.7</div><div class="lbl">Composite Score<br>/ 10 — FLAT</div></div>
+          <div class="stat-box warn"><div class="num">80</div><div class="lbl">God Objects<br>&gt;500 LOC</div></div>
+          <div class="stat-box warn"><div class="num">8</div><div class="lbl">Confirmed<br>Bugs Found</div></div>
+        </div>
+        <h3>The Flat Line Problem</h3>
+        <p>In 90 days the team shipped <strong>3,191 commits</strong> — an extraordinary velocity. Source code grew <strong>+11.7%</strong>. But every quality dimension scored the same in December as in March. <strong>The codebase is getting bigger without getting better.</strong></p>
+        <h4>Confirmed Critical Defects (Production Paths)</h4>
+        <ul>
+          <li>🔴 <strong>Memory Leak:</strong> BookingViewModel — 2 RxJava subscriptions never disposed after <code>onCleared()</code></li>
+          <li>🔴 <strong>Race Condition:</strong> CheckInManagerV3 — TSA flag reset before async call completes → infinite re-trigger risk</li>
+          <li>🔴 <strong>Crash Path:</strong> CheckInManagerV3 — missing <code>return</code> after error dialog iterates empty list</li>
+          <li>🟠 <strong>Logic Errors:</strong> 5 more confirmed bugs in operator precedence &amp; boolean logic</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Root Cause: Structural Patterns</h3>
+        <div class="card red-border" style="margin-bottom:10px;">
+          <h4>🗿 God Objects</h4>
+          <p>BookingViewModel: <strong>2,286 LOC</strong>, 8 concerns, 3 reactive frameworks in one class. CheckInManagerV2/V3: two ~2,000 LOC classes with 70% structural duplication.</p>
+        </div>
+        <div class="card gold-border" style="margin-bottom:10px;">
+          <h4>🔀 Mixed Reactive Paradigms</h4>
+          <p>RxJava + Coroutines + LiveData + Compose State all in the same codebase — sometimes the same class. Every developer must understand all 3 to safely touch BookingViewModel.</p>
+        </div>
+        <div class="card blue-border">
+          <h4>✅ Bright Spots to Build On</h4>
+          <p><code>AncillaryOffersFlowStateMachine</code> — exemplary reference implementation. Sealed class adoption up <strong>22.7%</strong> in 90 days. Repository pattern well-established.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>6 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 7 ══ -->
+<div class="slide" id="slide-7">
+  <div class="slide-header">
+    <div class="eyebrow">Discovery Phase — Code Intelligence · disc-2026-001 COMPLETE</div>
+    <h2>What the Data Says: iOS</h2>
+    <div class="sub">52 repositories · Swift · Fleet-wide composite score: 5.6/10 · 90-day analysis</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:22px; align-items:start;">
+      <div>
+        <div class="stat-row">
+          <div class="stat-box ok"><div class="num">5.6</div><div class="lbl">Fleet Composite<br>Score / 10</div></div>
+          <div class="stat-box warn"><div class="num">4.7</div><div class="lbl">Test Coverage<br>Score (Weakest)</div></div>
+          <div class="stat-box warn"><div class="num">10+</div><div class="lbl">Confirmed<br>Bugs Found</div></div>
+        </div>
+        <h3>Fleet Health Distribution</h3>
+        <div style="display:flex; gap:10px; margin:12px 0;">
+          <div style="flex:1; background:var(--red-bg); border-radius:8px; padding:12px; text-align:center;">
+            <div style="font-size:1.5rem; font-weight:800; color:#b91c1c;">6%</div>
+            <div style="font-size:0.72rem; color:#b91c1c; font-weight:600;">🔴 High Risk</div>
+            <div style="font-size:0.72rem; color:var(--gray-600); margin-top:4px;">3 repos &lt;4.0</div>
+          </div>
+          <div style="flex:2; background:var(--yellow-bg); border-radius:8px; padding:12px; text-align:center;">
+            <div style="font-size:1.5rem; font-weight:800; color:var(--yellow);">56%</div>
+            <div style="font-size:0.72rem; color:var(--yellow); font-weight:600;">🟡 Moderate Risk</div>
+            <div style="font-size:0.72rem; color:var(--gray-600); margin-top:4px;">29 repos 4.0–5.9</div>
+          </div>
+          <div style="flex:1.5; background:var(--green-bg); border-radius:8px; padding:12px; text-align:center;">
+            <div style="font-size:1.5rem; font-weight:800; color:var(--green);">38%</div>
+            <div style="font-size:0.72rem; color:var(--green); font-weight:600;">🟢 Healthy</div>
+            <div style="font-size:0.72rem; color:var(--gray-600); margin-top:4px;">20 repos ≥6.0</div>
+          </div>
+        </div>
+        <div class="quote">
+          <p><strong>americanmobileapp-ios</strong> — the highest-velocity repo (1,149 commits in 90 days) — scores just <strong>4.1/10</strong>. The highest-traffic surface has the worst quality. Technical debt is compounding exactly where passengers feel it most.</p>
+        </div>
+      </div>
+      <div>
+        <h3>Key Patterns Found</h3>
+        <div class="card red-border" style="margin-bottom:10px;">
+          <h4>🚦 Boolean State Machine Problem</h4>
+          <p>7 repos use implicit boolean flags instead of explicit state machines. checkin-ios: a 138-line boolean flag maze managing check-in state. KVO bug confirmed in production path.</p>
+        </div>
+        <div class="card gold-border" style="margin-bottom:10px;">
+          <h4>📊 Coverage Gap Widening</h4>
+          <p>Test coverage 4.7/10 — weakest dimension fleet-wide. High-velocity repos adding features without proportional test growth. americanmobileapp-ios: 1,149 commits, coverage unchanged.</p>
+        </div>
+        <div class="card green-border">
+          <h4>✅ Reference Implementations</h4>
+          <p><strong>corenetworking-ios: 8.0/10.</strong> featurecontracts-ios: 7.0/10. booking-ios: 6.5/10. These repos prove the iOS stack <em>can</em> be clean — and they're in the same org.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>7 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 8 ══ -->
+<div class="slide" id="slide-8">
+  <div class="slide-header teal">
+    <div class="eyebrow">Discovery Phase — Exploratory Discovery</div>
+    <h2>The Discovery Workflow: Building the Coaching Plan on Evidence</h2>
+  </div>
+  <div class="slide-body">
+    <p style="margin-bottom:16px;">Constitutional discovery is not a workshop prep checklist — it is a <strong>governed, stage-gated process</strong> that produces a validated coaching plan backed by real evidence. Every stage has an entry gate, an exit gate, and committed artifacts. You cannot self-certify your way through.</p>
+    <h3>The Stage A–F Evidence Chain</h3>
+    <div class="phase-row">
+      <div class="phase-pill done"><span class="icon">📋</span><strong>A</strong><div class="lbl">Initialize<br>Problem Statement</div></div>
+      <div class="phase-pill active"><span class="icon">🔭</span><strong>B</strong><div class="lbl">Field Study<br>User Insights</div></div>
+      <div class="phase-pill locked"><span class="icon">💻</span><strong>C</strong><div class="lbl">Code Evidence<br>Repo Analysis</div></div>
+      <div class="phase-pill locked"><span class="icon">✅</span><strong>D</strong><div class="lbl">Validation<br>Stakeholders</div></div>
+      <div class="phase-pill locked"><span class="icon">📈</span><strong>E</strong><div class="lbl">Metrics<br>Baselines &amp; Targets</div></div>
+      <div class="phase-pill locked"><span class="icon">🗺️</span><strong>F</strong><div class="lbl">Roadmap Lock<br>Implementation</div></div>
+    </div>
+    <div class="grid-2" style="gap:20px; margin-top:16px;">
+      <div class="card green-border">
+        <h4>✅ disc-2026-001 — COMPLETE</h4>
+        <p><strong>Mobile Platform Quality Modernization</strong><br>
+        The full quantitative evidence base: 78+ repos analyzed, quality scores, 10 confirmed critical bugs (CF-01–CF-10), Harel statechart analysis, god-class inventory, roadmap locked as <strong>impl-2026-001</strong>.</p>
+        <p style="margin-top:8px;"><span class="badge green">Stage F Complete</span> <span class="badge green">Roadmap Locked</span></p>
+      </div>
+      <div class="card blue-border">
+        <h4>🔄 disc-2026-002 — IN PROGRESS</h4>
+        <p><strong>Hangar Coaching Programme</strong><br>
+        Building on disc-2026-001 to define the Wave 4 coaching plan — three capability gaps to close: product discovery, legacy rescue, greenfield development. Spanning all 3 platforms &amp; 78+ repos.</p>
+        <p style="margin-top:8px;"><span class="badge blue">Stage A Initialized</span> <span class="badge gold">Awaiting Ram Approval</span></p>
+      </div>
+    </div>
+    <div class="highlight-block" style="margin-top:16px;">
+      <p>🔑 <strong>The key insight:</strong> We didn't <em>guess</em> what the mobile teams need to learn. In <strong>2–3 days</strong>, agentic constitutional workflows analyzed 78+ repositories across a 90-day commit window and surfaced — with law citations and commit hashes — exactly what these teams need. That evidence is now committed and reviewable by anyone.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>8 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 9 ══ -->
+<div class="slide" id="slide-9">
+  <div class="slide-header dark">
+    <div class="eyebrow">Teach Phase — Constitutional Learning</div>
+    <h2>Teaching Differently: Constitutional Learning vs. Traditional Teach</h2>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:22px; align-items:start; margin-bottom:20px;">
+      <div>
+        <h3>Traditional Teach (Previous Waves)</h3>
+        <div class="card" style="border-left:4px solid #aaa;">
+          <ul style="margin-top:0;">
+            <li>Instructor-led classroom lectures</li>
+            <li>Generic exercises on toy codebases</li>
+            <li>Topics decided upfront, same for all waves</li>
+            <li>Learning stays in the classroom</li>
+            <li>No connection to what the team will <em>actually</em> do in Engage</li>
+            <li>Coach as bottleneck — 1 cohort at a time</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>Constitutional Learning (Wave 4)</h3>
+        <div class="card green-border">
+          <ul style="margin-top:0;">
+            <li>AI agent as co-instructor, enforcing laws at every step</li>
+            <li>Exercises run <em>on the actual mobile codebase</em></li>
+            <li>Topics surfaced by agentic analysis of this team's code</li>
+            <li>Every exercise produces a committed governance artifact</li>
+            <li>Teach and Engage are connected — same codebase, same avatars</li>
+            <li>Constitutional lint is the gate — not self-reporting</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <h3>The Constitutional Advantage</h3>
+    <div class="grid-3" style="gap:12px;">
+      <div class="card blue-border" style="text-align:center; padding:16px 14px;">
+        <div style="font-size:1.8rem; margin-bottom:6px;">⚡</div>
+        <h4>Speed</h4>
+        <p style="font-size:0.8rem;">Agentic discovery compressed weeks of manual codebase archaeology into hours. Teach curriculum auto-generated from the evidence base — not built from scratch.</p>
+      </div>
+      <div class="card green-border" style="text-align:center; padding:16px 14px;">
+        <div style="font-size:1.8rem; margin-bottom:6px;">🎯</div>
+        <h4>Relevance</h4>
+        <p style="font-size:0.8rem;">Every topic taught is grounded in <em>this team's</em> confirmed bugs, god objects, and architectural patterns. Not a generic curriculum — a custom one built from real evidence.</p>
+      </div>
+      <div class="card gold-border" style="text-align:center; padding:16px 14px;">
+        <div style="font-size:1.8rem; margin-bottom:6px;">📦</div>
+        <h4>Durability</h4>
+        <p style="font-size:0.8rem;">Teams leave each session with committed artifacts — not just memory. Law citations, ADRs, proposals. The evidence chain is permanent and reviewable by Ram and stakeholders.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>9 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 10 ══ -->
+<div class="slide" id="slide-10">
+  <div class="slide-header dark">
+    <div class="eyebrow">Teach Phase — Curriculum Design</div>
+    <h2>Wave 4 Mobile Curriculum: Five Constitutional Learning Themes</h2>
+    <div class="sub">Everything is taught constitutionally — themes grounded in real mobile evidence, not generic syllabi</div>
+  </div>
+  <div class="slide-body">
+    <div class="highlight-block" style="margin-bottom:16px; padding:12px 18px;">
+      <p>🤖 <strong>One delivery method for all themes:</strong> AI-agent-driven exercises on the actual mobile codebase. Every session produces committed artifacts and passes <code>aa-constitution-lint</code>. The themes below are anchors — each one traces directly to evidence we already have in the constitution.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+
+      <div style="display:grid; grid-template-columns:1fr 1.8fr; gap:0; border-radius:9px; overflow:hidden; border:1px solid var(--gray-200);">
+        <div style="background:var(--aa-navy); color:#fff; padding:14px 16px;">
+          <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.07em; opacity:0.7; margin-bottom:4px;">Theme 1</div>
+          <div style="font-weight:700; font-size:0.9rem; line-height:1.35;">Code Quality &amp;<br>Legacy Rescue</div>
+          <div style="margin-top:8px; font-size:0.75rem; opacity:0.8; line-height:1.4;">Legacy Code · Refactoring &amp; Smells · Clean Code &amp; Modular Architecture · Strangler-Fig Pattern</div>
+          <div style="margin-top:8px;"><span style="background:rgba(255,255,255,0.2); border-radius:4px; padding:2px 7px; font-size:0.68rem;">ENG-3.1 · ENG-2.3</span></div>
+        </div>
+        <div style="background:var(--gray-50); padding:12px 16px;">
+          <div style="font-size:0.72rem; font-weight:700; color:var(--aa-red); margin-bottom:5px;">📍 Mobile Evidence</div>
+          <div style="font-size:0.8rem; color:var(--gray-600); line-height:1.5;"><strong>Android:</strong> BookingViewModel 2,286 LOC managing 8 concerns · CheckInManagerV2/V3 ~2,000 LOC each with 70% duplication · 80 god objects across androidapps · Mobile-Manage-Minilith (BFF)</div>
+          <div style="font-size:0.8rem; color:var(--gray-600); line-height:1.5; margin-top:4px;"><strong>iOS:</strong> americanmobileapp-ios 4.1/10 with 1,149 commits/90d adding debt faster than it's removed</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1.8fr; gap:0; border-radius:9px; overflow:hidden; border:1px solid var(--gray-200);">
+        <div style="background:#005f6b; color:#fff; padding:14px 16px;">
+          <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.07em; opacity:0.7; margin-bottom:4px;">Theme 2</div>
+          <div style="font-weight:700; font-size:0.9rem; line-height:1.35;">Testing &amp;<br>Quality Gates</div>
+          <div style="margin-top:8px; font-size:0.75rem; opacity:0.8; line-height:1.4;">Atomic TDD · BDD · Test Pyramid &amp; Automation · Bug Triage &amp; Production Incident Prevention</div>
+          <div style="margin-top:8px;"><span style="background:rgba(255,255,255,0.2); border-radius:4px; padding:2px 7px; font-size:0.68rem;">ENG-4.1 · ENG-4.2</span></div>
+        </div>
+        <div style="background:var(--gray-50); padding:12px 16px;">
+          <div style="font-size:0.72rem; font-weight:700; color:var(--aa-red); margin-bottom:5px;">📍 Mobile Evidence</div>
+          <div style="font-size:0.8rem; color:var(--gray-600); line-height:1.5;"><strong>Android:</strong> Coverage 4.0/10 · 8 new source files per 1 test file added · 8 confirmed bugs in production paths including 2 memory leaks &amp; 2 race conditions in booking and check-in</div>
+          <div style="font-size:0.8rem; color:var(--gray-600); line-height:1.5; margin-top:4px;"><strong>iOS:</strong> Coverage 4.7/10 (weakest fleet dimension) · CheckInManagerV3Test at 5,566 LOC — the test mirrors the god object</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1.8fr; gap:0; border-radius:9px; overflow:hidden; border:1px solid var(--gray-200);">
+        <div style="background:#5c2d91; color:#fff; padding:14px 16px;">
+          <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.07em; opacity:0.7; margin-bottom:4px;">Theme 3</div>
+          <div style="font-weight:700; font-size:0.9rem; line-height:1.35;">Architecture &amp;<br>OO Design</div>
+          <div style="margin-top:8px; font-size:0.75rem; opacity:0.8; line-height:1.4;">Object-Oriented Development · State Machine Design · Reactive Programming (Kotlin Coroutines) · Dependency Injection</div>
+          <div style="margin-top:8px;"><span style="background:rgba(255,255,255,0.2); border-radius:4px; padding:2px 7px; font-size:0.68rem;">ENG-2.2 · ENG-3.2</span></div>
+        </div>
+        <div style="background:var(--gray-50); padding:12px 16px;">
+          <div style="font-size:0.72rem; font-weight:700; color:var(--aa-red); margin-bottom:5px;">📍 Mobile Evidence</div>
+          <div style="font-size:0.8rem; color:var(--gray-600); line-height:1.5;"><strong>Android:</strong> RxJava + Coroutines + LiveData + Compose State all in BookingViewModel · checkin-ios 138-line boolean flag maze · FlightCardViewModel 17 constructor dependencies · Only 16 explicit state machines across 3,226 files</div>
+          <div style="font-size:0.8rem; color:var(--gray-600); line-height:1.5; margin-top:4px;"><strong>Reference:</strong> AncillaryOffersFlowStateMachine — exemplary sealed-class state machine already in the codebase</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1.8fr; gap:0; border-radius:9px; overflow:hidden; border:1px solid var(--gray-200);">
+        <div style="background:var(--aa-red); color:#fff; padding:14px 16px;">
+          <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.07em; opacity:0.7; margin-bottom:4px;">Theme 4</div>
+          <div style="font-weight:700; font-size:0.9rem; line-height:1.35;">Security &amp;<br>Compliance</div>
+          <div style="margin-top:8px; font-size:0.75rem; opacity:0.8; line-height:1.4;">Security Vulnerabilities · Privacy Engineering · GDPR/Biometric Compliance</div>
+          <div style="margin-top:8px;"><span style="background:rgba(255,255,255,0.2); border-radius:4px; padding:2px 7px; font-size:0.68rem;">ENG-6.1 · BUS-2.4</span></div>
+        </div>
+        <div style="background:var(--gray-50); padding:12px 16px;">
+          <div style="font-size:0.72rem; font-weight:700; color:var(--aa-red); margin-bottom:5px;">📍 Mobile Evidence</div>
+          <div style="font-size:0.8rem; color:var(--gray-600); line-height:1.5;"><strong>Android:</strong> TSA biometric eligibility race condition in CheckInManagerV3 (production path) · check-in-travel avatar encodes TSA biometric laws and GDPR/CCPA constraints</div>
+          <div style="font-size:0.8rem; color:var(--gray-600); line-height:1.5; margin-top:4px;"><strong>BFF:</strong> 3 thread-safety critical bugs in service recovery path · DOT consumer protection requirements (BUS-2.3) in booking &amp; disruption flows</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1.8fr; gap:0; border-radius:9px; overflow:hidden; border:1px solid var(--gray-200);">
+        <div style="background:#7c4d00; color:#fff; padding:14px 16px;">
+          <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.07em; opacity:0.7; margin-bottom:4px;">Theme 5</div>
+          <div style="font-weight:700; font-size:0.9rem; line-height:1.35;">Platform, Observability<br>&amp; Product Discovery</div>
+          <div style="margin-top:8px; font-size:0.75rem; opacity:0.8; line-height:1.4;">CI/CD Essentials · Event Driven Reliability · Observability &amp; Distributed Tracing · Contract-first API · Discovery Trees</div>
+          <div style="margin-top:8px;"><span style="background:rgba(255,255,255,0.2); border-radius:4px; padding:2px 7px; font-size:0.68rem;">ENG-4.2 · PRD-2.1</span></div>
+        </div>
+        <div style="background:var(--gray-50); padding:12px 16px;">
+          <div style="font-size:0.72rem; font-weight:700; color:var(--aa-red); margin-bottom:5px;">📍 Mobile Evidence</div>
+          <div style="font-size:0.8rem; color:var(--gray-600); line-height:1.5;"><strong>BFF:</strong> 78+ repos with zero CI constitutional gates · Mobile-FLIFO-BFF event-driven reliability gaps · DSS display staleness surfaced in Gate Management discovery</div>
+          <div style="font-size:0.8rem; color:var(--gray-600); line-height:1.5; margin-top:4px;"><strong>Product:</strong> disc-2026-001/002 are live examples of constitutional discovery trees — product coaches run these in Teach with PMs as hands-on exercises</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>10 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 11 ══ -->
+<div class="slide" id="slide-11">
+  <div class="slide-header">
+    <div class="eyebrow">Engage Phase — 12 Weeks</div>
+    <h2>Engage: Constitutional Workflows in the Dojo</h2>
+    <div class="sub">Real pain points · Real codebases · Real teams — governed by the constitution at every step</div>
+  </div>
+  <div class="slide-body">
+    <p style="margin-bottom:16px;">In Engage, the coaching team works <em>alongside</em> the mobile squads. The constitution provides three proven workflows — not advice, but governed processes with entry gates, exit gates, and committed artifacts.</p>
+    <div class="grid-3" style="gap:16px; margin-bottom:20px;">
+      <div class="card red-border">
+        <div style="font-size:1.8rem; margin-bottom:8px;">🔧</div>
+        <h4>Legacy Rescue</h4>
+        <p style="font-size:0.82rem;">Start where the pain is hardest. The <strong>impl-2026-001</strong> programme is already in motion — Slice 1 targets critical bug fixes &amp; CI foundation from the confirmed defects in disc-2026-001.</p>
+        <p style="font-size:0.78rem; margin-top:8px;"><strong>Examples:</strong> BookingViewModel decomposition, CheckInManager god-class split, BFF Minilith strangler-fig, coverage uplift from 4% → constitutional gate.</p>
+        <p style="margin-top:8px;"><span class="badge red">impl-2026-001</span></p>
+      </div>
+      <div class="card green-border">
+        <div style="font-size:1.8rem; margin-bottom:8px;">🌱</div>
+        <h4>Greenfield Development</h4>
+        <p style="font-size:0.82rem;">New features built constitutionally from day one. Avatar selection, AGENTS.md bootstrap, constitutional proposal, Atomic TDD — every new module starts governed.</p>
+        <p style="font-size:0.78rem; margin-top:8px;"><strong>Goal:</strong> Teams leave the Hangar able to bootstrap any new service or module in their domain without a coach present.</p>
+        <p style="margin-top:8px;"><span class="badge green">ENG-4.1 Enforced</span></p>
+      </div>
+      <div class="card blue-border">
+        <div style="font-size:1.8rem; margin-bottom:8px;">🏛️</div>
+        <h4>Constitutional Adoption</h4>
+        <p style="font-size:0.82rem;">78+ individual repos lack <code>AGENTS.md</code> and <code>hangar-ai-specs/</code>. The adoption workflow rolls constitutional governance into each team repo, one squad at a time.</p>
+        <p style="font-size:0.78rem; margin-top:8px;"><strong>Goal:</strong> Every mobile team repo is constitutionally governed before end of Engage. Teams own their own avatars.</p>
+        <p style="margin-top:8px;"><span class="badge blue">ENG-1.2</span> <span class="badge blue">ENG-11.1</span></p>
+      </div>
+    </div>
+    <div style="margin-top:20px; background:linear-gradient(135deg,#7c4d00,var(--aa-gold)); border-radius:10px; padding:20px 24px;">
+      <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.8); margin-bottom:6px;">⭐ Of Particular Interest</div>
+      <div style="font-size:1.05rem; font-weight:800; color:#fff; margin-bottom:10px;">Accelerated Discovery During Engage</div>
+      <p style="color:rgba(255,255,255,0.92); font-size:0.88rem; line-height:1.6; margin:0;">Engage is not just about executing known work — it is also about <strong style="color:#fff;">discovering new architectural shifts and disruptions as they emerge in real time.</strong> When a squad surfaces an unexpected pain point, coaches run a constitutional accelerated discovery session (Stage A–B) to validate the problem <em>before</em> any solution work begins. This keeps teams from jumping to solutions under pressure — and produces a committed, stakeholder-approvable evidence artifact every time. <strong style="color:#fff;">This is the Hangar model working at its highest fidelity: coaching and discovery running in parallel with delivery.</strong></p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>11 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 12 ══ -->
+<div class="slide" id="slide-12">
+  <div class="slide-header">
+    <div class="eyebrow">For Coaches Now — Practical Reality</div>
+    <h2>Wave 4: What We're Asking of Every Coach</h2>
+    <div class="sub">2.5 weeks to Teach · All coaches — technical and product · Honest about the learning curve</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:22px; align-items:start; margin-bottom:16px;">
+      <div>
+        <h3>The Honest Ask</h3>
+        <div class="quote">
+          <p>We are not expecting every coach to be a constitutional learning expert in 2.5 weeks. We are asking every coach to <strong>understand the approach</strong>, contribute to curriculum design, and <strong>grow alongside the teams</strong> in Wave 4.</p>
+        </div>
+        <h4>What Technical Coaches Will Do</h4>
+        <ul>
+          <li>Lead Track A &amp; C sessions — code-level constitutional exercises</li>
+          <li>Run impl-2026-001 Slice 1 alongside Android/iOS/BFF squads</li>
+          <li>Run adoption workflow on 2–3 priority repos during Engage</li>
+          <li>Pair with product coaches on accelerated discovery sessions</li>
+        </ul>
+        <h4 style="margin-top:14px;">What Product Coaches Will Do</h4>
+        <ul>
+          <li>Lead Track B sessions — discovery trees, product thinking</li>
+          <li>Run disc-2026-002 Stages B–F to lock the coaching plan</li>
+          <li>Coach PMs through product discovery workflow (Stage A–F)</li>
+          <li>Connect Teach learnings to real OKR conversations in Engage</li>
+        </ul>
+      </div>
+      <div>
+        <h3>How We Learn Together</h3>
+        <div class="card gold-border" style="margin-bottom:12px;">
+          <h4>🤖 The Constitution Helps You Coach</h4>
+          <p>You don't need to have the answer — the constitutional framework provides it. When a team asks a question about state machines, the android-kotlin avatar has the evidence. When they ask about TSA biometric compliance, the check-in-travel avatar has the laws.</p>
+          <div style="margin-top:10px; background:linear-gradient(135deg,var(--aa-navy),#005b9f); border-radius:7px; padding:10px 16px; text-align:center;">
+            <span style="font-size:1rem; font-weight:800; color:#fff; letter-spacing:0.01em;">You are the guide. The constitution is the expert.</span>
+          </div>
+        </div>
+        <div class="card blue-border" style="margin-bottom:12px;">
+          <h4>📈 What Success Looks Like in Wave 4</h4>
+          <ul style="font-size:0.83rem;">
+            <li>Teams can articulate <em>why</em> laws like ENG-4.1 exist — and demonstrate them</li>
+            <li>At least 1 mobile repo adopts constitutional governance during Engage</li>
+            <li>impl-2026-001 Slice 1 closes at least 2 confirmed critical bugs</li>
+            <li>Product coaches lead at least 1 Stage A discovery with a product team</li>
+          </ul>
+        </div>
+        <div class="card navy-border">
+          <h4>🔑 The Precedent We're Setting</h4>
+          <p>Wave 4 is where we prove the model. Wave 5 is where we scale it. Everything we learn about how teams respond to constitutional learning — what lands, what needs adjustment — shapes the certification program that will run for every wave after this.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>12 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 13 ══ -->
+<div class="slide" id="slide-13">
+  <div class="slide-header gold">
+    <div class="eyebrow">Wave 5 &amp; Beyond — The Vision</div>
+    <h2>From Wave 4 Proof-of-Concept to Wave 5 Certified Program</h2>
+    <div class="sub">Self-service · Certification · Scale without instructor bottlenecks</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:22px; align-items:start; margin-bottom:16px;">
+      <div>
+        <h3>The Wave 5 Model</h3>
+        <p>In Wave 4 we prove constitutional learning works. In Wave 5 we systematize it — so a coach doesn't need to have been in the Wave 4 dojo to teach the next wave. The <strong>Hangar Workshop Program</strong> is the vehicle.</p>
+        <div class="stat-row">
+          <div class="stat-box ok"><div class="num">4</div><div class="lbl">Workshops<br>Ready to Publish</div></div>
+          <div class="stat-box ok"><div class="num">15h</div><div class="lbl">Total Workshop<br>Content</div></div>
+          <div class="stat-box ok"><div class="num">100%</div><div class="lbl">Self-Service<br>Artifact-driven</div></div>
+        </div>
+        <div class="card gold-border">
+          <h4>Certification Path (Wave 5)</h4>
+          <ul style="font-size:0.82rem;">
+            <li><strong>Coach Certification:</strong> Coaches complete all 4 workshops and demonstrate constitutional coaching in a Wave dojo before leading a cohort</li>
+            <li><strong>Team Certification:</strong> Teams leave the Hangar with committed artifacts proving constitutional competency in their domain</li>
+            <li><strong>Continuous:</strong> Constitutional lint runs in CI — certification is not a one-time event, it's an ongoing gate</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>The Four Self-Service Workshops</h3>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; gap:12px; align-items:flex-start; background:var(--gray-50); border-radius:8px; padding:12px 14px; border:1px solid var(--gray-200);">
+            <div style="font-size:1.4rem; flex-shrink:0;">🌱</div>
+            <div><strong style="font-size:0.88rem;">HAW-GF · Greenfield</strong><br><span style="font-size:0.78rem; color:var(--gray-600);">Bootstrap a new repo with the constitution. Avatar selection → constitutional proposal → Atomic TDD → lint PASS. · <strong>3 hours</strong></span></div>
+          </div>
+          <div style="display:flex; gap:12px; align-items:flex-start; background:var(--gray-50); border-radius:8px; padding:12px 14px; border:1px solid var(--gray-200);">
+            <div style="font-size:1.4rem; flex-shrink:0;">🔧</div>
+            <div><strong style="font-size:0.88rem;">HAW-LR · Legacy Rescue</strong><br><span style="font-size:0.78rem; color:var(--gray-600);">Adopt against a legacy codebase (4% coverage → SonarQube gate PASS). Archaeology, ADR, refactor vs. rewrite. · <strong>6 hours · 2 sessions</strong></span></div>
+          </div>
+          <div style="display:flex; gap:12px; align-items:flex-start; background:var(--gray-50); border-radius:8px; padding:12px 14px; border:1px solid var(--gray-200);">
+            <div style="font-size:1.4rem; flex-shrink:0;">🧠</div>
+            <div><strong style="font-size:0.88rem;">HAW-AW · Avatar Workflow</strong><br><span style="font-size:0.78rem; color:var(--gray-600);">Create, validate &amp; enrich avatars. RAG eval confirms ≥85% recall. What we ran for Wave 4 Mobile. · <strong>3 hours</strong></span></div>
+          </div>
+          <div style="display:flex; gap:12px; align-items:flex-start; background:var(--gray-50); border-radius:8px; padding:12px 14px; border:1px solid var(--gray-200);">
+            <div style="font-size:1.4rem; flex-shrink:0;">📋</div>
+            <div><strong style="font-size:0.88rem;">HAW-PD · Product Discovery</strong><br><span style="font-size:0.78rem; color:var(--gray-600);">Governed Stage A–F evidence chain. Every gate enforced. Implementation proposal output. · <strong>3 hours</strong></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>13 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 14 ══ -->
+<div class="slide" id="slide-14">
+  <div class="slide-header gold">
+    <div class="eyebrow">Wave 5 &amp; Beyond</div>
+    <h2>Why Constitutional Learning Scales: The Compounding Advantage</h2>
+  </div>
+  <div class="slide-body">
+    <div class="grid-3" style="gap:14px; margin-bottom:20px;">
+      <div class="card blue-border" style="text-align:center; padding:18px 14px;">
+        <div style="font-size:2rem; margin-bottom:8px;">🤖</div>
+        <h4>AI Agent as Instructor</h4>
+        <p style="font-size:0.8rem;">The learner gives one bootstrap prompt. The AI agent reads the workshop guide, drives the experience, enforces gates, and refuses to let the learner skip steps. <strong>No instructor required, no scheduled cohort.</strong></p>
+      </div>
+      <div class="card green-border" style="text-align:center; padding:18px 14px;">
+        <div style="font-size:2rem; margin-bottom:8px;">🔒</div>
+        <h4>Constitution-Enforced Gates</h4>
+        <p style="font-size:0.8rem;"><code>aa-constitution-lint</code> runs at every phase exit. The gate either passes or it does not. Not self-reporting, not trust. <strong>Evidence is committed — not remembered.</strong></p>
+      </div>
+      <div class="card gold-border" style="text-align:center; padding:18px 14px;">
+        <div style="font-size:2rem; margin-bottom:8px;">🚀</div>
+        <h4>10x Coach Leverage</h4>
+        <p style="font-size:0.8rem;">One coach working constitutionally can support many teams simultaneously — avatars carry the domain knowledge, lint enforces the gates, and artifacts persist the evidence. <strong>Coaches move from answering the same questions to raising the ceiling on what teams can achieve.</strong></p>
+      </div>
+    </div>
+    <h3>The Value Trajectory</h3>
+    <div style="display:flex; gap:0; margin:16px 0; align-items:stretch;">
+      <div style="flex:1; background:linear-gradient(135deg,#003057,#005b9f); color:#fff; border-radius:8px 0 0 8px; padding:16px 18px; text-align:center;">
+        <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.75; margin-bottom:6px;">Wave 4 (Now)</div>
+        <div style="font-weight:700; font-size:0.9rem; line-height:1.4;">Proof of model<br>Constitutional learning pilot<br>5 coaches · 1 mobile team</div>
+      </div>
+      <div style="display:flex; align-items:center; padding:0 4px; background:#e0e4ea; color:#555; font-size:1.2rem;">→</div>
+      <div style="flex:1; background:linear-gradient(135deg,#005f6b,#0097a7); color:#fff; padding:16px 18px; text-align:center;">
+        <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.75; margin-bottom:6px;">Wave 5</div>
+        <div style="font-weight:700; font-size:0.9rem; line-height:1.4;">Certified coaches<br>Self-service workshops live<br>Any team can onboard</div>
+      </div>
+      <div style="display:flex; align-items:center; padding:0 4px; background:#e0e4ea; color:#555; font-size:1.2rem;">→</div>
+      <div style="flex:1; background:linear-gradient(135deg,#1b5e20,#2e7d32); color:#fff; border-radius:0 8px 8px 0; padding:16px 18px; text-align:center;">
+        <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.75; margin-bottom:6px;">Beyond</div>
+        <div style="font-weight:700; font-size:0.9rem; line-height:1.4;">All Hangar waves<br>Self-serve on Learning Hub<br>Verified by artifact, not memory</div>
+      </div>
+    </div>
+    <div class="quote">
+      <p>"The goal is not for coaches to be the experts forever. The goal is to build a constitutional learning engine that runs without us — so we can keep raising the ceiling for what's possible at AA."</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile</span><span>14 / 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ SLIDE 15 ══ -->
+<div class="slide closing-slide" id="slide-15">
+  <div class="slide-header">
+    <div class="eyebrow">Hangar Sync · April 2026</div>
+    <h1>What Happens Next</h1>
+    <div class="sub">The constitution is running. The avatars are committed. The evidence is real.<br>Now we teach to it, coach with it, and let teams own it.</div>
+  </div>
+  <div class="slide-body" style="background:#fff; padding:28px 44px 36px;">
+    <div class="grid-2" style="gap:22px; margin-bottom:20px;">
+      <div>
+        <h3>Immediate Actions (Next 2.5 Weeks)</h3>
+        <div class="card green-border" style="margin-bottom:10px;">
+          <h4>For All Coaches</h4>
+          <ul style="font-size:0.83rem;">
+            <li>Read disc-2026-001 executive summaries (Android + iOS) — this is the evidence base for every conversation</li>
+            <li>Open the android-kotlin and ios-swift avatars — this is what the AI agent knows about our teams</li>
+            <li>Identify which Track you'll lead in Teach and align with team lead</li>
+          </ul>
+        </div>
+        <div class="card blue-border">
+          <h4>For Technical Coaches (Willem, Griff, Adeel)</h4>
+          <ul style="font-size:0.83rem;">
+            <li>Review impl-2026-001 — Slice 1 scope and critical bug list (CF-01–CF-10)</li>
+            <li>Prepare one Track A exercise using a real file from androidapps (suggest: CheckInManagerV3)</li>
+            <li>Run the constitutional adoption workflow against one pilot repo</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>Open Questions for This Session</h3>
+        <div class="card gold-border" style="margin-bottom:10px;">
+          <h4>🗣️ Discussion Points</h4>
+          <ul style="font-size:0.83rem;">
+            <li>Which Track A/B/C topics do we prioritize given the 2-week Teach window?</li>
+            <li>How do we sequence constitutional learning so it connects to Engage workflows?</li>
+            <li>What does Ram need to see at the Stage A exit gate for disc-2026-002?</li>
+            <li>Which Engage workflow (Legacy Rescue / Greenfield / Adoption) do we run first with which squad?</li>
+            <li>What's our Wave 5 ask — coach certification scope and timeline?</li>
+          </ul>
+        </div>
+        <div class="card navy-border">
+          <h4>📎 Reference Materials</h4>
+          <ul style="font-size:0.83rem;">
+            <li><code>reports/android/executive-summary-android.md</code></li>
+            <li><code>reports/ios/executive-summary-ios.md</code></li>
+            <li><code>hangar-ai-specs/changes/disc-2026-002/stage-a-initialize.md</code></li>
+            <li>Avatar Clinic artifacts: <code>avatar-enrichment-mobile-android/</code> &amp; <code>avatar-enrichment-mobile-ios/</code></li>
+            <li>Workshop Program: <code>workshop-program-slides.html</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="highlight-block">
+      <p style="text-align:center; font-size:0.95rem;">✈️ <strong>The Hangar AI Constitution is not a document we tell teams about. It is a process we run with them — and Wave 4 Mobile is where it becomes real.</strong></p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Hangar AI Constitution · Wave 4 Mobile · Hangar Sync April 2026</span><span>15 / 15</span></div>
+</div>
+
+</div><!-- #deck -->
+
+<div id="keyboard-hint">← → arrow keys or buttons to navigate</div>
+
+<script>
+  let current = 1;
+  const total = 15;
+
+  function showSlide(n) {
+    document.querySelector('.slide.active')?.classList.remove('active');
+    document.getElementById('slide-' + n)?.classList.add('active');
+    document.getElementById('slide-counter').textContent = n + ' / ' + total;
+    document.getElementById('btn-prev').disabled = n === 1;
+    document.getElementById('btn-next').disabled = n === total;
+    document.getElementById('progress-bar').style.width = ((n / total) * 100) + '%';
+    fitSlide();
+  }
+
+  function fitSlide() {
+    const slide = document.getElementById('slide-' + current);
+    if (!slide) return;
+    slide.style.transform = 'none';
+    const deck = document.getElementById('deck');
+    const availW = deck.clientWidth - 32;
+    const availH = deck.clientHeight - 16;
+    const slideH = slide.offsetHeight;
+    const scale = Math.min(availW / 960, availH / slideH, 1);
+    slide.style.transform = scale < 1 ? `scale(${scale})` : 'none';
+  }
+
+  function changeSlide(dir) {
+    const next = current + dir;
+    if (next >= 1 && next <= total) {
+      current = next;
+      showSlide(current);
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   changeSlide(-1);
+  });
+
+  window.addEventListener('resize', fitSlide);
+
+  showSlide(1);
+</script>
+</body>
+</html>

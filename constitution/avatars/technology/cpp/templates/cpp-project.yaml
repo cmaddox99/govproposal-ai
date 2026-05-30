@@ -1,0 +1,42 @@
+# C++ Project Declaration for AI Avatar Routing
+# Copy this file to .copilot/project.yaml in your repository root.
+# The AI avatar reads this file to provide version-appropriate C++ advice.
+#
+# Governance: hangar-ai-specs/changes/cpp-version-routing-foundation/PROPOSAL.md
+# Schema version: "1"
+
+cpp:
+  # Required: ISO C++ standard your project compiles against.
+  # Valid values: pre98 | 98 | 03 | 11 | 14 | 17 | 20 | 23
+  #
+  #   pre98  - MSVC 6.0 / .dsp/.dsw projects (e.g. SPEClient); pre-ISO
+  #   98     - ISO C++98 (1998 standard)
+  #   03     - ISO C++03 (2003 amendment, mostly identical to C++98)
+  #   11     - ISO C++11 — unique_ptr, lambdas, move semantics, nullptr
+  #   14     - ISO C++14 — make_unique, generic lambdas, relaxed constexpr
+  #   17     - ISO C++17 — string_view, optional, variant, scoped_lock, structured bindings
+  #   20     - ISO C++20 — concepts, coroutines, span, jthread, modules, designated init
+  #   23     - ISO C++23 — std::expected, flat containers, std::print
+  standard: "14"
+
+  # Optional: Highest idiom level your team will write in NEW code.
+  # Defaults to the same as standard if omitted.
+  # Use when your project compiles a newer standard but enforces a lower idiom level
+  # (e.g. standard: "17" but idiom_level: "14" because team is not yet using C++17 features).
+  # Valid values: same as standard above.
+  # idiom_level: "14"
+
+  # Optional: Primary compiler toolchain.
+  # Valid values: msvc | gcc | clang | other
+  # compiler: msvc
+
+  # Optional: Build system / toolset string for display in warnings.
+  # Examples: "Visual Studio 2019", "GCC 11.4", "Clang 15 (CMake 3.26)"
+  # toolset: ""
+
+  # Schema version — do not change. Used for drift detection.
+  schema_version: "1"
+
+  # Optional: Free-text notes about this project's C++ configuration.
+  # Shown alongside version warnings when avatar detects mismatch.
+  # notes: ""

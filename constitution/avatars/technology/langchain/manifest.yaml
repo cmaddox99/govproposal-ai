@@ -1,0 +1,141 @@
+# LangChain/LlamaIndex Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-langchain
+  type: technology
+  name: LangChain/LlamaIndex
+  version: "2.0.0"
+
+stack:
+  language: Python 3.11+
+  frameworks:
+    - LangChain
+    - LlamaIndex
+  testing:
+    - pytest
+    - pytest-asyncio
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+    tracing: LangSmith
+
+dependencies:
+  required:
+    - langchain: ">=0.1.0"
+    - langchain-openai: ">=0.0.5"
+    - langchain-community: ">=0.0.10"
+    - openai: ">=1.10.0"
+  dev:
+    - pytest: ">=8.0.0"
+    - pytest-asyncio: ">=0.23.0"
+    - pytest-cov: ">=4.1.0"
+    - ruff: ">=0.1.0"
+    - mypy: ">=1.8.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-6.1
+    title: Observability Law
+    example_file: examples/ENG-6.1-observability.md
+  - id: ENG-6.5
+    title: Input Validation
+    example_file: examples/ENG-6.5-validation.md
+
+conventions:
+  naming:
+    modules: snake_case
+    classes: PascalCase
+    chains: PascalCase + Chain
+    agents: PascalCase + Agent
+    tools: PascalCase + Tool
+    prompts: UPPER_SNAKE
+
+  patterns:
+    chain: "LCEL chain with RunnableParallel"
+    agent: "create_openai_functions_agent pattern"
+    tool: "BaseTool subclass with schema"
+    retriever: "Custom retriever with invoke method"
+
+commands:
+  test:
+    all: pytest
+    async: pytest --asyncio-mode=auto
+    chains: pytest tests/chains/
+    agents: pytest tests/agents/
+    coverage: pytest --cov=src --cov-report=html
+    integration: pytest tests/integration/ --run-integration
+  dev:
+    serve: langchain serve
+    debug_tracing: "export LANGCHAIN_TRACING_V2=true"
+
+project_structure: |
+  langchain_project/
+  ├── src/
+  │   ├── chains/                  # LangChain chains
+  │   │   ├── __init__.py
+  │   │   ├── qa_chain.py          # Q&A chain
+  │   │   ├── summarization.py     # Summarization chain
+  │   │   └── extraction.py        # Data extraction chain
+  │   ├── agents/                  # LangChain agents
+  │   │   ├── __init__.py
+  │   │   ├── research_agent.py
+  │   │   └── code_agent.py
+  │   ├── tools/                   # Custom tools
+  │   │   ├── __init__.py
+  │   │   ├── search_tool.py
+  │   │   ├── database_tool.py
+  │   │   └── api_tool.py
+  │   ├── retrievers/              # Custom retrievers
+  │   │   ├── __init__.py
+  │   │   ├── hybrid_retriever.py
+  │   │   └── reranking_retriever.py
+  │   ├── prompts/                 # Prompt templates
+  │   │   ├── __init__.py
+  │   │   ├── qa_prompts.py
+  │   │   └── agent_prompts.py
+  │   ├── embeddings/              # Embedding utilities
+  │   │   ├── __init__.py
+  │   │   └── cache.py
+  │   ├── vectorstores/            # Vector store setup
+  │   │   ├── __init__.py
+  │   │   └── pinecone_store.py
+  │   ├── callbacks/               # Custom callbacks
+  │   │   ├── __init__.py
+  │   │   ├── logging_callback.py
+  │   │   └── metrics_callback.py
+  │   └── utils/
+  │       ├── __init__.py
+  │       └── text_splitter.py
+  ├── tests/
+  │   ├── chains/
+  │   │   └── test_qa_chain.py
+  │   ├── agents/
+  │   │   └── test_research_agent.py
+  │   ├── tools/
+  │   │   └── test_tools.py
+  │   ├── integration/
+  │   │   └── test_full_pipeline.py
+  │   └── conftest.py              # Shared fixtures
+  ├── notebooks/
+  │   ├── exploration.ipynb
+  │   └── prompt_testing.ipynb
+  ├── configs/
+  │   ├── chains.yaml              # Chain configurations
+  │   ├── prompts.yaml             # Prompt templates
+  │   └── models.yaml              # Model configurations
+  ├── data/
+  │   └── documents/               # Source documents for RAG
+  ├── .env.example
+  ├── requirements.txt
+  └── README.md

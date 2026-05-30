@@ -1,0 +1,70 @@
+avatar:
+  id: avatar-product-network-automation
+  type: product
+  name: "Network Automation"
+  version: "1.0.0"
+  created: "2026-04-28"
+  last_updated: "2026-04-28"
+
+domain:
+  category: "Product (Internal Operations)"
+  description: |
+    Network Automation governs AI-assisted development of IT network infrastructure tooling
+    at American Airlines — spanning Nautobot-driven device management, DNS lifecycle,
+    firewall rule management, network monitoring, and PaaS subnet provisioning.
+    Every automated network change must satisfy IT change management controls and produce
+    a complete audit trail before device configuration is applied.
+  personas:
+    - Network Engineer
+    - NOC Operator
+    - Platform/Cloud Engineer
+    - IT Change Manager
+  personas_file: "examples/personas.md"
+
+core_journeys:
+  - "Network change request — Nautobot inventory to device push"
+  - "DNS record lifecycle — create, update, delete via Apigee API"
+  - "Firewall rule lifecycle — request, approve, push, audit"
+  - "Network health monitoring and alert response (MOCCA/Eagle Eye)"
+  - "PaaS subnet provisioning"
+
+activates:
+  skills:
+    - skill-spec-governance
+    - skill-02-user-journey-mapping
+    - skill-03-executable-spec
+    - skill-13-observability
+    - skill-11-incident-response
+    - skill-27-constitution-compliance
+  workflows:
+    - product-discovery-stage-a-f
+    - avatar-workflow
+
+specializes_laws:
+  - id: PRD-1.1
+    title: "Customer-Centric Law"
+    example_file: examples/PRD-1.1-discovery.md
+  - id: PRD-1.2
+    title: "Problem-First Law"
+    example_file: examples/PRD-1.2-problem-first.md
+  - id: PRD-1.5
+    title: "Evidence-Based Decision Law"
+    example_file: examples/PRD-1.5-evidence-based.md
+  - id: PRD-2.1
+    title: "Problem Validation Law"
+    example_file: examples/PRD-2.1-journey.md
+  - id: PRD-2.5
+    title: "Discovery Stage-Gate Law"
+    example_file: examples/PRD-2.5-stage-gate.md
+  - id: PRD-5.1
+    title: "MVP Law"
+    example_file: examples/PRD-5.1-metrics.md
+  - id: PRD-6.2
+    title: "Retention Over Acquisition Law"
+    example_file: examples/PRD-6.2-retention.md
+  - id: BUS-2.1
+    title: "Regulatory Mapping Law"
+    example_file: examples/BUS-2.1-change-compliance.md
+  - id: BUS-7.1
+    title: "Audit Trail Law"
+    example_file: examples/BUS-7.1-audit-trail.md

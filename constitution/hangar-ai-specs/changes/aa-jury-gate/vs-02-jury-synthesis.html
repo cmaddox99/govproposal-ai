@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artifact — Hangar AI Constitution</title>
+<style>
+/* ── AA Constitutional Design System ── */
+@page { size: 1088px 1408px; margin: 0; }
+
+:root {
+  --aa-blue: #003087;
+  --aa-red:  #C8102E;
+  --ink:     #17202a;
+  --muted:   #5f6d7a;
+  --line:    #d9e1ea;
+  --soft:    #f3f7fb;
+  --soft-2:  #eef3f8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* ── Page layout ── */
+.page {
+  width: 1088px;
+  min-height: 1408px;
+  padding: 94px 88px 100px;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  page-break-after: always;
+}
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 12px;
+  background: linear-gradient(90deg, var(--aa-blue), var(--aa-red));
+}
+.page::after {
+  content: "✈";
+  position: absolute;
+  right: 34px; bottom: -10px;
+  font-size: 240px;
+  color: var(--aa-blue);
+  opacity: .03;
+  transform: rotate(18deg);
+  pointer-events: none;
+}
+.page.cover {
+  background:
+    radial-gradient(circle at 85% 16%, rgba(0,48,135,.08), transparent 22%),
+    linear-gradient(180deg, #fbfcfe 0%, #f1f6fa 100%);
+}
+.footer {
+  position: absolute;
+  left: 88px; right: 88px; bottom: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5ebf1;
+  padding-top: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #7f8b97;
+}
+.footer .pn { color: var(--aa-blue); font-weight: 800; }
+
+/* ── Typography ── */
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--aa-red);
+}
+h1 {
+  margin-top: 22px;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--aa-blue);
+  font-weight: 850;
+  max-width: 820px;
+}
+h2 {
+  margin-top: 32px;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -.6px;
+  color: var(--aa-blue);
+  font-weight: 800;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+h3 { margin-top: 20px; font-size: 19px; color: var(--aa-blue); font-weight: 700; }
+h4 { margin-top: 16px; font-size: 16px; color: var(--ink); font-weight: 700; }
+p  { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #32404d; }
+ul, ol { margin-top: 10px; padding-left: 24px; }
+li { font-size: 15px; line-height: 1.55; color: #32404d; margin-top: 4px; }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  background: var(--soft-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+pre {
+  margin-top: 14px;
+  background: #1e2832;
+  color: #c9d1d9;
+  padding: 16px 18px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.4; }
+th { border-top: 0; background: var(--soft); color: var(--aa-blue); font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+blockquote { border-left: 4px solid var(--aa-blue); margin-top: 14px; padding: 10px 16px; background: var(--soft); color: var(--muted); font-size: 14px; }
+
+/* ── Meta / stat cards ── */
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; max-width: 820px; }
+.meta-card { border: 1px solid var(--line); background: #fff; padding: 16px 18px; }
+.meta-card .k { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: var(--aa-red); font-weight: 800; }
+.meta-card .v { margin-top: 7px; font-size: 17px; line-height: 1.4; color: #23303d; }
+.summary-band { margin-top: 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card { border: 1px solid var(--line); background: #fff; padding: 14px; }
+.stat-card .n { font-size: 34px; line-height: 1; color: var(--aa-blue); font-weight: 850; letter-spacing: -1px; }
+.stat-card .l { margin-top: 7px; font-size: 13px; line-height: 1.35; color: #52606d; }
+
+/* ── Status badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.status-badge.proposed  { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.implemented { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.archived  { background: var(--soft-2); color: var(--muted); border: 1px solid var(--line); }
+.status-badge.accepted  { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.deprecated { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.high   { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.medium { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.low    { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+
+/* ── Chip row ── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--aa-blue);
+  letter-spacing: .3px;
+}
+
+/* ── ADR header ── */
+.adr-header {
+  border: 2px solid var(--aa-blue);
+  padding: 20px 24px;
+  margin-top: 24px;
+  background: var(--soft);
+}
+.adr-header .adr-num { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); font-weight: 700; }
+.adr-header h1 { margin-top: 8px; font-size: 32px; }
+.adr-header .adr-meta { display: flex; gap: 20px; margin-top: 14px; align-items: center; flex-wrap: wrap; }
+.adr-header .adr-meta-item { font-size: 13px; color: var(--muted); }
+.adr-header .adr-meta-item strong { color: var(--ink); }
+
+/* ── Confidence band ── */
+.confidence-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-left: 6px solid var(--aa-blue);
+  background: var(--soft);
+  margin-top: 24px;
+}
+.confidence-band .cb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.confidence-band.high  { border-left-color: #1b7a2b; }
+.confidence-band.medium { border-left-color: #b36b00; }
+.confidence-band.low   { border-left-color: var(--aa-red); }
+
+/* ── Tasks / checklist ── */
+.task-done, .task-pending {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 5px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.task-done .cb   { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; background: #1b7a2b; border: 2px solid #1b7a2b; display: flex; align-items: center; justify-content: center; }
+.task-done .cb::after { content: "✓"; color: #fff; font-size: 11px; font-weight: 900; }
+.task-pending .cb { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; border: 2px solid var(--aa-blue); }
+.task-done .task-text   { color: #52606d; text-decoration: line-through; }
+.task-pending .task-text { color: #32404d; }
+.phase-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+.phase-num {
+  background: var(--aa-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+.progress-table { margin-top: 20px; }
+
+/* ── Law citation tooltips (Task 4.4) ── */
+.law-cite {
+  position: relative;
+  display: inline;
+  color: var(--aa-blue);
+  font-weight: 700;
+  border-bottom: 1px dashed var(--aa-blue);
+  cursor: help;
+  white-space: nowrap;
+}
+.law-cite[data-non-negotiable="true"] {
+  color: var(--aa-red);
+  border-bottom-color: var(--aa-red);
+}
+.law-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 9999;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2832;
+  color: #e8edf2;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: normal;
+  min-width: 220px;
+  max-width: 340px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: opacity .15s ease, visibility .15s ease;
+  text-align: left;
+  font-weight: 400;
+}
+.law-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e2832;
+}
+.law-tooltip .law-summary { font-size: 12px; color: #9aaab8; margin-top: 4px; display: block; }
+.law-tooltip em { color: #f0a500; font-style: normal; font-size: 11px; font-weight: 700; }
+.law-cite:hover .law-tooltip,
+.law-cite:focus .law-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+/* Flip tooltip below when near top of viewport */
+.law-cite.flip-below .law-tooltip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.law-cite.flip-below .law-tooltip::after {
+  top: auto; bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1e2832;
+}
+
+@media print {
+  .law-tooltip { display: none; }
+  .law-cite { border-bottom: none; color: inherit; font-weight: inherit; }
+}
+</style>
+</head>
+<body>
+
+
+<div class="page cover">
+  <div class="eyebrow">Hangar AI Constitution</div>
+  <h1>Governance Artifact</h1>
+  <div class="footer"><div>Governance Artifact</div><div class="pn">1</div></div>
+</div>
+<div class="page content">
+  <h1>VS-02 Judicial Synthesis: Extractor</h1>
+<h2>Round 1 Jury Findings</h2>
+<p>Five jurors unanimously returned <strong>NEEDS_REVISION</strong> for the initial VS-02 implementation.
+Seven corrections were required and applied at commit <code>eec7079</code>.</p>
+<h3>J1 (claude-opus-4.6 — Domain Sceptic)</h3>
+<ul>
+<li><code>yaml.dump(sort_keys=True)</code> reorders keys — breaks idempotency requirement</li>
+<li>Empty dict after pop leaves malformed output</li>
+<li><code>parse()</code> no-frontmatter ambiguity (returns <code>({}, &quot;&quot;)</code>)</li>
+<li>Silent <code>YAMLError</code> swallowed in strip path</li>
+</ul>
+<h3>J2 (claude-sonnet-4.6 — Technical Expert)</h3>
+<ul>
+<li><code>sort_keys</code> + complex scalar corruption → <strong>recommended line-level filter</strong> (adopted)</li>
+<li>CRLF normalisation gap identified</li>
+</ul>
+<h3>J3 (gpt-5.4 — Strategic/Product Lens)</h3>
+<ul>
+<li><code>parse()</code> no-frontmatter ambiguity; hash not source-stable across YAML round-trips</li>
+</ul>
+<h3>J4 (gpt-5.2 — Defense Counsel)</h3>
+<ul>
+<li>Non-dict frontmatter not guarded in either function</li>
+<li><code>sort_keys</code> issue confirmed; mutation survivors noted</li>
+</ul>
+<h3>J5 (gpt-5.4-mini — Devil's Advocate)</h3>
+<ul>
+<li>Non-lossless round-trip confirmed</li>
+<li>CRLF normalisation gap</li>
+<li>UTF-8 BOM breaks frontmatter detection</li>
+</ul>
+<h3>R1 Corrections Applied</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Correction</th>
+<th>Commit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C-P6-VS02-R1-001</td>
+<td>Switch <code>strip_jury_gate</code> to line-level filter (no yaml.dump)</td>
+<td><code>eec7079</code></td>
+</tr>
+<tr>
+<td>C-P6-VS02-R1-002</td>
+<td><code>isinstance(dict)</code> guard in <code>parse()</code></td>
+<td><code>eec7079</code></td>
+</tr>
+<tr>
+<td>C-P6-VS02-R1-003</td>
+<td><code>isinstance(dict)</code> guard in <code>strip_jury_gate()</code></td>
+<td><code>eec7079</code></td>
+</tr>
+<tr>
+<td>C-P6-VS02-R1-004</td>
+<td><code>_strip_bom()</code> helper; applied in both functions</td>
+<td><code>eec7079</code></td>
+</tr>
+<tr>
+<td>C-P6-VS02-R1-005</td>
+<td>Test for empty frontmatter <code>---\n---\nbody</code> contract</td>
+<td><code>eec7079</code></td>
+</tr>
+<tr>
+<td>C-P6-VS02-R1-006</td>
+<td>Module docstring with pipeline ordering, CRLF, design notes</td>
+<td><code>eec7079</code></td>
+</tr>
+<tr>
+<td>C-P6-VS02-R1-007</td>
+<td>Mutation-killing tests (key order, block scalar, BOM, non-dict)</td>
+<td><code>eec7079</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Round 2 Jury Findings</h2>
+<p>Two jurors returned <strong>APPROVED</strong> (J2, J3). Three returned <strong>NEEDS_REVISION</strong> (J1, J4, J5).
+Two additional corrections were required and applied at commit <code>ebffbcb</code>.</p>
+<h3>J1 (claude-opus-4.6 — Domain Sceptic)</h3>
+<ul>
+<li><strong>R2-001 MAJOR:</strong> Blank lines within <code>jury_gate:</code> block scalars leaked through the skip filter
+— <code>if skip and line and line[0] in (...)</code> reset <code>skip=False</code> on empty lines</li>
+<li><strong>R2-002 MINOR:</strong> Spurious <code>\n</code> when <code>jury_gate:</code> is the only frontmatter key; produced
+<code>---\n\n---</code> instead of <code>---\n---</code></li>
+</ul>
+<h3>J2 (claude-sonnet-4.6 — Technical Expert)</h3>
+<p>All 7 R1 corrections confirmed. Blank-line issue noted as LOW non-blocking.
+<strong>Verdict: APPROVED</strong></p>
+<h3>J3 (gpt-5.4 — Strategic/Product Lens)</h3>
+<p>Implementation adequate for downstream VS-03/04/05 integration. No new issues.
+<strong>Verdict: APPROVED</strong></p>
+<h3>J4 (gpt-5.2 — Defense Counsel)</h3>
+<p>Mutant equivalence debate (stale cache reported 8 survivors, actual 6). Coverage claim
+on overall package (not extractor.py scope). Both resolved by anchor fix and scope clarification.</p>
+<h3>J5 (gpt-5.4-mini — Devil's Advocate)</h3>
+<p>Blank-line issue confirmed as genuine edge case. Agreed fix approach is correct.</p>
+<h3>R2 Corrections Applied</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Correction</th>
+<th>Commit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C-P6-VS02-R2-001</td>
+<td>Fix skip: <code>if skip: if not line or line[0] in (&quot; &quot;, &quot;\t&quot;): continue; skip=False</code></td>
+<td><code>ebffbcb</code></td>
+</tr>
+<tr>
+<td>C-P6-VS02-R2-002</td>
+<td>Sole-key fix: <code>fm_block = &quot;\n&quot;.join(out_lines) + &quot;\n&quot; if out_lines else &quot;&quot;</code></td>
+<td><code>ebffbcb</code></td>
+</tr>
+</tbody>
+</table>
+<p>Also: Anchored <code>match=r&quot;^frontmatter must&quot;</code> to eliminate mutant 115.</p>
+<hr />
+<h2>Judicial Synthesis</h2>
+<p><strong>Synthesizer:</strong> claude-opus-4.5 (model distinct from all 5 jurors per greenfield-development.md)</p>
+<p>All 9 corrections (7 from R1, 2 from R2) are <strong>CONFIRMED</strong> in the final implementation at
+commit <code>ebffbcb</code>.</p>
+<h3>Quality Metrics</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+<th>Threshold</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tests</td>
+<td>33</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Coverage (extractor.py)</td>
+<td>100%</td>
+<td>≥90%</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Mutation score</td>
+<td>82/88 = 93.2%</td>
+<td>≥85%</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Ruff</td>
+<td>All checks passed</td>
+<td>0 errors</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<h3>Surviving Mutants Rationale</h3>
+<table>
+<thead>
+<tr>
+<th>Mutant</th>
+<th>Reason equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>56, 82</td>
+<td>Type annotation union operators — no runtime effect</td>
+</tr>
+<tr>
+<td>81</td>
+<td><code>or→and</code> guard — equivalent for synthesis files starting with <code>---</code> per Phase 4 §2.1 contract</td>
+</tr>
+<tr>
+<td>128, 129</td>
+<td><code>skip = False</code> init — first <code>fm_lines</code> line is always a top-level YAML key; reset on first iteration</td>
+</tr>
+<tr>
+<td>152</td>
+<td>Tab-indent branch — PyYAML rejects tab-indented YAML per spec; branch unreachable</td>
+</tr>
+</tbody>
+</table>
+<h3>Verdict</h3>
+<p><strong>VERDICT: APPROVED</strong></p>
+<p>VS-02 is production-ready. The line-level filter design correctly preserves YAML formatting
+while safely removing <code>jury_gate:</code> blocks. The R2 blank-line bug (C-P6-VS02-R2-001) was a
+genuine edge case caught and resolved by the jury process.</p>
+<p>All Phase 4 §2.1 normative API contracts are implemented and verified. VS-03 (Validator) may proceed.</p>
+
+  <div class="footer"><div>Governance Artifact</div><div class="pn">2</div></div>
+</div>
+
+<script>
+// Flip tooltip below the citation when it would overflow the top of the viewport
+document.querySelectorAll('.law-cite').forEach(function(el) {
+  el.addEventListener('mouseenter', function() {
+    var rect = el.getBoundingClientRect();
+    var tooltip = el.querySelector('.law-tooltip');
+    if (!tooltip) return;
+    var tipH = tooltip.offsetHeight || 80;
+    if (rect.top < tipH + 12) {
+      el.classList.add('flip-below');
+    } else {
+      el.classList.remove('flip-below');
+    }
+  });
+  // Keyboard accessibility
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  el.setAttribute('aria-describedby', 'tooltip-' + el.dataset.lawId);
+  var tip = el.querySelector('.law-tooltip');
+  if (tip) tip.id = 'tooltip-' + el.dataset.lawId;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+# Business Domain Laws
+# Prefix: BUS
+# Source: constitution/base/BUSINESS-CONSTITUTION.md
+
+domain: business
+prefix: BUS
+version: "2.0.0"
+authority: American Airlines Compliance & Legal
+
+description: |
+  Business laws governing compliance, data governance, privacy, risk management,
+  and aviation-specific regulatory requirements. Ensures all software development
+  adheres to legal, regulatory, and corporate policy requirements.
+
+priority_hierarchy:
+  1: Legal Compliance - FAA, TSA, DOT, GDPR, CCPA requirements
+  2: Safety - Passenger and operational safety
+  3: Privacy - Customer data protection
+  4: Security - System and data security
+  5: Business Continuity - Operational resilience
+  6: Efficiency - Operational optimization
+
+articles:
+  I:
+    title: Foundational Principles
+    non_negotiable: [BUS-1.1]
+    laws:
+      - BUS-1.1  # Priority Hierarchy Law (NON-NEGOTIABLE)
+      - BUS-1.2  # Risk-Based Approach Law
+      - BUS-1.3  # Accountability Law
+      - BUS-1.4  # Transparency Law
+      - BUS-1.5  # Continuous Improvement Law
+
+  II:
+    title: Compliance Framework Laws
+    non_negotiable: [BUS-2.1, BUS-2.2, BUS-2.3]
+    laws:
+      - BUS-2.1  # FAA Compliance Law (FAR, DO-178C)
+      - BUS-2.2  # Control Framework Law (NON-NEGOTIABLE)
+      - BUS-2.3  # DOT Consumer Protection Law
+      - BUS-2.4  # Evidence Collection Law
+
+  III:
+    title: Data Governance Laws
+    non_negotiable: [BUS-3.1, BUS-3.6]
+    laws:
+      - BUS-3.1  # Data Classification Law
+      - BUS-3.2  # Data Inventory Law
+      - BUS-3.3  # Data Retention Law
+      - BUS-3.4  # Data Quality Law
+      - BUS-3.5  # Cross-Border Data Transfer Law
+      - BUS-3.6  # Monetary Precision Law (NON-NEGOTIABLE)
+
+  IV:
+    title: Privacy Laws
+    non_negotiable: [BUS-4.3]
+    laws:
+      - BUS-4.1  # Privacy by Design Law
+      - BUS-4.2  # Consent Management Law
+      - BUS-4.3  # Data Subject Rights Law (NON-NEGOTIABLE)
+      - BUS-4.4  # Privacy Notice Law
+      - BUS-4.5  # Privacy Impact Assessment Law
+
+  V:
+    title: Security Governance Laws
+    status: deferred
+    laws:
+      - BUS-5.1  # Security Policy Law
+      - BUS-5.2  # Access Control Governance Law
+      - BUS-5.3  # Vulnerability Management Law
+      - BUS-5.4  # Security Assessment Law
+      - BUS-5.5  # Third-Party Security Law
+
+  VI:
+    title: Risk Management Laws
+    non_negotiable: [BUS-6.1]
+    laws:
+      - BUS-6.1  # Risk Assessment Law
+      - BUS-6.2  # Risk Register Law
+      - BUS-6.3  # Risk Appetite Law
+      - BUS-6.4  # Risk Reporting Law
+
+  VII:
+    title: Audit & Evidence Laws
+    non_negotiable: [BUS-7.1]
+    laws:
+      - BUS-7.1  # Audit Trail Law (NON-NEGOTIABLE)
+      - BUS-7.2  # Evidence Integrity Law
+      - BUS-7.3  # Audit Readiness Law
+      - BUS-7.4  # Internal Audit Law
+
+  VIII:
+    title: Vendor & Third-Party Laws
+    status: deferred
+    laws:
+      - BUS-8.1  # Vendor Assessment Law
+      - BUS-8.2  # Contract Requirements Law
+      - BUS-8.3  # SLA Management Law
+      - BUS-8.4  # Third-Party Monitoring Law
+      - BUS-8.5  # Supply Chain Risk Law
+
+  IX:
+    title: Incident Management Laws
+    non_negotiable: [BUS-9.3]
+    laws:
+      - BUS-9.1  # Incident Classification Law
+      - BUS-9.2  # Incident Response Law
+      - BUS-9.3  # Breach Notification Law (NON-NEGOTIABLE)
+      - BUS-9.4  # Post-Incident Review Law
+
+  X:
+    title: Business Continuity Laws
+    status: deferred
+    laws:
+      - BUS-10.1  # BCP Requirements Law
+      - BUS-10.2  # Disaster Recovery Law
+      - BUS-10.3  # IROP (Irregular Operations) Law
+      - BUS-10.4  # Testing & Validation Law
+      - BUS-10.5  # Communication Protocol Law

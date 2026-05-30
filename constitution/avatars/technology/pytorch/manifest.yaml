@@ -1,0 +1,133 @@
+# PyTorch Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-pytorch
+  type: technology
+  name: PyTorch
+  version: "2.0.0"
+
+stack:
+  language: Python 3.11+
+  framework: PyTorch 2.0+
+  testing:
+    - pytest
+    - torch.testing
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - torch: ">=2.0.0"
+    - torchvision: ">=0.15.0"
+    - torchaudio: ">=2.0.0"
+  dev:
+    - pytest: ">=8.0.0"
+    - pytest-cov: ">=4.1.0"
+    - ruff: ">=0.1.0"
+    - mypy: ">=1.8.0"
+    - onnx: ">=1.14.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+
+conventions:
+  naming:
+    modules: snake_case
+    model_classes: PascalCase
+    layers: PascalCase
+    functions: snake_case
+    tensors: snake_case
+    config_keys: snake_case
+
+  patterns:
+    model: "nn.Module with forward method"
+    trainer: "Trainer class with train_epoch/evaluate"
+    dataset: "Dataset subclass with __len__/__getitem__"
+    transform: "Callable transforms"
+
+commands:
+  test:
+    all: pytest
+    gpu: pytest --run-gpu
+    fast: pytest -m "not slow"
+    models: pytest tests/models/
+    coverage: pytest --cov=src --cov-report=html
+    parallel: pytest -n auto
+  dev:
+    check_cuda: "python -c \"import torch; print(torch.cuda.is_available())\""
+    train: python scripts/train.py --config configs/experiment/baseline.yaml
+  profile:
+    training: python -m torch.profiler scripts/train.py
+
+project_structure: |
+  pytorch_project/
+  ├── src/
+  │   ├── models/                  # Model architectures
+  │   │   ├── __init__.py
+  │   │   ├── base.py              # Base model class
+  │   │   ├── classifier.py        # Classification models
+  │   │   ├── segmentation.py      # Segmentation models
+  │   │   └── layers/              # Custom layers
+  │   │       ├── __init__.py
+  │   │       └── attention.py
+  │   ├── data/                    # Data handling
+  │   │   ├── __init__.py
+  │   │   ├── dataset.py           # Custom datasets
+  │   │   ├── transforms.py        # Data transforms
+  │   │   └── sampler.py           # Custom samplers
+  │   ├── training/                # Training logic
+  │   │   ├── __init__.py
+  │   │   ├── trainer.py           # Training loop
+  │   │   ├── callbacks.py         # Training callbacks
+  │   │   └── schedulers.py        # LR schedulers
+  │   ├── evaluation/              # Evaluation
+  │   │   ├── __init__.py
+  │   │   ├── metrics.py           # Metrics computation
+  │   │   └── visualization.py     # Result visualization
+  │   ├── inference/               # Inference
+  │   │   ├── __init__.py
+  │   │   ├── predictor.py         # Prediction wrapper
+  │   │   └── onnx_export.py       # ONNX export
+  │   └── utils/
+  │       ├── __init__.py
+  │       ├── checkpointing.py
+  │       └── distributed.py
+  ├── tests/
+  │   ├── models/
+  │   │   └── test_classifier.py
+  │   ├── data/
+  │   │   └── test_dataset.py
+  │   ├── training/
+  │   │   └── test_trainer.py
+  │   └── conftest.py
+  ├── configs/
+  │   ├── model/
+  │   │   └── resnet.yaml
+  │   ├── training/
+  │   │   └── default.yaml
+  │   └── experiment/
+  │       └── baseline.yaml
+  ├── scripts/
+  │   ├── train.py
+  │   ├── evaluate.py
+  │   └── export.py
+  ├── notebooks/
+  │   ├── exploration.ipynb
+  │   └── analysis.ipynb
+  ├── requirements.txt
+  └── README.md

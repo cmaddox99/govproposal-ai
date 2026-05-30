@@ -1,0 +1,168 @@
+avatar:
+  id: avatar-product-network-planning
+  type: product
+  name: "Network Planning & Optimization"
+  version: "1.0.0"
+  created: "2026-02-20"
+  last_updated: "2026-02-20"
+
+domain:
+  category: "Network Planning & Operational Optimization"
+  description: |
+    American Airlines Network Planning & Optimization provides data-driven decision support
+    for flight network design, capacity planning, and operational resource allocation.
+    Critical value drivers include route profitability forecasting, network capacity optimization,
+    demand prediction accuracy, and automated scenario analysis for strategic planning decisions.
+  
+  personas:
+    - Network Planning Analyst
+    - Capacity Planning Manager
+    - Revenue Management Strategist
+    - Operations Research Engineer
+  personas_file: "examples/personas.md"
+
+core_journeys:
+  - "Route Profitability Analysis & Forecasting"
+  - "Network Capacity Optimization & Reallocation"
+  - "Demand Prediction & Scenario Modeling"
+  - "Strategic Network Planning & What-If Analysis"
+  - "Operational Resource Allocation"
+
+activates:
+  skills:
+    # Discovery & Research
+    - skill-spec-governance
+    - skill-01-research-discovery
+    - skill-02-research-synthesis
+    
+    # Product Planning
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+    
+    # Development
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+    
+    # ML/AI
+    - skill-22-ml-experiment-tracking
+    - skill-24-model-validation
+    
+    # Brownfield/Enrichment
+    - skill-30-taxonomy-governed-avatar-enrichment
+
+    # Compliance
+    - skill-27-constitution-compliance
+
+  workflows:
+    - product-discovery-stage-a-f
+    - workflow-ml-model-development
+    - legacy-rescue-decision-track
+
+specializes_laws:
+  - id: PRD-1.1
+    title: "Continuous Discovery"
+    description: "Understand network planning needs through analyst interviews, strategic planning research, and operational constraint analysis"
+    example_file: "examples/PRD-1.1-discovery.md"
+    key_practices:
+      - "Interview network planners about route analysis pain points"
+      - "Analyze strategic planning cycles and decision-making bottlenecks"
+      - "Research operational constraints (crew, aircraft, gate availability)"
+  
+  - id: PRD-2.1
+    title: "User Journey Mapping"
+    description: "Map analyst workflows from data collection to strategic recommendation, identifying manual steps and error-prone handoffs"
+    example_file: "examples/PRD-2.1-journey.md"
+    key_practices:
+      - "Document data pipeline from source to analysis (manual ETL steps)"
+      - "Identify pain points in scenario modeling (rerunning models takes hours)"
+      - "Track collaboration touchpoints between planning, ops, and revenue teams"
+  
+  - id: PRD-4.1
+    title: "MVP & Product-Market Fit"
+    description: "Define minimal viable planning tools with pilot analysts, measure time-to-insight and forecast accuracy improvements"
+    example_file: "examples/PRD-4.1-mvp.md"
+    key_practices:
+      - "Pilot with 2-3 analysts on specific route analysis tasks"
+      - "Measure baseline vs. new tool: time-to-insight, forecast accuracy, scenario count"
+      - "Decision gate: 30%+ time savings OR 10%+ accuracy improvement = scale"
+  
+  - id: ENG-4.1
+    title: "Atomic TDD"
+    description: "Write tests for planning logic, forecast models, and optimization algorithms before implementation (Brownfield: preserve R/PySpark logic during refactoring)"
+    example_file: "examples/ENG-4.1-tdd.md"
+    key_practices:
+      - "Test route profitability calculations with known data"
+      - "Test demand forecast model with historical accuracy benchmarks"
+      - "Regression test existing R/PySpark models during Python refactoring"
+  
+  - id: ENG-10.1
+    title: "Brownfield Code Preservation"
+    description: "When modernizing legacy network planning tools (R, PySpark, notebooks), preserve existing logic and require explicit approval for rewrites"
+    example_file: "examples/ENG-10.1-brownfield.md"
+    key_practices:
+      - "Default to preserve R/PySpark code with containerization or API wrappers"
+      - "Require side-by-side validation (output parity tests) for any logic migration"
+      - "Get stakeholder signoff before changing forecasting algorithms"
+
+  # Compliance enrichment (Phase 8)
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: "FAA slot controls (DCA/JFK/LGA/ORD); DOT Essential Air Service (EAS) obligations; bilateral air service agreements for international routes; slot waiver policies during irregular operations"
+  - id: BUS-2.4
+    title: "Evidence Collection"
+    description: "Network planning decisions affecting EAS routes must include regulatory justification. FAA slot usage audit trail: operated vs. waived, waiver reason, reporting to FAA within required window"
+  - id: ENG-6.7
+    title: "Audit Trail"
+    description: "All route addition/deletion decisions, slot relinquishments, and EAS-affected schedule changes must be immutably logged with regulatory basis and stakeholder approval evidence"
+
+dependencies:
+  - "Revenue Management System"
+  - "Crew Management System (slot constraints)"
+  - "Airport Slot Coordination Systems (Sabre AirVision)"
+  - "FAA Slot Administration Office API"
+  - "DOT Essential Air Service Database"
+
+legacy_context:
+  description: |
+    Network Planning & Optimization systems often exist as brownfield codebases with:
+    - Legacy R scripts for statistical forecasting and route profitability models
+    - PySpark pipelines for large-scale network optimization and capacity allocation
+    - Jupyter notebooks for ad-hoc analysis and scenario modeling
+    - H2O/scikit-learn models for demand prediction
+    
+    When adopting this avatar for brownfield projects:
+    1. DO NOT rewrite R/PySpark to Python without explicit migration approval
+    2. Preserve existing forecasting logic unless accuracy improvements are validated
+    3. Containerize legacy models rather than reimplementing algorithms
+    4. Run side-by-side validation tests before replacing any production logic
+    
+  brownfield_workflow: "docs/guides/adoption/taxonomy-aligned-avatar-enrichment-workflow.md"
+  preservation_policy: "docs/guides/adoption/brownfield-code-preservation.md"
+
+related_avatars:
+  products:
+    - cargo-freight
+    - loyalty-aadvantage
+  technology:
+    - azure-ml
+    - python-fastapi
+    - legacy-ml-interop
+    - python-streamlit
+
+rag_retrieval:
+  triggers:
+    - "network planning"
+    - "route optimization"
+    - "capacity planning"
+    - "demand forecasting"
+    - "network capacity"
+    - "route profitability"
+    - "flight network"
+    - "scenario modeling"
+    - "operational optimization"
+    - "resource allocation"
+  anti_triggers:
+    - "ORAA" # Organization name, not product capability
+    - "Data Engineering" # Team name, not product domain

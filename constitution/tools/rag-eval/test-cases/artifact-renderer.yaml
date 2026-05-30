@@ -1,0 +1,24 @@
+test_cases:
+
+  # --- Artifact HTML Rendering (skill-artifact-html-rendering.md) ---
+
+  - id: tc-ar-001
+    question: "How do I render a proposal as HTML with law citation tooltips?"
+    expected_laws: [ENG-13.1]
+    expected_skills: [skill-artifact-html-rendering.md]
+    expected_avatars: []
+    category: skills
+
+  - id: tc-ar-002
+    question: "Generate a PDF from an ADR following the constitutional format"
+    expected_laws: [ENG-13.1]
+    expected_skills: [skill-artifact-html-rendering.md]
+    expected_avatars: []
+    category: skills
+
+  - id: tc-ar-003
+    question: "What law governs the presentation of governance artifacts?"
+    expected_laws: [ENG-13.1]
+    expected_skills: [skill-artifact-html-rendering.md]
+    expected_avatars: []
+    category: laws

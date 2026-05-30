@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 4 — Build / Correct / Enrich | Android Avatar Clinic</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 960px; margin: 40px auto; padding: 0 24px; color: #1a1a2e; background: #f8f9fa; }
+  h1 { color: #0d47a1; border-bottom: 3px solid #0d47a1; padding-bottom: 12px; }
+  h2 { color: #1565c0; margin-top: 32px; }
+  h3 { color: #283593; margin-top: 20px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78em; font-weight: 700; margin-left: 4px; }
+  .pass { background: #e8f5e9; color: #2e7d32; }
+  .fixed { background: #e8f5e9; color: #1b5e20; }
+  .new { background: #f3e5f5; color: #6a1b9a; }
+  .enrich { background: #e3f2fd; color: #0d47a1; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th { background: #1565c0; color: #fff; padding: 10px 14px; text-align: left; font-size: 0.88em; }
+  td { padding: 9px 14px; border-bottom: 1px solid #e0e0e0; font-size: 0.9em; vertical-align: top; }
+  tr:hover td { background: #e8eaf6; }
+  .section { background: #fff; border-radius: 8px; padding: 20px 24px; margin: 20px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .verdict { font-size: 1.05em; font-weight: 700; padding: 14px 18px; border-radius: 6px; margin: 16px 0; }
+  .verdict.green { background: #e8f5e9; border-left: 5px solid #43a047; color: #2e7d32; }
+  .phase-header { background: linear-gradient(135deg, #1b5e20 0%, #388e3c 100%); color: #fff; padding: 24px; border-radius: 10px; margin-bottom: 28px; }
+  .phase-header p { margin: 6px 0 0 0; opacity: 0.88; }
+  code { background: #f1f3f4; padding: 2px 6px; border-radius: 3px; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 0.87em; }
+  .before-after { display: flex; gap: 12px; margin: 8px 0; }
+  .before { flex: 1; background: #fce4ec; padding: 10px 14px; border-radius: 6px; font-size: 0.87em; }
+  .after { flex: 1; background: #e8f5e9; padding: 10px 14px; border-radius: 6px; font-size: 0.87em; }
+  .before strong, .after strong { display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<div class="phase-header">
+  <h1 style="border:none;color:#fff;margin:0">Phase 4 — Build / Correct / Enrich</h1>
+  <p>Avatar Clinic · Android Session · Hangar AI Constitution</p>
+  <p style="font-size:0.85em; opacity:0.75">android-kotlin: 6 BLOCKINGs resolved · 5 advisories resolved · 2026-04-27</p>
+</div>
+
+<div class="section">
+  <h2>Track 1 — Corrections (BLOCKINGs + Advisories)</h2>
+
+  <h3>B1 · guidance.md — Token Overrun Fixed</h3>
+  <div class="before-after">
+    <div class="before"><strong>Before</strong>1,809w — 5.4× over budget<br>Full tutorial content inside RAG file</div>
+    <div class="after"><strong>After</strong>255w ✓ — within 338w budget<br>Slim: stack reality, authorities, AA codebase facts, key patterns. Full content saved to <code>guidance-detail.md</code></div>
+  </div>
+
+  <h3>A4 · DI Framework Mismatch — Corrected in guidance.md + manifest.yaml</h3>
+  <div class="before-after">
+    <div class="before"><strong>Before</strong>Avatar: "Stack: Hilt" / "@HiltViewModel" / "@HiltAndroidApp"<br>Reality: Dagger 2, zero Hilt annotations in 3,226 files</div>
+    <div class="after"><strong>After</strong><code>di: Dagger 2 (AA current) → Hilt (migration target)</code><br>guidance.md now states the AA reality and points agents to the <code>dagger2-hilt-migration</code> use case</div>
+  </div>
+
+  <h3>B2–B5 · Over-Budget Example Files — All Trimmed</h3>
+  <table>
+    <thead><tr><th>File</th><th>Before</th><th>After</th><th>Detail saved as</th></tr></thead>
+    <tbody>
+      <tr><td><code>ENG-4.1-atomic-tdd.md</code></td><td>872w</td><td><strong>188w</strong> ✓</td><td><code>ENG-4.1-atomic-tdd-detail.md</code></td></tr>
+      <tr><td><code>ENG-6.1-security.md</code></td><td>872w</td><td><strong>177w</strong> ✓</td><td><code>ENG-6.1-security-detail.md</code></td></tr>
+      <tr><td><code>ENG-6.4-data-protection.md</code></td><td>797w</td><td><strong>156w</strong> ✓</td><td><code>ENG-6.4-data-protection-detail.md</code></td></tr>
+      <tr><td><code>ENG-6.7-audit-trail.md</code></td><td>876w</td><td><strong>251w</strong> ✓</td><td><code>ENG-6.7-audit-trail-detail.md</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>A1 · skill- Prefix in manifest.yaml — Fixed</h3>
+  <div class="before-after">
+    <div class="before"><strong>Before</strong><code>- skill-06-atomic-tdd</code><br><code>- skill-07-vertical-slice-dev</code><br><code>- skill-08-code-review</code><br><code>- skill-25-ux-design</code></div>
+    <div class="after"><strong>After</strong><code>- 06-atomic-tdd</code><br><code>- 07-vertical-slice-dev</code><br><code>- 08-code-review</code><br><code>- 25-ux-design</code></div>
+  </div>
+
+  <h3>A2 · skill- Prefix in index.yaml — Fixed</h3>
+  <div class="before-after">
+    <div class="before"><strong>Before</strong><code>- skill-06-atomic-tdd</code><br><code>- skill-25-ux-design</code><br><code>- skill-08-code-review</code></div>
+    <div class="after"><strong>After</strong><code>- 06-atomic-tdd</code><br><code>- 25-ux-design</code><br><code>- 08-code-review</code></div>
+  </div>
+
+  <h3>A3 · version Missing from index.yaml — Fixed</h3>
+  <div class="before-after">
+    <div class="before"><strong>Before</strong>No <code>version</code> field in registry entry</div>
+    <div class="after"><strong>After</strong><code>version: "1.1.0"</code> added to index.yaml entry<br><code>di: Dagger 2 (AA current) → Hilt (migration target)</code> added to stack</div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Track 2 — Tech Avatar Enrichment</h2>
+
+  <h3>B6 · use-cases/ Created — 2 Use Cases</h3>
+  <table>
+    <thead><tr><th>Use Case</th><th>Laws</th><th>Words</th><th>AA Evidence</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>dagger2-hilt-migration/</code></td>
+        <td>ENG-2.2, ENG-4.1</td>
+        <td>449w ✓</td>
+        <td>DataModule.kt 1,737 LOC / 316 @Provides as motivating example; incremental migration strategy for AA monolith</td>
+      </tr>
+      <tr>
+        <td><code>sealed-state-machine/</code></td>
+        <td>ENG-3.1, ENG-3.2</td>
+        <td>511w ✓</td>
+        <td>CheckInManagerV2 (13 boolean flags = 2^13 states) + V2/V3 duplication (70% / ~1,500 LOC) as direct evidence; sealed interface replaces both classes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>A5 · ENG-3.1 Enriched with Real AA God-Class Data</h3>
+  <table>
+    <thead><tr><th>File</th><th>LOC</th><th>Violation Type</th></tr></thead>
+    <tbody>
+      <tr><td><code>BookingViewModel.kt</code></td><td>2,106</td><td>8 concerns; 120+ imports; 3 reactive paradigms</td></tr>
+      <tr><td><code>ChangeSeatActivity.kt</code></td><td>1,965</td><td>Fat Activity — UI + business logic + navigation</td></tr>
+      <tr><td><code>CheckInManagerV2.kt</code></td><td>~2,000</td><td>13 boolean flags = 2^13 implicit states</td></tr>
+      <tr><td><code>CheckInManagerV3.kt</code></td><td>~2,000</td><td>70% copy-paste of V2 (~1,500 duplicated LOC)</td></tr>
+      <tr><td><code>DataModule.kt</code></td><td>1,737</td><td>316 @Provides — monolithic DI module</td></tr>
+    </tbody>
+  </table>
+
+  <h3>ENG-10.1 + ENG-11.1 Added to manifest.yaml</h3>
+  <p>Both laws verified in <code>laws/index.yaml</code> (Phase 3) before being added. Android-specific notes grounded in codebase data.</p>
+</div>
+
+<div class="section">
+  <h2>Final File Inventory — android-kotlin avatar</h2>
+  <table>
+    <thead><tr><th>File</th><th>Words</th><th>Budget</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><code>guidance.md</code></td><td>255w</td><td>≤338w</td><td><span class="badge pass">✓</span></td></tr>
+      <tr><td><code>examples/ENG-2.2-layers.md</code></td><td>624w</td><td>≤638w</td><td><span class="badge pass">✓</span></td></tr>
+      <tr><td><code>examples/ENG-3.1-complexity.md</code></td><td>302w</td><td>≤638w</td><td><span class="badge pass">✓ enriched</span></td></tr>
+      <tr><td><code>examples/ENG-3.2-immutability.md</code></td><td>447w</td><td>≤638w</td><td><span class="badge pass">✓</span></td></tr>
+      <tr><td><code>examples/ENG-4.1-atomic-tdd.md</code></td><td>188w</td><td>≤638w</td><td><span class="badge fixed">✓ trimmed</span></td></tr>
+      <tr><td><code>examples/ENG-6.1-security.md</code></td><td>177w</td><td>≤638w</td><td><span class="badge fixed">✓ trimmed</span></td></tr>
+      <tr><td><code>examples/ENG-6.4-data-protection.md</code></td><td>156w</td><td>≤638w</td><td><span class="badge fixed">✓ trimmed</span></td></tr>
+      <tr><td><code>examples/ENG-6.7-audit-trail.md</code></td><td>251w</td><td>≤638w</td><td><span class="badge fixed">✓ trimmed</span></td></tr>
+      <tr><td><code>use-cases/dagger2-hilt-migration/README.md</code></td><td>449w</td><td>≤1,125w</td><td><span class="badge new">✓ new</span></td></tr>
+      <tr><td><code>use-cases/sealed-state-machine/README.md</code></td><td>511w</td><td>≤1,125w</td><td><span class="badge new">✓ new</span></td></tr>
+    </tbody>
+  </table>
+  <p><strong>Detail files</strong> (human-readable, not RAG-loaded): guidance-detail.md, ENG-4.1-atomic-tdd-detail.md, ENG-6.1-security-detail.md, ENG-6.4-data-protection-detail.md, ENG-6.7-audit-trail-detail.md</p>
+</div>
+
+<div class="section">
+  <h2>BLOCKING / Advisory Resolution Scorecard</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Finding</th><th>Resolution</th></tr></thead>
+    <tbody>
+      <tr><td>B1</td><td>guidance.md 1,809w</td><td><span class="badge pass">RESOLVED</span> — 255w</td></tr>
+      <tr><td>B2</td><td>ENG-4.1 872w</td><td><span class="badge pass">RESOLVED</span> — 188w</td></tr>
+      <tr><td>B3</td><td>ENG-6.1 872w</td><td><span class="badge pass">RESOLVED</span> — 177w</td></tr>
+      <tr><td>B4</td><td>ENG-6.4 797w</td><td><span class="badge pass">RESOLVED</span> — 156w</td></tr>
+      <tr><td>B5</td><td>ENG-6.7 876w</td><td><span class="badge pass">RESOLVED</span> — 251w</td></tr>
+      <tr><td>B6</td><td>use-cases/ missing</td><td><span class="badge pass">RESOLVED</span> — 2 use cases created</td></tr>
+      <tr><td>A1</td><td>skill- prefix in manifest</td><td><span class="badge pass">RESOLVED</span></td></tr>
+      <tr><td>A2</td><td>skill- prefix in index.yaml</td><td><span class="badge pass">RESOLVED</span></td></tr>
+      <tr><td>A3</td><td>version missing in index.yaml</td><td><span class="badge pass">RESOLVED</span> — version: "1.1.0" added</td></tr>
+      <tr><td>A4</td><td>Hilt/Dagger-2 mismatch</td><td><span class="badge pass">RESOLVED</span> — DI reality noted in manifest + guidance; use case added</td></tr>
+      <tr><td>A5</td><td>ENG-3.1 no AA evidence</td><td><span class="badge pass">RESOLVED</span> — 5 god-class files with real LOC data</td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green">✅ All 6 BLOCKINGs resolved · All 5 advisories resolved · Ready for Phase 5 — RAG Validate</div>
+</div>
+
+<footer style="margin-top:40px; padding-top:16px; border-top:1px solid #e0e0e0; color:#757575; font-size:0.82em">
+  Hangar AI Constitution Avatar Clinic — Android Session · Phase 4 of 6 · Generated 2026-04-27
+</footer>
+</body>
+</html>

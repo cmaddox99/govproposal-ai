@@ -1,0 +1,147 @@
+avatar:
+  id: avatar-ancillary-upsell
+  type: product
+  name: "Ancillary Upsell & Post-Booking Purchases"
+  version: "1.0.0"
+  created: "2026-04-30"
+  last_updated: "2026-04-30"
+
+domain:
+  category: "Post-Booking Ancillary Revenue & Upgrades"
+  description: |
+    BOUNDARY: Scope is post-booking and in-journey ancillary revenue only. Initial
+    booking-flow ancillary purchase is owned by passenger-booking. Offer selection
+    and targeting is owned by marketing-personalization. This avatar owns the
+    transactional purchase completion layer at non-initial-booking touchpoints.
+
+    This avatar covers: instant upsell (cabin upgrades purchasable via miles or
+    cash post-booking), the upgrade bid/auction system (economy passengers bidding
+    on premium cabin availability), bag purchase post-booking (adding checked bag
+    allowance after initial booking), fare rules display, and terms & conditions
+    presentation at point of purchase. Backend services: mobile-iu-bff (instant
+    upsell), mobile-ancillary-bff (bags and general ancillaries),
+    mobile-offers-bff (offer delivery and eligibility).
+  personas:
+    - Economy Traveler seeking cabin upgrade
+    - AAdvantage Miles Earner redeeming miles for upgrade
+    - Traveler adding checked bags post-booking
+    - Business Traveler bidding on premium cabin via auction
+
+core_journeys:
+  - "Instant Upsell — Cabin Upgrade Post-Booking"
+  - "Upgrade Bid Auction"
+  - "Bag Purchase Post-Booking"
+  - "Fare Rules & Terms Display"
+  - "Miles vs. Cash Payment Selection"
+
+activates:
+  skills:
+    - skill-spec-governance
+    - skill-02-user-journey-mapping
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+    - skill-06-atomic-tdd
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - PRD-1.2
+  - PRD-1.5
+  - PRD-2.5
+  - PRD-5.1
+  - PRD-6.2
+  - BUS-1.1
+  - BUS-2.3
+  - BUS-3.6
+  - BUS-4.3
+  - BUS-7.1
+  - BUS-9.3
+
+conventions:
+  - Monetary values must use exact decimal precision; never display rounded prices (BUS-3.6)
+  - All payment flows must surface DOT refund policy before purchase confirmation (BUS-2.3)
+  - Miles and cash payment paths are distinct; do not conflate offer models across payment types
+  - Offer data is fetched from mobile-offers-bff; purchase completion calls mobile-iu-bff or mobile-ancillary-bff
+  - Fare rules and terms & conditions must be reachable before the purchase confirmation step
+  - Audit trail for every purchase transaction is mandatory (BUS-7.1)
+  - Payment card data handling must comply with BUS-4.3 (PCI scope minimization)
+
+commands:
+  - name: "explain-boundary"
+    description: "Summarize what this avatar owns vs. passenger-booking and marketing-personalization"
+  - name: "check-law"
+    description: "Verify a proposed feature or change against specializes_laws for this avatar"
+  - name: "trace-purchase-flow"
+    description: "Trace the transactional purchase path from offer entry to confirmation for a given ancillary type"
+
+project_structure:
+  instantupsell-ios:
+    coordinators:
+      - PricingCoordinator
+      - SegmentOfferSelectionCoordinator
+    view_models:
+      - InstantUpsellOffersViewModel
+      - MilesOfferShelfViewModel
+      - BenefitsViewModel
+      - BenefitItemViewModel
+      - CalloutsListViewModel
+      - UpgradeYourTripViewModel
+      - UpgradeYourTripViewModel_MilesAsFormOfPayment
+      - UpgradeYourTripViewModel_Alerts
+      - SegmentOfferViewModel
+      - CabinOfferViewModel
+      - OriginalCabinOfferViewModel
+      - InstantUpsellFullTeaserMilesHeaderViewModel
+      - TermsAndConditionsFooterViewModel
+    views:
+      - FareRulesView
+      - UpgradeYourTripView
+      - InstantUpsellOffersView
+      - AwardFooterView
+      - TermsAndConditionsFooterView
+      - ZeroInsetCardView
+    controllers:
+      - UpgradeYourTripViewController
+    data_models:
+      - UpgradeYourTripIU2
+      - InstantUpsellCallout
+      - UpsellCabinOfferLineItem
+      - PurchaseFlow_QueryParam
+  auction-ios:
+    description: "86 swift files — bid placement, bid management, bid status tracking"
+  upgrades-ios:
+    description: "54 swift files — upgrade management, upgrade status"
+  bags-ios:
+    description: "213 swift files — bag purchase and management"
+
+dependencies:
+  bffs:
+    - mobile-iu-bff
+    - mobile-ancillary-bff
+    - mobile-offers-bff
+  upstream_avatars:
+    - passenger-booking
+    - marketing-personalization
+  notes: >
+    passenger-booking owns initial ancillary purchase at booking time.
+    marketing-personalization owns offer targeting and eligibility.
+    This avatar consumes offer payloads and owns only the purchase completion layer.
+
+compliance_domains:
+  - DOT Consumer Protection (BUS-2.3) — refund disclosure before purchase
+  - Monetary Precision (BUS-3.6) — exact price display with tax breakdown
+  - Payment Data Security (BUS-4.3) — PCI scope minimization
+  - Audit & Recordkeeping (BUS-7.1) — purchase transaction audit trail
+  - AAdvantage Program Rules (BUS-9.3) — miles redemption compliance
+
+tags:
+  - ancillary
+  - upsell
+  - post-booking
+  - upgrade
+  - bid-auction
+  - bags
+  - miles-redemption
+  - ios
+  - mobile

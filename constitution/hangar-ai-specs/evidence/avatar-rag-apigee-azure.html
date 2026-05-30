@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>avatar-tech-apigee-azure — RAG Validation Report | rag-apigee-azure-2026-04-22</title>
+  <style>
+    :root {
+      --aa-red:#c8102e; --aa-dark:#0a0d14; --aa-navy:#131825; --aa-blue:#0f3460;
+      --aa-accent:#e94560; --aa-gold:#f5a623; --aa-green:#22c55e; --aa-green-dk:#16a34a;
+      --aa-purple:#7c3aed; --aa-teal:#0d9488; --aa-surface:#f4f6fa; --aa-border:#dde3ee;
+      --aa-text:#1e293b; --aa-muted:#64748b; --r:9px; --sh:0 2px 10px rgba(0,0,0,.07);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--aa-surface);color:var(--aa-text);font-size:14px;line-height:1.6}
+    header{background:linear-gradient(140deg,#070a12 0%,#0f3460 65%,#0d9488 100%);color:#fff;padding:32px 44px 26px;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;right:-60px;bottom:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(13,148,136,.22) 0%,transparent 70%);border-radius:50%}
+    .h-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px}
+    .h-title{font-size:28px;font-weight:800;letter-spacing:-.5px}
+    .h-sub{font-size:14px;color:rgba(255,255,255,.6);margin-top:4px;margin-bottom:18px}
+    .h-badges{display:flex;flex-wrap:wrap;gap:7px}
+    .hb{padding:3px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+    .hb-phase{background:var(--aa-teal);color:#fff}
+    .hb-mode{background:#5b21b6;color:#fff;border:1px solid #7c3aed}
+    .hb-conf-high{background:rgba(34,197,94,.25);color:#86efac;border:1px solid rgba(34,197,94,.4)}
+    .hb-conf-medium{background:rgba(245,166,35,.25);color:var(--aa-gold);border:1px solid rgba(245,166,35,.4)}
+    .hb-conf-low{background:rgba(239,68,68,.25);color:#fca5a5;border:1px solid rgba(239,68,68,.4)}
+    .hb-law{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.18)}
+    .hb-ok{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .hb-fail{background:#c8102e;color:#fff}
+    /* Phase tracker */
+    nav.phases{background:var(--aa-navy);padding:0 44px;display:flex;overflow-x:auto}
+    .ph{padding:13px 18px;font-size:12px;font-weight:600;color:rgba(255,255,255,.3);border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:8px}
+    .ph.done{color:rgba(255,255,255,.55);border-bottom-color:var(--aa-green-dk)}
+    .ph.active{color:#fff;border-bottom-color:var(--aa-teal)}
+    .ph.locked{color:rgba(255,255,255,.18)}
+    .ph-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;background:rgba(255,255,255,.07);flex-shrink:0}
+    .ph.done .ph-n{background:var(--aa-green-dk);color:#fff}
+    .ph.active .ph-n{background:var(--aa-teal);color:#fff}
+    /* Layout */
+    .body{max-width:1200px;margin:0 auto;padding:26px 20px;display:grid;grid-template-columns:1fr 320px;gap:22px}
+    @media(max-width:900px){.body{grid-template-columns:1fr}}
+    .main{display:flex;flex-direction:column;gap:18px}
+    .side{display:flex;flex-direction:column;gap:18px}
+    .card{background:#fff;border:1px solid var(--aa-border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+    .ch{padding:13px 18px 11px;border-bottom:1px solid var(--aa-border);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+    .ci{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+    .ct{font-weight:700;font-size:13px;color:var(--aa-dark);flex:1}
+    .cb{padding:18px}
+    .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--aa-muted);margin-bottom:6px}
+    /* RAG stat cards */
+    .rag-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+    @media(max-width:700px){.rag-grid{grid-template-columns:1fr 1fr}}
+    .rag-card{border-radius:8px;padding:14px 16px;border:1px solid var(--aa-border);background:#f8fafc}
+    .rag-card.pass{background:#f0fdf4;border-color:#bbf7d0}
+    .rag-card.fail{background:#fef2f2;border-color:#fecaca}
+    .rag-card.warn{background:#fffbeb;border-color:#fde68a}
+    .rag-n{font-size:30px;font-weight:800;line-height:1;color:var(--aa-blue);letter-spacing:-1px}
+    .rag-card.pass .rag-n{color:var(--aa-green-dk)}
+    .rag-card.fail .rag-n{color:#991b1b}
+    .rag-card.warn .rag-n{color:#92400e}
+    .rag-l{font-size:11px;color:var(--aa-muted);margin-top:6px;line-height:1.35}
+    .rag-verdict{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-top:12px}
+    .rv-pass{background:#dcfce7;color:#166534;border:1px solid #86efac}
+    .rv-fail{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+    /* Handoff summary */
+    .hf-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:600px){.hf-grid{grid-template-columns:1fr}}
+    .hf-box{border-radius:8px;padding:12px 14px;border:1px solid var(--aa-border);background:#f8fafc}
+    .hf-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:4px}
+    .hf-value{font-size:13px;font-weight:700;color:var(--aa-dark)}
+    .hf-box.ready{background:#f0fdf4;border-color:#bbf7d0}
+    .hf-box.pending{background:#fffbeb;border-color:#fde68a}
+    /* Law tooltips */
+    .law{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle}
+    .law:hover .tt{display:block}
+    .tt{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .tt::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .lp{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .lb{background:#fffbeb;color:#b45309;border-color:#fde68a}
+    .le{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .lt{background:#f0fdfa;color:#0f766e;border-color:#99f6e4}
+    /* Checklist */
+    .cl{list-style:none;display:flex;flex-direction:column;gap:8px}
+    .cli{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface)}
+    .cli.pass,.cli.done{background:#f0fdf4;border-color:#86efac}
+    .cli.fail{background:#fef2f2;border-color:#fecaca}
+    .cli.na{background:#f8fafc;border-color:var(--aa-border);opacity:.6}
+    .cbox{width:19px;height:19px;flex-shrink:0;border:2px solid var(--aa-border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:2px}
+    .cli.pass .cbox,.cli.done .cbox{background:var(--aa-green-dk);border-color:var(--aa-green-dk);color:#fff}
+    .cli.fail .cbox{background:#dc2626;border-color:#dc2626;color:#fff}
+    .cli.na .cbox{background:#e2e8f0;border-color:#e2e8f0;color:#64748b}
+    .ctitle{font-weight:600;font-size:13px}
+    .cdesc{font-size:12px;color:var(--aa-muted);margin-top:2px}
+    .clw{font-size:11px;font-weight:700;color:var(--aa-accent);margin-top:3px}
+    /* Audit table */
+    .at{width:100%;border-collapse:collapse;font-size:12px}
+    .at th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .at td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .at tr:last-child td{border-bottom:none}
+    .ao{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+    .ao-ok{background:#dcfce7;color:#166534}
+    .ao-ip{background:#fef3c7;color:#92400e}
+    .ao-wait{background:#fef3c7;color:#92400e}
+    .ao-fail{background:#fee2e2;color:#991b1b}
+    /* Render gate */
+    .rg{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%);border-radius:9px;padding:16px 18px;color:#fff;margin-bottom:14px}
+    .rg-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c4b5fd;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+    .rg-desc{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:12px}
+    .rg-btns{display:flex;gap:8px;flex-wrap:wrap}
+    .rgb{padding:7px 16px;border-radius:7px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+    .rgb-approve{background:#22c55e;color:#fff}.rgb-approve:hover{background:#16a34a}
+    .rgb-enhance{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25)}.rgb-enhance:hover{background:rgba(255,255,255,.22)}
+    .rgb-reject{background:#ef4444;color:#fff}.rgb-reject:hover{background:#dc2626}
+    #rg-decision{font-size:12px;margin-top:10px;padding:8px 12px;border-radius:7px;display:none}
+    .rg-persist{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);color:#86efac;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    .rg-persist-pend{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);color:#fbbf24;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    /* Spec files */
+    .sf{display:flex;align-items:center;gap:8px;padding:8px 11px;background:var(--aa-surface);border:1px dashed var(--aa-border);border-radius:7px;font-family:'Cascadia Code','Fira Code',monospace;font-size:11.5px;color:#1d4ed8;margin-bottom:7px}
+    .ss{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap}
+    .ss-ok{background:#dcfce7;color:#166534}
+    .ss-wait{background:#fef3c7;color:#92400e}
+    .ss-pend{background:#fee2e2;color:#991b1b}
+    /* Avatar chip */
+    .av{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;background:#f0fdfa;border:1px solid #99f6e4;font-size:12px;font-weight:600;color:#0f766e;margin-bottom:6px}
+    /* Prose */
+    code{font-family:'Cascadia Code','Fira Code',monospace;background:#f1f5f9;padding:1px 5px;border-radius:4px;font-size:11.5px;color:#0f3460}
+    hr{border:none;border-top:1px solid var(--aa-border);margin:13px 0}
+    .prose h1,.prose h2,.prose h3{margin:12px 0 8px;color:var(--aa-blue)}
+    .prose p{margin:8px 0}
+    .prose ul,.prose ol{margin:8px 0 8px 22px}
+    .prose table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+    .prose table th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:11px;font-weight:700;border-bottom:1px solid var(--aa-border)}
+    .prose table td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .prose table tr:last-child td{border-bottom:none}
+    /* Law citation spans */
+    .law-cite{display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle;background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .law-cite[data-non-negotiable="false"]{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .law-tooltip{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .law-tooltip::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .law-cite:hover .law-tooltip{display:block}
+    /* Markdown checkbox items */
+    .task-done,.task-pending{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface);margin:4px 0}
+    .task-done{background:#f0fdf4;border-color:#86efac}
+    .task-done .cb{width:18px;height:18px;flex-shrink:0;border-radius:4px;background:var(--aa-green-dk);border:2px solid var(--aa-green-dk);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700;padding:0!important;margin-top:2px}
+    .task-done .cb::after{content:'✓'}
+    .task-pending .cb{width:18px;height:18px;flex-shrink:0;border-radius:4px;background:#fff;border:2px solid var(--aa-border);padding:0!important;margin-top:2px}
+    .task-text{font-size:12px;line-height:1.5;flex:1}
+    /* Footer */
+    footer{background:var(--aa-dark);color:rgba(255,255,255,.45);padding:11px 44px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;font-size:11px}
+    .ft-dot{width:7px;height:7px;border-radius:50%;background:var(--aa-teal);animation:pulse 2s infinite;flex-shrink:0}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="h-eye">avatar-workflow · rag-apigee-azure-2026-04-22</div>
+  <div class="h-title">avatar-tech-apigee-azure — RAG Validation Report</div>
+  <div class="h-sub">Avatar Workflow &nbsp;·&nbsp; phase-5-rag-validate</div>
+  <div class="h-badges">
+    <span class="hb hb-phase">📍 phase-5-rag-validate</span>
+    
+    
+      <span class="hb hb-conf-high">Confidence: high</span>
+    
+    <span class="hb hb-law">ENG-13.1</span><span class="hb hb-law">ENG-11.1</span>
+  </div>
+</header>
+
+
+
+<nav class="phases" aria-label="Avatar workflow phases">
+    <div class="ph done">
+      <div class="ph-n">✓</div>
+      Pre-flight
+    </div>
+    <div class="ph done">
+      <div class="ph-n">✓</div>
+      Identify
+    </div>
+    <div class="ph done">
+      <div class="ph-n">✓</div>
+      Scan
+    </div>
+    <div class="ph done">
+      <div class="ph-n">✓</div>
+      Discover
+    </div>
+    <div class="ph done">
+      <div class="ph-n">✓</div>
+      Build
+    </div>
+    <div class="ph active">
+      <div class="ph-n">5</div>
+      RAG Validate
+    </div>
+    <div class="ph locked">
+      <div class="ph-n">6</div>
+      Commit
+    </div>
+</nav>
+
+<div class="body">
+  <div class="main">
+
+    
+    
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f0fdfa">🔬</div>
+        <div class="ct">RAG Validation Summary</div>
+        <span class="law lt">ENG-13.1 ⚠<span class="tt"><strong>Artifact Rendering Standard — NON-NEGOTIABLE</strong><br>Rendered and reviewed before advancing to Phase 6.</span></span>
+      </div>
+      <div class="cb">
+        <div class="rag-grid">
+          <div class="rag-card pass">
+            <div class="rag-n">5/5</div>
+            <div class="rag-l">Recall<br>Target ≥ 95% (5/5)</div>
+          </div>
+          <div class="rag-card pass">
+            <div class="rag-n">930</div>
+            <div class="rag-l">Max tokens/query<br>Target ≤ 3,500</div>
+          </div>
+          <div class="rag-card pass">
+            <div class="rag-n">100%</div>
+            <div class="rag-l">Precision<br>Target ≥ 90%</div>
+          </div>
+          <div class="rag-card pass">
+            <div class="rag-n">HIGH</div>
+            <div class="rag-l">Confidence<br>Evidence quality</div>
+          </div>
+        </div>
+        
+          <span class="rag-verdict rv-pass">✅ PASS</span>
+          <span style="font-size:12px;color:var(--aa-muted);margin-left:10px;">Proceed to Phase 6 render gate</span>
+          
+        
+      </div>
+    </div>
+    
+
+    
+    
+
+    
+    
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#eff6ff">📄</div><div class="ct">Detail</div></div>
+      <div class="cb prose"><h1>avatar-tech-apigee-azure — RAG Validation Report</h1>
+<p><strong>Mode:</strong> Generate
+<strong>Avatar type:</strong> technology
+<strong>Date:</strong> 2026-04-22
+<strong>Validator:</strong> Amaya (Technical Coach) — file-based RAG simulation</p>
+<hr />
+<h2>Query Results</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Query</th>
+<th>Result</th>
+<th>Laws/Content Returned</th>
+<th>Token Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td>What laws govern Apigee + Azure development at AA?</td>
+<td>PASS</td>
+<td><span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span>, <span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span>, <span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span>, <span class="law-cite" data-law-id="ENG-6.4" data-non-negotiable="true">ENG-6.4<span class="law-tooltip"><strong>Data Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span>, <span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span>, <span class="law-cite" data-law-id="ENG-5.2" data-non-negotiable="false">ENG-5.2<span class="law-tooltip"><strong>CI/CD Pipeline Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-7.1" data-non-negotiable="false">ENG-7.1<span class="law-tooltip"><strong>Failure Handling Law</strong></span></span> (manifest + guidance)</td>
+<td>574</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>How do I secure an Apigee proxy — OAuth and Managed Identity?</td>
+<td>PASS</td>
+<td><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span>-security-by-design.md — OAuthV2 PreFlow XML, Managed Identity Terraform + C#, M2M vs user auth table</td>
+<td>650</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>How do I set up CI/CD for Apigee and Terraform at AA?</td>
+<td>PASS</td>
+<td>manifest.yaml commands block + <span class="law-cite" data-law-id="ENG-5.2" data-non-negotiable="false">ENG-5.2<span class="law-tooltip"><strong>CI/CD Pipeline Law</strong></span></span>-cicd-pipeline.md — GitHub Actions proxy deploy, Terraform plan/apply, Functions ZIP</td>
+<td>930</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>Show me an atomic TDD example for an Apigee proxy and Azure Function</td>
+<td>PASS</td>
+<td><span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span>-atomic-tdd.md — Mocha proxy (Layer 1), checkov Terraform (Layer 2), Jest Function handler (Layer 3)</td>
+<td>700</td>
+</tr>
+<tr>
+<td>Q5</td>
+<td>How do I propagate correlation IDs across Apigee and Azure for audit compliance?</td>
+<td>PASS</td>
+<td><span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span>-audit-trail.md — AM-CorrelationId AssignMessage, ML-AzureMonitor MessageLogging, Azure Functions structured logging</td>
+<td>600</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Threshold Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Target</th>
+<th>Actual</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recall</td>
+<td>≥ 95% (5/5)</td>
+<td>5/5 (100%)</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Max tokens per query</td>
+<td>≤ 3,500</td>
+<td>930</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Precision (no hallucinated laws)</td>
+<td>≥ 90%</td>
+<td>100%</td>
+<td>PASS</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Verdict</h2>
+<p><strong>PASS — proceed to Phase 6 render gate</strong></p>
+<blockquote>
+<p>Render gate (<span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span>): HTML render of this report required. Human confirmation by Adeel before <code>rag_validated: true</code> is set in <code>index.yaml</code>.</p>
+</blockquote>
+<hr />
+<h2>Notes</h2>
+<ul>
+<li>All 7 law examples verified present on disk and within 850-token budget</li>
+<li>All law IDs are ENG-* — zero law boundary violations for a technology avatar</li>
+<li>guidance.md is pure navigation table format — trimmed to nav-table, within 450-token budget</li>
+<li>Cardinal rule: every gate device request hits Apigee first — OAuth at the edge, Managed Identity for every Azure service call downstream</li>
+<li>Key security pattern: never expose stack traces through Apigee FaultRules; normalized error envelope with correlation ID only</li>
+</ul>
+</div>
+    </div>
+    
+
+    
+    
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f0fdf4">✅</div>
+        <div class="ct">Exit Gate Checklist</div>
+        <span class="law lp">ENG-13.1 ⚠<span class="tt"><strong>NON-NEGOTIABLE</strong><br>ALL items must be checked before advancing to Phase 6.</span></span>
+      </div>
+      <div class="cb">
+        <ul class="cl">
+          
+            <li class="cli pass">
+              <div class="cbox">✓</div>
+              <div>
+                <div class="ctitle">Q1 — Law coverage: all 7 law IDs with titles returned from manifest + guidance</div>
+                
+                
+              </div>
+            </li>
+          
+            <li class="cli pass">
+              <div class="cbox">✓</div>
+              <div>
+                <div class="ctitle">Q2 — Security: ENG-6.1 OAuthV2 PreFlow, Managed Identity, M2M vs user auth table returned</div>
+                
+                
+              </div>
+            </li>
+          
+            <li class="cli pass">
+              <div class="cbox">✓</div>
+              <div>
+                <div class="ctitle">Q3 — CI/CD setup: ENG-5.2 GitHub Actions pipeline for proxy + Terraform + Functions returned</div>
+                
+                
+              </div>
+            </li>
+          
+            <li class="cli pass">
+              <div class="cbox">✓</div>
+              <div>
+                <div class="ctitle">Q4 — Example retrieval: ENG-4.1 atomic TDD across all 3 layers (Mocha, checkov, Jest) returned</div>
+                
+                
+              </div>
+            </li>
+          
+            <li class="cli pass">
+              <div class="cbox">✓</div>
+              <div>
+                <div class="ctitle">Q5 — Audit trail: ENG-6.7 correlation ID propagation across Apigee + Azure Functions returned</div>
+                
+                
+              </div>
+            </li>
+          
+            <li class="cli pass">
+              <div class="cbox">✓</div>
+              <div>
+                <div class="ctitle">Recall ≥ 95% (5/5 queries answered)</div>
+                
+                
+              </div>
+            </li>
+          
+            <li class="cli pass">
+              <div class="cbox">✓</div>
+              <div>
+                <div class="ctitle">Max tokens per query response ≤ 3,500</div>
+                
+                
+              </div>
+            </li>
+          
+            <li class="cli pass">
+              <div class="cbox">✓</div>
+              <div>
+                <div class="ctitle">Precision ≥ 90% (no hallucinated laws)</div>
+                
+                
+              </div>
+            </li>
+          
+            <li class="cli pend">
+              <div class="cbox"></div>
+              <div>
+                <div class="ctitle">Rendered HTML reviewed in browser (ENG-13.1)</div>
+                
+                
+              </div>
+            </li>
+          
+        </ul>
+      </div>
+    </div>
+    
+
+    
+    
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f1f5f9">📋</div>
+        <div class="ct">Audit Log</div>
+        <span class="law lb">ENG-11.1<span class="tt"><strong>Hangar SDD Law</strong><br>Every phase transition logged.</span></span>
+      </div>
+      <div class="cb">
+        <table class="at">
+          <thead><tr><th>Date</th><th>Actor</th><th>Action</th><th>Outcome</th></tr></thead>
+          <tbody>
+            
+            <tr>
+              <td>2026-04-22</td>
+              <td>Amaya (Technical Coach)</td>
+              <td>Phase 5 RAG simulation run — 5 canonical queries</td>
+              <td><span class="ao ao-ok">PASS</span></td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+
+  </div><!-- end main -->
+
+  <div class="side">
+
+    <!-- ENG-13.1 Render Gate -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#1e1b4b;font-size:16px;">🖥️</div>
+        <div class="ct" style="color:#4f46e5;">ENG-13.1 Render Gate</div>
+        <span class="hb hb-fail" style="font-size:9px;">NON-NEG</span>
+      </div>
+      <div class="cb">
+        
+          <div class="rg-persist-pend">⏳ <strong>PENDING</strong> — awaiting reviewer decision in the source artifact</div>
+        
+        <div class="rg">
+          <div class="rg-title">🖥️ Human Browser Review</div>
+          <div class="rg-desc">Review this artifact in your browser. Record your decision in the source <code>.md</code> file. Button clicks are reminders only.</div>
+          <div class="rg-btns">
+            <button class="rgb rgb-approve" onclick="rgDecision('APPROVE')">✅ APPROVE</button>
+            <button class="rgb rgb-enhance" onclick="rgDecision('ENHANCE')">🔄 ENHANCE</button>
+            <button class="rgb rgb-reject" onclick="rgDecision('REJECT')">❌ REJECT</button>
+          </div>
+          <div id="rg-decision"></div>
+        </div>
+        <p style="font-size:12px;color:var(--aa-muted);">Phase 6 does not begin until this render gate is ticked APPROVE in the source artifact. (ENG-13.1 NON-NEGOTIABLE)</p>
+      </div>
+    </div>
+
+    
+    
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0fdf4">✅</div><div class="ct">Stakeholder Approval</div></div>
+      <div class="cb">
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;">
+          
+          <div><span class="lbl">Reviewer</span><div style="font-weight:700;">Adeel Ali</div></div>
+          
+          <div><span class="lbl">Role</span><div>Inventor / Co-founder</div></div>
+          
+          <div><span class="lbl">Affirmed</span>
+            <div style="font-weight:700;color:#92400e;">
+              ⏳ Not yet — set affirm: true to confirm
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--aa-muted);padding:8px 10px;background:var(--aa-surface);border-radius:6px;border:1px dashed var(--aa-border);">Pending human review of rendered HTML</div>
+        </div>
+      </div>
+    </div>
+    
+
+    
+    
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📂</div><div class="ct">Spec Artifacts</div></div>
+      <div class="cb">
+        
+        <div class="sf">📄 avatars/technology/apigee-azure/manifest.yaml<span class="ss ss-pend">COMPLETE</span></div>
+        
+        <div class="sf">📄 avatars/technology/apigee-azure/guidance.md<span class="ss ss-pend">COMPLETE</span></div>
+        
+        <div class="sf">📄 avatars/technology/apigee-azure/examples/<span class="ss ss-pend">COMPLETE — 7 law examples (ENG-4.1, ENG-3.1, ENG-6.1, ENG-6.4, ENG-6.7, ENG-5.2, ENG-7.1)</span></div>
+        
+      </div>
+    </div>
+    
+
+    
+    
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#fff1f2">⚖️</div><div class="ct">Active Laws</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:7px;">
+        
+          <span class="law lp" style="width:fit-content">
+            ENG-13.1 ⚠<span class="tt"><strong>Artifact Rendering Standard · NON-NEGOTIABLE — all governance artifacts rendered as HTML before stakeholder presentation</strong></span>
+          </span>
+        
+          <span class="law lb" style="width:fit-content">
+            ENG-11.1<span class="tt"><strong>Hangar SDD Law — governed spec-driven development workflow</strong></span>
+          </span>
+        
+      </div>
+    </div>
+    
+
+    
+    
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📎</div><div class="ct">Artifact Info</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:9px;font-size:12px;">
+        
+        <div><div class="lbl">Template Version</div><div style="font-weight:600;">v1.0.0</div></div>
+        <div><div class="lbl">Template</div><div style="font-family:monospace;font-size:11px;color:#1d4ed8;word-break:break-all;">docs/templates/avatars/rag-validation-template.md</div></div>
+        
+      </div>
+    </div>
+    
+
+  </div><!-- end side -->
+</div><!-- end body -->
+
+<footer>
+  <div style="display:flex;align-items:center;gap:8px;"><div class="ft-dot"></div>avatar-workflow · rag-apigee-azure-2026-04-22 · phase-5-rag-validate</div>
+  <div style="font-family:monospace;font-size:10px;opacity:.6;">avatar-tech-apigee-azure — RAG Validation Report</div>
+</footer>
+
+<script>
+function rgDecision(d) {
+  var el = document.getElementById('rg-decision');
+  el.style.display = 'block';
+  if (d === 'APPROVE') {
+    el.style.cssText = 'background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x2705; <strong>APPROVE</strong> — Reminder only. To record: set <code>render_gate.status: approved</code> in the source artifact.';
+  } else if (d === 'ENHANCE') {
+    el.style.cssText = 'background:rgba(124,58,237,.15);color:#c4b5fd;border:1px solid rgba(124,58,237,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x1F504; <strong>ENHANCE</strong> — Describe the enhancement needed in the source artifact, then re-render.';
+  } else {
+    el.style.cssText = 'background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x274C; <strong>REJECT</strong> — Document the blocker in the source artifact. Phase 6 does NOT begin.';
+  }
+}
+</script>
+
+</body>
+</html>

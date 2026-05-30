@@ -1,0 +1,30 @@
+domain: product-planning
+title: Product Planning
+description: Roadmapping, specs, documentation, planning
+version: 2.0.0
+laws:
+- PRD-3.3
+- PRD-4.1
+- PRD-4.2
+- ENG-4.4
+keywords:
+- roadmap
+- spec
+- planning
+- documentation
+skills:
+  - file: 01-roadmapping.md
+    name: Roadmapping
+    triggers: [roadmap, product direction, prioritize backlog, what to build next, define an MVP, minimum viable feature, riskiest assumption, reduce churn, invest in acquisition]
+    laws: [PRD-4.1, PRD-4.2, PRD-4.3, PRD-4.4]
+    examples: 01-roadmapping-examples.md
+  - file: 03-executable-spec.md
+    name: Executable Specification
+    triggers: [acceptance criteria, Gherkin specs, feature behavior, BDD]
+    laws: [PRD-3.3, ENG-4.1, ENG-4.4]
+    examples: 03-executable-spec-examples.md
+  - file: 16-documentation.md
+    name: Documentation
+    triggers: [write documentation, create ADR, runbook, API docs]
+    laws: [ENG-3.6]
+count: 3

@@ -1,0 +1,115 @@
+# Apigee + Azure Cloud Avatar Manifest
+avatar:
+  id: avatar-tech-apigee-azure
+  type: technology
+  name: "Apigee + Azure Cloud"
+  version: "1.1.0"
+  created: "2026-01-01"
+  last_updated: "2026-04-24"
+  codebase_source: "AAInternal/apigeeDocs"
+
+conventions:
+  proxy_naming:
+    rule: "Do NOT include 'edgemicro' in proxy name — use descriptive API functionality name"
+    example: "user-profile-v1 (not edgemicro-user-profile)"
+  base_path:
+    rule: "Use specific meaningful paths — never '/' or '/api'"
+    example: "/api/user-service/v1"
+  k8s_target:
+    rule: "For AKS deployments use internal mesh URL"
+    example: "http://svcname.namespace.svc.cluster.local"
+  prod_change_request:
+    rule: "ServiceNow Team Name required for all production deployments (Change Request)"
+  security_grant_types:
+    supported: "OAuth 2.0 client credentials only (auth code planned for future B2E)"
+    spa_exception: "Single Page Apps: API key only when Akamai fronts for load balancing and BOT protection"
+  microgateway_limits:
+    max_tps: 100
+    bot_detection: "NOT supported — front with Akamai for BOT protection"
+
+stack:
+  language: "JavaScript (Apigee policies), HCL (Terraform), TypeScript (Azure Functions)"
+  framework: "Google Apigee Edge Microgateway + Microsoft Azure"
+  deployment_types:
+    - "Microgateway on AKS (K8s — internal mesh target)"
+    - "Microgateway on Azure App Service (Docker — public/VNET target)"
+    - "Edge Gateway (contact #topic-apigee before use)"
+  testing:
+    - "Apigee API proxy unit tests (JavaScript + Mocha)"
+    - "Terraform: terraform validate + tflint + checkov"
+    - "Integration: Postman / Newman collection tests"
+    - "Contract: Pact (consumer-driven contract testing)"
+  secrets: "HashiCorp Vault (developer app credentials) + Azure Key Vault (runtime secrets)"
+  identity: "Azure Active Directory (AAD) + OAuth 2.0 client credentials"
+  messaging: "Azure Service Bus + Azure Event Grid"
+  monitoring: "Dynatrace OneAgent (built into Docker image) + Azure Monitor"
+  docker_image: "docker.aa.com/prod/datamovement/apigee/edgemicro:3.3.8.0"
+  orgs:
+    dev: "aa-dev"
+    test: "aa-test"
+    stage: "aa-stage"
+    prod: "aa-prod"
+
+commands:
+  provision:
+    proxy: "Use Runway Self Service Portal: https://developer.aa.com/apigee/create (select Micro Gateway)"
+    developer_app: "Use Runway Developer App: https://developer.aa.com/apigee — requires HashiCorp Vault namespace"
+    approve_app: "Approve via Runway: https://developer.aa.com/apigee/approval (allow 15 min after creation)"
+  deploy:
+    apigee: "GitHub Actions pipeline (auto-created by Runway template) — never manual UI upload"
+    terraform: "terraform plan -out=tfplan && terraform apply tfplan"
+    functions: "az functionapp deployment source config-zip -g $RG -n $FUNC_APP --src ./dist.zip"
+  test:
+    proxy: "npm test"
+    terraform: "terraform validate && tflint && checkov -d ."
+    functions: "npm test"
+  promote:
+    nonprod_to_prod: "Runway MANAGE API > Update API Endpoints > select PROD — auto-raises PR; merge triggers pipeline"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-08-code-review
+    - skill-10-security-review
+    - skill-12-api-design
+    - skill-27-constitution-compliance
+  workflows:
+    - greenfield-development
+    - legacy-rescue-refactor
+    - legacy-rescue-decision-track
+
+specializes_laws:
+  - id: ENG-4.1
+    title: "Atomic TDD Law"
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-3.1
+    title: "Complexity Limits"
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-6.1
+    title: "Security by Design Law"
+    example_file: examples/ENG-6.1-security-by-design.md
+  - id: ENG-6.4
+    title: "Data Protection Law"
+    example_file: examples/ENG-6.4-data-protection.md
+  - id: ENG-6.7
+    title: "Audit Trail Law"
+    example_file: examples/ENG-6.7-audit-trail.md
+  - id: ENG-5.2
+    title: "CI/CD Pipeline Law"
+    example_file: examples/ENG-5.2-cicd-pipeline.md
+  - id: ENG-7.1
+    title: "Failure Handling Law"
+    example_file: examples/ENG-7.1-failure-handling.md
+
+tags:
+  - technology
+  - apigee
+  - azure
+  - api-gateway
+  - terraform
+  - azure-functions
+  - key-vault
+  - oauth2
+  - iac
+  - wave-4
+  - gate-management

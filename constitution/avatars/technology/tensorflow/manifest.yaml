@@ -1,0 +1,124 @@
+# TensorFlow/Keras Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-tensorflow
+  type: technology
+  name: TensorFlow/Keras
+  version: "2.0.0"
+
+stack:
+  language: Python 3.11+
+  framework: TensorFlow 2.x + Keras
+  testing:
+    - pytest
+    - tensorflow.test
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - tensorflow: ">=2.15.0"
+  dev:
+    - pytest: ">=8.0.0"
+    - pytest-cov: ">=4.1.0"
+    - ruff: ">=0.1.0"
+    - mypy: ">=1.8.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+
+conventions:
+  naming:
+    modules: snake_case
+    model_classes: PascalCase
+    layers: PascalCase
+    functions: snake_case
+    tensors: snake_case
+
+  patterns:
+    model: "keras.Model subclass with call method"
+    dataset: "tf.data.Dataset pipeline"
+    trainer: "Custom training loop with tf.function"
+    export: "SavedModel or TFLite format"
+
+commands:
+  test:
+    all: pytest
+    gpu: pytest --run-gpu
+    fast: pytest -m "not slow"
+    models: pytest tests/models/
+    coverage: pytest --cov=src --cov-report=html
+  dev:
+    check_gpu: "python -c \"import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))\""
+    tensorboard: tensorboard --logdir logs/
+  profile:
+    training: python scripts/train.py --profile
+
+project_structure: |
+  tensorflow_project/
+  ├── src/
+  │   ├── models/                  # Model definitions
+  │   │   ├── __init__.py
+  │   │   ├── base.py              # Base model class
+  │   │   ├── classifier.py        # Classification models
+  │   │   ├── layers/              # Custom layers
+  │   │   │   ├── __init__.py
+  │   │   │   └── attention.py
+  │   │   └── blocks/              # Model blocks
+  │   │       └── residual.py
+  │   ├── data/                    # Data pipeline
+  │   │   ├── __init__.py
+  │   │   ├── dataset.py           # tf.data pipelines
+  │   │   ├── augmentation.py      # Data augmentation
+  │   │   └── preprocessing.py     # Preprocessing
+  │   ├── training/                # Training
+  │   │   ├── __init__.py
+  │   │   ├── trainer.py           # Training loop
+  │   │   ├── callbacks.py         # Custom callbacks
+  │   │   └── losses.py            # Custom losses
+  │   ├── evaluation/              # Evaluation
+  │   │   ├── __init__.py
+  │   │   └── metrics.py           # Custom metrics
+  │   ├── serving/                 # Model serving
+  │   │   ├── __init__.py
+  │   │   ├── export.py            # SavedModel export
+  │   │   └── tflite.py            # TFLite conversion
+  │   └── utils/
+  │       ├── __init__.py
+  │       └── config.py
+  ├── tests/
+  │   ├── models/
+  │   │   └── test_classifier.py
+  │   ├── data/
+  │   │   └── test_dataset.py
+  │   ├── training/
+  │   │   └── test_trainer.py
+  │   └── conftest.py
+  ├── configs/
+  │   ├── model.yaml
+  │   ├── training.yaml
+  │   └── experiment/
+  │       └── baseline.yaml
+  ├── scripts/
+  │   ├── train.py
+  │   ├── evaluate.py
+  │   └── export.py
+  ├── notebooks/
+  │   └── exploration.ipynb
+  ├── requirements.txt
+  └── README.md

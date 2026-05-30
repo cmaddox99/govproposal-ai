@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 3 — Discover | Android Avatar Clinic</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 960px; margin: 40px auto; padding: 0 24px; color: #1a1a2e; background: #f8f9fa; }
+  h1 { color: #0d47a1; border-bottom: 3px solid #0d47a1; padding-bottom: 12px; }
+  h2 { color: #1565c0; margin-top: 32px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78em; font-weight: 700; margin-left: 4px; }
+  .pass { background: #e8f5e9; color: #2e7d32; }
+  .new { background: #f3e5f5; color: #6a1b9a; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th { background: #1565c0; color: #fff; padding: 10px 14px; text-align: left; font-size: 0.88em; }
+  td { padding: 9px 14px; border-bottom: 1px solid #e0e0e0; font-size: 0.9em; vertical-align: top; }
+  tr:hover td { background: #e8eaf6; }
+  .section { background: #fff; border-radius: 8px; padding: 20px 24px; margin: 20px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .verdict { font-size: 1.05em; font-weight: 700; padding: 14px 18px; border-radius: 6px; margin: 16px 0; }
+  .verdict.green { background: #e8f5e9; border-left: 5px solid #43a047; color: #2e7d32; }
+  .phase-header { background: linear-gradient(135deg, #4a148c 0%, #7b1fa2 100%); color: #fff; padding: 24px; border-radius: 10px; margin-bottom: 28px; }
+  .phase-header p { margin: 6px 0 0 0; opacity: 0.88; }
+  code { background: #f1f3f4; padding: 2px 6px; border-radius: 3px; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 0.87em; }
+  blockquote { border-left: 4px solid #7b1fa2; margin: 12px 0; padding: 8px 16px; background: #f3e5f5; color: #4a148c; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="phase-header">
+  <h1 style="border:none;color:#fff;margin:0">Phase 3 — Discover</h1>
+  <p>Avatar Clinic · Android Session · Hangar AI Constitution</p>
+  <p style="font-size:0.85em; opacity:0.75">Law inventory verification — read from laws/index.yaml and law files · 2026-04-27</p>
+</div>
+
+<div class="section">
+  <h2>Constitution Read Ledger</h2>
+  <p>Files read before proposing any changes. No law ID cited in Phase 4 without a corresponding entry here.</p>
+  <table>
+    <thead><tr><th>File Read</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>laws/index.yaml</code></td><td>Master law registry — 168 total laws. Source of truth for all ID verification.</td></tr>
+      <tr><td><code>laws/engineering/governance.md</code></td><td>ENG-10.1 text verified</td></tr>
+      <tr><td><code>laws/engineering/spec-driven-development.md</code></td><td>ENG-11.1 text verified</td></tr>
+      <tr><td><code>agent-skills/skills-by-domain/development-practices/</code></td><td>Confirmed skill file names: <code>06-atomic-tdd.md</code>, <code>07-vertical-slice-dev.md</code>, <code>08-code-review.md</code>, <code>25-ux-design.md</code> — no <code>skill-</code> prefix</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Existing Laws — Confirmed in Manifest</h2>
+  <table>
+    <thead><tr><th>Law ID</th><th>Title</th><th>Verified</th><th>Use in Phase 4</th></tr></thead>
+    <tbody>
+      <tr><td>ENG-4.1</td><td>Atomic TDD Law</td><td><span class="badge pass">✓</span></td><td>Keep in manifest; trim example file</td></tr>
+      <tr><td>ENG-6.1</td><td>Security by Design Law</td><td><span class="badge pass">✓</span></td><td>Keep in manifest; trim example file</td></tr>
+      <tr><td>ENG-6.4</td><td>Data Protection Law</td><td><span class="badge pass">✓</span></td><td>Keep in manifest; trim example file</td></tr>
+      <tr><td>ENG-6.7</td><td>Audit Trail Law</td><td><span class="badge pass">✓</span></td><td>Keep in manifest; trim example file</td></tr>
+      <tr><td>ENG-4.2</td><td>Test Pyramid Law</td><td><span class="badge pass">✓</span></td><td>Keep in manifest; no example file needed</td></tr>
+      <tr><td>ENG-3.1</td><td>Complexity Limits</td><td><span class="badge pass">✓</span></td><td>Keep in manifest; enrich example with AA god-class data</td></tr>
+      <tr><td>ENG-3.2</td><td>Immutability Law</td><td><span class="badge pass">✓</span></td><td>Keep in manifest; file within budget</td></tr>
+      <tr><td>ENG-2.2</td><td>Layered Architecture</td><td><span class="badge pass">✓</span></td><td>Keep in manifest; file within budget</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>New Laws — To Add in Phase 4</h2>
+  <table>
+    <thead><tr><th>Law ID</th><th>Title</th><th>Verified Text</th><th>Android Note</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>ENG-10.1</code> <span class="badge new">NEW</span></td>
+        <td>Constitution Metrics Collection Law</td>
+        <td><em>"All systems governed by the Constitution MUST implement standardized metrics collection for law compliance, violation tracking, and adoption health."</em> — NON-NEGOTIABLE</td>
+        <td>Android: law compliance tracked via Detekt + Android Lint custom rules; violation counts surfaced in CI reports per sprint</td>
+      </tr>
+      <tr>
+        <td><code>ENG-11.1</code> <span class="badge new">NEW</span></td>
+        <td>Hangar SDD Law</td>
+        <td><em>"Every project adopting the Hangar AI Constitution SHALL implement the Hangar SDD process. hangar-ai-specs/ folder MUST exist; significant work MUST have an approved PROPOSAL.md before implementation."</em> — NON-NEGOTIABLE</td>
+        <td>Android: <code>hangar-ai-specs/</code> exists in androidapps; spec-first discipline directly addresses the god-class growth pattern (80 files >500 LOC, score flat at 4.7/10 despite 3,191 commits)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Laws Checked and Not Added</h2>
+  <p>The following were checked and confirmed non-existent in this constitution's ENG series:</p>
+  <table>
+    <thead><tr><th>ID Checked</th><th>Result</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td>ENG-9.x series</td><td>Entire series absent from index.yaml (168 laws)</td><td>Not referenced — no phantom law risk</td></tr>
+      <tr><td>ENG-8.x series</td><td>Absent</td><td>Not referenced</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Phase 4 Change Authorization</h2>
+  <p>The following changes are authorized — all law IDs verified, all skill names confirmed from file system:</p>
+  <table>
+    <thead><tr><th>Change</th><th>Authorized By</th></tr></thead>
+    <tbody>
+      <tr><td>Remove <code>skill-</code> prefix from 4 skills in manifest + 3 in index.yaml</td><td>Skill files confirmed: <code>06-atomic-tdd.md</code>, <code>07-vertical-slice-dev.md</code>, <code>08-code-review.md</code>, <code>25-ux-design.md</code></td></tr>
+      <tr><td>Add <code>ENG-10.1</code> to <code>specializes_laws</code></td><td>Verified in <code>laws/engineering/governance.md</code></td></tr>
+      <tr><td>Add <code>ENG-11.1</code> to <code>specializes_laws</code></td><td>Verified in <code>laws/engineering/spec-driven-development.md</code></td></tr>
+      <tr><td>Add Dagger 2 migration note to manifest + guidance.md</td><td>Source: codebase report — 0 Hilt annotations in 3,226 files; 56 @Module, 316 @Provides, 486 @Inject</td></tr>
+      <tr><td>Trim guidance.md → ≤338w; save original as guidance-detail.md</td><td>Budget: ≤450 tokens per workflow spec</td></tr>
+      <tr><td>Trim 4 over-budget examples → ≤638w; save originals as *-detail.md</td><td>Budget: ≤850 tokens per workflow spec</td></tr>
+      <tr><td>Create use-cases/ with 2 use cases</td><td>Workflow requires ≥2 for technology avatar</td></tr>
+      <tr><td>Enrich ENG-3.1 with AA god-class evidence</td><td>Source: androidapps code-quality-analysis.md — real file/LOC data</td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green">✅ PASS — All law IDs verified, all skill names confirmed. Phase 4 authorized to proceed.</div>
+</div>
+
+<footer style="margin-top:40px; padding-top:16px; border-top:1px solid #e0e0e0; color:#757575; font-size:0.82em">
+  Hangar AI Constitution Avatar Clinic — Android Session · Phase 3 of 6 · Generated 2026-04-27
+</footer>
+</body>
+</html>

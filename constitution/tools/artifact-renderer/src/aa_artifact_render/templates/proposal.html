@@ -1,0 +1,56 @@
+{% extends "_base.html" %}
+{% block title %}{{ frontmatter.get('title', 'Proposal') }} — Hangar AI Constitution{% endblock %}
+{% block body %}
+{% set status = frontmatter.get('status', 'PROPOSED') | lower %}
+{% set title = frontmatter.get('title', 'Governance Proposal') %}
+{% set spec_id = frontmatter.get('spec_id', '') %}
+{% set triggered_by = frontmatter.get('triggered_by', '') %}
+{% set scope = frontmatter.get('scope', '') %}
+{% set laws_applied = frontmatter.get('laws_applied', []) %}
+
+<!-- COVER PAGE -->
+<div class="page cover">
+  <div class="eyebrow">Hangar AI Constitution — Spec-Driven Development</div>
+  <div style="margin-top: 20px;">
+    <span class="status-badge {{ status }}">{{ status | upper }}</span>
+    {% if spec_id %}<span class="chip" style="margin-left: 10px;">{{ spec_id }}</span>{% endif %}
+  </div>
+  <h1>{{ title }}</h1>
+  {% if triggered_by or scope %}
+  <div class="meta">
+    {% if triggered_by %}
+    <div class="meta-card">
+      <div class="k">Triggered By</div>
+      <div class="v">{{ triggered_by }}</div>
+    </div>
+    {% endif %}
+    {% if scope %}
+    <div class="meta-card">
+      <div class="k">Scope</div>
+      <div class="v">{{ scope }}</div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+  {% if laws_applied %}
+  <div class="chip-row" style="margin-top: 28px;">
+    {% for law in laws_applied %}
+    <span class="chip">{{ law }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="footer">
+    <div>{{ title }}</div>
+    <div class="pn">1</div>
+  </div>
+</div>
+
+<!-- CONTENT PAGES -->
+<div class="page content">
+  {{ body | safe }}
+  <div class="footer">
+    <div>{{ title }}</div>
+    <div class="pn">2</div>
+  </div>
+</div>
+{% endblock %}

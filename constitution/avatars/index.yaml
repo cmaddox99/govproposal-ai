@@ -1,0 +1,1594 @@
+﻿# Avatars Registry
+# Context-specific configurations that specialize laws for technology, industry, and product-type
+
+version: "2.0.0"
+
+categories:
+  - id: technology
+    description: Stack-specific patterns, testing frameworks, tooling
+    path: technology/
+    status: active
+    rag_validated: true
+    last_validated: "2026-04-27"
+
+  - id: industry
+    description: Regulatory compliance, audit requirements, security standards
+    path: industry/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+
+  - id: product-type
+    description: Architecture patterns for different business models
+    path: product-type/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+
+# Technology Avatars
+technology:
+  - id: avatar-python-fastapi
+    name: Python/FastAPI
+    path: technology/python-fastapi/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Python 3.11+
+      framework: FastAPI
+      testing: pytest, pytest-asyncio
+      orm: SQLAlchemy, MongoDB
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-07-vertical-slice-dev
+        - skill-08-code-review
+      workflows:
+        - product-discovery-stage-a-f
+        - greenfield-development
+    specializes_laws:
+      - ENG-4.1  # Atomic TDD
+      - ENG-3.1  # Complexity Limits
+      - ENG-3.2  # Immutability Law
+      - ENG-2.1  # DDD Aggregate Root
+      - ENG-6.5  # Input Validation
+
+  - id: avatar-java-spring
+    name: Java/Spring Boot
+    path: technology/java-spring/
+    status: active
+    version: "2.1.0"
+    rag_validated: true
+    last_validated: "2026-04-27"
+    stack:
+      language: Java 17+
+      framework: Spring Boot 2.x (AA BFF current) / Spring Boot 3.x (migration target)
+      testing: JUnit 5, Mockito
+      build: Maven/Gradle
+    activates:
+      skills:
+        - 06-atomic-tdd
+        - 07-vertical-slice-dev
+        - 08-code-review
+      workflows:
+        - product-discovery-stage-a-f
+        - greenfield-development
+    specializes_laws:
+      - ENG-4.1
+      - ENG-3.1
+      - ENG-2.1
+
+  - id: avatar-operations-research-optimizer
+    name: Operations Research / MIP Optimizer
+    path: technology/operations-research-optimizer/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Java 21+ (primary), Python 3.11+ (secondary)
+      solvers: FICO Xpress, IBM CPLEX, Gurobi, OR-Tools
+      paradigm: Mixed-Integer Programming (MIP) / Linear Programming (LP)
+      runtime: CLI / batch (message queue triggered)
+      testing: JUnit 5, AssertJ, Mockito
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-03-executable-spec
+        - skill-08-code-review
+        - skill-09-refactoring
+      workflows:
+        - product-discovery-stage-a-f
+    specializes_laws:
+      - ENG-4.1   # Atomic TDD - test constraints and scoring, not the solver library
+      - ENG-3.1   # Complexity Limits - one constraint per method
+      - ENG-6.7   # Audit Trail - log solver status, objective, solve time every run
+      - BUS-2.1   # FAA Compliance - FAR constraints must cite the specific regulation
+
+  - id: avatar-react-typescript
+    name: React/TypeScript
+    path: technology/react-typescript/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: TypeScript 5.x
+      framework: React 18+
+      testing: Jest, React Testing Library
+      build: Vite/Next.js
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-25-ux-design
+        - skill-26-design-to-code
+      workflows:
+        - greenfield-development
+    specializes_laws:
+      - ENG-4.1
+      - ENG-3.1
+      - PRD-3.4
+
+  - id: avatar-dotnet-core
+    name: .NET Core
+    path: technology/dotnet-core/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: C# 12
+      framework: .NET 8
+      testing: xUnit, Moq
+      build: dotnet CLI
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-07-vertical-slice-dev
+      workflows:
+        - product-discovery-stage-a-f
+    specializes_laws:
+      - ENG-4.1
+      - ENG-3.1
+      - ENG-2.1
+
+  - id: avatar-technology-cpp
+    name: "C++ (Modern)"
+    type: technology
+    path: technology/cpp/
+    version: "2.0.1"
+    status: active
+    rag_validated: true
+    last_validated: "2026-04-13"
+    stack:
+      language: "C++20 / C++23"
+      framework: "CMake build system"
+      testing: GoogleTest, GoogleMock, Mull
+      build: CMake, vcpkg
+    activates:
+      skills:
+        - 06-atomic-tdd
+        - 07-vertical-slice-dev
+        - 08-code-review
+        - 04-business-domain-modeling
+        - skill-cpp-jni-bridge
+      workflows:
+        - greenfield-development
+        - product-discovery-stage-a-f
+        - adoption
+    specializes_laws:
+      - ENG-2.1   # DDD Aggregate Root
+      - ENG-2.2   # Layered Architecture
+      - ENG-3.1   # Complexity Limits
+      - ENG-3.2   # Immutability
+      - ENG-3.3   # Law of Demeter
+      - ENG-3.5   # Naming Conventions
+      - ENG-3.7   # Error Handling
+      - ENG-4.1   # Atomic TDD
+      - ENG-4.2   # Test Pyramid
+      - ENG-4.4   # Test Coverage
+      - ENG-5.2   # CI/CD Pipeline
+      - ENG-5.5   # Observability
+      - ENG-6.1   # Security by Design
+      - ENG-6.4   # Data Protection
+      - ENG-6.5   # Input Validation
+      - ENG-6.7   # Audit Trail
+      - ENG-7.1   # Failure Handling
+      - ENG-7.2   # Circuit Breaker
+      - ENG-7.3   # Retry and Back-off
+      - ENG-7.4   # Timeout Governance
+      - ENG-7.5   # Bulkhead Isolation
+
+  - id: avatar-nodejs-typescript
+    name: Node.js/TypeScript
+    path: technology/nodejs-typescript/
+    status: active
+    version: "2.1.0"
+    rag_validated: true
+    last_validated: "2026-04-27"
+    stack:
+      language: TypeScript 5+
+      runtime: Node.js 20+
+      testing: Jest 29, Supertest
+      framework: Express 4 (AA BFF standard)
+    activates:
+      skills:
+        - 06-atomic-tdd
+        - 07-vertical-slice-dev
+        - 08-code-review
+        - 04-business-domain-modeling
+      workflows:
+        - product-discovery-stage-a-f
+        - greenfield-development
+    specializes_laws:
+      - ENG-4.1
+      - ENG-3.1
+      - ENG-2.1
+      - ENG-10.1
+      - ENG-11.1
+
+  - id: avatar-angular
+    name: Angular
+    path: technology/angular/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: TypeScript 5.x
+      framework: Angular 17+
+      testing: Jasmine, Karma
+      build: Angular CLI
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-25-ux-design
+      workflows:
+        - greenfield-development
+    specializes_laws:
+      - ENG-4.1
+      - PRD-3.4
+
+  - id: avatar-playwright-e2e-testing
+    name: Playwright E2E/UI Testing
+    path: technology/playwright-e2e-testing/
+    status: active
+    version: "1.0.0"
+    rag_validated: true
+    last_validated: "2026-05-01"
+    stack:
+      language: TypeScript 5+ (primary), Java 11+, Python 3.11+
+      framework: Playwright
+      testing: "@playwright/test, Playwright Java + TestNG/Cucumber, pytest-playwright"
+    activates:
+      skills:
+        - 06-atomic-tdd
+        - 08-code-review
+      workflows:
+        - greenfield-development
+    specializes_laws:
+      - ENG-4.1
+      - ENG-4.2
+      - ENG-3.1
+      - ENG-6.1
+      - ENG-6.4
+      - ENG-6.7
+
+  - id: avatar-mobile-react-native
+    name: React Native
+    path: technology/mobile-react-native/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: TypeScript
+      framework: React Native/Expo
+      testing: Jest, Detox
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-25-ux-design
+      workflows:
+        - greenfield-development
+    specializes_laws:
+      - ENG-4.1
+      - PRD-3.4
+
+  - id: avatar-android-kotlin
+    name: Android / Kotlin
+    path: technology/android-kotlin/
+    status: active
+    version: "1.3.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    stack:
+      language: Kotlin 2.1.0
+      ui: Jetpack Compose (808 files) + legacy Views/XML
+      di: Dagger 2 (Hilt not yet adopted)
+      testing: JUnit 4 + MockK 1.13.12 + Turbine 1.1.0
+      cicd: Gradle direct (no fastlane in repo)
+      package_manager: Gradle (Groovy DSL; libs.versions.toml)
+      compile_sdk: "36"
+    activates:
+      skills:
+        - 06-atomic-tdd
+        - 25-ux-design
+        - 08-code-review
+      workflows:
+        - greenfield-development
+    specializes_laws:
+      - ENG-4.1
+      - ENG-4.2
+      - ENG-6.1
+      - ENG-6.4
+      - ENG-6.7
+      - ENG-3.1
+      - ENG-3.2
+      - ENG-2.2
+      - ENG-10.1
+      - ENG-11.1
+      - ENG-12.1
+      - ENG-13.1
+
+  - id: avatar-ios-swift
+    name: iOS / Swift
+    path: technology/ios-swift/
+    status: active
+    version: "1.2.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    stack:
+      language: Swift 5.9+
+      ui: UIKit (87%) + SwiftUI (13%)
+      testing: XCTest (85%) + Swift Testing (15%)
+      cicd: fastlane (in Tooling/fastlane/ via moduletools-ios)
+      package_manager: Carthage (--use-xcframeworks)
+      build_system: Tuist (Project.swift)
+      deployment_target: iOS 14.0+
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-25-ux-design
+        - skill-08-code-review
+      workflows:
+        - greenfield-development
+    specializes_laws:
+      - ENG-4.1
+      - ENG-4.2
+      - ENG-6.1
+      - ENG-6.4
+      - ENG-6.7
+      - ENG-3.1
+      - ENG-3.2
+      - ENG-2.2
+      - ENG-10.1
+      - ENG-11.1
+      - ENG-12.1
+      - ENG-13.1
+
+  - id: avatar-ios-build-infrastructure
+    name: iOS Build Infrastructure (Xcode / Carthage / Coverage)
+    path: technology/ios-build-infrastructure/
+    status: active
+    version: "1.0.0"
+    rag_validated: true
+    last_validated: "2026-05-07"
+    companion_to: avatar-ios-swift
+    stack:
+      build_system: xcodebuild (direct CLI)
+      package_manager: Carthage (--use-xcframeworks; prebuilt binaries)
+      coverage_toolchain: llvm-profdata + xccov (xcresult bundle)
+      network_stubbing: WireMock (external JAR, AAWireMockURLProtocol)
+      simulator: xcrun simctl
+    triggers:
+      - "profraw version mismatch"
+      - "Carthage coverage"
+      - "DerivedData cleanup"
+      - "xccov failed"
+      - "FBSApplicationLibrary returned nil"
+      - "WireMock iOS"
+      - "xcodebuild coverage"
+      - "ios bootstrap"
+    specializes_laws:
+      - ENG-4.1
+      - ENG-4.2
+      - ENG-10.1
+    created: "2026-05-07"
+    triggered_by: "disc-2026-005 Stage C iOS — ios-swift avatar knowledge gap"
+
+  - id: avatar-ml-analytics
+    name: ML/Analytics
+    path: technology/ml-analytics/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Python 3.11+
+      frameworks: scikit-learn, pandas, numpy
+      mlops: MLflow, Kubeflow
+    activates:
+      skills:
+        - skill-22-rag-architecture
+        - skill-23-ai-agents
+      workflows:
+        - product-discovery-stage-a-f
+    specializes_laws:
+      - ENG-4.1
+      - BUS-3.1
+
+  - id: avatar-data-engineering
+    name: Data Engineering
+    path: technology/data-engineering/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Python/Scala
+      frameworks: Apache Spark, dbt
+      orchestration: Airflow, Dagster
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+      workflows:
+        - product-discovery-stage-a-f
+    specializes_laws:
+      - ENG-4.1
+      - BUS-3.1
+
+  # AI/ML Avatars
+  - id: avatar-pytorch
+    name: PyTorch
+    path: technology/pytorch/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Python 3.11+
+      framework: PyTorch 2.0+
+      testing: pytest, torchtest
+    specializes_laws:
+      - ENG-4.1
+      - BUS-3.1
+
+  - id: avatar-tensorflow
+    name: TensorFlow
+    path: technology/tensorflow/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Python 3.11+
+      framework: TensorFlow 2.x, Keras
+      testing: pytest, tf.test
+    specializes_laws:
+      - ENG-4.1
+      - BUS-3.1
+
+  - id: avatar-langchain
+    name: LangChain
+    path: technology/langchain/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Python 3.11+
+      framework: LangChain, LlamaIndex
+      testing: pytest
+    activates:
+      skills:
+        - skill-22-rag-architecture
+        - skill-23-ai-agents
+    specializes_laws:
+      - ENG-4.1
+      - ENG-6.1
+
+  - id: avatar-llm-applications
+    name: LLM Applications
+    path: technology/llm-applications/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Python/TypeScript
+      apis: OpenAI, Anthropic, Google
+      testing: pytest, jest
+    activates:
+      skills:
+        - skill-22-rag-architecture
+        - skill-23-ai-agents
+    specializes_laws:
+      - ENG-4.1
+      - ENG-6.1
+      - BUS-4.1
+
+  - id: avatar-vector-databases
+    name: Vector Databases
+    path: technology/vector-databases/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      databases: Pinecone, Chroma, Weaviate, Qdrant, pgvector
+      testing: pytest
+    activates:
+      skills:
+        - skill-22-rag-architecture
+    specializes_laws:
+      - ENG-4.1
+      - BUS-3.1
+
+  # MLOps Avatars
+  - id: avatar-mlflow-kubeflow
+    name: MLflow/Kubeflow
+    path: technology/mlflow-kubeflow/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      mlops: MLflow, Kubeflow Pipelines
+      orchestration: Kubernetes
+    specializes_laws:
+      - ENG-4.1
+      - ENG-5.1
+      - BUS-3.1
+
+  - id: avatar-sagemaker
+    name: AWS SageMaker
+    path: technology/sagemaker/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      platform: AWS SageMaker
+      language: Python
+      testing: pytest
+    specializes_laws:
+      - ENG-4.1
+      - ENG-6.1
+      - BUS-3.1
+
+  - id: avatar-vertex-ai
+    name: Google Vertex AI
+    path: technology/vertex-ai/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      platform: Google Cloud Vertex AI
+      language: Python
+      testing: pytest
+    specializes_laws:
+      - ENG-4.1
+      - ENG-6.1
+      - BUS-3.1
+
+  - id: avatar-azure-ml
+    name: Azure ML
+    path: technology/azure-ml/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      platform: Azure Machine Learning
+      language: Python
+      testing: pytest
+    specializes_laws:
+      - ENG-4.1
+      - ENG-6.1
+      - BUS-3.1
+
+  - id: avatar-python-streamlit
+    name: Python/Streamlit
+    path: technology/python-streamlit/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Python 3.11+
+      framework: Streamlit
+      testing: pytest, selenium
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-07-vertical-slice-dev
+        - skill-30-taxonomy-governed-avatar-enrichment
+      workflows:
+        - product-discovery-stage-a-f
+        - legacy-rescue-decision-track
+    specializes_laws:
+      - ENG-4.1  # Atomic TDD
+      - ENG-3.1  # Complexity Limits
+      - ENG-2.2  # Layered Architecture
+      - ENG-10.1  # Brownfield Integration
+
+  - id: avatar-legacy-ml-interop
+    name: Legacy ML Interoperability
+    path: technology/legacy-ml-interop/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      preservation: R, PySpark, Jupyter
+      interop: Docker, FastAPI, Python
+      testing: pytest, regression tests
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-07-vertical-slice-dev
+        - skill-30-taxonomy-governed-avatar-enrichment
+      workflows:
+        - legacy-rescue-decision-track
+        - product-discovery-stage-a-f
+    specializes_laws:
+      - ENG-10.1  # Brownfield Preservation
+      - ENG-4.1  # Atomic TDD for Regression
+      - ENG-2.2  # Layered Architecture
+      - ENG-6.5  # Input Validation
+
+  - id: avatar-streaming-ml
+    name: Streaming ML
+    path: technology/streaming-ml/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      streaming: Kafka, Flink
+      ml: Feast, online inference
+      testing: pytest
+    specializes_laws:
+      - ENG-4.1
+      - ENG-7.1
+      - BUS-3.1
+
+  - id: avatar-azure-openai
+    name: Azure OpenAI Service
+    path: technology/azure-openai/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Python 3.11+
+      platform: Azure OpenAI Service
+      frameworks: openai SDK, langchain-openai (AzureChatOpenAI)
+      testing: pytest, responses (HTTP mock)
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-21-prompt-engineering
+    specializes_laws:
+      - ENG-4.1  # Atomic TDD ΓÇö wrapper testable with mocked HTTP
+      - ENG-6.5  # Input Validation ΓÇö payload validation before API call
+      - ENG-6.1  # Security ΓÇö API key never logged; Managed Identity for prod
+      - BUS-7.1  # Audit Trail ΓÇö TID propagates through every LLM call
+
+  - id: avatar-postgresql-sqlalchemy
+    name: PostgreSQL / SQLAlchemy (Async)
+    path: technology/postgresql-sqlalchemy/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Python 3.11+
+      database: PostgreSQL 14+
+      frameworks: SQLAlchemy 2.x async, asyncpg, psycopg2-binary
+      testing: pytest, pytest-asyncio, Docker Compose
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-15-data-modeling
+    specializes_laws:
+      - ENG-4.1  # Atomic TDD ΓÇö session injected for testability
+      - ENG-4.2  # Test Pyramid ΓÇö unit mock sessions, integration real container
+      - BUS-7.1  # Audit Trail ΓÇö append-only trace tables, no UPDATE/DELETE
+      - ENG-6.5  # Input Validation ΓÇö PII fields validated before DB write
+      - ENG-6.1  # Security ΓÇö credentials from env vars; key never logged
+
+  - id: avatar-opentelemetry-python
+    name: OpenTelemetry Python (OTEL)
+    path: technology/opentelemetry-python/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Python 3.11+
+      platform: OpenTelemetry (OTLP ΓåÆ Dynatrace)
+      frameworks: opentelemetry-distro, opentelemetry-exporter-otlp, structlog
+      testing: pytest, InMemorySpanExporter
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-13-observability
+    specializes_laws:
+      - ENG-4.1  # Atomic TDD ΓÇö spans testable with InMemorySpanExporter
+      - BUS-7.1  # Audit Trail ΓÇö LLM and compliance spans required for observability
+      - ENG-1.2  # AI-Engineer Pairing ΓÇö instrumentation decisions must be explainable
+
+  # Data Platform Avatars
+  - id: avatar-databricks-pyspark
+    name: "Databricks / PySpark / Delta Lake"
+    path: technology/databricks-pyspark/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: Python 3.10+
+      frameworks: PySpark, Delta Lake, MLflow
+      sdk: databricks-sdk>=0.76.0
+      testing: pytest, pytest-cov, databricks-connect
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-07-vertical-slice-dev
+        - skill-08-code-review
+        - skill-04-business-domain-modeling
+      workflows:
+        - product-discovery-stage-a-f
+        - greenfield-development
+    specializes_laws:
+      - ENG-4.1  # Atomic TDD ΓÇö SparkSession fixture, Delta table fixtures
+      - ENG-6.1  # Security by Design ΓÇö dbutils.secrets, Unity Catalog least-privilege
+      - ENG-6.4  # Data Protection ΓÇö column masking, row filters, Fernet encryption
+      - ENG-6.7  # Audit Trail ΓÇö append-only Delta audit log, MLflow run linkage
+      - ENG-3.1  # Complexity Limits ΓÇö pure PySpark functions, single responsibility
+      - ENG-5.1  # CI/CD ΓÇö Databricks Asset Bundle deploy workflow
+      - BUS-7.1  # Audit Trail (Business) ΓÇö 7-year retention, tamper-evident Delta
+
+  - id: avatar-r-shiny
+    name: "R / Shiny"
+    path: technology/r-shiny/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      language: R 4.x
+      frameworks: Shiny, shinydashboard, shinytest2
+      packages: testthat>=3.0.0, AzureStor, data.table, config, DT
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-08-code-review
+      workflows:
+        - product-discovery-stage-a-f
+    specializes_laws:
+      - ENG-4.1  # Atomic TDD ΓÇö testthat for pure R functions extracted from server.R
+      - ENG-6.1  # Security by Design ΓÇö config package, shiny::req() auth checks
+      - ENG-3.1  # Complexity Limits ΓÇö single-responsibility reactives
+      - ENG-6.5  # Input Validation ΓÇö validate()/need() before every data operation
+
+  - id: avatar-azure-data-factory
+    name: "Azure Data Factory"
+    path: technology/azure-data-factory/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    stack:
+      platform: Azure Data Factory
+      authoring: JSON (ARM templates), VS Code ADF extension
+      security: Azure Managed Identity, Azure Key Vault
+      cicd: GitHub Actions, ARM template deployment
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-08-code-review
+      workflows:
+        - product-discovery-stage-a-f
+    specializes_laws:
+      - ENG-4.1  # Atomic TDD ΓÇö single-activity debug pipeline before orchestration
+      - ENG-5.1  # CI/CD ΓÇö GitHub Actions ARM deploy, no Studio Publish
+      - ENG-6.1  # Security by Design ΓÇö MSI linked services, Key Vault references
+      - ENG-6.7  # Audit Trail ΓÇö Diagnostic Settings to Log Analytics, structured logs
+
+  - id: avatar-tech-apigee-azure
+    name: Apigee + Azure Cloud
+    type: technology
+    path: technology/apigee-azure/
+    version: "1.1.0"
+    status: active
+    rag_validated: true
+    last_validated: "2026-04-24"
+    codebase_source: "AAInternal/apigeeDocs"
+    specializes_laws:
+      - ENG-4.1  # Atomic TDD Law
+      - ENG-3.1  # Complexity Limits (non-negotiable baseline — added)
+      - ENG-6.1  # Security by Design Law
+      - ENG-6.4  # Data Protection Law
+      - ENG-6.7  # Audit Trail Law
+      - ENG-5.2  # CI/CD Pipeline Law
+      - ENG-7.1  # Failure Handling Law
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-08-code-review
+        - skill-10-security-review
+        - skill-12-api-design
+        - skill-27-constitution-compliance
+      workflows:
+        - greenfield-development
+        - legacy-rescue-refactor
+
+  - id: avatar-tech-dss-event-driven
+    name: DSS Event-Driven Microservices
+    type: technology
+    path: technology/dss-event-driven/
+    status: active
+    rag_validated: true
+    last_validated: "2026-05-07"
+    wave: 4
+    codebase_source: AAInternal/hangar-w4-gate-mgmt (dss/)
+    specializes_laws:
+      - ENG-4.1  # Atomic TDD Law
+      - ENG-2.1  # Domain-Driven Design Law
+      - ENG-3.1  # Complexity Limits
+      - ENG-5.5  # Observability Law
+      - ENG-6.4  # Data Protection Law
+      - ENG-7.1  # Failure Handling Law
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-07-vertical-slice-dev
+        - skill-08-code-review
+        - skill-14-real-time-data-integration
+      workflows:
+        - greenfield-development
+        - legacy-rescue-refactor
+
+# Industry Avatars
+industry:
+  - id: avatar-aviation-faa
+    name: Aviation (FAA)
+    path: industry/aviation-faa/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    compliance:
+      - FAA Part 121
+      - DO-178C
+      - TSA
+      - DOT
+    specializes_laws:
+      - ENG-6.1  # Security by Design
+      - ENG-6.7  # Audit Trail
+      - BUS-7.1  # Audit Trail
+      - BUS-1.1  # Priority Hierarchy
+
+  - id: avatar-healthcare-hipaa
+    name: Healthcare (HIPAA)
+    path: industry/healthcare-hipaa/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    compliance:
+      - HIPAA
+      - HITECH
+      - 21 CFR Part 11
+    specializes_laws:
+      - ENG-6.4  # Data Protection
+      - BUS-4.3  # Data Subject Rights
+      - BUS-9.3  # Breach Notification
+
+  - id: avatar-finance-sox-pci
+    name: Finance (SOX/PCI)
+    path: industry/finance-sox-pci/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    compliance:
+      - SOX
+      - PCI-DSS
+      - GLBA
+    specializes_laws:
+      - ENG-6.7  # Audit Trail
+      - BUS-7.1  # Audit Trail
+      - BUS-6.1  # Risk Assessment
+
+  - id: avatar-government-fedramp
+    name: Government (FedRAMP)
+    path: industry/government-fedramp/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    compliance:
+      - FedRAMP
+      - FISMA
+      - NIST 800-53
+    specializes_laws:
+      - ENG-6.1
+      - ENG-6.4
+      - BUS-1.1
+
+  - id: avatar-defense-dod
+    name: Defense (DoD)
+    path: industry/defense-dod/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    compliance:
+      - ITAR
+      - CMMC
+      - DFARS
+    specializes_laws:
+      - ENG-6.1
+      - ENG-6.4
+      - BUS-1.1
+
+  - id: avatar-education-ferpa
+    name: Education (FERPA)
+    path: industry/education-ferpa/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    compliance:
+      - FERPA
+      - COPPA
+    specializes_laws:
+      - ENG-6.4
+      - BUS-4.3
+
+  - id: avatar-accounting-gaap
+    name: Accounting (GAAP)
+    path: industry/accounting-gaap/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    compliance:
+      - GAAP
+      - IFRS
+    specializes_laws:
+      - BUS-7.1
+      - BUS-6.1
+
+# Product-Type Avatars
+product_type:
+  - id: avatar-b2b-saas
+    name: B2B SaaS
+    path: product-type/b2b-saas/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - Multi-tenancy
+      - Subscription management
+      - Usage metering
+    specializes_laws:
+      - ENG-2.3  # Vertical Slice
+      - PRD-5.1  # MVP Law
+
+  - id: avatar-b2c-consumer
+    name: B2C Consumer
+    path: product-type/b2c-consumer/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - User experience
+      - Performance
+      - Accessibility
+    specializes_laws:
+      - PRD-3.4  # Experience Principles
+      - PRD-6.2  # Retention Over Acquisition
+
+  - id: avatar-marketplace
+    name: Marketplace
+    path: product-type/marketplace/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - Two-sided platforms
+      - Trust and safety
+      - Transaction management
+    specializes_laws:
+      - ENG-6.1
+      - PRD-5.1
+
+  - id: avatar-platform-api
+    name: Platform/API
+    path: product-type/platform-api/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - API design
+      - Versioning
+      - Developer experience
+    specializes_laws:
+      - ENG-2.3
+      - ENG-3.1
+
+  - id: avatar-internal-enterprise
+    name: Internal Enterprise
+    path: product-type/internal-enterprise/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - Integration
+      - Workflow automation
+      - Internal tools
+    specializes_laws:
+      - ENG-2.3
+      - BUS-7.1
+
+  - id: avatar-edtech-k12
+    name: EdTech K-12
+    path: product-type/edtech-k12/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - Child safety
+      - Accessibility
+      - Learning outcomes
+    specializes_laws:
+      - PRD-3.4
+      - BUS-4.3
+  - id: avatar-internal-productivity
+    name: Internal Productivity Tools
+    path: product-type/internal-productivity/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - Workflow automation
+      - Content transformation
+      - Brand compliance
+      - Self-service tools
+    specializes_laws:
+      - ENG-2.3  # Vertical Slice
+      - ENG-4.1  # Atomic TDD
+      - PRD-5.1  # MVP Law
+      - BUS-7.1  # Audit Trail
+    activates:
+      skills:
+        - skill-28-content-transformation
+        - skill-25-ux-design
+        - skill-21-prompt-engineering
+        - skill-06-atomic-tdd
+      workflows:
+        - workflow-design-standard-transformation
+        - product-discovery-stage-a-f
+
+  - id: avatar-travel-docs-compliance
+    name: TravelDocs Compliance
+    path: product-type/travel-docs-compliance/
+    status: active
+    version: "1.2.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    focus:
+      - Document readiness decisions
+      - Regulatory compliance and audit trails
+      - Exception explainability
+      - API-first operational reliability
+    specializes_laws:
+      - BUS-2.1  # Regulatory Mapping (IATA TIMATIC, CBP APIS)
+      - BUS-4.3  # Data Subject Rights (GDPR Art.9, CCPA biometric)
+      - PRD-1.1  # Continuous Discovery
+      - PRD-2.1  # User Journey Mapping
+      - PRD-5.1  # Metrics & Success
+      - ENG-6.1  # Security by Design (MRZ/biometric PII)
+      - ENG-6.7  # Audit Trail
+    activates:
+      skills:
+        - spec-governance
+        - 02-user-journey-mapping
+        - 04-business-domain-modeling
+        - 05-business-rules
+        - 10-security-review
+      workflows:
+        - product-discovery-stage-a-f
+        - legacy-rescue-decision-track
+
+  # Marketing & Personalization
+  - id: avatar-product-marketing-personalization
+    name: "Marketing Personalization & Targeted Offers"
+    path: product-type/marketing-personalization/
+    status: active
+    version: "1.2.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    focus:
+      - Offer selection and ranking
+      - Campaign A/B experimentation
+      - Customer segmentation and targeting
+      - Offer delivery and attribution
+      - Retention win-back campaigns
+    activates:
+      skills:
+        - skill-spec-governance
+        - skill-02-user-journey-mapping
+        - skill-02-research-synthesis
+        - skill-03-executable-spec
+        - skill-04-business-domain-modeling
+        - skill-05-business-rules
+        - skill-06-atomic-tdd
+        - skill-07-vertical-slice-dev
+        - skill-08-code-review
+      workflows:
+        - product-discovery-stage-a-f
+    specializes_laws:
+      - PRD-1.1  # Continuous Discovery ΓÇö campaign manager interviews, CTR analysis
+      - PRD-1.2  # Problem-First ΓÇö validate offer mismatch before ML investment
+      - PRD-1.5  # Evidence-Based ΓÇö A/B test results drive all algorithm changes
+      - PRD-2.1  # User Journey Mapping ΓÇö Trigger ΓåÆ LTV Impact full offer journey
+      - PRD-3.1  # Roadmap Planning ΓÇö retention-first quarterly roadmap with metric gates
+      - PRD-5.1  # MVP Law ΓÇö rule-based holdout test before ML rebuild
+      - PRD-6.2  # Retention Over Acquisition ΓÇö 90-day re-engagement as north star
+      - BUS-4.3  # Data Subject Rights ΓÇö opt-out, erasure, access for offer targeting
+      - BUS-7.1  # Audit Trail ΓÇö append-only offer decision log, 7-year retention
+      - BUS-9.3  # Breach Notification ΓÇö targeting data exposure runbook
+  - id: avatar-crew-training-scheduling
+    name: Crew Training Scheduling
+    path: product-type/crew-training-scheduling/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - Pilot OE training schedule optimization
+      - Open blocked sequence recovery
+      - MIP-based assignment recommendation
+      - FAR-compliant scheduling constraints
+    specializes_laws:
+      - PRD-1.2   # Problem-First Law - spoilage reduction is the validated problem
+      - PRD-5.1   # MVP Law - feasible solution + freeze enforcement + scheduler output
+      - ENG-4.1   # Atomic TDD - constraint and scoring tests before code
+      - ENG-6.7   # Audit Trail - solver run and recommendation are auditable records
+      - BUS-2.1   # FAA Compliance - FAR Part 117 constraints are regulatory
+    non_negotiable_examples:
+      - law: PRD-1.2
+        file: product-type/crew-training-scheduling/examples/PRD-1.2-problem-first.md
+      - law: PRD-5.1
+        file: product-type/crew-training-scheduling/examples/PRD-5.1-mvp-law.md
+      - law: BUS-7.1
+        file: product-type/crew-training-scheduling/examples/BUS-7.1-audit-trail.md
+      - law: BUS-2.1
+        file: product-type/crew-training-scheduling/examples/BUS-2.1-regulatory-mapping.md
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-03-executable-spec
+        - skill-08-code-review
+      workflows:
+        - product-discovery-stage-a-f
+    industry_avatar: aviation-faa
+    technology_avatar: operations-research-optimizer
+    reference_implementation: daily-optimizer (JOSE Optimizer)
+
+  - id: avatar-cargo-freight
+    name: Cargo & Freight
+    path: product-type/cargo-freight/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - Freight booking and quoting
+      - Cargo operations
+      - Forwarder integration
+    specializes_laws:
+      - PRD-1.2  # Problem-First Law
+      - PRD-1.5  # Evidence-Based Decision
+      - PRD-5.1  # MVP Law
+      - PRD-6.2  # Retention Over Acquisition
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-02-user-journey-mapping
+        - skill-03-executable-spec
+      workflows:
+        - product-discovery-stage-a-f
+
+  - id: avatar-check-in-travel
+    name: Check-In & Boarding
+    path: product-type/check-in-travel/
+    status: active
+    version: "1.6.1"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    focus:
+      - Digital and mobile check-in
+      - Boarding process
+      - Gate operations
+      - IFCI passport scan and NFC verification
+    specializes_laws:
+      - PRD-1.1  # Continuous Discovery
+      - PRD-2.1  # User Journey Mapping
+      - PRD-5.1  # Metrics & Success
+      - PRD-6.2  # Retention Over Acquisition
+      - BUS-2.1  # Regulatory Mapping (TSA 49 CFR Part 1544, DOT ADA)
+      - BUS-2.2  # Control Framework
+      - BUS-4.3  # Data Subject Rights (biometric/passport PII)
+      - ENG-6.4  # PII & TSA Secure Flight
+      - ENG-6.7  # Audit Trail (boarding pass issuance, APIS)
+    activates:
+      skills:
+        - skill-01-customer-discovery
+        - skill-02-user-journey-mapping
+        - skill-02-research-synthesis
+        - skill-03-executable-spec
+        - skill-04-business-domain-modeling
+        - skill-05-business-rules
+        - skill-07-operational-excellence
+        - skill-10-security-review
+        - skill-27-constitution-compliance
+      workflows:
+        - product-discovery-stage-a-f
+        - workflow-boarding-operations
+
+  - id: avatar-loyalty-aadvantage
+    name: Loyalty (AAdvantage)
+    path: product-type/loyalty-aadvantage/
+    status: active
+    version: "1.4.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    focus:
+      - Member acquisition and retention
+      - Points earning and redemption
+      - Elite status progression
+    specializes_laws:
+      - PRD-1.2  # Problem-First Law
+      - PRD-6.2  # Retention Over Acquisition
+      - PRD-5.1  # MVP Law
+      - BUS-4.3  # Data Subject Rights
+    activates:
+      skills:
+        - skill-02-user-journey-mapping
+        - skill-06-atomic-tdd
+      workflows:
+        - product-discovery-stage-a-f
+
+  - id: avatar-airport-operations
+    name: Airport Operations
+    path: product-type/airport-operations/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - Gate management
+      - IROP recovery
+      - Crew coordination
+      - Ground operations
+    specializes_laws:
+      - BUS-2.1  # FAA Compliance
+      - BUS-2.2  # TSA Security
+      - BUS-2.3  # DOT Consumer Protection
+      - PRD-1.2  # Problem-First Law
+      - PRD-5.1  # MVP Law
+      - ENG-6.7  # Audit Trail
+    activates:
+      skills:
+        - skill-02-user-journey-mapping
+        - skill-06-atomic-tdd
+        - skill-13-observability
+      workflows:
+        - product-discovery-stage-a-f
+
+  - id: avatar-customer-service
+    name: Customer Service
+    path: product-type/customer-service/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - IROP self-service rebooking
+      - DOT-compliant refund processing
+      - Involuntary denied boarding
+      - Complaint resolution
+    specializes_laws:
+      - BUS-2.3  # DOT Consumer Protection
+      - PRD-1.2  # Problem-First Law
+      - PRD-6.2  # Retention Over Acquisition
+      - BUS-7.1  # Audit Trail
+    activates:
+      skills:
+        - skill-02-user-journey-mapping
+        - skill-06-atomic-tdd
+      workflows:
+        - product-discovery-stage-a-f
+
+  - id: avatar-passenger-booking
+    name: Passenger Booking
+    path: product-type/passenger-booking/
+    status: active
+    version: "1.7.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    focus:
+      - Flight search and fare display
+      - DOT fare transparency
+      - PCI-DSS payment
+      - Itinerary management
+    specializes_laws:
+      - BUS-2.1  # Regulatory Mapping (PCI-DSS, DOT 14 CFR)
+      - BUS-2.2  # Control Framework (PCI-DSS 12-req)
+      - BUS-4.3  # Data Subject Rights
+      - ENG-6.1  # Security by Design
+      - ENG-6.4  # PII & GDPR
+      - ENG-6.7  # Audit Trail
+      - PRD-1.1  # Continuous Discovery
+      - PRD-2.1  # User Journey Mapping
+      - PRD-5.1  # Metrics & Success
+    activates:
+      skills:
+        - skill-02-user-journey-mapping
+        - skill-06-atomic-tdd
+        - skill-10-security-review
+      workflows:
+        - product-discovery-stage-a-f
+
+  - id: avatar-schedule-change-self-serve
+    name: Schedule Change Self-Serve
+    path: product-type/schedule-change-self-serve/
+    status: active
+    version: "1.1.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    focus:
+      - Customer schedule change flows
+      - Service recovery
+      - Self-service eligibility
+    specializes_laws:
+      - BUS-2.1  # DOT 14 CFR Part 250 schedule change consumer rights
+      - PRD-1.1  # Continuous Discovery
+      - PRD-2.1  # User Journey Mapping
+      - PRD-3.1  # Roadmap Planning
+      - PRD-5.1  # Metrics & Success
+      - ENG-6.1  # Security by Design (PNR PII)
+      - ENG-6.4  # Compliance and Audit Trail
+    activates:
+      skills:
+        - skill-02-user-journey-mapping
+        - skill-06-atomic-tdd
+      workflows:
+        - product-discovery-stage-a-f
+
+  - id: avatar-ground-ops-staffing-analytics
+    name: Ground Ops Staffing Analytics
+    path: product-type/ground-ops-staffing-analytics/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - Staffing gap analytics
+      - Ground operations optimization
+      - Demand forecasting
+    specializes_laws:
+      - PRD-1.2  # Problem-First Law
+      - PRD-5.1  # MVP Law
+      - ENG-6.4  # Data Protection
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-04-business-domain-modeling
+      workflows:
+        - product-discovery-stage-a-f
+
+  - id: avatar-network-planning-optimization
+    name: Network Planning Optimization
+    path: product-type/network-planning-optimization/
+    status: active
+    rag_validated: unknown
+    last_validated: "2026-05-07"
+    focus:
+      - Route profitability analysis
+      - Schedule optimization
+      - Capacity planning
+    specializes_laws:
+      - PRD-1.2  # Problem-First Law
+      - PRD-5.1  # MVP Law
+      - PRD-1.5  # Evidence-Based Decision
+    activates:
+      skills:
+        - skill-04-business-domain-modeling
+        - skill-06-atomic-tdd
+      workflows:
+        - product-discovery-stage-a-f
+
+  - id: avatar-customer-relations-ops
+    name: Customer Relations Operations
+    path: product-type/customer-relations-ops/
+    status: active
+    version: "1.1.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    focus:
+      - AI-assisted complaint draft generation
+      - PII safety in LLM workflows
+      - Compensation validation
+      - Audit trail for LLM calls
+    specializes_laws:
+      - BUS-1.1  # Priority Hierarchy
+      - BUS-7.1  # Audit Trail
+      - ENG-6.5  # Input Validation
+      - ENG-4.1  # Atomic TDD
+      - PRD-5.1  # MVP Law
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-21-prompt-engineering
+        - skill-13-observability
+      workflows:
+        - product-discovery-stage-a-f
+
+  - id: avatar-product-gate-management
+    name: Gate Management Platform
+    path: product-type/gate-management/
+    status: active
+    rag_validated: true
+    last_validated: "2026-04-22"
+    wave: 4
+    codebase_source: AAInternal/hangar-w4-gate-mgmt
+    focus:
+      - Digital Signage (DSS — FIDS/GIDS/BIDS/WIDS)
+      - Touchless Biometric Boarding
+      - Carry-On Baggage Compliance
+      - Connect Me operational communications
+    specializes_laws:
+      - BUS-2.1  # FAA Compliance Law
+      - BUS-2.2  # Control Framework Law
+      - BUS-2.4  # Evidence Collection Law
+      - ENG-6.7  # Audit Trail Law
+      - ENG-6.1  # Security by Design Law
+      - PRD-1.2  # Problem-First Law
+      - PRD-5.1  # MVP Law
+    activates:
+      skills:
+        - skill-02-user-journey-mapping
+        - skill-03-executable-spec
+        - skill-05-business-rules
+        - skill-06-atomic-tdd
+        - skill-14-real-time-data-integration
+        - skill-22-decision-support
+      workflows:
+        - product-discovery-stage-a-f
+        - greenfield-development
+        - legacy-rescue-decision-track
+      technology_avatars:
+        - avatar-tech-apigee-azure
+        - avatar-tech-dss-event-driven
+        - avatar-react-typescript
+        - avatar-dotnet-core
+        - avatar-nodejs-typescript
+      industry_avatars:
+        - avatar-aviation-faa
+
+  - id: avatar-product-ballot-trading
+    name: Pilot Ballot & Trip Trading
+    type: product
+    path: product-type/ballot-trading/
+    status: provisional  # pending taxonomy extension approval (see PROPOSAL)
+    rag_validated: true
+    last_validated: "2026-04-27"
+    taxonomy_extension_status: "PENDING — awaiting Director+ approval per hangar-ai-specs/changes/taxonomy-extension-ballot-trading/PROPOSAL.md"
+    specializes_laws:
+      - PRD-1.1  # Continuous Discovery
+      - PRD-1.2  # Problem-First (NON-NEGOTIABLE)
+      - PRD-1.5  # Evidence-Based Decisions
+      - PRD-2.1  # User Journey Mapping
+      - PRD-2.5  # Stage-Gate Reviews
+      - PRD-5.1  # MVP Law (NON-NEGOTIABLE)
+      - PRD-6.2  # Retention Over Acquisition
+      - BUS-7.1  # Audit Trail (NON-NEGOTIABLE)
+      - BUS-2.2  # Control Framework
+      - BUS-3.1  # Data Classification
+    activates:
+      skills:
+        - skill-spec-governance
+        - skill-02-user-journey-mapping
+        - skill-05-business-rules
+        - skill-27-constitution-compliance
+      workflows:
+        - avatar-workflow
+        - greenfield-development
+
+  - id: avatar-product-crew-recovery-solver
+    name: "American Airlines Crew Recovery Solver"
+    type: product
+    path: product-type/crew-recovery-solver/
+    version: "1.0.0"
+    status: active
+    rag_validated: true
+    last_validated: "2026-04-23"
+
+# Mobile Product-Type Avatars (Wave 4 — hangar-w4-dp-mobile, 2026-04-30)
+
+  - id: avatar-manage-trip
+    name: "Trip Management & Post-Booking Modifications"
+    type: product
+    path: product-type/manage-trip/
+    version: "1.0.0"
+    status: active
+    rag_validated: true
+    last_validated: "2026-04-30"
+    wave: 4
+    codebase_source: hangar-w4-dp-mobile (managetrip-ios + trips-ios + 6 BFF repos)
+    taxonomy_approved: "2026-04-30"
+
+  - id: avatar-flight-status-flifo
+    name: "Flight Status & FLIFO Information"
+    type: product
+    path: product-type/flight-status-flifo/
+    version: "1.0.0"
+    status: active
+    rag_validated: true
+    last_validated: "2026-04-30"
+    wave: 4
+    codebase_source: hangar-w4-dp-mobile (flightinfo-ios + flightstatusnotification-ios + Mobile-FLIFO-BFF)
+    taxonomy_approved: "2026-04-30"
+
+  - id: avatar-ancillary-upsell
+    name: "Ancillary Upsell & Post-Booking Purchases"
+    type: product
+    path: product-type/ancillary-upsell/
+    version: "1.0.0"
+    status: active
+    rag_validated: true
+    last_validated: "2026-04-30"
+    wave: 4
+    codebase_source: hangar-w4-dp-mobile (instantupsell-ios + auction-ios + upgrades-ios + bags-ios + BFFs)
+    taxonomy_approved: "2026-04-30"
+    boundary_clause: "Post-booking ancillary only; initial booking-flow → passenger-booking; targeting → marketing-personalization"
+
+  - id: avatar-account-identity
+    name: "Account Identity & Profile Management"
+    type: product
+    path: product-type/account-identity/
+    version: "1.0.0"
+    status: active
+    rag_validated: true
+    last_validated: "2026-04-30"
+    wave: 4
+    codebase_source: hangar-w4-dp-mobile (account-ios + devicevalidation-ios)
+    taxonomy_approved: "2026-04-30"
+    scope_note: "Auth/profile/device-trust; loyalty excluded (→ loyalty-aadvantage); ENG-3.1 web-bridge risk"
+
+# Wave 4 Technology Avatars
+
+  - id: avatar-tech-apigee-azure
+    name: Apigee + Azure Cloud
+    type: technology
+    path: technology/apigee-azure/
+    status: active
+    rag_validated: true
+    last_validated: "2026-04-22"
+    wave: 4
+    codebase_source: AAInternal/hangar-w4-gate-mgmt (biometrics/ + carryon/)
+    specializes_laws:
+      - ENG-4.1  # Atomic TDD Law
+      - ENG-3.1  # Complexity Limits (non-negotiable baseline — added)
+      - ENG-6.1  # Security by Design Law
+      - ENG-6.4  # Data Protection Law
+      - ENG-6.7  # Audit Trail Law
+      - ENG-5.2  # CI/CD Pipeline Law
+      - ENG-7.1  # Failure Handling Law
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-08-code-review
+        - skill-10-security-review
+        - skill-14-real-time-data-integration
+      workflows:
+        - greenfield-development
+        - legacy-rescue-refactor
+
+  - id: avatar-tech-dss-event-driven
+    name: DSS Event-Driven Microservices
+    type: technology
+    path: technology/dss-event-driven/
+    status: active
+    rag_validated: true
+    last_validated: "2026-04-22"
+    wave: 4
+    codebase_source: AAInternal/hangar-w4-gate-mgmt (dss/)
+    specializes_laws:
+      - ENG-4.1  # Atomic TDD Law
+      - ENG-2.1  # Domain-Driven Design Law
+      - ENG-3.1  # Complexity Limits
+      - ENG-5.5  # Observability Law
+      - ENG-6.4  # Data Protection Law
+      - ENG-7.1  # Failure Handling Law
+    activates:
+      skills:
+        - skill-06-atomic-tdd
+        - skill-07-vertical-slice-dev
+        - skill-08-code-review
+        - skill-14-real-time-data-integration
+      workflows:
+        - greenfield-development
+        - legacy-rescue-refactor

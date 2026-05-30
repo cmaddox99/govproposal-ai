@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phase 3 — Discover | Avatar Enrichment: Mobile iOS</title>
+  <style>
+    :root {
+      --aa-blue:#0f3460; --aa-teal:#0d9488; --aa-surface:#f4f6fa;
+      --aa-border:#dde3ee; --aa-text:#1e293b; --aa-muted:#64748b; --r:9px;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--aa-surface); color:var(--aa-text); font-size:14px; line-height:1.6; }
+    header { background:linear-gradient(140deg,#070a12 0%,#0f3460 65%,#0d9488 100%); color:#fff; padding:32px 44px 26px; }
+    .h-eyebrow { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:6px; }
+    .h-title { font-size:26px; font-weight:800; }
+    .h-sub { font-size:13px; color:rgba(255,255,255,.6); margin-top:4px; }
+    .badges { display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
+    .badge { padding:3px 11px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; }
+    .b-phase { background:var(--aa-teal); color:#fff; }
+    .b-ok { background:rgba(34,197,94,.25); color:#86efac; border:1px solid rgba(34,197,94,.4); }
+    main { max-width:980px; margin:32px auto; padding:0 24px 60px; }
+    h2 { font-size:15px; font-weight:700; margin:28px 0 12px; color:var(--aa-blue); border-bottom:2px solid var(--aa-border); padding-bottom:6px; }
+    .section { background:#fff; border:1px solid var(--aa-border); border-radius:var(--r); padding:22px 26px; margin-bottom:18px; }
+    .section-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--aa-muted); margin-bottom:14px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { background:#f8f9fc; font-weight:600; text-align:left; padding:8px 12px; border-bottom:2px solid var(--aa-border); color:var(--aa-muted); font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
+    td { padding:8px 12px; border-bottom:1px solid var(--aa-border); vertical-align:top; }
+    tr:last-child td { border-bottom:none; }
+    .tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; margin:1px; }
+    .t-nn  { background:#fee2e2; color:#991b1b; }
+    .t-prd { background:#ede9fe; color:#5b21b6; }
+    .t-bus { background:#fef3c7; color:#92400e; }
+    .t-eng { background:#e0f2fe; color:#0369a1; }
+    .t-av  { background:#fce7f3; color:#9d174d; }
+    .t-new { background:#dcfce7; color:#15803d; border:1px solid #86efac; }
+    code   { background:#f1f5f9; padding:1px 5px; border-radius:4px; font-size:12px; color:#0369a1; }
+    .note  { font-size:12px; color:var(--aa-muted); margin-top:8px; }
+    footer { text-align:center; font-size:11px; color:var(--aa-muted); padding:20px; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="h-eyebrow">Hangar AI Constitution — Avatar Workflow</div>
+  <div class="h-title">Phase 3 — Law Discovery</div>
+  <div class="h-sub">Codebase: hangar-w4-dp-mobile &nbsp;·&nbsp; Run date: 2026-04-27 &nbsp;·&nbsp; Source: laws/index.yaml + domain law files (168 laws)</div>
+  <div class="badges">
+    <span class="badge b-phase">Phase 3 Complete</span>
+    <span class="badge b-ok">✓ All Laws Verified from Source Files</span>
+  </div>
+</header>
+<main>
+
+  <p style="font-size:13px;color:var(--aa-muted);margin-bottom:24px;">
+    All law IDs and titles below are read directly from <code>laws/index.yaml</code> and the domain law files. None are invented.
+    <span class="tag t-nn">NON-NEG</span> = non-negotiable, requires executive approval to amend.
+    <span class="tag t-av">AVIATION</span> = aviation-specific non-negotiable.
+    <span class="tag t-new">NEW</span> = not yet in avatar's specializes_laws — must be added in Phase 4.
+  </p>
+
+  <!-- PASSENGER BOOKING -->
+  <h2>avatar-passenger-booking &nbsp;<span class="tag t-prd">product</span></h2>
+  <div class="section">
+    <div class="section-title">Applicable Laws — confirmed from source files</div>
+    <table>
+      <tr><th>Law ID</th><th>Title</th><th>Domain</th><th>Status</th></tr>
+      <tr><td><code>PRD-1.1</code></td><td>Customer-Centric Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>PRD-1.2</code></td><td>Problem-First Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-1.5</code></td><td>Evidence-Based Decision Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-2.1</code></td><td>Problem Validation Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>PRD-2.5</code></td><td>Discovery Stage-Gate Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-3.1</code></td><td>Persona Development Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>PRD-3.2</code></td><td>Journey Mapping Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>PRD-5.1</code></td><td>Minimum Viable Product Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-6.2</code></td><td>Retention Over Acquisition Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>BUS-2.1</code></td><td>FAA Compliance Law</td><td><span class="tag t-av">AVIATION</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>BUS-2.2</code></td><td>Control Framework Law (TSA)</td><td><span class="tag t-av">AVIATION</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>BUS-2.3</code></td><td>DOT Consumer Protection Law</td><td><span class="tag t-av">AVIATION</span></td><td><span class="tag t-new">NEW</span> (fare transparency)</td></tr>
+      <tr><td><code>BUS-3.1</code></td><td>Data Classification Law (PNR)</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-av">AVIATION</span> <span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>BUS-3.6</code></td><td>Monetary Precision Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-nn">NON-NEG</span> <span class="tag t-new">NEW</span> (payments)</td></tr>
+      <tr><td><code>BUS-4.3</code></td><td>Data Subject Rights Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-nn">NON-NEG</span> <span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>BUS-7.1</code></td><td>Audit Trail Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-nn">NON-NEG</span> <span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>ENG-6.1</code></td><td>Security by Design Law</td><td><span class="tag t-eng">ENG-6.x cond.</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>ENG-6.4</code></td><td>Data Protection Law</td><td><span class="tag t-eng">ENG-6.x cond.</span></td><td>in avatar ✓</td></tr>
+    </table>
+    <p class="note">Core journeys to define in Phase 4: <strong>Search &amp; Book</strong>, <strong>Seat Selection</strong>, <strong>Payment</strong>, <strong>PNR Retrieval</strong></p>
+  </div>
+
+  <!-- CHECK-IN TRAVEL -->
+  <h2>avatar-check-in-travel &nbsp;<span class="tag t-prd">product</span></h2>
+  <div class="section">
+    <div class="section-title">Applicable Laws</div>
+    <table>
+      <tr><th>Law ID</th><th>Title</th><th>Domain</th><th>Status</th></tr>
+      <tr><td><code>PRD-1.2</code></td><td>Problem-First Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-1.5</code></td><td>Evidence-Based Decision Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-2.5</code></td><td>Discovery Stage-Gate Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-3.1</code></td><td>Persona Development Law</td><td><span class="tag t-prd">PRD</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>PRD-3.2</code></td><td>Journey Mapping Law</td><td><span class="tag t-prd">PRD</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>PRD-4.1</code></td><td>Outcome-Based Roadmap Law</td><td><span class="tag t-prd">PRD</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>PRD-5.1</code></td><td>Minimum Viable Product Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-6.2</code></td><td>Retention Over Acquisition Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>BUS-2.1</code></td><td>FAA Compliance Law</td><td><span class="tag t-av">AVIATION</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>BUS-2.2</code></td><td>Control Framework Law (TSA)</td><td><span class="tag t-av">AVIATION</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>BUS-2.3</code></td><td>DOT Consumer Protection Law</td><td><span class="tag t-av">AVIATION</span></td><td><span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>BUS-4.1</code></td><td>Privacy by Design Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-new">NEW</span> (location data at gate)</td></tr>
+      <tr><td><code>BUS-4.3</code></td><td>Data Subject Rights Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-nn">NON-NEG</span> <span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>BUS-7.1</code></td><td>Audit Trail Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-nn">NON-NEG</span> <span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>ENG-6.4</code></td><td>Data Protection Law</td><td><span class="tag t-eng">ENG-6.x cond.</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>ENG-6.7</code></td><td>Audit Trail Law (Eng)</td><td><span class="tag t-eng">ENG-6.x cond.</span></td><td>in avatar ✓</td></tr>
+    </table>
+    <p class="note">Core journeys to define in Phase 4: <strong>Mobile Check-In</strong>, <strong>Boarding Pass Retrieval</strong>, <strong>Gate Change Notification</strong></p>
+  </div>
+
+  <!-- SCHEDULE CHANGE -->
+  <h2>avatar-schedule-change-self-serve &nbsp;<span class="tag t-prd">product</span></h2>
+  <div class="section">
+    <div class="section-title">Applicable Laws</div>
+    <table>
+      <tr><th>Law ID</th><th>Title</th><th>Domain</th><th>Status</th></tr>
+      <tr><td><code>PRD-1.2</code></td><td>Problem-First Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-1.5</code></td><td>Evidence-Based Decision Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-2.1</code></td><td>Problem Validation Law</td><td><span class="tag t-prd">PRD</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>PRD-2.3</code></td><td>Jobs-to-be-Done Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-new">NEW</span> (rebooking JTBD)</td></tr>
+      <tr><td><code>PRD-2.5</code></td><td>Discovery Stage-Gate Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-3.2</code></td><td>Journey Mapping Law</td><td><span class="tag t-prd">PRD</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>PRD-5.1</code></td><td>Minimum Viable Product Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-6.2</code></td><td>Retention Over Acquisition Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>BUS-2.1</code></td><td>FAA Compliance Law</td><td><span class="tag t-av">AVIATION</span></td><td><span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>BUS-2.3</code></td><td>DOT Consumer Protection Law</td><td><span class="tag t-av">AVIATION</span></td><td><span class="tag t-new">NEW</span> (involuntary change rights)</td></tr>
+      <tr><td><code>BUS-3.6</code></td><td>Monetary Precision Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-nn">NON-NEG</span> <span class="tag t-new">NEW</span> (refunds)</td></tr>
+      <tr><td><code>BUS-4.3</code></td><td>Data Subject Rights Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-nn">NON-NEG</span> <span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>BUS-7.1</code></td><td>Audit Trail Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-nn">NON-NEG</span> <span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>ENG-6.4</code></td><td>Data Protection Law</td><td><span class="tag t-eng">ENG-6.x cond.</span></td><td>in avatar ✓</td></tr>
+      <tr><td style="color:#dc2626"><code>ENG-2.3</code></td><td style="color:#dc2626">Vertical Slice Architecture Law</td><td><span class="tag t-eng">ENG</span></td><td style="color:#dc2626;font-weight:700">⛔ REMOVE — FORBIDDEN in product avatar</td></tr>
+      <tr><td style="color:#dc2626"><code>ENG-9.4</code></td><td style="color:#dc2626">— (not in law index)</td><td><span class="tag t-eng">ENG</span></td><td style="color:#dc2626;font-weight:700">⛔ REMOVE — not a valid law ID + FORBIDDEN</td></tr>
+    </table>
+    <p class="note">Core journeys to define in Phase 4: <strong>Involuntary Schedule Change</strong>, <strong>Voluntary Flight Change</strong>, <strong>Refund Request</strong></p>
+  </div>
+
+  <!-- CUSTOMER RELATIONS -->
+  <h2>avatar-customer-relations-ops &nbsp;<span class="tag t-prd">product</span></h2>
+  <div class="section">
+    <div class="section-title">Applicable Laws</div>
+    <table>
+      <tr><th>Law ID</th><th>Title</th><th>Domain</th><th>Status</th></tr>
+      <tr><td><code>PRD-1.2</code></td><td>Problem-First Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-1.5</code></td><td>Evidence-Based Decision Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-2.1</code></td><td>Problem Validation Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>PRD-2.5</code></td><td>Discovery Stage-Gate Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-3.1</code></td><td>Persona Development Law</td><td><span class="tag t-prd">PRD</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>PRD-5.1</code></td><td>Minimum Viable Product Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>PRD-6.2</code></td><td>Retention Over Acquisition Law</td><td><span class="tag t-prd">PRD</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>BUS-2.3</code></td><td>DOT Consumer Protection Law</td><td><span class="tag t-av">AVIATION</span></td><td><span class="tag t-new">NEW</span> (complaint resolution)</td></tr>
+      <tr><td><code>BUS-4.1</code></td><td>Privacy by Design Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-new">NEW</span> (PII in LLM complaint drafts)</td></tr>
+      <tr><td><code>BUS-4.3</code></td><td>Data Subject Rights Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-nn">NON-NEG</span> <span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>BUS-7.1</code></td><td>Audit Trail Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-nn">NON-NEG</span> — in avatar ✓</td></tr>
+      <tr><td><code>BUS-9.1</code></td><td>Incident Classification Law</td><td><span class="tag t-bus">BUS</span></td><td><span class="tag t-new">NEW</span></td></tr>
+      <tr><td><code>ENG-6.4</code></td><td>Data Protection Law</td><td><span class="tag t-eng">ENG-6.x cond.</span></td><td>in avatar ✓</td></tr>
+      <tr><td><code>ENG-6.7</code></td><td>Audit Trail Law (Eng)</td><td><span class="tag t-eng">ENG-6.x cond.</span></td><td>in avatar ✓</td></tr>
+    </table>
+    <p class="note">Core journeys to define in Phase 4: <strong>Complaint Intake &amp; Draft</strong>, <strong>Customer Compensation Decision</strong></p>
+  </div>
+
+  <!-- IOS SWIFT -->
+  <h2>avatar-ios-swift &nbsp;<span class="tag t-eng" style="background:#e0f2fe;color:#0369a1;">technology</span></h2>
+  <div class="section">
+    <div class="section-title">Applicable Laws — ENG-* only (non-negotiable must have code examples)</div>
+    <table>
+      <tr><th>Law ID</th><th>Title</th><th>Non-Neg?</th><th>Example Exists?</th></tr>
+      <tr><td><code>ENG-2.1</code></td><td>Domain-Driven Design Law</td><td>—</td><td><span class="tag t-new">NEW — add from feature module structure</span></td></tr>
+      <tr><td><code>ENG-2.2</code></td><td>Layered Architecture Law</td><td>—</td><td>✓ exists</td></tr>
+      <tr><td><code>ENG-3.1</code></td><td>Complexity Limits</td><td>—</td><td>✓ exists</td></tr>
+      <tr><td><code>ENG-3.2</code></td><td>Immutability Law</td><td>—</td><td>✓ exists</td></tr>
+      <tr><td><code>ENG-4.1</code></td><td>Atomic TDD Law</td><td><span class="tag t-nn">NON-NEG</span></td><td>✓ exists</td></tr>
+      <tr><td><code>ENG-4.2</code></td><td>Test Pyramid Law</td><td>—</td><td>✓ exists (over token budget — split in Phase 4)</td></tr>
+      <tr><td><code>ENG-5.2</code></td><td>CI/CD Pipeline Law</td><td>—</td><td><span class="tag t-new">NEW — Xcode Cloud / Fastlane patterns</span></td></tr>
+      <tr><td><code>ENG-5.5</code></td><td>Observability Law</td><td>—</td><td><span class="tag t-new">NEW — crash reporting, analytics-ios patterns</span></td></tr>
+      <tr><td><code>ENG-6.1</code></td><td>Security by Design Law</td><td><span class="tag t-nn">NON-NEG</span></td><td>✓ exists</td></tr>
+      <tr><td><code>ENG-6.2</code></td><td>Authentication Law</td><td>—</td><td><span class="tag t-new">NEW — biometric / SSO patterns from codebase</span></td></tr>
+      <tr><td><code>ENG-6.4</code></td><td>Data Protection Law</td><td><span class="tag t-nn">NON-NEG</span></td><td>✓ exists</td></tr>
+      <tr><td><code>ENG-6.5</code></td><td>Input Validation Law</td><td>—</td><td><span class="tag t-new">NEW — form validation patterns</span></td></tr>
+      <tr><td><code>ENG-6.7</code></td><td>Audit Trail Law</td><td><span class="tag t-nn">NON-NEG</span></td><td>✓ exists</td></tr>
+      <tr><td><code>ENG-7.1</code></td><td>Failure Handling Law</td><td>—</td><td><span class="tag t-new">NEW — offline mode / network error patterns</span></td></tr>
+      <tr><td><code>ENG-10.1</code></td><td>Constitution Governance Law</td><td><span class="tag t-nn">NON-NEG</span></td><td><span class="tag t-new" style="background:#fee2e2;color:#991b1b;">MISSING — required for non-neg</span></td></tr>
+      <tr><td><code>ENG-11.1</code></td><td>Spec-Driven Development Law</td><td><span class="tag t-nn">NON-NEG</span></td><td><span class="tag t-new" style="background:#fee2e2;color:#991b1b;">MISSING — required for non-neg</span></td></tr>
+    </table>
+    <p class="note">⚠ <code>ENG-10.1</code> and <code>ENG-11.1</code> are non-negotiable laws with no example in the iOS avatar. These must be added in Phase 4 — they are the highest-priority gap.</p>
+  </div>
+
+</main>
+<footer>Hangar AI Constitution · Avatar Workflow v1.0.0 · Phase 3 of 6 · Laws source: laws/index.yaml + 11 domain files · 168 total laws verified</footer>
+</body>
+</html>

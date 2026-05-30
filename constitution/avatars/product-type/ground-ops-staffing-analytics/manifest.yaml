@@ -1,0 +1,202 @@
+avatar:
+  id: avatar-product-ground-ops-staffing-analytics
+  type: product
+  name: "Ground Ops Staffing Analytics"
+  version: "1.0.0"
+  created: "2026-03-26"
+  last_updated: "2026-03-26"
+  contributed_by: "ABR-Staffing adoption — constitutional enrichment contribution"
+
+domain:
+  category: "Airport Ground Operations / ML-Driven Workforce Optimization"
+  description: |
+    American Airlines Ground Ops Staffing Analytics provides machine learning–driven
+    decision support for airport ramp and baggage operations staffing. It predicts
+    ground-crew requirements using historical bag scan events, flight data, and
+    passenger manifests, enabling data-driven staffing plans at hub stations.
+    Key value drivers include staffing accuracy (avoiding over/under-staffing),
+    bag delivery reliability (pull-time SLAs), IROP resilience, and labor cost efficiency.
+
+  personas:
+    - "Ground Ops Analyst (Staffing Optimizer)"
+    - "Ramp Operations Supervisor"
+    - "Station Operations Manager"
+    - "Airport Planning Engineer"
+  personas_file: "examples/personas.md"
+
+triggers:
+  - "staffing optimization"
+  - "ramp staffing"
+  - "baggage ramp"
+  - "ABR staffing"
+  - "airport baggage ramp"
+  - "driver allocation"
+  - "ground crew prediction"
+  - "bag delivery routing"
+  - "airport workforce optimization"
+  - "quantile staffing model"
+  - "hot stop"
+  - "cold stop"
+  - "bagroom induction"
+  - "pull time analysis"
+  - "claim delivery"
+  - "transfer link"
+  - "IROP staffing"
+  - "seasonal staffing plan"
+  - "percentile staffing selection"
+  - "ground station planning"
+
+core_journeys:
+  - "Seasonal Staffing Plan Generation"
+  - "Station-Level Bag Delivery Routing Analysis"
+  - "ML Model Training & Percentile Selection"
+  - "IROP Impact Assessment & Staffing Adjustment"
+  - "Cross-Station Staffing Comparison & Rollout"
+
+activates:
+  skills:
+    # Discovery & Research
+    - skill-spec-governance
+    - skill-01-research-discovery
+    - skill-02-research-synthesis
+
+    # Product Planning
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+
+    # Development
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+
+    # ML/AI
+    - skill-22-ml-experiment-tracking
+    - skill-24-model-validation
+
+    # Brownfield/Enrichment
+    - skill-30-taxonomy-governed-avatar-enrichment
+
+  workflows:
+    - product-discovery-stage-a-f
+    - workflow-ml-model-development
+    - legacy-rescue-decision-track
+
+technology_affinity:
+  primary: ml-analytics          # scikit-learn, pandas, quantile regression
+  secondary: databricks-pyspark  # ADLS/Databricks SQL data ingestion
+  preservation: legacy-ml-interop  # Jupyter notebooks → extract to modules
+
+specializes_laws:
+  - id: PRD-1.1
+    title: "Continuous Discovery"
+    description: "Understand ramp staffing pain points through supervisor interviews, bag delivery data, and IROP post-mortems"
+    example_file: "examples/PRD-1.1-discovery.md"
+    key_practices:
+      - "Interview ramp supervisors about current manual estimation methods"
+      - "Analyze historical under/over-staffing events and their cost impact"
+      - "Review IROP post-mortems for staffing failure patterns"
+      - "Study bag-delivery pull-time trends by station and delivery type"
+
+  - id: PRD-2.1
+    title: "User Journey Mapping"
+    description: "Map the staffing analyst workflow from seasonal data pull to final staffing plan delivery"
+    example_file: "examples/PRD-2.1-journey.md"
+    key_practices:
+      - "Document pipeline: data extraction → feature engineering → model → plan"
+      - "Identify manual validation steps between pipeline stages"
+      - "Track handoff from ML output to ground operations supervisor approval"
+
+  - id: PRD-3.1
+    title: "Roadmap Planning"
+    description: "Prioritize features by labor savings, on-time bag delivery, and station expansion potential"
+    example_file: "examples/PRD-3.1-roadmap.md"
+    key_practices:
+      - "Rank by labor cost impact: over-staffing cost vs. under-staffing penalty"
+      - "Sequence station expansion: CLT → DFW → PHX → MIA → (new stations)"
+      - "Prioritize quantile calibration improvements before adding delivery types"
+
+  - id: PRD-4.1
+    title: "MVP & Product-Market Fit"
+    description: "Validate staffing model accuracy with a single station/season before expanding"
+    example_file: "examples/PRD-4.1-mvp.md"
+    key_practices:
+      - "Run model against DFW Summer 2024 and compare to actual staffing records"
+      - "Define accuracy gate: within 15% of actual staffing 80% of the time"
+      - "Pilot with one supervising station manager before ops-wide rollout"
+
+  - id: PRD-5.1
+    title: "Metrics & Success Definition"
+    description: "Define staffing accuracy, labor efficiency, and on-time delivery as primary outcomes"
+    example_file: "examples/PRD-5.1-metrics.md"
+    key_practices:
+      - "Track staffing deviation: predicted vs. actual headcount per shift"
+      - "Measure pull-time SLA: % flights with bag delivery within first_pulltime threshold"
+      - "Report labor cost variance: over/under-staffing cost by station per season"
+
+  - id: ENG-4.1
+    title: "Atomic TDD Law"
+    description: "Characterization tests for utils/ modules first; extract notebook logic to tested modules second"
+    key_practices:
+      - "Utils must have ≥90% test coverage before any refactoring"
+      - "Notebook extractions tested before notebooks are modified (ENG-4.4)"
+      - "ML model accuracy assertions in tests (not just training success)"
+
+  - id: ENG-4.4
+    title: "Test-First Brownfield Law"
+    description: "Baseline specs for all pipeline notebooks before any extraction work"
+    key_practices:
+      - "Document notebook input/output contracts in hangar-ai-specs/specs/"
+      - "Write characterization tests for utils/ modules first"
+      - "Do NOT modify notebook cells until phase 1 safety net is complete"
+
+  - id: ENG-6.4
+    title: "Data Protection Law"
+    description: "Bag scan data contains anonymized flight/bag IDs. Passenger PII must not appear in logs or outputs."
+    key_practices:
+      - "No passenger names, SSNs, or full DOB in any output file or log"
+      - "DB credentials always in .env files (never committed)"
+      - "ADLS access token rotated per security policy"
+
+  - id: ENG-6.7
+    title: "Audit Trail Law"
+    description: "Every pipeline run logged with run_id for full traceability"
+    key_practices:
+      - "run_id persisted to current_run_id.json and referenced in all log entries"
+      - "Structured log format: [station][process_type][timestamp][uuid][notebook]"
+      - "model_metrics.json captures accuracy per run for retrospective comparison"
+
+  - id: BUS-2.1
+    title: "FAA Compliance"
+    description: "Ground ops data subject to FAA Part 121 record-keeping requirements"
+    key_practices:
+      - "Staffing plans retained per FAA Part 121 record-keeping schedules"
+      - "IROP adjustments traceable to specific flight IDs"
+      - "DO-178C Level D applies (decision-support tool, not airborne system)"
+
+key_metrics:
+  staffing_accuracy: "Predicted vs. actual within 15% on 80%+ of shifts"
+  pull_time_compliance: "≥85% of flights within station first_pulltime threshold"
+  labor_cost_variance: "Reduce over-staffing waste by ≥20%"
+  model_coverage: "Active across CLT, DFW, PHX, MIA stations"
+  pipeline_reliability: "100% successful runs in production season window"
+
+business_impact:
+  labor_efficiency: "Targeted 20% reduction in over-staffing waste"
+  bag_reliability: "Improve pull-time SLA compliance"
+  station_expansion: "Scale from 4 stations to 8+ with same pipeline"
+  estimated_roi: "Labor savings > model maintenance cost within 1 season"
+
+brownfield_notes: |
+  ABR-Staffing is the reference implementation. The codebase is Python 3.12 + Jupyter notebooks
+  + scikit-learn + Databricks SQL + Teradata. Phase 1 focus is characterization tests on utils/
+  Python modules. Phase 2 extracts embedded notebook logic to tested src/abr/ modules.
+  DO NOT rewrite notebook logic before safety net is complete (ENG-4.4).
+  Related tech avatars: ml-analytics (primary), databricks-pyspark (secondary), legacy-ml-interop.
+
+dependencies:
+  - "Teradata (historical staffing and operations data)"
+  - "Databricks SQL (feature engineering pipeline)"
+  - "Crew Management System (shift schedule source)"
+  - "Airport Operations System (flight schedule)"
+  - "Staffing Assignment Tool (output consumer)"

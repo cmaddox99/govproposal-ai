@@ -1,0 +1,132 @@
+# MLflow + Kubeflow Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-mlflow-kubeflow
+  type: technology
+  name: MLflow + Kubeflow
+  version: "2.0.0"
+
+stack:
+  language: Python 3.11+
+  platforms:
+    - MLflow
+    - Kubeflow Pipelines
+  testing:
+    - pytest
+    - kfp.testing
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - mlflow: ">=2.9.0"
+    - kfp: ">=2.4.0"
+    - kubernetes: ">=28.0.0"
+  dev:
+    - pytest: ">=8.0.0"
+    - pytest-cov: ">=4.1.0"
+    - ruff: ">=0.1.0"
+    - mypy: ">=1.8.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-6.1
+    title: Observability Law
+    example_file: examples/ENG-6.1-observability.md
+  - id: ENG-2.1
+    title: Simplicity Law
+    example_file: examples/ENG-2.1-simplicity.md
+
+conventions:
+  naming:
+    modules: snake_case
+    functions: snake_case
+    classes: PascalCase
+    experiments: lowercase-dashes
+    pipelines: lowercase-dashes
+    components: lowercase-dashes
+
+  patterns:
+    tracker: "ExperimentTracker wrapper for MLflow"
+    pipeline: "KFP DSL pipeline definition"
+    component: "@component decorated functions"
+    registry: "ModelRegistry for model lifecycle"
+
+commands:
+  test:
+    all: pytest
+    unit: pytest tests/ -m "not integration"
+    pipeline_local: pytest tests/pipelines/ --run-local
+    coverage: pytest --cov=src --cov-report=html
+  dev:
+    mlflow_server: mlflow server --host 0.0.0.0 --port 5000
+    compile_pipeline: "python -c 'from kfp import compiler; ...'"
+  pipeline:
+    upload: kfp pipeline upload -p my-pipeline pipeline.yaml
+    create_run: kfp run submit -e experiment -p my-pipeline
+    list_runs: kfp run list
+
+project_structure: |
+  mlops_project/
+  ├── src/
+  │   ├── pipelines/               # Kubeflow Pipelines
+  │   │   ├── __init__.py
+  │   │   ├── training_pipeline.py
+  │   │   ├── inference_pipeline.py
+  │   │   └── components/          # Pipeline components
+  │   │       ├── __init__.py
+  │   │       ├── preprocess.py
+  │   │       ├── train.py
+  │   │       ├── evaluate.py
+  │   │       └── deploy.py
+  │   ├── tracking/                # MLflow tracking
+  │   │   ├── __init__.py
+  │   │   ├── experiment.py        # Experiment tracker
+  │   │   └── registry.py          # Model registry
+  │   ├── models/                  # Model code
+  │   │   ├── __init__.py
+  │   │   ├── classifier.py
+  │   │   └── training.py
+  │   ├── serving/                 # Model serving
+  │   │   ├── __init__.py
+  │   │   ├── predictor.py
+  │   │   └── kserve_spec.py
+  │   └── utils/
+  │       ├── __init__.py
+  │       └── config.py
+  ├── tests/
+  │   ├── pipelines/
+  │   │   └── test_training_pipeline.py
+  │   ├── tracking/
+  │   │   └── test_experiment.py
+  │   ├── components/
+  │   │   └── test_train.py
+  │   └── conftest.py
+  ├── configs/
+  │   ├── pipeline.yaml
+  │   ├── mlflow.yaml
+  │   └── kserve.yaml
+  ├── docker/
+  │   ├── training/
+  │   │   └── Dockerfile
+  │   └── serving/
+  │       └── Dockerfile
+  ├── manifests/                   # Kubernetes manifests
+  │   ├── mlflow/
+  │   │   └── deployment.yaml
+  │   └── kserve/
+  │       └── inference-service.yaml
+  ├── requirements.txt
+  └── README.md

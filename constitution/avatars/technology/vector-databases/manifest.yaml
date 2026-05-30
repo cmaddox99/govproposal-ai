@@ -1,0 +1,127 @@
+# Vector Databases Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-vector-databases
+  type: technology
+  name: Vector Databases
+  version: "2.0.0"
+
+stack:
+  language: Python 3.11+
+  frameworks:
+    - Pinecone
+    - Chroma
+    - Weaviate
+    - Qdrant
+    - pgvector
+  testing:
+    - pytest
+    - pytest-asyncio
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - pinecone-client: ">=3.0.0"
+    - chromadb: ">=0.4.0"
+    - qdrant-client: ">=1.7.0"
+  dev:
+    - pytest: ">=8.0.0"
+    - pytest-asyncio: ">=0.23.0"
+    - pytest-cov: ">=4.1.0"
+    - ruff: ">=0.1.0"
+    - mypy: ">=1.8.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-6.1
+    title: Observability Law
+    example_file: examples/ENG-6.1-observability.md
+
+conventions:
+  naming:
+    modules: snake_case
+    classes: PascalCase
+    functions: snake_case
+    indexes: snake_case
+    config_keys: snake_case
+
+  patterns:
+    client: "VectorDBBackend ABC with upsert/query/delete"
+    indexer: "DocumentIndexer with chunking and batching"
+    retriever: "SemanticRetriever for search"
+    hybrid: "HybridRetriever for semantic + keyword"
+
+commands:
+  test:
+    all: pytest
+    unit: pytest tests/ -m "not integration"
+    integration: pytest tests/integration/ --run-integration
+    coverage: pytest --cov=src --cov-report=html
+  dev:
+    chroma_start: chroma run --path ./chroma_data
+    qdrant_start: docker run -p 6333:6333 qdrant/qdrant
+
+project_structure: |
+  vectordb_project/
+  ├── src/
+  │   ├── vectordb/                # Vector DB layer
+  │   │   ├── __init__.py
+  │   │   ├── client.py            # Unified client interface
+  │   │   ├── backends/            # Provider-specific
+  │   │   │   ├── __init__.py
+  │   │   │   ├── pinecone.py
+  │   │   │   ├── chroma.py
+  │   │   │   ├── weaviate.py
+  │   │   │   ├── qdrant.py
+  │   │   │   └── pgvector.py
+  │   │   └── config.py            # Connection config
+  │   ├── embeddings/              # Embedding layer
+  │   │   ├── __init__.py
+  │   │   ├── models.py            # Embedding models
+  │   │   └── cache.py             # Embedding cache
+  │   ├── indexing/                # Indexing pipeline
+  │   │   ├── __init__.py
+  │   │   ├── indexer.py           # Document indexer
+  │   │   ├── chunking.py          # Text chunking
+  │   │   └── preprocessing.py     # Text preprocessing
+  │   ├── search/                  # Search layer
+  │   │   ├── __init__.py
+  │   │   ├── retriever.py         # Semantic retriever
+  │   │   ├── reranker.py          # Result reranking
+  │   │   └── hybrid.py            # Hybrid search
+  │   ├── evaluation/              # Quality evaluation
+  │   │   ├── __init__.py
+  │   │   └── metrics.py           # Retrieval metrics
+  │   └── utils/
+  │       ├── __init__.py
+  │       └── batching.py
+  ├── tests/
+  │   ├── vectordb/
+  │   │   └── test_client.py
+  │   ├── indexing/
+  │   │   └── test_indexer.py
+  │   ├── search/
+  │   │   └── test_retriever.py
+  │   └── conftest.py
+  ├── configs/
+  │   ├── pinecone.yaml
+  │   ├── chroma.yaml
+  │   └── embeddings.yaml
+  ├── scripts/
+  │   ├── index_documents.py
+  │   └── evaluate_retrieval.py
+  ├── requirements.txt
+  └── README.md

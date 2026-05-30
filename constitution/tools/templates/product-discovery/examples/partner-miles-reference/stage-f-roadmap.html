@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  
+
+  <title>Stage F — Roadmap Lock | disc-2026-042 | AAdvantage Partner-Miles Posting — Roadmap Lock + Implementation Proposal</title>
+  <style>
+    :root {
+      --aa-red:#c8102e; --aa-dark:#0a0d14; --aa-navy:#131825; --aa-blue:#0f3460;
+      --aa-accent:#e94560; --aa-gold:#f5a623; --aa-green:#22c55e; --aa-green-dk:#16a34a;
+      --aa-purple:#7c3aed; --aa-surface:#f4f6fa; --aa-border:#dde3ee;
+      --aa-text:#1e293b; --aa-muted:#64748b; --r:9px; --sh:0 2px 10px rgba(0,0,0,.07);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--aa-surface);color:var(--aa-text);font-size:14px;line-height:1.6}
+    header{background:linear-gradient(140deg,#070a12 0%,#0f3460 65%,#1a4f8a 100%);color:#fff;padding:32px 44px 26px;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;right:-60px;bottom:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(200,16,46,.18) 0%,transparent 70%);border-radius:50%}
+    .h-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px}
+    .h-title{font-size:28px;font-weight:800;letter-spacing:-.5px}
+    .h-sub{font-size:14px;color:rgba(255,255,255,.6);margin-top:4px;margin-bottom:18px}
+    .h-badges{display:flex;flex-wrap:wrap;gap:7px}
+    .hb{padding:3px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+    .hb-stage{background:var(--aa-red);color:#fff}
+    .hb-mode{background:rgba(124,58,237,.35);color:#c4b5fd;border:1px solid rgba(124,58,237,.4)}
+    .hb-tier{background:rgba(245,166,35,.2);color:var(--aa-gold);border:1px solid rgba(245,166,35,.3)}
+    .hb-law{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.18)}
+    .hb-warn{background:#c8102e;color:#fff}
+    .hb-new{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .hb-ok{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .hb-cond{background:rgba(245,166,35,.25);color:var(--aa-gold);border:1px solid rgba(245,166,35,.35)}
+    .hb-fail{background:#c8102e;color:#fff}
+    nav.stages{background:var(--aa-navy);padding:0 44px;display:flex;overflow-x:auto}
+    .st{padding:13px 18px;font-size:12px;font-weight:600;color:rgba(255,255,255,.3);border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:8px}
+    .st.done{color:rgba(255,255,255,.55);border-bottom-color:var(--aa-green-dk)}
+    .st.active{color:#fff;border-bottom-color:var(--aa-red)}
+    .st.locked{color:rgba(255,255,255,.18);cursor:not-allowed}
+    .st-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;background:rgba(255,255,255,.07);flex-shrink:0}
+    .st.done .st-n{background:var(--aa-green-dk);color:#fff}
+    .st.active .st-n{background:var(--aa-red);color:#fff}
+    .body{max-width:1200px;margin:0 auto;padding:26px 20px;display:grid;grid-template-columns:1fr 320px;gap:22px}
+    @media(max-width:900px){.body{grid-template-columns:1fr}}
+    .main{display:flex;flex-direction:column;gap:18px}
+    .side{display:flex;flex-direction:column;gap:18px}
+    .card{background:#fff;border:1px solid var(--aa-border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+    .ch{padding:13px 18px 11px;border-bottom:1px solid var(--aa-border);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+    .ci{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+    .ct{font-weight:700;font-size:13px;color:var(--aa-dark);flex:1}
+    .cb{padding:18px}
+    .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--aa-muted);margin-bottom:6px}
+    .law{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle}
+    .law:hover .tt{display:block}
+    .tt{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .tt::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .lp{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .lb{background:#fffbeb;color:#b45309;border-color:#fde68a}
+    .le{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin:2px 2px 0 0}
+    .tg{background:#dcfce7;color:#166534}
+    .tr{background:#fee2e2;color:#991b1b}
+    .ty{background:#fef3c7;color:#92400e}
+    .tb{background:#dbeafe;color:#1d4ed8}
+    .tp{background:#ede9fe;color:#5b21b6}
+    .mt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:600px){.mt-grid{grid-template-columns:1fr}}
+    .mt-box{border-radius:8px;padding:14px 16px;border:2px solid}
+    .mt-selected{background:#f5f3ff;border-color:#7c3aed}
+    .mt-gold{background:#fffbeb;border-color:var(--aa-gold)}
+    .mt-inactive{background:#f8fafc;border-color:var(--aa-border);opacity:.6}
+    .mt-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--aa-muted);margin-bottom:4px}
+    .mt-value{font-size:15px;font-weight:800;color:var(--aa-dark)}
+    .mt-desc{font-size:12px;color:var(--aa-muted);margin-top:5px}
+    .rubric{width:100%;border-collapse:collapse;font-size:12px}
+    .rubric th{background:var(--aa-surface);padding:7px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .rubric td{padding:8px 12px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .rubric tr:last-child td{border-bottom:none}
+    .yes{color:var(--aa-green-dk);font-weight:700}
+    .no{color:#991b1b;font-weight:700}
+    .tbd{color:#92400e;font-weight:700}
+    .gate-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:600px){.gate-row{grid-template-columns:1fr}}
+    .gate{border-radius:8px;padding:13px 15px;display:flex;gap:10px}
+    .ge{background:#eff6ff;border:1px solid #bfdbfe}
+    .gx{background:#f0fdf4;border:1px solid #bbf7d0}
+    .gp{background:#fffbeb;border:1px solid #fde68a}
+    .gi{font-size:18px;flex-shrink:0}
+    .gl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:2px}
+    .gtt{font-size:13px;line-height:1.5}
+    .prd-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:600px){.prd-grid{grid-template-columns:1fr}}
+    .prd-box{border-radius:8px;padding:12px 14px;border:1px solid}
+    .prd-ok{background:#f0fdf4;border-color:#bbf7d0}
+    .prd-warn{background:#fffbeb;border-color:#fde68a}
+    .prd-fail{background:#fef2f2;border-color:#fecaca}
+    .prd-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:4px}
+    .prd-txt{font-size:12px;line-height:1.5;color:var(--aa-text)}
+    .dom-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:11px}
+    .dom{border-radius:8px;border:1px solid var(--aa-border);overflow:hidden}
+    .dh{padding:9px 13px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:7px}
+    .db{padding:11px 13px;background:#fff;font-size:12px;display:flex;flex-direction:column;gap:5px}
+    .dr{display:flex;justify-content:space-between;align-items:baseline}
+    .dk{color:var(--aa-muted)}
+    .dv{font-weight:600}
+    .arch{background:var(--aa-navy);border-radius:8px;padding:18px;font-family:'Cascadia Code','Fira Code','Courier New',monospace;font-size:11.5px;color:rgba(255,255,255,.82);line-height:1.9;overflow-x:auto;white-space:pre}
+    .arch .dim{color:rgba(255,255,255,.3)}
+    .arch .hi{color:var(--aa-gold);font-weight:700}
+    .arch .grn{color:#4ade80}
+    .arch .red{color:#f87171}
+    .cl{list-style:none;display:flex;flex-direction:column;gap:8px}
+    .cli{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface)}
+    .cli.done{background:#f0fdf4;border-color:#86efac}
+    .cli.pend{background:#fff;border-color:var(--aa-border)}
+    .cli.wait{background:#fffbeb;border-color:#fde68a}
+    .cbox{width:19px;height:19px;flex-shrink:0;border:2px solid var(--aa-border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:2px}
+    .cli.done .cbox{background:var(--aa-green-dk);border-color:var(--aa-green-dk);color:#fff}
+    .cli.wait .cbox{background:var(--aa-gold);border-color:var(--aa-gold);color:#fff}
+    .ctitle{font-weight:600;font-size:13px}
+    .cdesc{font-size:12px;color:var(--aa-muted);margin-top:2px}
+    .clw{font-size:11px;font-weight:700;color:var(--aa-accent);margin-top:3px}
+    .at{width:100%;border-collapse:collapse;font-size:12px}
+    .at th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .at td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .at tr:last-child td{border-bottom:none}
+    .ao{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+    .ao-ok{background:#dcfce7;color:#166534}
+    .ao-ip{background:#fef3c7;color:#92400e}
+    .ao-wait{background:#fef3c7;color:#92400e}
+    .ao-fail{background:#fee2e2;color:#991b1b}
+    .rg{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%);border-radius:9px;padding:16px 18px;color:#fff;margin-bottom:14px}
+    .rg-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c4b5fd;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+    .rg-desc{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:12px}
+    .rg-btns{display:flex;gap:8px;flex-wrap:wrap}
+    .rgb{padding:7px 16px;border-radius:7px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+    .rgb-approve{background:#22c55e;color:#fff}.rgb-approve:hover{background:#16a34a}
+    .rgb-enhance{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25)}.rgb-enhance:hover{background:rgba(255,255,255,.22)}
+    .rgb-reject{background:#ef4444;color:#fff}.rgb-reject:hover{background:#dc2626}
+    #rg-decision{font-size:12px;margin-top:10px;padding:8px 12px;border-radius:7px;display:none}
+    .rg-persist{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);color:#86efac;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    .rg-persist-pend{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);color:#fbbf24;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    .sf{display:flex;align-items:center;gap:8px;padding:8px 11px;background:var(--aa-surface);border:1px dashed var(--aa-border);border-radius:7px;font-family:'Cascadia Code','Fira Code',monospace;font-size:11.5px;color:#1d4ed8;margin-bottom:7px}
+    .ss{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap}
+    .ss-ok{background:#dcfce7;color:#166534}
+    .ss-wait{background:#fef3c7;color:#92400e}
+    .ss-pend{background:#fee2e2;color:#991b1b}
+    .av{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;background:#f0f4ff;border:1px solid #c7d2fe;font-size:12px;font-weight:600;color:#4338ca;margin-bottom:6px}
+    .ev-panel{border-radius:0}
+    .ev-header{padding:12px 18px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--aa-border)}
+    .ev-header.ok{background:#f0fdf4;color:#166534}
+    .ev-header.cond{background:#fffbeb;color:#92400e}
+    .ev-header.fail{background:#fef2f2;color:#991b1b}
+    .ev-body{padding:0}
+    .ev-row{display:flex;gap:10px;align-items:flex-start;padding:10px 18px;border-bottom:1px solid #f1f5f9}
+    .ev-row:last-child{border-bottom:none}
+    .ev-persona{font-weight:700;font-size:12px}
+    .ev-law{font-size:10px;color:var(--aa-accent);font-weight:700;margin-top:1px}
+    .ev-note{font-size:11.5px;color:var(--aa-muted);margin-top:4px;line-height:1.5}
+    .ev-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;flex-shrink:0}
+    .ev-pass{background:#dcfce7;color:#166534}
+    .ev-warn{background:#fef3c7;color:#92400e}
+    .ev-fail{background:#fee2e2;color:#991b1b}
+    code{font-family:'Cascadia Code','Fira Code',monospace;background:#f1f5f9;padding:1px 5px;border-radius:4px;font-size:11.5px;color:#0f3460}
+    hr{border:none;border-top:1px solid var(--aa-border);margin:13px 0}
+    footer{background:var(--aa-dark);color:rgba(255,255,255,.45);padding:11px 44px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;font-size:11px}
+    .ft-dot{width:7px;height:7px;border-radius:50%;background:var(--aa-gold);animation:pulse 2s infinite;flex-shrink:0}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .prose h1,.prose h2,.prose h3{margin:12px 0 8px}
+    .prose p{margin:8px 0}
+    .prose ul,.prose ol{margin:8px 0 8px 22px}
+    .prose table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+    .prose table th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:11px;font-weight:700;border-bottom:1px solid var(--aa-border)}
+    .prose table td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="h-eye">product-discovery · disc-2026-042</div>
+  <div class="h-title">Stage F &nbsp;·&nbsp; Roadmap Lock</div>
+  <div class="h-sub">AAdvantage Partner-Miles Posting — Roadmap Lock + Implementation Proposal &nbsp;·&nbsp; Workflow v2.0.0</div>
+  <div class="h-badges">
+    <span class="hb hb-stage">Stage F of 6</span>
+    <span class="hb hb-mode">🔭 Exploratory</span>
+    <span class="hb hb-tier">⚡ Tier 2</span>
+    <span class="hb hb-law">PRD-4.1</span><span class="hb hb-law">PRD-4.2</span><span class="hb hb-law">ENG-11.1</span><span class="hb hb-law">BUS-7.1</span><span class="hb hb-law">ENG-13.1</span><span class="hb hb-law">ENG-13.3</span>
+    <span class="hb hb-ok">✅ Ensemble: APPROVED</span>
+    
+  </div>
+</header>
+
+
+<nav class="stages" aria-label="Discovery stages">
+    <div class="st done">
+      <div class="st-n">✓</div>
+      Initialize
+    </div>
+    <div class="st done">
+      <div class="st-n">✓</div>
+      Field Study
+    </div>
+    <div class="st done">
+      <div class="st-n">✓</div>
+      Code Evidence
+    </div>
+    <div class="st done">
+      <div class="st-n">✓</div>
+      Validation
+    </div>
+    <div class="st done">
+      <div class="st-n">✓</div>
+      Metrics
+    </div>
+    <div class="st active">
+      <div class="st-n">F</div>
+      Roadmap Lock
+    </div>
+</nav>
+
+
+<div class="body">
+  <div class="main">
+
+    
+    <!-- Stage Gates -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#eff6ff">🚦</div>
+        <div class="ct">Stage Gates</div>
+        <span class="law lp">PRD-4.1<span class="tt">PRD-4.1</span></span><span class="law lb">PRD-4.2<span class="tt">PRD-4.2</span></span><span class="law le">ENG-11.1<span class="tt">ENG-11.1</span></span>
+      </div>
+      <div class="cb">
+        <div class="gate-row">
+          
+          <div class="gate ge">
+            <div class="gi">📥</div>
+            <div><div class="gl">Entry Gate — ✅ Met</div>
+            <div class="gtt">All five prior stages approved. Stage E AARRR funnel finalized with concrete PMF criteria (M2 ≥ 35% AND M4 ≥ −20% at Day 90). Stage D RED finding (retention) properly isolated as hypothesis, not roadmap commitment.
+</div></div>
+          </div>
+          
+          
+          <div class="gate gp">
+            <div class="gi">📤</div>
+            <div><div class="gl">Exit Gate — ⏳ PENDING</div>
+            <div class="gtt">Awaiting §Render Gate APPROVE + executive-sponsor sign-off. Implementation proposal handed off to greenfield-development workflow Phase 1 (Capture).
+</div></div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    
+    <!-- Mode & Tier -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f5f3ff">🧭</div>
+        <div class="ct">Discovery Mode &amp; Tier</div>
+        <span class="hb hb-mode" style="font-size:11px;">Exploratory</span>
+        <span class="hb hb-tier" style="font-size:11px;">Tier 2</span>
+      </div>
+      <div class="cb">
+        
+        <div class="mt-grid" style="margin-bottom:16px;">
+          
+          <div class="mt-box mt-selected">
+            <div class="mt-label">✅ Selected Mode</div>
+            <div class="mt-value">🔭 Exploratory</div>
+            <div class="mt-desc">Mode locked at Stage A.</div>
+          </div>
+          
+          
+          <div class="mt-box mt-gold">
+            <div class="mt-label">✅ Selected Tier</div>
+            <div class="mt-value" style="color:#92400e;">⚡ Tier 2</div>
+            <div class="mt-desc">Tier 2 carried; full slice-1-ready brief + executive briefing.</div>
+          </div>
+          
+        </div>
+        
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- PRD-2.1 Problem Validation -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#fff1f2">📝</div>
+        <div class="ct">Problem Statement — PRD-2.1 Validation</div>
+        <span class="law lp">PRD-2.1<span class="tt"><strong>Problem Validation Law</strong><br>All problems MUST be validated before solution design. All 4 dimensions required.</span></span>
+      </div>
+      <div class="cb">
+        <div class="prd-grid">
+          
+            
+            
+            <div class="prd-box prd-ok">
+              <div class="prd-lbl">✅ 1. Problem Exists</div>
+              <div class="prd-txt">Validated. Carried.</div>
+            </div>
+            
+          
+            
+            
+            <div class="prd-box prd-ok">
+              <div class="prd-lbl">✅ 2. Problem Matters</div>
+              <div class="prd-txt">Validated. $2.4M annual support cost baseline.</div>
+            </div>
+            
+          
+            
+            
+            <div class="prd-box prd-ok">
+              <div class="prd-lbl">✅ 3. Problem Is Solvable</div>
+              <div class="prd-txt">Validated. Extend ledger + member-app, no mainframe changes.</div>
+            </div>
+            
+          
+            
+            
+            <div class="prd-box prd-ok">
+              <div class="prd-lbl">✅ 4. Users Will Exchange Value</div>
+              <div class="prd-txt">Validated. 7/8 concept-test adoption signal.</div>
+            </div>
+            
+          
+        </div>
+      </div>
+    </div>
+    
+
+    
+    <!-- Domain Landscape -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f0f4ff">🗺️</div>
+        <div class="ct">Roadmap — Now / Next / Later (PRD-4.2)</div>
+      </div>
+      <div class="cb">
+        
+        <div class="dom-grid" style="margin-bottom:16px;">
+          
+          <div class="dom">
+            <div class="dh" style="background:#f0fdf4;color:#166534;">🚀 NOW (Q2 2026 — 6-week slice)</div>
+            <div class="db">
+              <div class="dr"><span class="dk">Submodules</span><span class="dv">Slice 1</span></div>
+              <div class="dr"><span class="dk">Stack</span><span class="dv">aa-loyalty-ledger GraphQL + aa-member-app screen + LaunchDarkly flag</span></div>
+              <div class="dr"><span class="dk">Role</span><span class="dv">Read-only partner-miles status tracker, Gold-tier rollout</span></div>
+              
+              <div style="margin-top:7px;">
+                <span class="tag tg">Validated</span><span class="tag tg">Hand off to Greenfield Phase 1</span><span class="tag tg">PMF target: Day 90</span>
+              </div>
+              
+            </div>
+          </div>
+          
+          <div class="dom">
+            <div class="dh" style="background:#eff6ff;color:#1d4ed8;">📡 NEXT (Q3 2026)</div>
+            <div class="db">
+              <div class="dr"><span class="dk">Submodules</span><span class="dv">Slice 2</span></div>
+              <div class="dr"><span class="dk">Stack</span><span class="dv">aa-member-comms integration + consent gating per GDPR</span></div>
+              <div class="dr"><span class="dk">Role</span><span class="dv">Push notifications when partner miles transition to POSTED state</span></div>
+              
+              <div style="margin-top:7px;">
+                <span class="tag tb">Conditional on Slice-1 PMF</span><span class="tag tb">Comms platform reuse</span>
+              </div>
+              
+            </div>
+          </div>
+          
+          <div class="dom">
+            <div class="dh" style="background:#f5f3ff;color:#5b21b6;">🧪 NEXT (Q3 2026)</div>
+            <div class="db">
+              <div class="dr"><span class="dk">Submodules</span><span class="dv">Experiment</span></div>
+              <div class="dr"><span class="dk">Stack</span><span class="dv">Loyalty Strategy ownership · Q3 design · Q4–Q1 execution</span></div>
+              <div class="dr"><span class="dk">Role</span><span class="dv">Matched-cohort A/B for retention lift hypothesis (resolves DVFT-A3)</span></div>
+              
+              <div style="margin-top:7px;">
+                <span class="tag tp">Resolves RED claim</span><span class="tag tp">No promise; measurement</span>
+              </div>
+              
+            </div>
+          </div>
+          
+          <div class="dom">
+            <div class="dh" style="background:#fffbeb;color:#92400e;">⏳ LATER (Q1 2027+)</div>
+            <div class="db">
+              <div class="dr"><span class="dk">Submodules</span><span class="dv">Slice 3</span></div>
+              <div class="dr"><span class="dk">Stack</span><span class="dv">Mainframe + partner-feed-ingest rewrite · multi-quarter</span></div>
+              <div class="dr"><span class="dk">Role</span><span class="dv">Mainframe partner-feed real-time integration (reduces window from 4-6w to &lt;72h)</span></div>
+              
+              <div style="margin-top:7px;">
+                <span class="tag ty">Big bet — separate initiative</span><span class="tag ty">Conditional on partner contracts</span><span class="tag ty">Skip if NOW solves enough</span>
+              </div>
+              
+            </div>
+          </div>
+          
+        </div>
+        
+        
+        <div class="lbl">Slice 1 Architecture — What Greenfield Phase 1 Will Build</div>
+        <div class="arch" style="margin-top:8px;">Member opens AA app
+      ↓
+      aa-member-app (React Native)
+      ↳ NEW: &lt;PartnerMilesTracker /&gt; screen, behind &#39;partner-miles-tracker&#39; LaunchDarkly flag
+      ↳ Gold-tier cohort first (10% → 50% → 100% over 4 weeks)
+
+GraphQL query: partnerEarnings(memberId, limit: 10, status: [&#39;PENDING&#39;, &#39;PROCESSING&#39;, &#39;POSTED&#39;])
+      ↓
+      aa-loyalty-ledger (Java)
+      ↳ NEW: partnerEarnings root field on the ledger schema
+      ↳ Reads existing PartnerEarningTransaction.status enum (no schema change)
+
+Returns ordered list of transactions with:
+      - flight (carrier, route, date)
+      - status (PENDING / PROCESSING / POSTED / REJECTED)
+      - estimatedPostBy (computed from posting SLA)
+      - lastUpdated (audit timestamp)
+
+Member sees: &#34;Your Iberia MAD-MIA flight from April 7 — Processing — expected by April 28&#34;
+
+Observability instrumentation (resolves DVFT-A2):
+      - Mixpanel events: tracker_viewed, tracker_opened, tracker_returned
+      - CX call-reason &#39;partner_miles&#39; → linked to most-recent member tracker state at time of call
+      - Looker dashboard &#39;partner-miles-cx&#39; surfaces M1–M4 daily
+</div>
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- Findings -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#fffbeb">🔍</div>
+        <div class="ct">Implementation Proposal — Handoff to Greenfield Phase 1</div>
+      </div>
+      <div class="cb">
+        <ul class="cl">
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Slice 1 estimate: 4–6 engineer-weeks (Now bucket)</div>
+              <div class="cdesc">aa-loyalty-ledger: 2ew (GraphQL field + tests). aa-member-app: 2-3ew (screen + flag + a11y). Observability: 1ew. Phased rollout: 1-2 calendar weeks.</div>
+              <div class="clw">PRD-4.2</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Outcome framing (PRD-4.1): &#39;Members can see their partner miles processing&#39;</div>
+              <div class="cdesc">Single-sentence outcome. Replaces feature framing (&#39;build a tracker&#39;). Connects directly to Stage B JTBD (&#39;know my earning is safe&#39;).</div>
+              <div class="clw">PRD-4.1</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Slice-1-ready brief filed for Greenfield Phase 1 ingestion</div>
+              <div class="cdesc">tools/templates/product-discovery/slice-1-ready-brief.md filled. Includes: outcome, primary user, slice scope, success metric (M2 + M4), out-of-scope, dependencies.</div>
+              <div class="clw">PRD-4.2 · ENG-11.1</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Out-of-scope for Slice 1 (defended explicitly)</div>
+              <div class="cdesc">Push notifications (Q3 Next), reducing posting window (Later), redemption-side UX (out of program scope), partner-side push integration (architecturally avoided).</div>
+              <div class="clw">PRD-4.2</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Stage F PDF generated for executive sign-off (ENG-13.3)</div>
+              <div class="cdesc">PDF rendered via aa-artifact-render --pdf. PDF is the formal review surface for the executive sponsor and CFO delegate.</div>
+              <div class="clw">ENG-13.3</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Implementation handoff target: greenfield-development workflow Phase 1 (Capture)</div>
+              <div class="cdesc">implementation-proposal.md becomes the Capture-phase input. Workflow continuity preserved.</div>
+              <div class="clw">ENG-11.1</div>
+            </div>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+    
+
+    
+    <!-- Prose body from markdown (catch-all) -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#eff6ff">📄</div><div class="ct">Narrative &amp;amp; Rationale</div></div>
+      <div class="cb prose"><h1>Stage F Evidence: Roadmap Lock — AAdvantage Partner-Miles Posting</h1>
+<blockquote>
+<p><strong>Reference example.</strong> Synthesized data; demonstrates a complete Stage F under the rich-card discovery template — including the handoff to greenfield-development.</p>
+</blockquote>
+<hr />
+<h2>The single-sentence outcome (<span class="law-cite" data-law-id="PRD-4.1" data-non-negotiable="false">PRD-4.1<span class="law-tooltip"><strong>Outcome-Based Roadmap Law</strong></span></span>)</h2>
+<blockquote>
+<p><strong>&quot;Members can see their partner miles processing.&quot;</strong></p>
+</blockquote>
+<p>That replaces &quot;build a tracker.&quot; Outcome framing forces us to measure the right thing (members seeing it) instead of the wrong thing (the tracker existing).</p>
+<hr />
+<h2>Handoff to Greenfield Phase 1</h2>
+<p><code>implementation-proposal.md</code> is ready as the Capture-phase input for the <strong>greenfield-development workflow</strong>. Slice 1 estimate: 4–6 engineer-weeks. Phased rollout: Gold-tier cohort first (10% → 50% → 100% over 4 weeks). PMF declaration target: Day 90 post-launch.</p>
+<p>🔴 <strong>Amaya</strong> picks up from here when greenfield-development Phase 1 begins.</p>
+<hr />
+<h2>Render Gate (<span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span> + <span class="law-cite" data-law-id="ENG-13.3" data-non-negotiable="false">ENG-13.3<span class="law-tooltip"><strong>PDF Reproducibility Law</strong></span></span>)</h2>
+<blockquote>
+<p><strong>NON-NEGOTIABLE:</strong> Reviewer ticks exactly one decision below. Stage F additionally requires PDF for executive sign-off (<span class="law-cite" data-law-id="ENG-13.3" data-non-negotiable="false">ENG-13.3<span class="law-tooltip"><strong>PDF Reproducibility Law</strong></span></span>).</p>
+</blockquote>
+<ul>
+<li><div class="task-pending"><div class="cb"></div><div class="task-text">✅ <strong>APPROVE</strong> — Roadmap is ready; greenfield-development Phase 1 may begin</div></div></li>
+<li><div class="task-pending"><div class="cb"></div><div class="task-text">🔄 <strong>ENHANCE</strong> — Specific roadmap item needs sharpening</div></div></li>
+<li><div class="task-pending"><div class="cb"></div><div class="task-text">❌ <strong>REJECT</strong> — Roadmap not ready; do NOT hand off to engineering</div></div></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Reviewer name</strong></td>
+<td><em>pending</em></td>
+</tr>
+<tr>
+<td><strong>Reviewer role</strong></td>
+<td>Discovery Sponsor + Executive Sponsor</td>
+</tr>
+<tr>
+<td><strong>Decision timestamp</strong></td>
+<td><em>pending</em></td>
+</tr>
+<tr>
+<td><strong>Review method</strong></td>
+<td>PDF review (executive) + in-browser HTML (sponsor)</td>
+</tr>
+<tr>
+<td><strong>Self-cert?</strong></td>
+<td>No — initiator (Amal) ≠ reviewers (Adeel + executive)</td>
+</tr>
+</tbody>
+</table>
+</div>
+    </div>
+    
+
+    
+    <!-- Exit Gate Checklist -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f0fdf4">✅</div>
+        <div class="ct">Exit Gate Checklist — Stage F → Next</div>
+        <span class="law lp">PRD-2.5 ⚠<span class="tt"><strong>Stage-Gate Law — NON-NEGOTIABLE</strong><br>ALL items must be checked before advancing.</span></span>
+      </div>
+      <div class="cb">
+        <ul class="cl">
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Now/Next/Later roadmap defined (PRD-4.2)</div>
+              <div class="cdesc">1 Now slice + 2 Next slices + 1 Later bet. RED finding properly isolated.</div>
+              <div class="clw">PRD-4.2</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Outcome framing applied (PRD-4.1)</div>
+              <div class="cdesc">&#39;Members can see their partner miles processing&#39; — single sentence, replaces feature framing.</div>
+              <div class="clw">PRD-4.1</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Vertical slices defined for Slice 1</div>
+              <div class="cdesc">End-to-end member app screen + GraphQL field + observability + phased rollout plan.</div>
+              <div class="clw">PRD-4.2</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Implementation proposal scaffolded for Greenfield Phase 1</div>
+              <div class="cdesc">implementation-proposal.md ready for handoff. Outcome, scope, success metric (M2 + M4), out-of-scope, dependencies all filled.</div>
+              <div class="clw">ENG-11.1</div>
+            </div>
+          </li>
+          
+          <li class="cli done">
+            <div class="cbox">✓</div>
+            <div>
+              <div class="ctitle">Stage F PDF generated (ENG-13.3)</div>
+              <div class="cdesc">PDF rendered alongside HTML for executive sign-off. Cross-platform reproducible.</div>
+              <div class="clw">ENG-13.3</div>
+            </div>
+          </li>
+          
+          <li class="cli wait">
+            <div class="cbox">⏳</div>
+            <div>
+              <div class="ctitle">Stakeholder approval — Executive Sponsor + Product Owner</div>
+              <div class="cdesc">Pending: Adeel Ali (Discovery Sponsor) + executive sponsor delegate.</div>
+              <div class="clw">PRD-2.5</div>
+            </div>
+          </li>
+          
+          <li class="cli wait">
+            <div class="cbox">⏳</div>
+            <div>
+              <div class="ctitle">HTML render gate — APPROVED in browser (PDF preferred for sponsor review)</div>
+              <div class="cdesc">Awaiting ticked APPROVE.</div>
+              <div class="clw">ENG-13.1 · ENG-13.3</div>
+            </div>
+          </li>
+          
+          <li class="cli wait">
+            <div class="cbox">⏳</div>
+            <div>
+              <div class="ctitle">BUS-7.1 audit event filed for Stage F → workflow-complete + greenfield-development entry</div>
+              <div class="cdesc">Will append on APPROVE.</div>
+              <div class="clw">BUS-7.1</div>
+            </div>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+    
+
+    
+    <!-- Audit Log -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f1f5f9">📋</div>
+        <div class="ct">Audit Log</div>
+        <span class="law lb">BUS-7.1 ⚠<span class="tt"><strong>Audit Trail — NON-NEGOTIABLE</strong><br>Every stage transition: who / what / when / where / why / outcome.</span></span>
+      </div>
+      <div class="cb">
+        <table class="at">
+          <thead><tr><th>Event</th><th>Actor</th><th>Role</th><th>System</th><th>Timestamp</th><th>Outcome</th></tr></thead>
+          <tbody>
+            
+            <tr>
+              <td>Stage E → F</td>
+              <td>Adeel Ali</td>
+              <td>Inventor / Approver</td>
+              <td>manual</td>
+              <td>2026-04-17</td>
+              <td><span class="ao ao-ok">APPROVED</span></td>
+            </tr>
+            
+            <tr>
+              <td>Now/Next/Later roadmap drafted</td>
+              <td>Amal</td>
+              <td>Product Coach</td>
+              <td>Hangar AI Constitution</td>
+              <td>2026-04-17</td>
+              <td><span class="ao ao-ok">OK</span></td>
+            </tr>
+            
+            <tr>
+              <td>Implementation proposal scaffolded</td>
+              <td>Amal + Amaya</td>
+              <td>Product + Technical</td>
+              <td>Hangar AI Constitution</td>
+              <td>2026-04-17</td>
+              <td><span class="ao ao-ok">OK</span></td>
+            </tr>
+            
+            <tr>
+              <td>Stage F PDF generated for executive sign-off</td>
+              <td>aa-artifact-render</td>
+              <td>Renderer (ENG-13.3)</td>
+              <td>Hangar AI Constitution</td>
+              <td>2026-04-17</td>
+              <td><span class="ao ao-ok">RENDERED</span></td>
+            </tr>
+            
+            <tr>
+              <td>Ensemble verdict computed</td>
+              <td>VerdictEngine</td>
+              <td>Constitutional Ensemble</td>
+              <td>Hangar AI Constitution</td>
+              <td>2026-04-17</td>
+              <td><span class="ao ao-ok">APPROVED</span></td>
+            </tr>
+            
+            <tr>
+              <td>Workflow complete — handoff to greenfield-development</td>
+              <td>Adeel Ali + Executive Sponsor</td>
+              <td>Approvers</td>
+              <td>manual</td>
+              <td>TBD</td>
+              <td><span class="ao ao-wait">AWAITING</span></td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+
+  </div><!-- end main -->
+
+  <div class="side">
+
+    <!-- ENG-13.1 Render Gate -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#1e1b4b;font-size:16px;">🖥️</div>
+        <div class="ct" style="color:#4f46e5;">ENG-13.1 Render Gate</div>
+        <span class="hb hb-fail" style="font-size:9px;">NON-NEG</span>
+      </div>
+      <div class="cb">
+        
+          <div class="rg-persist-pend">⏳ <strong>PENDING</strong> — awaiting reviewer decision in source PROPOSAL.md</div>
+        
+        <div class="rg">
+          <div class="rg-title">🖥️ Human Browser Review</div>
+          <div class="rg-desc">Source-of-truth is the §Render Gate checkbox in PROPOSAL.md. Button clicks are reminders only — tick the checkbox to record.</div>
+          <div class="rg-btns">
+            <button class="rgb rgb-approve" onclick="rgDecision('APPROVE')">✅ APPROVE</button>
+            <button class="rgb rgb-enhance" onclick="rgDecision('ENHANCE')">🔄 ENHANCE</button>
+            <button class="rgb rgb-reject" onclick="rgDecision('REJECT')">❌ REJECT</button>
+          </div>
+          <div id="rg-decision"></div>
+        </div>
+        <p style="font-size:12px;color:var(--aa-muted);">Stage does not advance until §Render Gate in PROPOSAL.md carries a ticked APPROVE row. (PRD-2.5 NON-NEGOTIABLE)</p>
+      </div>
+    </div>
+
+    
+    <!-- Ensemble Agent Verdict -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f5f3ff">🤖</div>
+        <div class="ct">Ensemble Agent Verdict</div>
+      </div>
+      <div class="cb" style="padding:0">
+        <div class="ev-panel">
+          <div class="ev-header ok">
+            ✅ Constitutional Verdict
+            <span class="ev-badge ev-pass">APPROVED</span>
+          </div>
+          <div class="ev-body">
+            
+              
+              <div class="ev-row">
+                <div style="flex:1">
+                  <div class="ev-persona">Amal (Product Coach)</div>
+                  <div class="ev-law">PRD-4.1</div>
+                  <div class="ev-note">Outcome-framed, not feature-framed. Slice-1 scope is the smallest defensible thing that tests the core hypothesis (visibility &gt; speed) and produces measurable PMF signal.</div>
+                </div>
+                <span class="ev-badge ev-pass">PASS</span>
+              </div>
+            
+              
+              <div class="ev-row">
+                <div style="flex:1">
+                  <div class="ev-persona">Amal (Product Coach)</div>
+                  <div class="ev-law">PRD-4.2</div>
+                  <div class="ev-note">Now/Next/Later structure honest. RED-tagged retention claim sits in Next as an experiment, not in Now as a promise. Later bucket explicitly conditional on Now performance.</div>
+                </div>
+                <span class="ev-badge ev-pass">PASS</span>
+              </div>
+            
+              
+              <div class="ev-row">
+                <div style="flex:1">
+                  <div class="ev-persona">Amaya (Technical Coach)</div>
+                  <div class="ev-law">ENG-11.1</div>
+                  <div class="ev-note">Implementation proposal hands cleanly to greenfield-development Phase 1. Architecture diagram + observability instrumentation gate are concrete. Estimate is bottom-up from Stage C codebase assessment.</div>
+                </div>
+                <span class="ev-badge ev-pass">PASS</span>
+              </div>
+            
+              
+              <div class="ev-row">
+                <div style="flex:1">
+                  <div class="ev-persona">Sentinel</div>
+                  <div class="ev-law">BUS-7.1</div>
+                  <div class="ev-note">Audit trail intact across all 6 stages. Compliance sign-offs (PCI, GDPR, retention) carried into roadmap as constraints. Phased rollout plan is auditable per cohort.</div>
+                </div>
+                <span class="ev-badge ev-pass">PASS</span>
+              </div>
+            
+              
+              <div class="ev-row">
+                <div style="flex:1">
+                  <div class="ev-persona">Willem (Constitutional Architect)</div>
+                  <div class="ev-law">PRD-2.5</div>
+                  <div class="ev-note">All 6 stages executed in order with appropriate gate evidence at each. PRD-2.5 satisfied. No skipping. No self-certification. Workflow is clean.</div>
+                </div>
+                <span class="ev-badge ev-pass">PASS</span>
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    
+    <!-- Participating Avatars -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f5f3ff">🤖</div><div class="ct">Participating Avatars</div></div>
+      <div class="cb">
+        
+          
+          <div class="av">🎯 product <span style="color:#6366f1;font-weight:400;font-size:11px;">· lead at Stage F</span></div>
+          
+        
+          
+          <div class="av">🔴 engineering <span style="color:#6366f1;font-weight:400;font-size:11px;">· Amaya — handoff lead to Greenfield</span></div>
+          
+        
+          
+          <div class="av">💼 business <span style="color:#6366f1;font-weight:400;font-size:11px;">· Executive sponsor + CFO delegate</span></div>
+          
+        
+          
+          <div class="av">✈️ avatar-product-loyalty <span style="color:#6366f1;font-weight:400;font-size:11px;">· AAdvantage</span></div>
+          
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- Spec Artifacts -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📂</div><div class="ct">Spec Artifacts</div></div>
+      <div class="cb">
+        
+        <div class="sf">📄 stage-f-roadmap.md<span class="ss ss-ok">DRAFTED</span></div>
+        
+        <div class="sf">📄 implementation-proposal.md<span class="ss ss-ok">OK</span></div>
+        
+        <div class="sf">📄 slice-1-ready-brief.md<span class="ss ss-ok">OK</span></div>
+        
+        <div class="sf">🌐 executive-briefing-deck.html<span class="ss ss-ok">RENDERED</span></div>
+        
+        <div class="sf">🌐 stage-f-roadmap.html<span class="ss ss-ok">RENDERED</span></div>
+        
+        <div class="sf">📕 stage-f-roadmap.pdf<span class="ss ss-ok">RENDERED</span></div>
+        
+      </div>
+    </div>
+    
+
+    
+    <!-- Stakeholder Approval -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0fdf4">✅</div><div class="ct">Stakeholder Approval</div></div>
+      <div class="cb">
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;">
+          <div><span class="lbl">Approver</span><div style="font-weight:700;">Adeel Ali + Executive Sponsor</div></div>
+          <div><span class="lbl">Title</span><div>Inventor / Discovery Sponsor + Executive</div></div>
+          <div><span class="lbl">Date</span><div>Pending</div></div>
+          <div><span class="lbl">Method</span><div>PDF review + workshop session</div></div>
+          <div><span class="lbl">Self-cert?</span><div style="color:#166534;font-weight:700;">✅ No</div></div>
+        </div>
+      </div>
+    </div>
+    
+
+    
+    <!-- Active Laws -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#fff1f2">⚖️</div><div class="ct">Active Laws — Stage F</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:7px;">
+        
+          <span class="law lp" style="width:fit-content">PRD-4.1<span class="tt">PRD-4.1</span></span>
+        
+          <span class="law lb" style="width:fit-content">PRD-4.2<span class="tt">PRD-4.2</span></span>
+        
+          <span class="law le" style="width:fit-content">ENG-11.1<span class="tt">ENG-11.1</span></span>
+        
+          <span class="law le" style="width:fit-content">BUS-7.1<span class="tt">BUS-7.1</span></span>
+        
+          <span class="law le" style="width:fit-content">ENG-13.1<span class="tt">ENG-13.1</span></span>
+        
+          <span class="law le" style="width:fit-content">ENG-13.3<span class="tt">ENG-13.3</span></span>
+        
+      </div>
+    </div>
+    
+
+  </div><!-- end side -->
+</div><!-- end body -->
+
+<footer>
+  <div style="display:flex;align-items:center;gap:8px;"><div class="ft-dot"></div>disc-2026-042 · Stage F · PENDING</div>
+  <div>AAdvantage Partner-Miles Posting · Stage F (workflow complete)</div>
+  <div>branch: exploratory-demo</div>
+</footer>
+
+<script>
+function rgDecision(d) {
+  var el = document.getElementById('rg-decision');
+  el.style.display = 'block';
+  if (d === 'APPROVE') {
+    el.style.cssText = 'background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x2705; <strong>APPROVE</strong> — This button is a reminder. To actually record approval, tick <code>- [x] APPROVE</code> in the PROPOSAL.md §Render Gate section.';
+  } else if (d === 'ENHANCE') {
+    el.style.cssText = 'background:rgba(124,58,237,.15);color:#c4b5fd;border:1px solid rgba(124,58,237,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x1F504; <strong>ENHANCE</strong> — Describe the enhancement needed in PROPOSAL.md §Render Gate.';
+  } else {
+    el.style.cssText = 'background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x274C; <strong>REJECT</strong> — Document the blocker in PROPOSAL.md §Render Gate. Stage does NOT advance.';
+  }
+}
+</script>
+
+</body>
+</html>

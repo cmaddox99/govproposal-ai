@@ -1,0 +1,86 @@
+name: RAG Evaluation
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  rag-eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check if rag-eval tool exists
+        id: check
+        run: |
+          if [ -d "tools/rag-eval" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::tools/rag-eval/ directory not found — skipping RAG evaluation"
+          fi
+
+      - name: Set up Python 3.11
+        if: steps.check.outputs.exists == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install rag-eval dependencies
+        if: steps.check.outputs.exists == 'true'
+        run: pip install pyyaml
+
+      - name: Run RAG evaluation
+        if: steps.check.outputs.exists == 'true'
+        id: rag
+        run: |
+          set +e
+          python tools/rag-eval/evaluate.py --format github-actions --threshold-check
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Post RAG score card as PR comment
+        if: steps.check.outputs.exists == 'true' && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let body;
+            try {
+              const raw = fs.readFileSync('tools/rag-eval/reports/latest.json', 'utf8');
+              const data = JSON.parse(raw);
+              const lines = [
+                '## 🔍 RAG Evaluation Score Card',
+                '',
+                '```json',
+                JSON.stringify(data, null, 2),
+                '```',
+              ];
+              body = lines.join('\n');
+            } catch (e) {
+              body = `## 🔍 RAG Evaluation Score Card\n\nScore card not available: ${e.message}`;
+            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+
+      - name: Upload RAG eval report artifact
+        if: steps.check.outputs.exists == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rag-eval-report
+          path: tools/rag-eval/reports/latest.json
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Fail on threshold breach
+        if: steps.check.outputs.exists == 'true' && steps.rag.outputs.exit_code != '0'
+        run: |
+          echo "RAG evaluation failed threshold check (exit code ${{ steps.rag.outputs.exit_code }})"
+          exit 1

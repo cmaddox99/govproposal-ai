@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en"
+  data-page-id="P3-ENG"
+  data-registry-version="2.0.0"
+  data-render-timestamp="2026-05-07T16:30:00Z">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P3 — Engineer Quick Start — Hangar AI Constitution</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   ADOPTION GUIDE DESIGN SYSTEM v2 — ENG-13.1 ⛔ COMPLIANT
+   Zero external deps. System fonts only. Inner pages.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── RESET & TOKENS ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #132033;
+  background:
+    radial-gradient(circle at top right, rgba(199,155,44,0.12), transparent 30%),
+    radial-gradient(circle at left 20%, rgba(0,51,102,0.06), transparent 25%),
+    linear-gradient(180deg, #fdfcf8 0%, #f2f5fa 50%, #f8f2ea 100%);
+  min-height: 100vh;
+}
+a { color: inherit; }
+h1,h2,h3,h4 {
+  margin: 0;
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-weight: 700;
+  line-height: 1.08;
+}
+p { margin: 0 0 1rem; }
+ul, ol { margin: 0 0 1rem; padding-left: 1.4rem; }
+li { margin-bottom: 0.4rem; }
+code {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88em;
+  background: rgba(0,51,102,0.07);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+pre {
+  background: #0f1f3d;
+  color: #e8f0f8;
+  padding: 20px;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────────────── */
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+main { padding-bottom: 72px; }
+section { margin-top: 56px; }
+.section-head { margin-bottom: 28px; }
+.section-label {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #cc0000;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.section-head h2 {
+  font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+  letter-spacing: -0.03em;
+  color: #132033;
+}
+.section-head p {
+  margin: 12px 0 0;
+  max-width: 680px;
+  color: #566579;
+  font-size: 1rem;
+}
+
+/* ── STICKY NAV ──────────────────────────────────────────────────── */
+.site-nav {
+  background: #001a40;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+  gap: 16px;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.88);
+  text-decoration: none;
+}
+.nav-brand-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fff, #f7ca66);
+  flex-shrink: 0;
+}
+.nav-links { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.nav-link {
+  color: rgba(255,255,255,0.68);
+  text-decoration: none;
+  font-size: 0.83rem;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+.nav-link:hover { color: #fff; }
+.btn-nav-home {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: #fff;
+  font-size: 0.80rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btn-nav-home:hover { background: rgba(255,255,255,0.18); }
+
+/* ── PAGE HERO ───────────────────────────────────────────────────── */
+.page-hero-wrap { padding: 36px 0 28px; }
+.page-hero {
+  padding: 44px 44px 40px;
+  border-radius: 30px;
+  background: linear-gradient(140deg, #001a40 0%, #003366 58%, #0d4080 100%);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 20px 60px rgba(0,26,64,0.22);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: auto -8% -40% 55%;
+  height: 280px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+  transform: rotate(-8deg);
+}
+.page-hero::after {
+  content: "";
+  position: absolute;
+  right: -50px; top: -50px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.07);
+  pointer-events: none;
+}
+.eyebrow {
+  display: inline-block;
+  color: #ffd880;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.page-hero h1 {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-top: 14px;
+  text-shadow: 0 2px 20px rgba(0,26,64,0.30);
+}
+.page-hero .subtitle {
+  margin: 16px 0 0;
+  max-width: 680px;
+  color: rgba(255,255,255,0.80);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+.persona-routing { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.routing-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* ── CONTENT CARDS ───────────────────────────────────────────────── */
+.card {
+  padding: 28px 26px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  box-shadow: 0 14px 36px rgba(0,26,64,0.09);
+  margin-bottom: 16px;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 48px rgba(0,26,64,0.14);
+}
+.card h3 {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: #132033;
+  margin-bottom: 10px;
+}
+
+/* ── CALLOUTS ────────────────────────────────────────────────────── */
+.callout-warning, .callout-amber {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(255,215,0,0.08); border-left: 4px solid #c79b2c;
+  margin: 12px 0;
+}
+.callout-danger, .callout-red {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(204,0,0,0.06); border-left: 4px solid #cc0000;
+  margin: 12px 0;
+}
+.callout-info, .callout-blue {
+  padding: 16px 20px; border-radius: 14px;
+  background: #eaf0f7; border-left: 4px solid #0066cc;
+  margin: 12px 0;
+}
+.callout-success, .callout-green {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(0,153,76,0.07); border-left: 4px solid #009934;
+  margin: 12px 0;
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: #003366;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-primary:hover { background: #001a40; transform: translateY(-1px); }
+
+.btn-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: rgba(0,51,102,0.08);
+  border: 1px solid rgba(0,51,102,0.14);
+  color: #003366;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.btn-copy:hover { background: rgba(0,51,102,0.14); }
+.btn-copy.copied { background: rgba(0,153,76,0.12); border-color: rgba(0,153,76,0.20); color: #007a2e; }
+
+/* ── ACCORDIONS ──────────────────────────────────────────────────── */
+details {
+  border-radius: 14px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+details[open] { box-shadow: 0 8px 24px rgba(0,26,64,0.09); }
+summary {
+  padding: 18px 20px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #132033;
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  gap: 12px;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after {
+  content: "▾";
+  color: #566579;
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+  font-family: sans-serif;
+  flex-shrink: 0;
+}
+details[open] summary::after { transform: rotate(180deg); }
+.details-body { padding: 4px 20px 20px; }
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+th {
+  background: #003366;
+  color: #fff;
+  padding: 12px 14px;
+  font-size: 0.83rem;
+  text-align: left;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0,51,102,0.09);
+  vertical-align: top;
+  font-size: 0.92rem;
+  color: #132033;
+}
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: rgba(0,51,102,0.03); }
+
+/* ── TAGS / PILLS ────────────────────────────────────────────────── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #eaf0f7;
+  color: #003366;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.tag-gold { background: rgba(199,155,44,0.15); color: #7a5800; }
+.tag-red { background: rgba(204,0,0,0.08); color: #cc0000; }
+.tag-green { background: rgba(0,153,76,0.10); color: #007a2e; }
+.tag-navy { background: rgba(0,51,102,0.12); color: #003366; }
+
+/* ── PHASE STEPS (workflow pages) ────────────────────────────────── */
+.phase-step {
+  padding: 28px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  box-shadow: 0 14px 36px rgba(0,26,64,0.08);
+  margin-bottom: 20px;
+}
+.phase-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: #003366;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0,26,64,0.20);
+}
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.phase-header h3 {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: #132033;
+}
+
+/* ── GRID HELPERS ────────────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 820px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* ── FOOTER ──────────────────────────────────────────────────────── */
+footer {
+  background: #003366;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.82rem;
+  padding: 36px 24px;
+  text-align: center;
+  line-height: 2;
+  border-top: 2px solid #001a40;
+}
+.footer-inner { max-width: 1180px; margin: 0 auto; }
+.footer-title {
+  color: rgba(255,255,255,0.82);
+  font-weight: 700;
+  font-size: 0.92rem;
+  margin-bottom: 4px;
+}
+footer a { color: rgba(106,171,221,0.90); text-decoration: none; font-weight: 600; }
+footer a:hover { text-decoration: underline; color: #fff; }
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin-top: 12px;
+}
+.footer-sep { color: rgba(255,255,255,0.20); }
+
+/* ── PAGE-SPECIFIC STYLES ────────────────────────────────────────── */
+:root {
+  --aa-navy: #003366;
+  --aa-red: #cc0000;
+  --aa-silver: #d0d6de;
+  --aa-blue: #0066cc;
+  --aa-light: #f0f4f8;
+  --eng: #1a6b3a;
+  --sprint-bg: #fffbea;
+  --sprint-border: #e6b800;
+  --agent-bg: #eef4ff;
+  --agent-border: #0066cc;
+  --agency-bg: #f0f7f0;
+  --agency-border: #1a6b3a;
+  --card-shadow: 0 2px 10px rgba(0,0,0,0.09);
+  --radius: 10px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ── ACCOMPLISH BAR ── */
+.accomplish-bar {
+  background: #fffbea; border: 2px solid var(--sprint-border);
+  border-radius: var(--radius); padding: 16px 24px; margin-bottom: 28px;
+  display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start;
+}
+.accomplish-bar .label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: #7a5500; white-space: nowrap; padding-top: 2px;
+}
+.accomplish-items { display: flex; gap: 18px; flex-wrap: wrap; }
+.accomplish-item { display: flex; align-items: flex-start; gap: 7px; font-size: 13px; color: #4a3000; }
+.accomplish-item .check { color: var(--aa-blue); font-size: 15px; flex-shrink: 0; padding-top: 1px; }
+
+/* ── SECTION TITLES ── */
+.section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase;
+  color: #666; margin: 36px 0 14px; padding-bottom: 8px;
+  border-bottom: 1px solid #dde3ea;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title::before { content: ''; width: 3px; height: 14px; border-radius: 2px; background: var(--aa-blue); display: inline-block; }
+.section-title.sprint::before { background: var(--sprint-border); }
+.section-title.agent::before { background: var(--agent-border); }
+.section-title.agency::before { background: var(--agency-border); }
+.section-title.steps::before { background: var(--aa-red); }
+.section-title.links::before { background: var(--aa-navy); }
+.section-title.coaching::before { background: #888; }
+
+/* ── ⚡ FIRST GOVERNED TASK (DC-04) ── */
+.sprint-band {
+  background: var(--sprint-bg); border: 2px solid var(--sprint-border);
+  border-radius: var(--radius); padding: 24px 28px; margin-bottom: 8px;
+}
+.sprint-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.sprint-header h2 { font-size: 17px; font-weight: 700; color: #7a5500; }
+.sprint-badge {
+  background: var(--sprint-border); color: #fff; border-radius: 12px;
+  padding: 2px 10px; font-size: 11px; font-weight: 700;
+}
+.sprint-steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+@media (max-width: 640px) { .sprint-steps { grid-template-columns: 1fr; } }
+.sprint-step {
+  background: #fff; border-radius: 8px; border: 1px solid #f0d060;
+  padding: 18px; display: flex; flex-direction: column; gap: 8px;
+}
+.sprint-step-num { font-size: 11px; font-weight: 700; color: #aa8800; text-transform: uppercase; letter-spacing: 0.8px; }
+.sprint-step-title { font-size: 14px; font-weight: 700; color: #4a3000; }
+.sprint-step-desc { font-size: 12px; color: #665500; line-height: 1.6; }
+.prompt-block {
+  background: #f7f3e8; border: 1px solid #ddd0a0; border-radius: 6px;
+  padding: 10px 12px; font-family: 'Courier New', Courier, monospace;
+  font-size: 11px; color: #3a2c00; line-height: 1.6; margin-top: 4px;
+  word-break: break-word;
+}
+.copy-btn {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 6px;
+  background: var(--aa-blue); color: #fff; border: none; border-radius: 5px;
+  padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: background 0.15s; font-family: var(--font); align-self: flex-start;
+}
+.copy-btn:hover { background: #0055aa; }
+.copy-btn.copied { background: var(--eng); }
+.sprint-step a { color: var(--aa-blue); font-weight: 600; font-size: 13px; text-decoration: none; }
+.sprint-step a:hover { text-decoration: underline; }
+
+/* ── 🤖 AGENT ROLE EXPLAINER (DC-03) ── */
+.agent-section {
+  background: var(--agent-bg); border: 1px solid #b8d0f0;
+  border-radius: var(--radius); padding: 24px 28px; margin-bottom: 8px;
+}
+.agent-section h2 { font-size: 16px; font-weight: 700; color: #003080; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.agent-section .dc-tag { font-size: 10px; font-weight: 600; background: #003366; color: #fff; border-radius: 4px; padding: 2px 7px; }
+.agent-section .sub { font-size: 13px; color: #2244aa; margin-bottom: 18px; }
+.agent-flow { display: flex; flex-direction: column; gap: 0; }
+.agent-step {
+  display: grid; grid-template-columns: 36px 1fr;
+  gap: 14px; align-items: start; padding: 14px 0;
+  border-bottom: 1px solid #ccd8f0;
+}
+.agent-step:last-child { border-bottom: none; }
+.agent-step-icon { font-size: 22px; padding-top: 1px; text-align: center; }
+.agent-step-content {}
+.agent-step-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.9px; color: #0050aa; margin-bottom: 3px;
+}
+.agent-step-label.you { color: var(--eng); }
+.agent-step-label.archive { color: #6a3f00; }
+.agent-step-desc { font-size: 13px; color: #1a2a4a; line-height: 1.65; }
+.agent-step-desc code { background: #dde8f8; border-radius: 3px; padding: 1px 5px; font-size: 11px; color: #003366; }
+
+/* ── 🧭 HUMAN AGENCY (DC-07 — VISIBLE) ── */
+.agency-section {
+  background: var(--agency-bg); border: 1px solid #a8d0b0;
+  border-radius: var(--radius); padding: 24px 28px; margin-bottom: 8px;
+}
+.agency-section h2 { font-size: 16px; font-weight: 700; color: #0f4d26; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.agency-section .dc-tag { font-size: 10px; font-weight: 600; background: var(--eng); color: #fff; border-radius: 4px; padding: 2px 7px; }
+.agency-section .sub { font-size: 13px; color: #1a5a30; margin-bottom: 18px; }
+.agency-items { display: flex; flex-direction: column; gap: 0; }
+.agency-item {
+  display: grid; grid-template-columns: 28px 1fr;
+  gap: 14px; align-items: start; padding: 14px 0;
+  border-bottom: 1px solid #b8d8c0;
+}
+.agency-item:last-child { border-bottom: none; }
+.agency-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--eng); color: #fff;
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.agency-content {}
+.agency-title { font-size: 14px; font-weight: 700; color: #0f4d26; margin-bottom: 3px; }
+.agency-title .law-tag {
+  font-size: 10px; font-weight: 700; background: rgba(204,0,0,0.12);
+  color: var(--aa-red); border-radius: 4px; padding: 1px 6px; margin-left: 6px;
+}
+.agency-desc { font-size: 13px; color: #1a4028; line-height: 1.65; }
+
+/* ── 📋 WORKFLOW STEPS (DC-01) ── */
+.step-cards { display: flex; flex-direction: column; gap: 8px; }
+.step-card {
+  background: #fff; border-radius: 8px; border: 1px solid #e4eaf2;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden;
+}
+.step-card-header {
+  display: grid; grid-template-columns: 36px 1fr auto;
+  gap: 12px; align-items: center; padding: 14px 16px;
+  cursor: pointer; background: #fff; border: none;
+  width: 100%; text-align: left; font-family: var(--font);
+  transition: background 0.12s;
+}
+.step-card-header:hover { background: #f7f9fc; }
+.step-card.open .step-card-header { background: #f0f4fa; border-bottom: 1px solid #dde3ea; }
+.step-num {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--aa-navy); color: #fff;
+  font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.step-title-wrap {}
+.step-title { font-size: 14px; font-weight: 700; color: #1a2332; }
+.step-subtitle { font-size: 11px; color: #888; margin-top: 1px; }
+.step-chevron {
+  font-size: 16px; color: #aaa; transition: transform 0.2s; display: inline-block;
+}
+.step-card.open .step-chevron { transform: rotate(180deg); }
+.step-card-body {
+  display: none; padding: 16px 18px 18px 66px;
+}
+.step-card.open .step-card-body { display: block; }
+.step-card-body p { font-size: 13px; color: #2a3a50; line-height: 1.7; }
+.step-card-body p + p { margin-top: 8px; }
+.step-card-body a { color: var(--aa-blue); font-weight: 600; text-decoration: none; }
+.step-card-body a:hover { text-decoration: underline; }
+.step-card-body .law-inline {
+  display: inline-block; background: rgba(204,0,0,0.10);
+  color: var(--aa-red); border-radius: 4px; padding: 1px 7px;
+  font-size: 11px; font-weight: 700; margin-left: 4px;
+}
+.step-card-body ul { margin: 8px 0 0 0; padding-left: 18px; }
+.step-card-body ul li { font-size: 13px; color: #2a3a50; line-height: 1.7; margin-bottom: 3px; }
+.metric-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #e8f5ee; border: 1px solid #90c8a4;
+  border-radius: 12px; padding: 2px 10px;
+  font-size: 11px; font-weight: 700; color: var(--eng); margin-top: 6px;
+}
+
+/* ── 🔗 WORKFLOW LINKS ── */
+.links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+@media (max-width: 540px) { .links-grid { grid-template-columns: 1fr; } }
+.link-card {
+  background: #fff; border-radius: 8px; border: 1px solid #e4eaf2;
+  box-shadow: var(--card-shadow); padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 6px;
+  text-decoration: none; transition: box-shadow 0.15s, transform 0.15s;
+}
+.link-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-1px); }
+.link-card-icon { font-size: 22px; }
+.link-card-title { font-size: 14px; font-weight: 700; color: var(--aa-navy); }
+.link-card-sub { font-size: 12px; color: #667; }
+.link-card-arrow { font-size: 11px; color: var(--aa-blue); margin-top: 2px; }
+
+/* ── ▼ COACHING NOTES (DC-06 collapsed) ── */
+.coaching-details {
+  background: #f8f9fa; border: 1px solid #dde3ea;
+  border-radius: var(--radius); overflow: hidden;
+}
+.coaching-details summary {
+  padding: 14px 20px; font-size: 14px; font-weight: 700; color: #444;
+  cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px;
+  user-select: none; justify-content: flex-start;
+}
+.coaching-details summary::-webkit-details-marker { display: none; }
+.coaching-details summary::after { display: none; }
+.coaching-details summary::before {
+  content: '▶'; font-size: 10px; color: #888; transition: transform 0.2s; display: inline-block;
+}
+.coaching-details[open] summary::before { transform: rotate(90deg); }
+.coaching-details summary:hover { background: #f0f2f5; }
+.coaching-body { padding: 0 20px 20px; }
+.coaching-prompt {
+  background: #fff; border-radius: 8px; border: 1px solid #e0e5eb;
+  border-left: 3px solid #888; padding: 14px 16px; margin-top: 12px;
+}
+.coaching-prompt-num { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #888; margin-bottom: 5px; }
+.coaching-prompt-text { font-size: 13px; color: #2a3a50; line-height: 1.7; font-style: italic; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Site navigation">
+  <div class="nav-inner">
+    <a href="p1-landing.html" class="nav-brand" aria-label="Adoption Guide Home">
+      <div class="nav-brand-dot" aria-hidden="true"></div>
+      Hangar AI · Adoption Guide
+    </a>
+    <div class="nav-links">
+      <a href="workflows/index.html" class="nav-link">Workflows</a>
+      <a href="phase-gate-guide.html" class="nav-link">Phase Gate Guide</a>
+      <a href="p1-landing.html" class="btn-nav-home">← Guide Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="page-hero-wrap">
+    <div class="page-hero">
+      <div class="eyebrow">ENGINEER · QUICK START</div>
+      <h1>Engineer Quick Start</h1>
+      <p class="subtitle">Your first constitutionally-governed task — TDD gate passing, SonarQube green, and phase gate evidence filed in under 60 minutes.</p>
+      <div class="persona-routing" aria-label="Intended audiences">
+        <span class="routing-chip">⚙️ Engineer ✅</span>
+        <span class="routing-chip">🎓 Coach — see Coach Quick Start</span>
+        <span class="routing-chip">🏗️ Architect — see Architect Quick Start</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     MAIN
+═══════════════════════════════════════════════════════ -->
+<main><div class="shell">
+
+  <!-- ACCOMPLISH BAR -->
+  <div class="accomplish-bar" role="note" aria-label="Session goals">
+    <div class="label">By the end of this session:</div>
+    <div class="accomplish-items">
+      <div class="accomplish-item"><span class="check">①</span> Run your first PROPOSE → IMPLEMENT → ARCHIVE cycle</div>
+      <div class="accomplish-item"><span class="check">②</span> Pass the TDD and SonarQube gates</div>
+      <div class="accomplish-item"><span class="check">③</span> Submit a constitutionally-governed PR</div>
+    </div>
+  </div>
+
+  <!-- ⚡ FIRST GOVERNED TASK (DC-04) -->
+  <div class="section-title sprint">⚡ First Governed Task <span style="font-size:10px;color:#aa8800;letter-spacing:.5px;">(DC-04)</span></div>
+  <div class="sprint-band" role="region" aria-label="First governed task — DC-04">
+    <div class="sprint-header">
+      <h2>⚡ Run Your First Governed Task</h2>
+      <span class="sprint-badge">DC-04</span>
+    </div>
+    <div class="sprint-steps">
+
+      <!-- Step 1 -->
+      <div class="sprint-step">
+        <div class="sprint-step-num">Step 1</div>
+        <div class="sprint-step-title">Adopt the constitution</div>
+        <div class="sprint-step-desc">
+          The constitution must be in your repo before any governed task. Use the adoption workflow, then paste the prompt into your AI agent.
+        </div>
+        <a href="workflows/adoption.html">→ Adoption Workflow</a>
+        <div class="prompt-block" id="prompt-adopt">Adopt the Hangar AI Constitution into this repo. Clone from github.com/AAInternal/hangar-ai-constitution.git to ./../ and follow the adoption workflow.</div>
+        <button class="copy-btn" aria-label="Copy adoption prompt" onclick="copyPrompt(this, 'prompt-adopt')">📋 Copy Prompt</button>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="sprint-step">
+        <div class="sprint-step-num">Step 2</div>
+        <div class="sprint-step-title">Start your first proposal</div>
+        <div class="sprint-step-desc">
+          Paste the prompt below into your AI agent. Describe your ticket in one sentence and scope it to one class, endpoint, or service.
+        </div>
+        <div class="prompt-block" id="prompt-proposal">Read the Hangar AI Constitution. I want to work on [describe your ticket/feature in 1 sentence]. Create a constitutional proposal for this change. Scope it to [one class/endpoint/service] only. Include the applicable law IDs.</div>
+        <button class="copy-btn" aria-label="Copy first task proposal prompt" onclick="copyPrompt(this, 'prompt-proposal')">📋 Copy Prompt</button>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="sprint-step">
+        <div class="sprint-step-num">Step 3</div>
+        <div class="sprint-step-title">Review the proposal</div>
+        <div class="sprint-step-desc">
+          Read it carefully before typing APPROVE. Check:
+        </div>
+        <ul style="margin-top:6px;padding-left:18px;font-size:12px;color:#665500;line-height:1.7;">
+          <li>Does the scope match your ticket?</li>
+          <li>Are the test requirements clear?</li>
+          <li>Is the batch size right — could it be smaller?</li>
+        </ul>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="sprint-step">
+        <div class="sprint-step-num">Step 4</div>
+        <div class="sprint-step-title">Approve, implement, and archive</div>
+        <div class="sprint-step-desc">
+          Type <strong>APPROVE</strong> to let the agent run IMPLEMENT. Review the changes — do they follow the proposal? Are there side effects outside scope? Then type <strong>ARCHIVE</strong> to close the loop and create your governance trail.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 🤖 AGENT ROLE EXPLAINER (DC-03) -->
+  <div class="section-title agent">🤖 What is the Agent Doing? <span style="font-size:10px;color:#0066cc;letter-spacing:.5px;">(DC-03)</span></div>
+  <div class="agent-section" role="region" aria-label="Agent role explainer — DC-03">
+    <h2>🤖 What is the Agent Doing? <span class="dc-tag">DC-03</span></h2>
+    <p class="sub">The agent works in governed phases. You stay in control at every gate.</p>
+    <div class="agent-flow" role="list">
+
+      <div class="agent-step" role="listitem">
+        <div class="agent-step-icon">📋</div>
+        <div class="agent-step-content">
+          <div class="agent-step-label">1 · PROPOSE</div>
+          <div class="agent-step-desc">Agent reads your ticket description and the constitution. It proposes what to change, which tests to write, which laws apply. This is a governance document — not code yet. No files are modified at this stage.</div>
+        </div>
+      </div>
+
+      <div class="agent-step" role="listitem">
+        <div class="agent-step-icon">🧑‍💻</div>
+        <div class="agent-step-content">
+          <div class="agent-step-label you">Your turn</div>
+          <div class="agent-step-desc">You read the proposal. Check scope. Reduce if needed: <em>"Scope this to one class only."</em> When you are satisfied, type <code>APPROVE</code>. The agent will not proceed without your explicit approval.</div>
+        </div>
+      </div>
+
+      <div class="agent-step" role="listitem">
+        <div class="agent-step-icon">⚙️</div>
+        <div class="agent-step-content">
+          <div class="agent-step-label">2 · IMPLEMENT</div>
+          <div class="agent-step-desc">Agent writes the code + tests (TDD: failing tests first, then implementation). Runs the SonarQube gate. Commits with a reference to the proposal ID. You review: does the code match the proposal? Any unexpected side effects?</div>
+        </div>
+      </div>
+
+      <div class="agent-step" role="listitem">
+        <div class="agent-step-icon">🗂️</div>
+        <div class="agent-step-content">
+          <div class="agent-step-label archive">3 · ARCHIVE</div>
+          <div class="agent-step-desc">Proposal moves to <code>hangar-ai-specs/archive/</code>. Your PR now has a governed history. This is the constitutional trail — every decision traceable to a law citation. Reviewers and auditors can follow the full reasoning chain.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 🎲 NON-DETERMINISM CALLOUT (DC-11 — VISIBLE BY DEFAULT) -->
+  <div style="background:#f0f7f0;border:2px solid #1a6b3a;border-radius:10px;padding:20px 24px;margin-bottom:24px;" role="region" aria-label="Non-determinism callout — DC-11 — visible by default">
+    <div style="font-size:13px;font-weight:700;color:#1a6b3a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">🎲 DC-11 · Non-Deterministic Workflows</div>
+    <p style="margin:0 0 10px;font-size:14px;color:#0f4d26;font-weight:600;">The agent's output varies between runs. This is by design — not a bug.</p>
+    <ul style="margin:0;padding-left:18px;font-size:13px;color:#1a4028;line-height:1.75;">
+      <li>Two identical prompts may produce different proposals. Both can be constitutionally valid.</li>
+      <li>Your APPROVE decision is the gate. It is <strong>never automatic</strong>.</li>
+      <li>If the output isn't right, scope it down and re-propose — the constitution supports iteration.</li>
+      <li>Use the phase gate evidence to verify the agent stayed within your approved scope.</li>
+    </ul>
+  </div>
+
+  <!-- 🧭 HUMAN AGENCY & ADAPTIVE SCOPE (DC-07 — VISIBLE) -->
+  <div class="section-title agency">🧭 Human Agency &amp; Adaptive Scope <span style="font-size:10px;color:#1a6b3a;letter-spacing:.5px;">(DC-07)</span></div>
+  <div class="agency-section" role="region" aria-label="Human agency — DC-07 — visible by default">
+    <h2>🧭 Human Agency &amp; Adaptive Scope <span class="dc-tag">DC-07</span></h2>
+    <p class="sub">You own the scope. You own the approval. You own the architecture.</p>
+    <div class="agency-items" role="list">
+
+      <div class="agency-item" role="listitem">
+        <div class="agency-num">1</div>
+        <div class="agency-content">
+          <div class="agency-title">Your ticket, your scope</div>
+          <div class="agency-desc">The agent will propose the full scope it can see. You are <strong>NOT</strong> required to accept it all. Scope it to one class, one endpoint, one service. Small changes done well beat large ones done poorly.</div>
+        </div>
+      </div>
+
+      <div class="agency-item" role="listitem">
+        <div class="agency-num">2</div>
+        <div class="agency-content">
+          <div class="agency-title">Tests come before code <span class="law-tag">ENG-4.1 ⛔</span></div>
+          <div class="agency-desc">The constitution requires TDD. The agent should write failing tests first, then make them pass. If it writes implementation first, <strong>OBJECT</strong>. You have the authority — and the obligation — to enforce this.</div>
+        </div>
+      </div>
+
+      <div class="agency-item" role="listitem">
+        <div class="agency-num">3</div>
+        <div class="agency-content">
+          <div class="agency-title">The SonarQube gate only checks NEW code</div>
+          <div class="agency-desc">Don't worry about pre-existing issues in the codebase. The gate only requires that <em>your</em> new code doesn't add new violations. You are not responsible for the entire repo's historical debt in one PR.</div>
+        </div>
+      </div>
+
+      <div class="agency-item" role="listitem">
+        <div class="agency-num">4</div>
+        <div class="agency-content">
+          <div class="agency-title">You control iteration</div>
+          <div class="agency-desc">Didn't get everything in one session? That's fine. Close the proposal, commit what you have, open a new proposal for the next piece. The constitution is designed for iteration — not big-bang delivery.</div>
+        </div>
+      </div>
+
+      <div class="agency-item" role="listitem">
+        <div class="agency-num">5</div>
+        <div class="agency-content">
+          <div class="agency-title">ARCHIVE closes the loop</div>
+          <div class="agency-desc">Don't skip the archive step. It creates the auditable governance trail your team can review during code review and audits. Without it, the PR has code but no constitutional history.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 📋 FULL ENGINEER WORKFLOW (DC-01) -->
+  <div class="section-title steps">📋 Full Engineer Workflow <span style="font-size:10px;color:#cc0000;letter-spacing:.5px;">(DC-01)</span></div>
+  <div class="step-cards" role="list" aria-label="Full engineer workflow steps">
+
+    <!-- Step 1 -->
+    <div class="step-card" role="listitem">
+      <button class="step-card-header" onclick="toggleStep(this)" aria-expanded="false" aria-controls="step-body-1">
+        <div class="step-num">1</div>
+        <div class="step-title-wrap">
+          <div class="step-title">Adopt the constitution first</div>
+          <div class="step-subtitle">Pre-requisite — constitution must be in your repo</div>
+        </div>
+        <span class="step-chevron" aria-hidden="true">▼</span>
+      </button>
+      <div class="step-card-body" id="step-body-1">
+        <p>The Hangar AI Constitution must be adopted into your repository before any governed task can begin. Without it, the agent has no laws to reference, no workflows to follow, and no archive location to write to.</p>
+        <p><a href="workflows/adoption.html">→ Go to Adoption Workflow</a></p>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-card" role="listitem">
+      <button class="step-card-header" onclick="toggleStep(this)" aria-expanded="false" aria-controls="step-body-2">
+        <div class="step-num">2</div>
+        <div class="step-title-wrap">
+          <div class="step-title">Pick your workflow</div>
+          <div class="step-subtitle">Legacy Rescue · Greenfield · Avatar</div>
+        </div>
+        <span class="step-chevron" aria-hidden="true">▼</span>
+      </button>
+      <div class="step-card-body" id="step-body-2">
+        <p>Choose the workflow that matches your task:</p>
+        <ul>
+          <li><strong>Legacy Rescue</strong> — Modifying or refactoring existing code with a debt burden</li>
+          <li><strong>Greenfield</strong> — Building a net-new feature from scratch</li>
+          <li><strong>Avatar</strong> — Complex or cross-cutting work where the agent needs deep context about your system</li>
+        </ul>
+        <p style="margin-top:10px;"><a href="workflows/index.html">→ Workflows Hub</a></p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-card" role="listitem">
+      <button class="step-card-header" onclick="toggleStep(this)" aria-expanded="false" aria-controls="step-body-3">
+        <div class="step-num">3</div>
+        <div class="step-title-wrap">
+          <div class="step-title">Create a proposal</div>
+          <div class="step-subtitle">Describe your change · Agent proposes scope + law IDs</div>
+        </div>
+        <span class="step-chevron" aria-hidden="true">▼</span>
+      </button>
+      <div class="step-card-body" id="step-body-3">
+        <p>Describe in one sentence what you are changing. The agent creates a constitutional proposal including the specific laws that apply, the test requirements, and the proposed scope.</p>
+        <p>Review: does the scope match your ticket? Is it appropriately sized? Are the applicable law IDs correct? Reduce the scope if it feels too large — you can always open a follow-up proposal.</p>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-card" role="listitem">
+      <button class="step-card-header" onclick="toggleStep(this)" aria-expanded="false" aria-controls="step-body-4">
+        <div class="step-num">4</div>
+        <div class="step-title-wrap">
+          <div class="step-title">Write tests first (TDD gate)</div>
+          <div class="step-subtitle">ENG-4.1 ⛔ — failing tests before implementation</div>
+        </div>
+        <span class="step-chevron" aria-hidden="true">▼</span>
+      </button>
+      <div class="step-card-body" id="step-body-4">
+        <p>The agent must write failing tests <em>before</em> writing any implementation. <span class="law-inline">ENG-4.1 ⛔</span> is a hard gate — no exceptions.</p>
+        <p>Verify: tests exist and are failing before implementation begins. Cover the change fully. The target metric for your changeset:</p>
+        <div class="metric-chip">new_coverage ≥ 90% on changeset</div>
+        <p style="margin-top:10px;">If the agent writes implementation first, stop it and require the TDD sequence. You have the authority to enforce this gate.</p>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-card" role="listitem">
+      <button class="step-card-header" onclick="toggleStep(this)" aria-expanded="false" aria-controls="step-body-5">
+        <div class="step-num">5</div>
+        <div class="step-title-wrap">
+          <div class="step-title">Run the implementation</div>
+          <div class="step-subtitle">Agent writes code to pass the tests</div>
+        </div>
+        <span class="step-chevron" aria-hidden="true">▼</span>
+      </button>
+      <div class="step-card-body" id="step-body-5">
+        <p>Once tests are written and failing, the agent writes implementation to make them pass. Review the result:</p>
+        <ul>
+          <li>Does it follow the proposal exactly?</li>
+          <li>Are there side effects outside the agreed scope?</li>
+          <li>Does it introduce new dependencies not in the proposal?</li>
+        </ul>
+        <p style="margin-top:8px;">If you see scope creep, raise it before archiving. You can re-scope and re-implement without losing the constitutional trail.</p>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step-card" role="listitem">
+      <button class="step-card-header" onclick="toggleStep(this)" aria-expanded="false" aria-controls="step-body-6">
+        <div class="step-num">6</div>
+        <div class="step-title-wrap">
+          <div class="step-title">Pass the SonarQube gate</div>
+          <div class="step-subtitle">No new bugs · No new vulnerabilities · new_coverage ≥ threshold</div>
+        </div>
+        <span class="step-chevron" aria-hidden="true">▼</span>
+      </button>
+      <div class="step-card-body" id="step-body-6">
+        <p>The agent runs the constitutional SonarQube gate. Read <code>sonarqube-delta.md</code> to understand the results. The gate checks:</p>
+        <ul>
+          <li>No new bugs introduced by your changeset</li>
+          <li>No new vulnerabilities introduced by your changeset</li>
+          <li>New coverage on your changeset meets the threshold</li>
+        </ul>
+        <p style="margin-top:8px;">Remember: the gate only evaluates <em>new</em> code. Pre-existing issues in the codebase do not block your PR.</p>
+        <p style="margin-top:8px;"><a href="phase-gate-guide.html">→ Read Phase Gate Evidence Guide</a></p>
+      </div>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="step-card" role="listitem">
+      <button class="step-card-header" onclick="toggleStep(this)" aria-expanded="false" aria-controls="step-body-7">
+        <div class="step-num">7</div>
+        <div class="step-title-wrap">
+          <div class="step-title">Archive and submit PR</div>
+          <div class="step-subtitle">Proposal archived · PR references proposal ID · governance trail complete</div>
+        </div>
+        <span class="step-chevron" aria-hidden="true">▼</span>
+      </button>
+      <div class="step-card-body" id="step-body-7">
+        <p>The agent archives the proposal to <code>hangar-ai-specs/archive/</code>. Your PR description references the proposal ID. Every decision in the code is traceable to a specific law citation in the constitutional trail.</p>
+        <p style="margin-top:8px;">Code reviewers and auditors can follow the full reasoning chain from ticket description → proposal → implementation → archived evidence. This is what makes the PR constitutionally governed.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 🔗 WORKFLOW LINKS -->
+  <div class="section-title links">🔗 Workflow Links</div>
+  <div class="links-grid" role="list" aria-label="Quick navigation links">
+
+    <a href="workflows/index.html" class="link-card" role="listitem">
+      <div class="link-card-icon">🔀</div>
+      <div class="link-card-title">Choose Your Workflow</div>
+      <div class="link-card-sub">Legacy Rescue · Greenfield · Avatar — pick the right path for your task</div>
+      <div class="link-card-arrow">→ workflows/index.html</div>
+    </a>
+
+    <a href="phase-gate-guide.html" class="link-card" role="listitem">
+      <div class="link-card-icon">📊</div>
+      <div class="link-card-title">Read Phase Gate Evidence</div>
+      <div class="link-card-sub">Understand SonarQube delta reports and coverage evidence</div>
+      <div class="link-card-arrow">→ phase-gate-guide.html</div>
+    </a>
+
+  </div>
+
+  <!-- ▼ COACHING NOTES (DC-06 — collapsed) -->
+  <div class="section-title coaching" style="margin-top:40px;">▼ Coaching Notes for Engineers <span style="font-size:10px;color:#888;letter-spacing:.5px;">(DC-06 · Socratic)</span></div>
+  <details class="coaching-details" aria-label="Coaching notes — Socratic prompts — collapsed by default">
+    <summary>▼ Coaching Notes for Engineers <span style="font-size:11px;font-weight:400;color:#888;margin-left:6px;">(expand for Socratic prompts)</span></summary>
+    <div class="coaching-body">
+
+      <div class="coaching-prompt">
+        <div class="coaching-prompt-num">Prompt 1 — Scope &amp; Risk</div>
+        <div class="coaching-prompt-text">"Before you type APPROVE — what would happen if you approved this full proposal and it took 3x longer than expected? What scope change would make it feel safe?"</div>
+      </div>
+
+      <div class="coaching-prompt">
+        <div class="coaching-prompt-num">Prompt 2 — TDD Gate (ENG-4.1 ⛔)</div>
+        <div class="coaching-prompt-text">"The agent wrote implementation before tests. What does ENG-4.1 say about that? What would you do?"</div>
+      </div>
+
+      <div class="coaching-prompt">
+        <div class="coaching-prompt-num">Prompt 3 — Mutation Score</div>
+        <div class="coaching-prompt-text">"Your mutation score came back at 45%. What does that mean about your tests? What would a surviving mutant look like in your code?"</div>
+      </div>
+
+      <div class="coaching-prompt">
+        <div class="coaching-prompt-num">Prompt 4 — Architecture Communication</div>
+        <div class="coaching-prompt-text">"How would you explain to a senior architect why you scoped the proposal to one package instead of three?"</div>
+      </div>
+
+    </div>
+  </details>
+
+</div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-title">Hangar AI Constitution — Adoption Guide</div>
+    <div>American Airlines · Hangar AI Program · Adoption Guide v1.0.0</div>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="p1-landing.html">Guide Home</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="p3-coach-quick-start.html">Coach Quick Start</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="p3-architect-quick-start.html">Architect Quick Start</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="workflows/index.html">Workflows Hub</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="phase-gate-guide.html">Phase Gate Guide</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+function copyPrompt(btn, sourceId) {
+  const text = document.getElementById(sourceId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '&#x2705; Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => {
+    btn.innerHTML = '&#x26A0;&#xFE0F; Select + copy manually';
+    setTimeout(() => { btn.innerHTML = '&#x1F4CB; Copy Prompt'; }, 3000);
+  });
+}
+
+function toggleStep(header) {
+  const card = header.parentElement;
+  card.classList.toggle('open');
+  header.setAttribute('aria-expanded', card.classList.contains('open'));
+}
+</script>
+
+</body>
+</html>

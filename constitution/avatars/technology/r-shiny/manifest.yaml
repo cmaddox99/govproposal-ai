@@ -1,0 +1,108 @@
+# R / Shiny Avatar Manifest
+
+avatar:
+  id: avatar-technology-r-shiny
+  type: technology
+  name: "R / Shiny"
+  version: "1.0.0"
+
+stack:
+  language: R 4.x
+  frameworks:
+    - Shiny
+    - shinydashboard
+    - shinytest2
+  packages:
+    - testthat>=3.0.0
+    - AzureStor
+    - data.table
+    - config
+    - DT
+    - shinyjs
+    - reactable
+  tools:
+    linter: lintr
+    formatter: styler
+    type_checker: NA
+
+dependencies:
+  required:
+    - shiny: ">=1.8.0"
+    - shinydashboard: ">=0.7.2"
+    - data.table: ">=1.15.0"
+    - AzureStor: ">=3.7.0"
+    - config: ">=0.3.2"
+    - DT: ">=0.33"
+  dev:
+    - testthat: ">=3.0.0"
+    - shinytest2: ">=0.3.1"
+    - lintr: ">=3.1.0"
+    - styler: ">=1.10.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-08-code-review
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-6.1
+    title: Security by Design
+    example_file: examples/ENG-6.1-security-by-design.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-6.5
+    title: Input Validation
+    example_file: examples/ENG-6.5-validation.md
+
+conventions:
+  naming:
+    functions: snake_case
+    constants: UPPER_CASE
+    shiny_ids: camelCase
+    modules: "mod_<name>_ui / mod_<name>_server"
+    test_files: "test-<module_name>.R"
+  patterns:
+    module: "Shiny module pattern: mod_<name>_ui(id) + mod_<name>_server(id, ...)"
+    business_logic: "Extract pure R functions — testable with testthat, no Shiny reactivity"
+    config: "config::get() for all environment-specific values"
+    auth: "shiny::req() before every data operation requiring authentication"
+
+commands:
+  test:
+    all: "Rscript -e \"testthat::test_dir('tests/')\""
+    single: "Rscript -e \"testthat::test_file('tests/test-kpi_calculations.R')\""
+    coverage: "Rscript -e \"covr::report(covr::package_coverage())\""
+  app:
+    start: "Rscript app.R"
+    dev: "shiny::runApp('.', port=3838, launch.browser=TRUE)"
+  lint:
+    check: "Rscript -e \"lintr::lint_dir('.')\""
+    format: "Rscript -e \"styler::style_dir('.')\""
+
+project_structure: |
+  topml-campaign-dashboard/
+  ├── app.R                         # Entry point: sources global.R, ui.R, server.R
+  ├── global.R                      # Global config, shared data, module sources
+  ├── ui.R                          # UI definition using modules
+  ├── server.R                      # Server logic (thin orchestration, delegates to modules)
+  ├── config.yml                    # Environment config (dev/stage/prod) via config package
+  ├── modules/
+  │   ├── mod_campaign_summary.R    # mod_campaign_summary_ui() + mod_campaign_summary_server()
+  │   ├── mod_offer_performance.R
+  │   └── mod_audience_builder.R
+  ├── R/
+  │   ├── kpi_calculations.R        # Pure functions: calculate_campaign_kpi(), etc.
+  │   ├── data_loaders.R            # Data loading from Azure Blob / Delta
+  │   └── utils.R
+  ├── tests/
+  │   ├── test-kpi_calculations.R   # testthat tests for pure functions
+  │   ├── test-data_loaders.R
+  │   └── setup.R                   # Test fixtures
+  └── www/
+      └── custom.css

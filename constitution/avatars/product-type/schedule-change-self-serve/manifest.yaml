@@ -1,0 +1,228 @@
+avatar:
+  id: avatar-schedule-change-self-serve
+  type: product
+  name: "American Airlines Schedule Change Self-Serve"
+  version: "1.1.0"
+  created: "2026-03-11"
+  last_updated: "2026-04-30"
+
+domain:
+  category: "Passenger Schedule Change & Self-Serve Rebooking"
+  description: |
+    Schedule Change Self-Serve enables passengers to modify existing flight reservations
+    without agent intervention. It spans eligibility determination (tie rules, fare basis,
+    PNR state), rebooking execution, and audit trail across a distributed service mesh.
+    The platform targets same-day and advance schedule changes across domestic and
+    international itineraries, reducing manual agent handling for eligible change scenarios.
+
+  personas:
+    - Leisure Traveler (flexibility-seeking, mobile-first)
+    - Business Traveler (time-sensitive, loyalty-aware)
+    - Group Lead (coordinating multiple passengers)
+    - Airport Agent (exception handling and override)
+    - Compliance Analyst (audit and regulatory review)
+  personas_file: "examples/personas.md"
+
+core_journeys:
+  - "Same-day flight change (eligible domestic)"
+  - "Advance schedule change with fare difference"
+  - "Eligibility check with ineligibility reason explanation"
+  - "Agent-assisted override for ineligible change request"
+  - "Group rebooking following schedule disruption"
+
+activates:
+  skills:
+    - spec-governance
+    - 02-user-journey-mapping
+    - 04-business-domain-modeling
+    - 05-business-rules
+    - 12-api-design
+    - 13-observability
+    - 21-prompt-engineering
+    - 23-ai-agents
+
+  workflows:
+    - product-discovery-stage-a-f
+    - legacy-rescue-decision-track
+    - legacy-rescue-refactor
+
+specializes_laws:
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: |
+      DOT 14 CFR Part 250 governs involuntary schedule change consumer rights.
+      Airlines must offer rebooking on comparable flights, a full refund when
+      a passenger declines rebooking, and clear written disclosure of rights.
+      IATA Resolution 735d applies to international schedule changes.
+    key_practices:
+      - "DOT 14 CFR §250.5: inform passengers of schedule change rights in writing"
+      - "Full refund option must be surfaced prominently — not buried in UI"
+      - "Rebooking options must be on comparable service; codeshare rules documented"
+      - "IATA 735d: international schedule changes require fare rule re-evaluation"
+    law_citations:
+      - "DOT 14 CFR Part 250 involuntary change consumer protection"
+      - "IATA Resolution 735d international schedule change standards"
+
+  - id: PRD-1.1
+    title: "Continuous Discovery"
+    description: "Understand passenger ineligibility pain points, agent override frequency, and competitor change UX"
+    example_file: "examples/PRD-1.1-discovery.md"
+    key_practices:
+      - "Observe passengers hitting change ineligibility — what do they do next?"
+      - "Interview airport agents on override request patterns and root causes"
+      - "Study competitor platforms (United, Delta, Southwest) for change UX benchmarks"
+      - "Analyze abandonment signals in BFF logs for failed change attempts"
+
+  - id: PRD-2.1
+    title: "User Journey Mapping"
+    description: "Map journey from intent to change through eligibility check, rebooking, and confirmation"
+    example_file: "examples/PRD-2.1-journey.md"
+    key_practices:
+      - "Map 3 change paths: mobile app → web → kiosk/agent console"
+      - "Track eligibility check → reason code — if ineligible, what next?"
+      - "Identify exception flows: group changes, loyalty seat protections, codeshare restrictions"
+      - "Measure time and success rate at each orchestration step"
+
+  - id: PRD-3.1
+    title: "Roadmap Planning"
+    description: "Vertical-slice roadmap: eligibility transparency → rebooking success → conversational assistance"
+    example_file: "examples/PRD-3.1-roadmap.md"
+    key_practices:
+      - "Slice 1: Real-time eligibility with actionable reason codes"
+      - "Slice 2: Baseline variance and change history visibility"
+      - "Slice 3: Conversational eligibility explanation via AI agent"
+      - "Slice 4: Proactive change offer for high-impact schedule disruptions"
+
+  - id: PRD-4.1
+    title: "MVP & Product-Market Fit"
+    description: "Validate smallest usable slice with real eligibility data before conversational layer"
+    example_file: "examples/PRD-4.1-mvp.md"
+    key_practices:
+      - "First hypothesis: transparent reason codes reduce agent escalation by 20%"
+      - "Pilot cohort: 10% of same-day domestic change traffic"
+      - "Exit criteria: <5% increase in failed changes, measurable drop in agent calls"
+
+  - id: PRD-5.1
+    title: "Metrics & Success Definition"
+    description: "Tier 1-3 KPIs from customer outcome to operational efficiency to risk"
+    example_file: "examples/PRD-5.1-metrics.md"
+    key_practices:
+      - "Tier 1 (Customer): Self-serve change success rate, time-to-confirmation"
+      - "Tier 2 (Operational): Manual override frequency, BFF median latency"
+      - "Tier 3 (Risk): Failed audit events, compliance coverage, fraud rejection rate"
+
+  - id: ENG-6.1
+    title: "Security by Design"
+    description: "PII handling in change request payloads; JWT-scoped authorization on EligibilityEndpoint and ShoppingCartEndpoint"
+    example_file: "guidance.md"
+    law_justification: "ENG-6.x permitted: change payloads contain PNR and passenger PII requiring field-level encryption and role-scoped access"
+
+  - id: ENG-6.4
+    title: "Compliance and Audit Trail"
+    description: "Immutable record of eligibility decisions, rule matches, and human overrides in mobile-change-bff"
+    example_file: "guidance.md"
+    law_justification: "ENG-6.x permitted: DOT 14 CFR Part 250 requires auditable record of every involuntary change decision and passenger rights disclosure"
+
+dependencies:
+  internal:
+    - mobile-change-bff
+    - schedule-change-eligibility-service
+    - schedule-change-reservation-history-service
+    - drss-schedule-change-reservation-service
+    - drss-remarks-service
+  external:
+    - Apigee (schedule-change-eligibility-service-apigee)
+    - Apigee (apigee-schedule-change-history-service)
+    - Sabre / reservation systems
+  wiki:
+    - ServiceRecovery-Product-Wiki (architecture reference — validate against code)
+
+project_structure:
+  changetrip_ios:
+    root: ios/changetrip-ios/
+    key_dirs:
+      - Example/Sources/                          # ChangeTripCoordinator, feature wiring
+      - Tests/Sources/                            # ChangeTripChooseFlightsViewModelTests, CostSummaryViewModelTests
+      - AmericanChangeTripUITests/Screens/        # TripSummaryScreen, ChooseCabinScreen, ChooseFlightsScreen
+    key_files:
+      - ChangeTripCoordinator.swift               # top-level flow orchestration
+      - ChangeTripChooseFlightsViewModel.swift    # flight selection state
+      - CostSummaryViewModel.swift                # fare difference display
+      - CabinInfoViewModel.swift                  # cabin upgrade logic
+      - PassengerSelectionViewModel.swift         # multi-passenger change support
+      - ChangeTripInfoFetcher.swift               # BFF data fetcher
+    config: ios/fastlane/Fastfile
+  samedayflightchange_ios:
+    root: ios/samedayflightchange-ios/ios/AmericanSameDayFlightChange/
+    key_dirs:
+      - UI/NewFlightView/             # SameDayFlightChangeNewFlightViewController
+      - UI/OptionsView/               # SameDayFlightOptionsViewController
+      - Endpoints/                    # SDFCOffersEndpoint, SDFCShoppingCartEndpoint
+      - Models/                       # SDFCOffer
+      - Routing/                      # SameDayFlightChangeShoppingCartDestinationProvider
+  schedulechange_ios:
+    root: ios/schedulechange-ios/
+    key_dirs:
+      - Sources/UI/                   # TripUpdatesViewController, TripUpdatesViewController_*
+      - Sources/Providers/            # ScheduleChangeBannerProvider, ScheduleChangeCalloutViewModelProvider
+      - Sources/IO/                   # HistoryDataFetcher
+      - Sources/Toggles/              # AAFeatureScheduleChange
+      - Sources/DomainTypes/          # ScheduleChangeData, ChangeInfo, TripSlice
+  mobile_change_bff:
+    root: bff/mobile-change-bff/src/main/java/com/aa/change/bff/
+    key_dirs:
+      - api/controller/changetrip/    # ChangeTripController, EligibilityEndpoint, ShoppingCartEndpoint, TripSummaryEndpoint, FlightsEndpoint, CabinsEndpoint
+      - api/controller/sdfc/          # SDFCController
+      - api/connector/                # ReshopConnector, SDFCConnector, CSRetrieveReservationConnector
+      - api/service/implementation/   # ChangeTripServiceImplementation, SDFCServiceImplementation
+      - api/builder/                  # SDFCResponseBuilder
+      - utils/                        # ChangeTripUtil, SDFCUtils, DateUtils, CircuitBreakerNames
+      - config/                       # PingEndPointConfiguration, CachingConfig
+    build: build.gradle  # Spring Boot 4.0.4, Java 25, group com.aa.change
+
+commands:
+  ios:
+    setup: "fastlane ios setup_dependencies"
+    test: "fastlane ios run_unit_tests"
+    build: "fastlane ios build_ios"
+    release: "fastlane ios create_framework_release"
+    signing: "fastlane ios sync_signing_assets_jenkins"
+  bff:
+    build: "./gradlew build"
+    test: "./gradlew test"
+    integration_test: "./gradlew integrationTest"
+    coverage: "./gradlew jacocoTestReport"
+    lint: "./gradlew checkstyle"
+
+conventions:
+  ios_naming:
+    view_controllers: "*ViewController.swift (SameDayFlightChangeNewFlightViewController, TripUpdatesViewController)"
+    view_models: "*ViewModel.swift (ChangeTripChooseFlightsViewModel, CostSummaryViewModel, CabinInfoViewModel)"
+    coordinators: "*Coordinator.swift (ChangeTripCoordinator)"
+    fetchers: "*Fetcher.swift (ChangeTripInfoFetcher, HistoryDataFetcher)"
+    endpoints: "*Endpoint.swift (SDFCOffersEndpoint, SDFCShoppingCartEndpoint)"
+    feature_flags: "AAFeature*.swift (AAFeatureScheduleChange)"
+    providers: "*Provider.swift (ScheduleChangeBannerProvider, SameDayFlightChangeShoppingCartDestinationProvider)"
+    tests: "*Tests.swift (ChangeTripChooseFlightsViewModelTests, SDFCOffersEndpointTests)"
+  java_naming:
+    controllers: "*Controller.java (ChangeTripController, SDFCController)"
+    services: "*ServiceImplementation.java (ChangeTripServiceImplementation, SDFCServiceImplementation)"
+    connectors: "*Connector.java (ReshopConnector, SDFCConnector, CSRetrieveReservationConnector)"
+    builders: "*Builder.java (SDFCResponseBuilder)"
+    utils: "*Util.java, *Utils.java (ChangeTripUtil, SDFCUtils, DateUtils)"
+    tests: "*Test.java"
+  testing:
+    ios: "XCTest + XCUITest (AmericanChangeTripUITests); coverage via Fastlane"
+    bff: "JUnit 5 + Mockito; coverage via Jacoco; Spring Boot 4.0.4 / Java 25"
+  architecture:
+    bff: "Spring Boot controller → service → connector layering; circuit breaker via CircuitBreakerNames"
+    ios: "Coordinator-driven navigation; ViewModel per screen; Fetcher for BFF calls"
+
+tags:
+  - product
+  - schedule-change
+  - self-serve
+  - service-recovery
+  - eligibility
+  - rebooking
+  - agentic

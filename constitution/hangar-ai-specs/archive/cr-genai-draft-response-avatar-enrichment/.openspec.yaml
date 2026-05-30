@@ -1,0 +1,46 @@
+schema: spec-driven
+created: 2026-03-18
+status: PROPOSED
+change_id: cr-genai-draft-response-avatar-enrichment
+title: "cr-genai-draft-response Avatar Enrichment — Customer Relations Ops, Azure OpenAI, PostgreSQL/SQLAlchemy, OpenTelemetry Python"
+triggered_by: brownfield-adoption-analysis
+target_repo: codebases/oraa/cr-genai-draft-response
+
+laws:
+  - ENG-1.2   # AI-Engineer Pairing
+  - ENG-4.1   # Atomic TDD
+  - ENG-4.4   # Test-First Brownfield
+  - ENG-10.1  # Constitution Compliance / Brownfield Preservation
+  - BUS-1.1   # Priority Hierarchy
+  - BUS-7.1   # Audit Trail
+  - PRD-1.1   # Discovery
+  - PRD-2.1   # User Journey
+  - PRD-5.1   # MVP
+
+skills:
+  - skill-spec-governance
+  - skill-30-taxonomy-governed-avatar-enrichment
+  - skill-21-prompt-engineering
+  - skill-13-observability
+  - skill-12-api-design
+  - skill-06-atomic-tdd
+
+deliverables:
+  avatars:
+    - avatars/product-type/customer-relations-ops/
+    - avatars/technology/azure-openai/
+    - avatars/technology/postgresql-sqlalchemy/
+    - avatars/technology/opentelemetry-python/
+  registries:
+    - avatars/index.yaml
+    - avatars/product-type/index.yaml
+    - avatars/AVATAR-RAG-INDEX.yaml
+
+approval_required: true
+approvers:
+  - role: constitution-steward
+    status: pending
+  - role: oraa-product-representative
+    status: pending
+  - role: engineering-representative
+    status: pending

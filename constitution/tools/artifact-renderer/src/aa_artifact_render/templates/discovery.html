@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {%- set spec_id      = frontmatter.get('spec_id', frontmatter.get('id', '')) %}
+  {%- set stage        = frontmatter.get('stage', 'A') %}
+  {%- set s_label      = frontmatter.get('stage_label', '') %}
+  {%- set title        = frontmatter.get('title', 'Discovery Artifact') %}
+  {%- set workflow     = frontmatter.get('workflow', 'product-discovery') %}
+  {%- set wf_version   = frontmatter.get('workflow_version', '') %}
+  {%- set mode         = frontmatter.get('mode', frontmatter.get('discovery_mode', '')) %}
+  {%- set tier         = frontmatter.get('tier', '') %}
+  {%- set laws_applied = frontmatter.get('laws_applied', frontmatter.get('laws', [])) %}
+  {%- set stages_data  = frontmatter.get('stages', []) %}
+  {%- set ev_data      = frontmatter.get('ensemble_verdict', {}) %}
+  {%- set ev_verdicts  = ev_data.get('verdicts', []) if ev_data else [] %}
+  {%- set gates        = frontmatter.get('gates', {}) %}
+  {%- set mode_sel     = frontmatter.get('mode_selection', {}) %}
+  {%- set tier_sel     = frontmatter.get('tier_selection', {}) %}
+  {%- set prob_val     = frontmatter.get('problem_validation', {}) %}
+  {%- set domains      = frontmatter.get('domains', []) %}
+  {%- set arch_flow    = frontmatter.get('arch_flow', '') %}
+  {%- set findings          = frontmatter.get('findings', []) %}
+  {%- set exit_chk          = frontmatter.get('exit_checklist', []) %}
+  {%- set audit_log         = frontmatter.get('audit_log', []) %}
+  {%- set render_gate       = frontmatter.get('render_gate', {}) %}
+  {%- set spec_files        = frontmatter.get('spec_artifacts', []) %}
+  {%- set avatars           = frontmatter.get('avatars', []) %}
+  {%- set stakeholder       = frontmatter.get('stakeholder', {}) %}
+  {%- set source_registry   = frontmatter.get('source_registry', []) %}
+  {%- set methodology_note  = frontmatter.get('methodology_note', '') %}
+  {%- set evidence_glossary = frontmatter.get('evidence_glossary', []) %}
+  {%- set problem_evidence     = frontmatter.get('problem_evidence', []) %}
+  {%- set assumption_citations = frontmatter.get('assumption_citations', []) %}
+  {%- set baseline_sources     = frontmatter.get('baseline_sources', []) %}
+  {%- set roadmap_rationale    = frontmatter.get('roadmap_rationale', []) %}
+  {%- set footer_id    = frontmatter.get('footer_id', spec_id) %}
+  {%- set footer_proj  = frontmatter.get('footer_project', title) %}
+  {%- set footer_branch= frontmatter.get('branch', '') %}
+  {%- set tmpl_version = frontmatter.get('template_version', '') %}
+  {%- set tmpl_path    = frontmatter.get('template_path', '') %}
+  {%- set example_path = frontmatter.get('example_path', '') %}
+  {%- set avatar_path  = frontmatter.get('avatar_path', '') %}
+  {%- set artifact_status = frontmatter.get('status', '') %}
+
+  {%- set platform_icons = {
+    'app_store_ios':    '🍎',
+    'google_play':      '🤖',
+    'reddit':           '🟠',
+    'trustpilot':       '⭐',
+    'user_interview':   '🎤',
+    'survey':           '📋',
+    'analytics':        '📊',
+    'internal_report':  '📁',
+    'other':            '🔗'
+  } %}
+
+  {%- set law_names = {
+    'PRD-1.1':  'Customer-Centric Law',
+    'PRD-2.1':  'Problem Validation Law — all 4 dimensions required before solution design',
+    'PRD-2.5':  'Discovery Stage-Gate Law · NON-NEGOTIABLE — stages advance only when exit criteria are fully met and filed',
+    'PRD-3.1':  'Persona Development Law — domain avatar must be activated before Stage B',
+    'PRD-4.1':  'Roadmap Prioritisation Law',
+    'PRD-5.1':  'MVP & Experimentation Law',
+    'PRD-6.1':  'PMF Definition Law — success metrics defined before committing scope',
+    'BUS-7.1':  'Audit Trail Law · NON-NEGOTIABLE — every stage transition logged with who/what/when/why/outcome',
+    'ENG-3.2':  'Atomic TDD Law — coverage ≥90%, mutation ≥70%',
+    'ENG-11.1': 'Hangar SDD Law — governed spec-driven development workflow',
+    'ENG-11.2': 'Proposal Completeness Law — proposal must satisfy completeness checklist before review',
+    'ENG-13.1': 'Artifact Rendering Standard · NON-NEGOTIABLE — all governance artifacts rendered as HTML before stakeholder presentation',
+    'ENG-13.3': 'PDF Export Law — Stage F roadmap artifacts exported as PDF'
+  } %}
+
+  {# Ensemble verdict aggregation #}
+  {%- set ns = namespace(has_fail=false, has_warn=false) %}
+  {%- for v in ev_verdicts %}
+    {%- if v.get('verdict','PASS') == 'FAIL' %}{%- set ns.has_fail = true %}{%- endif %}
+    {%- if v.get('verdict','PASS') == 'WARN' %}{%- set ns.has_warn = true %}{%- endif %}
+  {%- endfor %}
+  {%- if ns.has_fail %}{%- set agg_label = 'BLOCKED' %}{%- set agg_icon = '⚡' %}
+  {%- elif ns.has_warn %}{%- set agg_label = 'CONDITIONS' %}{%- set agg_icon = '⚠️' %}
+  {%- else %}{%- set agg_label = 'APPROVED' %}{%- set agg_icon = '✅' %}{%- endif %}
+
+  <title>Stage {{ stage }}{% if s_label %} — {{ s_label }}{% endif %}{% if spec_id %} | {{ spec_id }}{% endif %}{% if title %} | {{ title }}{% endif %}</title>
+  <style>
+    :root {
+      --aa-red:#c8102e; --aa-dark:#0a0d14; --aa-navy:#131825; --aa-blue:#0f3460;
+      --aa-accent:#e94560; --aa-gold:#f5a623; --aa-green:#22c55e; --aa-green-dk:#16a34a;
+      --aa-purple:#7c3aed; --aa-surface:#f4f6fa; --aa-border:#dde3ee;
+      --aa-text:#1e293b; --aa-muted:#64748b; --r:9px; --sh:0 2px 10px rgba(0,0,0,.07);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--aa-surface);color:var(--aa-text);font-size:14px;line-height:1.6}
+    header{background:linear-gradient(140deg,#070a12 0%,#0f3460 65%,#1a4f8a 100%);color:#fff;padding:32px 44px 26px;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;right:-60px;bottom:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(200,16,46,.18) 0%,transparent 70%);border-radius:50%}
+    .h-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px}
+    .h-title{font-size:28px;font-weight:800;letter-spacing:-.5px}
+    .h-sub{font-size:14px;color:rgba(255,255,255,.6);margin-top:4px;margin-bottom:18px}
+    .h-badges{display:flex;flex-wrap:wrap;gap:7px}
+    .hb{padding:3px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+    .hb-stage{background:var(--aa-red);color:#fff}
+    .hb-mode{background:rgba(124,58,237,.35);color:#c4b5fd;border:1px solid rgba(124,58,237,.4)}
+    .hb-tier{background:rgba(245,166,35,.2);color:var(--aa-gold);border:1px solid rgba(245,166,35,.3)}
+    .hb-law{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.18)}
+    .hb-warn{background:#c8102e;color:#fff}
+    .hb-new{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .hb-ok{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .hb-cond{background:rgba(245,166,35,.25);color:var(--aa-gold);border:1px solid rgba(245,166,35,.35)}
+    .hb-fail{background:#c8102e;color:#fff}
+    nav.stages{background:var(--aa-navy);padding:0 44px;display:flex;overflow-x:auto}
+    .st{padding:13px 18px;font-size:12px;font-weight:600;color:rgba(255,255,255,.3);border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:8px}
+    .st.done{color:rgba(255,255,255,.55);border-bottom-color:var(--aa-green-dk)}
+    .st.active{color:#fff;border-bottom-color:var(--aa-red)}
+    .st.locked{color:rgba(255,255,255,.18);cursor:not-allowed}
+    .st-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;background:rgba(255,255,255,.07);flex-shrink:0}
+    .st.done .st-n{background:var(--aa-green-dk);color:#fff}
+    .st.active .st-n{background:var(--aa-red);color:#fff}
+    .body{max-width:1200px;margin:0 auto;padding:26px 20px;display:grid;grid-template-columns:1fr 320px;gap:22px}
+    @media(max-width:900px){.body{grid-template-columns:1fr}}
+    .main{display:flex;flex-direction:column;gap:18px}
+    .side{display:flex;flex-direction:column;gap:18px}
+    .card{background:#fff;border:1px solid var(--aa-border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+    .ch{padding:13px 18px 11px;border-bottom:1px solid var(--aa-border);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+    .ci{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+    .ct{font-weight:700;font-size:13px;color:var(--aa-dark);flex:1}
+    .cb{padding:18px}
+    .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--aa-muted);margin-bottom:6px}
+    .law{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle}
+    .law:hover .tt{display:block}
+    .tt{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .tt::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .lp{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .lb{background:#fffbeb;color:#b45309;border-color:#fde68a}
+    .le{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin:2px 2px 0 0}
+    .tg{background:#dcfce7;color:#166534}
+    .tr{background:#fee2e2;color:#991b1b}
+    .ty{background:#fef3c7;color:#92400e}
+    .tb{background:#dbeafe;color:#1d4ed8}
+    .tp{background:#ede9fe;color:#5b21b6}
+    .mt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:600px){.mt-grid{grid-template-columns:1fr}}
+    .mt-box{border-radius:8px;padding:14px 16px;border:2px solid}
+    .mt-selected{background:#f5f3ff;border-color:#7c3aed}
+    .mt-gold{background:#fffbeb;border-color:var(--aa-gold)}
+    .mt-inactive{background:#f8fafc;border-color:var(--aa-border);opacity:.6}
+    .mt-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--aa-muted);margin-bottom:4px}
+    .mt-value{font-size:15px;font-weight:800;color:var(--aa-dark)}
+    .mt-desc{font-size:12px;color:var(--aa-muted);margin-top:5px}
+    .rubric{width:100%;border-collapse:collapse;font-size:12px}
+    .rubric th{background:var(--aa-surface);padding:7px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .rubric td{padding:8px 12px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .rubric tr:last-child td{border-bottom:none}
+    .yes{color:var(--aa-green-dk);font-weight:700}
+    .no{color:#991b1b;font-weight:700}
+    .tbd{color:#92400e;font-weight:700}
+    .gate-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:600px){.gate-row{grid-template-columns:1fr}}
+    .gate{border-radius:8px;padding:13px 15px;display:flex;gap:10px}
+    .ge{background:#eff6ff;border:1px solid #bfdbfe}
+    .gx{background:#f0fdf4;border:1px solid #bbf7d0}
+    .gp{background:#fffbeb;border:1px solid #fde68a}
+    .gi{font-size:18px;flex-shrink:0}
+    .gl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:2px}
+    .gtt{font-size:13px;line-height:1.5}
+    .prd-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:600px){.prd-grid{grid-template-columns:1fr}}
+    .prd-box{border-radius:8px;padding:12px 14px;border:1px solid}
+    .prd-ok{background:#f0fdf4;border-color:#bbf7d0}
+    .prd-warn{background:#fffbeb;border-color:#fde68a}
+    .prd-fail{background:#fef2f2;border-color:#fecaca}
+    .prd-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:4px}
+    .prd-txt{font-size:12px;line-height:1.5;color:var(--aa-text)}
+    .dom-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:11px}
+    .dom{border-radius:8px;border:1px solid var(--aa-border);overflow:hidden}
+    .dh{padding:9px 13px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:7px}
+    .db{padding:11px 13px;background:#fff;font-size:12px;display:flex;flex-direction:column;gap:5px}
+    .dr{display:flex;justify-content:space-between;align-items:baseline}
+    .dk{color:var(--aa-muted)}
+    .dv{font-weight:600}
+    .arch{background:var(--aa-navy);border-radius:8px;padding:18px;font-family:'Cascadia Code','Fira Code','Courier New',monospace;font-size:11.5px;color:rgba(255,255,255,.82);line-height:1.9;overflow-x:auto;white-space:pre}
+    .arch .dim{color:rgba(255,255,255,.3)}
+    .arch .hi{color:var(--aa-gold);font-weight:700}
+    .arch .grn{color:#4ade80}
+    .arch .red{color:#f87171}
+    .cl{list-style:none;display:flex;flex-direction:column;gap:8px}
+    .cli{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface)}
+    .cli.done{background:#f0fdf4;border-color:#86efac}
+    .cli.pend{background:#fff;border-color:var(--aa-border)}
+    .cli.wait{background:#fffbeb;border-color:#fde68a}
+    .cbox{width:19px;height:19px;flex-shrink:0;border:2px solid var(--aa-border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:2px}
+    .cli.done .cbox{background:var(--aa-green-dk);border-color:var(--aa-green-dk);color:#fff}
+    .cli.wait .cbox{background:var(--aa-gold);border-color:var(--aa-gold);color:#fff}
+    .ctitle{font-weight:600;font-size:13px}
+    .cdesc{font-size:12px;color:var(--aa-muted);margin-top:2px}
+    .clw{font-size:11px;font-weight:700;color:var(--aa-accent);margin-top:3px}
+    .at{width:100%;border-collapse:collapse;font-size:12px}
+    .at th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .at td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .at tr:last-child td{border-bottom:none}
+    .ao{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+    .ao-ok{background:#dcfce7;color:#166534}
+    .ao-ip{background:#fef3c7;color:#92400e}
+    .ao-wait{background:#fef3c7;color:#92400e}
+    .ao-fail{background:#fee2e2;color:#991b1b}
+    .rg{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%);border-radius:9px;padding:16px 18px;color:#fff;margin-bottom:14px}
+    .rg-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c4b5fd;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+    .rg-desc{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:12px}
+    .rg-btns{display:flex;gap:8px;flex-wrap:wrap}
+    .rgb{padding:7px 16px;border-radius:7px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+    .rgb-approve{background:#22c55e;color:#fff}.rgb-approve:hover{background:#16a34a}
+    .rgb-enhance{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25)}.rgb-enhance:hover{background:rgba(255,255,255,.22)}
+    .rgb-reject{background:#ef4444;color:#fff}.rgb-reject:hover{background:#dc2626}
+    #rg-decision{font-size:12px;margin-top:10px;padding:8px 12px;border-radius:7px;display:none}
+    .rg-persist{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);color:#86efac;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    .rg-persist-pend{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);color:#fbbf24;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    .sf{display:flex;align-items:center;gap:8px;padding:8px 11px;background:var(--aa-surface);border:1px dashed var(--aa-border);border-radius:7px;font-family:'Cascadia Code','Fira Code',monospace;font-size:11.5px;color:#1d4ed8;margin-bottom:7px}
+    .ss{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap}
+    .ss-ok{background:#dcfce7;color:#166534}
+    .ss-wait{background:#fef3c7;color:#92400e}
+    .ss-pend{background:#fee2e2;color:#991b1b}
+    .av{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;background:#f0f4ff;border:1px solid #c7d2fe;font-size:12px;font-weight:600;color:#4338ca;margin-bottom:6px}
+    .ev-panel{border-radius:0}
+    .ev-header{padding:12px 18px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--aa-border)}
+    .ev-header.ok{background:#f0fdf4;color:#166534}
+    .ev-header.cond{background:#fffbeb;color:#92400e}
+    .ev-header.fail{background:#fef2f2;color:#991b1b}
+    .ev-body{padding:0}
+    .ev-row{display:flex;gap:10px;align-items:flex-start;padding:10px 18px;border-bottom:1px solid #f1f5f9}
+    .ev-row:last-child{border-bottom:none}
+    .ev-persona{font-weight:700;font-size:12px}
+    .ev-law{font-size:10px;color:var(--aa-accent);font-weight:700;margin-top:1px}
+    .ev-note{font-size:11.5px;color:var(--aa-muted);margin-top:4px;line-height:1.5}
+    .ev-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;flex-shrink:0}
+    .ev-pass{background:#dcfce7;color:#166534}
+    .ev-warn{background:#fef3c7;color:#92400e}
+    .ev-fail{background:#fee2e2;color:#991b1b}
+    code{font-family:'Cascadia Code','Fira Code',monospace;background:#f1f5f9;padding:1px 5px;border-radius:4px;font-size:11.5px;color:#0f3460}
+    hr{border:none;border-top:1px solid var(--aa-border);margin:13px 0}
+    footer{background:var(--aa-dark);color:rgba(255,255,255,.45);padding:11px 44px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;font-size:11px}
+    .ft-dot{width:7px;height:7px;border-radius:50%;background:var(--aa-gold);animation:pulse 2s infinite;flex-shrink:0}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .prose h1,.prose h2,.prose h3{margin:12px 0 8px}
+    .prose p{margin:8px 0}
+    .prose ul,.prose ol{margin:8px 0 8px 22px}
+    .prose table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+    .prose table th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:11px;font-weight:700;border-bottom:1px solid var(--aa-border)}
+    .prose table td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    /* Fix badge contrast — Exploratory/Tier readable on dark header */
+    .hb-mode{background:#5b21b6;color:#fff;border:1px solid #7c3aed}
+    .hb-tier{background:#92400e;color:#fef3c7;border:1px solid #b45309}
+    /* Law citation spans injected by citation resolver into prose body */
+    .law-cite{display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle;background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .law-cite[data-non-negotiable="false"]{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .law-tooltip{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .law-tooltip::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .law-cite:hover .law-tooltip{display:block}
+    /* Source registry chips (Stage B) */
+    .src-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid;position:relative;text-decoration:none;vertical-align:middle;white-space:nowrap}
+    .src-chip:hover .src-tip{display:block}
+    .src-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:280px;background:#1e293b;color:#f1f5f9;border-radius:8px;padding:11px 14px;font-size:12px;font-weight:400;z-index:999;line-height:1.6;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .src-tip::after{content:'';position:absolute;top:100%;left:12px;border:5px solid transparent;border-top-color:#1e293b}
+    .src-tip a{color:#93c5fd;text-decoration:underline}
+    .src-apple{background:#1c1c1e;color:#fff;border-color:#444}
+    .src-google{background:#0f9d58;color:#fff;border-color:#0b7a44}
+    .src-reddit{background:#ff4500;color:#fff;border-color:#cc3700}
+    .src-trustpilot{background:#00b67a;color:#fff;border-color:#008a5c}
+    .src-interview{background:#4338ca;color:#fff;border-color:#3730a3}
+    .src-default{background:#374151;color:#fff;border-color:#1f2937}
+    /* Source registry card list */
+    .src-list{display:flex;flex-direction:column;gap:10px}
+    .src-entry{background:var(--aa-surface);border:1px solid var(--aa-border);border-radius:8px;padding:11px 13px}
+    .src-entry-header{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+    .src-id{font-family:monospace;font-size:10px;font-weight:700;background:#e0e7ff;color:#3730a3;padding:1px 6px;border-radius:6px}
+    .src-label{font-weight:700;font-size:12px;color:var(--aa-dark);flex:1}
+    .src-meta{font-size:11px;color:var(--aa-muted);display:flex;gap:10px;flex-wrap:wrap;margin-top:3px}
+    .src-url{font-size:11px;color:#1d4ed8;word-break:break-all;margin-top:4px}
+    .src-desc{font-size:12px;color:var(--aa-text);margin-top:5px;line-height:1.5}
+    .src-quotes{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+    .src-quote-item{background:#fff;border-left:3px solid var(--aa-purple);padding:6px 10px;border-radius:0 6px 6px 0;font-size:11.5px;font-style:italic;color:#1e293b;line-height:1.5}
+    .src-quote-meta{font-size:10px;color:var(--aa-muted);margin-top:3px;font-style:normal}
+    /* Evidence glossary (Stage C) */
+    .evi-table{width:100%;border-collapse:collapse;font-size:12px}
+    .evi-table th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .evi-table td{padding:8px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .evi-table tr:last-child td{border-bottom:none}
+    .evi-id{font-family:monospace;font-size:10px;font-weight:700;background:#fef3c7;color:#92400e;padding:2px 7px;border-radius:6px;white-space:nowrap}
+    .evi-claim{font-weight:600;font-size:12px;color:var(--aa-dark)}
+    .evi-src{font-family:monospace;font-size:10.5px;color:#1d4ed8;word-break:break-all}
+    .evi-quote{font-style:italic;font-size:11.5px;color:#475569;line-height:1.5;background:#f8fafc;padding:5px 8px;border-radius:5px;margin-top:4px}
+    .evi-method{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;background:#e0e7ff;color:#3730a3}
+    .conf-high{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;background:#dcfce7;color:#166534}
+    .conf-med{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;background:#fef3c7;color:#92400e}
+    .conf-low{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;background:#fee2e2;color:#991b1b}
+    .evi-verified{font-size:10px;color:var(--aa-muted);margin-top:3px}
+    /* Problem Evidence Registry (Stage A) */
+    .prob-ev-list{display:flex;flex-direction:column;gap:10px}
+    .prob-ev-entry{background:var(--aa-surface);border:1px solid var(--aa-border);border-radius:8px;padding:11px 13px}
+    .prob-ev-header{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+    .prob-ev-id{font-family:monospace;font-size:10px;font-weight:700;background:#fce7f3;color:#9d174d;padding:1px 6px;border-radius:6px}
+    .prob-ev-dim{font-size:11px;font-weight:700;color:var(--aa-dark);flex:1}
+    .prob-ev-meta{font-size:11px;color:var(--aa-muted);display:flex;gap:10px;flex-wrap:wrap;margin-top:3px}
+    .prob-ev-src{font-size:11px;color:#1d4ed8;word-break:break-all;margin-top:4px}
+    .prob-ev-quote{font-style:italic;font-size:11.5px;color:#475569;line-height:1.5;background:#fdf2f8;padding:5px 8px;border-radius:5px;margin-top:5px;border-left:3px solid #f0abfc}
+    /* Baseline Sources (Stage E) */
+    .bsl-list{display:flex;flex-direction:column;gap:10px}
+    .bsl-entry{background:var(--aa-surface);border:1px solid var(--aa-border);border-radius:8px;padding:11px 13px}
+    .bsl-header{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+    .bsl-id{font-family:monospace;font-size:10px;font-weight:700;background:#d1fae5;color:#065f46;padding:1px 6px;border-radius:6px}
+    .bsl-mid{font-family:monospace;font-size:10px;font-weight:700;background:#ecfdf5;color:#047857;padding:1px 6px;border-radius:6px}
+    .bsl-metric{font-size:12px;font-weight:700;color:var(--aa-dark);flex:1}
+    .bsl-meta{font-size:11px;color:var(--aa-muted);display:flex;gap:10px;flex-wrap:wrap;margin-top:3px}
+    .bsl-method{font-size:11px;color:#374151;margin-top:4px;font-family:monospace;background:#f9fafb;padding:3px 7px;border-radius:4px;word-break:break-all}
+    /* Cross-Stage Evidence Map (Stage D) */
+    .ce-table{width:100%;border-collapse:collapse;font-size:12px}
+    .ce-table th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .ce-table td{padding:8px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .ce-table tr:last-child td{border-bottom:none}
+    .ce-id{font-family:monospace;font-size:10px;font-weight:700;background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:6px;white-space:nowrap}
+    .ce-ref{display:inline-block;font-family:monospace;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;margin:1px;white-space:nowrap}
+    .ce-ref-b{background:#fef3c7;color:#92400e}
+    .ce-ref-c{background:#ede9fe;color:#5b21b6}
+    .ce-ref-a{background:#fce7f3;color:#9d174d}
+    .ce-status-val{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;background:#dcfce7;color:#166534}
+    .ce-status-inv{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;background:#fee2e2;color:#991b1b}
+    .ce-status-unt{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;background:#f1f5f9;color:#475569}
+    .ce-eval{font-size:10px;color:var(--aa-muted);margin-top:3px}
+    /* Decision Traceability (Stage F) */
+    .dt-list{display:flex;flex-direction:column;gap:10px}
+    .dt-entry{background:var(--aa-surface);border:1px solid var(--aa-border);border-radius:8px;padding:11px 13px}
+    .dt-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+    .dt-id{font-family:monospace;font-size:10px;font-weight:700;background:#e0e7ff;color:#3730a3;padding:1px 6px;border-radius:6px}
+    .dt-label{font-size:12px;font-weight:700;color:var(--aa-dark);flex:1}
+    .dt-horizon-now{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;background:#dcfce7;color:#166534}
+    .dt-horizon-next{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;background:#dbeafe;color:#1e40af}
+    .dt-horizon-later{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;background:#f1f5f9;color:#475569}
+    .dt-driven{display:flex;flex-direction:column;gap:4px;margin-top:4px}
+    .dt-ref-row{display:flex;gap:6px;align-items:flex-start;font-size:11.5px}
+    .dt-ref{font-family:monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:6px;flex-shrink:0;white-space:nowrap}
+    .dt-ref-a{background:#fce7f3;color:#9d174d}
+    .dt-ref-b{background:#fef3c7;color:#92400e}
+    .dt-ref-c{background:#ede9fe;color:#5b21b6}
+    .dt-ref-e{background:#d1fae5;color:#065f46}
+    .dt-ref-d{background:#dbeafe;color:#1e40af}
+    .dt-meta{font-size:10px;color:var(--aa-muted);margin-top:4px;display:flex;gap:8px;flex-wrap:wrap}
+    details summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--aa-dark);padding:4px 0;user-select:none}
+    details summary:hover{color:var(--aa-purple)}
+    .task-done,.task-pending{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface);margin:4px 0}
+    .task-done{background:#f0fdf4;border-color:#86efac}
+    .task-done .cb{width:18px;height:18px;flex-shrink:0;border-radius:4px;background:var(--aa-green-dk);border:2px solid var(--aa-green-dk);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700;padding:0!important;margin-top:2px}
+    .task-done .cb::after{content:'✓'}
+    .task-pending .cb{width:18px;height:18px;flex-shrink:0;border-radius:4px;background:#fff;border:2px solid var(--aa-border);padding:0!important;margin-top:2px}
+    .task-text{font-size:12px;line-height:1.5;flex:1}
+    .prose li:has(.task-done),.prose li:has(.task-pending){list-style:none;margin-left:-22px}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="h-eye">{{ workflow }}{% if spec_id %} · {{ spec_id }}{% endif %}</div>
+  <div class="h-title">Stage {{ stage }}{% if s_label %} &nbsp;·&nbsp; {{ s_label }}{% endif %}</div>
+  <div class="h-sub">{{ title }}{% if wf_version %} &nbsp;·&nbsp; Workflow v{{ wf_version }}{% endif %}</div>
+  <div class="h-badges">
+    <span class="hb hb-stage">Stage {{ stage }}{% if stages_data %} of {{ stages_data|length }}{% endif %}</span>
+    {% if mode %}<span class="hb hb-mode">🔭 {{ mode }}</span>{% endif %}
+    {% if tier %}<span class="hb hb-tier">⚡ {{ tier }}</span>{% endif %}
+    {% for law in laws_applied %}<span class="hb hb-law">{{ law }}</span>{% endfor %}
+    {% if ev_verdicts %}
+      {%- if ns.has_fail %}<span class="hb hb-fail">⚡ Ensemble: BLOCKED</span>
+      {%- elif ns.has_warn %}<span class="hb hb-cond">⚠ Ensemble: CONDITIONS</span>
+      {%- else %}<span class="hb hb-ok">✅ Ensemble: APPROVED</span>{%- endif %}
+    {% endif %}
+  </div>
+</header>
+
+{% if stages_data %}
+<nav class="stages" aria-label="Discovery stages">
+  {%- for s in stages_data %}
+    {%- set s_status = s.get('status', 'locked') %}
+    <div class="st {{ s_status }}">
+      <div class="st-n">{% if s_status == 'done' %}✓{% else %}{{ s.get('id', loop.index) }}{% endif %}</div>
+      {{ s.get('label', s.get('id', '')) }}
+    </div>
+  {%- endfor %}
+</nav>
+{% endif %}
+
+<div class="body">
+  <div class="main">
+
+    {% if gates %}
+    <!-- Stage Gates -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#eff6ff">🚦</div>
+        <div class="ct">Stage Gates</div>
+        {% for law in laws_applied[:3] %}<span class="law {% if loop.first %}lp{% elif loop.index == 2 %}lb{% else %}le{% endif %}">{{ law }}<span class="tt"><strong>{{ law_names.get(law, law) }}</strong></span></span>{% endfor %}
+      </div>
+      <div class="cb">
+        <div class="gate-row">
+          {% if gates.get('entry') %}
+          <div class="gate {% if gates.entry.get('status') == 'met' %}ge{% elif gates.entry.get('status') == 'pending' %}gp{% else %}ge{% endif %}">
+            <div class="gi">📥</div>
+            <div><div class="gl">Entry Gate — {% if gates.entry.get('status') == 'met' %}✅ Met{% elif gates.entry.get('status') == 'pending' %}⏳ Pending{% else %}❌ Blocked{% endif %}</div>
+            <div class="gtt">{{ gates.entry.get('description', '') }}</div></div>
+          </div>
+          {% endif %}
+          {% if gates.get('exit') %}
+          <div class="gate {% if gates.exit.get('status') == 'met' %}gx{% elif gates.exit.get('status') == 'pending' %}gp{% else %}ge{% endif %}">
+            <div class="gi">📤</div>
+            <div><div class="gl">Exit Gate — {% if gates.exit.get('status') == 'met' %}✅ APPROVED{% elif gates.exit.get('status') == 'pending' %}⏳ PENDING{% else %}❌ Blocked{% endif %}</div>
+            <div class="gtt">{{ gates.exit.get('description', '') }}</div></div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if mode_sel or tier_sel %}
+    <!-- Mode & Tier -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f5f3ff">🧭</div>
+        <div class="ct">Discovery Mode &amp; Tier</div>
+        {% if mode %}<span class="hb hb-mode" style="font-size:11px;">{{ mode }}</span>{% endif %}
+        {% if tier %}<span class="hb hb-tier" style="font-size:11px;">{{ tier }}</span>{% endif %}
+      </div>
+      <div class="cb">
+        {% if mode_sel or tier_sel %}
+        <div class="mt-grid" style="margin-bottom:16px;">
+          {% if mode_sel %}
+          <div class="mt-box mt-selected">
+            <div class="mt-label">✅ Selected Mode</div>
+            <div class="mt-value">🔭 {{ mode_sel.get('selected', mode) }}</div>
+            <div class="mt-desc">{{ mode_sel.get('rationale', '') }}</div>
+          </div>
+          {% endif %}
+          {% if tier_sel %}
+          <div class="mt-box mt-gold">
+            <div class="mt-label">✅ Selected Tier</div>
+            <div class="mt-value" style="color:#92400e;">⚡ {{ tier_sel.get('tier', tier) }}</div>
+            <div class="mt-desc">{{ tier_sel.get('rationale', '') }}</div>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+        {% if tier_sel.get('rubric') %}
+        <div class="lbl">Tier Complexity Rubric</div>
+        <table class="rubric">
+          <thead><tr><th>#</th><th>Question</th><th>Answer</th><th>Evidence</th></tr></thead>
+          <tbody>
+            {% for r in tier_sel.rubric %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ r.get('question', '') }}</td>
+              {%- set ans = r.get('answer','') | string | lower %}
+              <td class="{% if ans == 'yes' or ans == 'true' %}yes{% elif ans == 'no' or ans == 'false' %}no{% else %}tbd{% endif %}">{{ r.get('answer', '') }}</td>
+              <td>{{ r.get('evidence', '') }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if prob_val %}
+    <!-- PRD-2.1 Problem Validation -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#fff1f2">📝</div>
+        <div class="ct">Problem Statement — PRD-2.1 Validation</div>
+        <span class="law lp">PRD-2.1<span class="tt"><strong>Problem Validation Law</strong><br>All problems MUST be validated before solution design. All 4 dimensions required.</span></span>
+      </div>
+      <div class="cb">
+        <div class="prd-grid">
+          {% for key in ['dim1','dim2','dim3','dim4'] %}
+            {% set d = prob_val.get(key, {}) %}
+            {% if d %}
+            <div class="prd-box {% if d.get('status') == 'ok' %}prd-ok{% elif d.get('status') == 'warn' %}prd-warn{% else %}prd-fail{% endif %}">
+              <div class="prd-lbl">{% if d.get('status') == 'ok' %}✅{% elif d.get('status') == 'warn' %}🟡{% else %}❌{% endif %} {{ d.get('label', loop.index ~ '. Dimension') }}</div>
+              <div class="prd-txt">{{ d.get('text', '') }}</div>
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if domains or arch_flow %}
+    <!-- Domain Landscape -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f0f4ff">🗺️</div>
+        <div class="ct">{{ frontmatter.get('domain_landscape_title', 'Domain Landscape') }}</div>
+      </div>
+      <div class="cb">
+        {% if domains %}
+        <div class="dom-grid" style="margin-bottom:16px;">
+          {% for d in domains %}
+          <div class="dom">
+            <div class="dh" style="background:{{ d.get('header_bg', '#fff1f2') }};color:{{ d.get('header_color', '#9f1239') }};">{{ d.get('icon', '') }} {{ d.get('name', '') }}</div>
+            <div class="db">
+              {% if d.get('submodules') %}<div class="dr"><span class="dk">Submodules</span><span class="dv">{{ d.submodules }}</span></div>{% endif %}
+              {% if d.get('stack') %}<div class="dr"><span class="dk">Stack</span><span class="dv">{{ d.stack }}</span></div>{% endif %}
+              {% if d.get('role') %}<div class="dr"><span class="dk">Role</span><span class="dv">{{ d.role }}</span></div>{% endif %}
+              {% if d.get('tags') %}
+              <div style="margin-top:7px;">
+                {% for t in d.tags %}<span class="tag {% if t.get('tone') == 'green' %}tg{% elif t.get('tone') == 'red' %}tr{% elif t.get('tone') == 'yellow' %}ty{% elif t.get('tone') == 'blue' %}tb{% else %}tp{% endif %}">{{ t.get('text', t) if t is mapping else t }}</span>{% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if arch_flow %}
+        <div class="lbl">{{ frontmatter.get('arch_title', 'Cross-Domain Flow') }}</div>
+        <div class="arch" style="margin-top:8px;">{{ arch_flow }}</div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if findings %}
+    <!-- Findings -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#fffbeb">🔍</div>
+        <div class="ct">{{ frontmatter.get('findings_title', 'Discovery Findings') }}</div>
+      </div>
+      <div class="cb">
+        <ul class="cl">
+          {% for f in findings %}
+          <li class="cli {% if f.get('status') == 'done' %}done{% elif f.get('status') == 'wait' %}wait{% else %}pend{% endif %}">
+            <div class="cbox">{% if f.get('status') == 'done' %}✓{% elif f.get('status') == 'wait' %}⏳{% endif %}</div>
+            <div>
+              <div class="ctitle">{{ f.get('title', '') }}</div>
+              {% if f.get('description') %}<div class="cdesc">{{ f.description }}</div>{% endif %}
+              {% if f.get('laws') %}<div class="clw">{{ f.laws | join(' · ') }}</div>{% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if assumption_citations %}
+    <!-- Cross-Stage Evidence Map (Stage D) -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#eff6ff">🗺️</div>
+        <div class="ct">Cross-Stage Evidence Map</div>
+        <span class="law le">PRD-2.2<span class="tt"><strong>Assumption Mapping Law</strong><br>All validated/invalidated assumptions must be backed by traceable upstream evidence.</span></span>
+        <span class="law lp">BUS-7.1<span class="tt"><strong>Audit Trail — NON-NEGOTIABLE</strong><br>Decision provenance required — who evaluated, when, and on what evidence.</span></span>
+      </div>
+      <div class="cb">
+        <details open>
+          <summary>{{ assumption_citations | length }} assumption{{ 's' if assumption_citations | length != 1 else '' }} — click to collapse</summary>
+          <div style="overflow-x:auto;margin-top:10px">
+          <table class="ce-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Assumption</th>
+                <th>Status</th>
+                <th>Supporting Evidence</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for a in assumption_citations %}
+              <tr>
+                <td><span class="ce-id">{{ a.get('assumption_id','') }}</span></td>
+                <td>
+                  <div style="font-weight:600;font-size:12px;">{{ a.get('assumption','') }}</div>
+                  {% if a.get('evaluated_by') %}<div class="ce-eval">✓ {{ a.evaluated_by }}</div>{% endif %}
+                </td>
+                <td>
+                  {%- set st = a.get('status','') | lower %}
+                  {%- if st == 'validated' %}<span class="ce-status-val">✅ Validated</span>
+                  {%- elif st == 'invalidated' %}<span class="ce-status-inv">❌ Invalidated</span>
+                  {%- else %}<span class="ce-status-unt">⬜ Untested</span>{%- endif %}
+                </td>
+                <td>
+                  {% if a.get('supporting_evidence') %}
+                  <div style="display:flex;flex-direction:column;gap:4px;">
+                    {% for ev in a.supporting_evidence %}
+                    {%- set r = ev.get('ref','') %}
+                    {%- set rc = 'ce-ref-a' if r.startswith('SRC-A') else ('ce-ref-b' if r.startswith('SRC-B') else ('ce-ref-c' if r.startswith('EVI-C') else 'ce-ref-b')) %}
+                    <div><span class="ce-ref {{ rc }}">{{ r }}</span>{% if ev.get('how') %} <span style="font-size:11px;color:var(--aa-muted)">— {{ ev.how | truncate(80) }}</span>{% endif %}</div>
+                    {% endfor %}
+                  </div>
+                  {% else %}
+                  <span style="font-size:11px;color:var(--aa-muted)">—</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {%- set conf = a.get('confidence','') | lower %}
+                  {%- if conf == 'high' %}<span class="conf-high">🟢 High</span>
+                  {%- elif conf == 'medium' %}<span class="conf-med">🟡 Medium</span>
+                  {%- else %}<span class="conf-low">🔴 Low</span>{%- endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          </div>
+        </details>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if evidence_glossary %}
+    <!-- Evidence Glossary (Stage C) -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#fffbeb">🧬</div>
+        <div class="ct">Evidence Glossary — Traceable Claims</div>
+        <span class="law lb">ENG-3.1<span class="tt"><strong>Tech Debt Law</strong><br>All critical findings and HIGH/MEDIUM debt items must carry a verified evidence entry.</span></span>
+        <span class="law lp">BUS-7.1<span class="tt"><strong>Audit Trail — NON-NEGOTIABLE</strong><br>Every claim acted upon must be traceable to source.</span></span>
+      </div>
+      <div class="cb">
+        <details open>
+          <summary>{{ evidence_glossary | length }} evidence entr{{ 'y' if evidence_glossary | length == 1 else 'ies' }} — click to collapse</summary>
+          <div style="overflow-x:auto;margin-top:10px">
+          <table class="evi-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Claim</th>
+                <th>Source File · Section</th>
+                <th>Verbatim Quote</th>
+                <th>Method</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for e in evidence_glossary %}
+              <tr>
+                <td><span class="evi-id">{{ e.get('id','') }}</span></td>
+                <td>
+                  <div class="evi-claim">{{ e.get('claim','') }}</div>
+                  {% if e.get('verified_by') %}<div class="evi-verified">✓ {{ e.verified_by }}</div>{% endif %}
+                </td>
+                <td>
+                  <div class="evi-src">{{ e.get('source_file','') }}</div>
+                  {% if e.get('section') %}<div style="font-size:11px;color:var(--aa-muted);margin-top:2px">{{ e.section }}</div>{% endif %}
+                </td>
+                <td>
+                  {% if e.get('quote') %}
+                  <div class="evi-quote">"{{ e.quote | truncate(160) }}"</div>
+                  {% endif %}
+                </td>
+                <td><span class="evi-method">{{ e.get('verification_method','') | replace('-',' ') }}</span></td>
+                <td>
+                  {%- set conf = e.get('confidence','') | lower %}
+                  {%- if conf == 'high' %}<span class="conf-high">🟢 High</span>
+                  {%- elif conf == 'medium' %}<span class="conf-med">🟡 Medium</span>
+                  {%- else %}<span class="conf-low">🔴 Low</span>{%- endif %}
+                  {% if e.get('confidence_rationale') %}<div style="font-size:10px;color:var(--aa-muted);margin-top:3px">{{ e.confidence_rationale }}</div>{% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          </div>
+        </details>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if body %}
+    <!-- Prose body from markdown (catch-all) -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#eff6ff">📄</div><div class="ct">{{ frontmatter.get('body_title', 'Narrative &amp; Rationale') }}</div></div>
+      <div class="cb prose">{{ body | safe }}</div>
+    </div>
+    {% endif %}
+
+    {% if exit_chk %}
+    <!-- Exit Gate Checklist -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f0fdf4">✅</div>
+        <div class="ct">Exit Gate Checklist — Stage {{ stage }} → Next</div>
+        <span class="law lp">PRD-2.5 ⚠<span class="tt"><strong>Stage-Gate Law — NON-NEGOTIABLE</strong><br>ALL items must be checked before advancing.</span></span>
+      </div>
+      <div class="cb">
+        <ul class="cl">
+          {% for item in exit_chk %}
+          <li class="cli {% if item.get('status') == 'done' %}done{% elif item.get('status') == 'wait' %}wait{% else %}pend{% endif %}">
+            <div class="cbox">{% if item.get('status') == 'done' %}✓{% elif item.get('status') == 'wait' %}⏳{% endif %}</div>
+            <div>
+              <div class="ctitle">{{ item.get('title', '') }}</div>
+              {% if item.get('description') %}<div class="cdesc">{{ item.description }}</div>{% endif %}
+              {% if item.get('laws') %}<div class="clw">{{ item.laws | join(' · ') }}</div>{% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if audit_log %}
+    <!-- Audit Log -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f1f5f9">📋</div>
+        <div class="ct">Audit Log</div>
+        <span class="law lb">BUS-7.1 ⚠<span class="tt"><strong>Audit Trail — NON-NEGOTIABLE</strong><br>Every stage transition: who / what / when / where / why / outcome.</span></span>
+      </div>
+      <div class="cb">
+        <table class="at">
+          <thead><tr><th>Event</th><th>Actor</th><th>Role</th><th>System</th><th>Timestamp</th><th>Outcome</th></tr></thead>
+          <tbody>
+            {% for row in audit_log %}
+            <tr>
+              <td>{{ row.get('event', '') }}</td>
+              <td>{{ row.get('actor', '') }}</td>
+              <td>{{ row.get('role', '') }}</td>
+              <td>{{ row.get('system', '') }}</td>
+              <td>{{ row.get('timestamp', '') }}</td>
+              <td><span class="ao {% if row.get('outcome','').upper() in ['OK','APPROVED','DONE','RENDERED','DRAFTED'] %}ao-ok{% elif row.get('outcome','').upper() in ['IN_PROGRESS','IP','AWAITING','WAIT','PENDING'] %}ao-wait{% elif row.get('outcome','').upper() in ['FAIL','BLOCKED','REJECTED'] %}ao-fail{% else %}ao-ip{% endif %}">{{ row.get('outcome', '') }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+  </div><!-- end main -->
+
+  <div class="side">
+
+    <!-- ENG-13.1 Render Gate -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#1e1b4b;font-size:16px;">🖥️</div>
+        <div class="ct" style="color:#4f46e5;">ENG-13.1 Render Gate</div>
+        <span class="hb hb-fail" style="font-size:9px;">NON-NEG</span>
+      </div>
+      <div class="cb">
+        {% if render_gate.get('status') == 'approved' %}
+          <div class="rg-persist">✅ <strong>APPROVED</strong>{% if render_gate.get('reviewer') %} — {{ render_gate.reviewer }}{% endif %}{% if render_gate.get('timestamp') %} · {{ render_gate.timestamp }}{% endif %}</div>
+        {% elif render_gate.get('status') == 'rejected' %}
+          <div class="rg-persist" style="background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.35);color:#fca5a5;">❌ <strong>REJECTED</strong>{% if render_gate.get('reviewer') %} — {{ render_gate.reviewer }}{% endif %}</div>
+        {% else %}
+          <div class="rg-persist-pend">⏳ <strong>PENDING</strong> — awaiting reviewer decision in the source artifact</div>
+        {% endif %}
+        <div class="rg">
+          <div class="rg-title">🖥️ Human Browser Review</div>
+          <div class="rg-desc">Source-of-truth is the §Render Gate checkbox in the source artifact. Button clicks are reminders only — tick the checkbox to record.</div>
+          <div class="rg-btns">
+            <button class="rgb rgb-approve" onclick="rgDecision('APPROVE')">✅ APPROVE</button>
+            <button class="rgb rgb-enhance" onclick="rgDecision('ENHANCE')">🔄 ENHANCE</button>
+            <button class="rgb rgb-reject" onclick="rgDecision('REJECT')">❌ REJECT</button>
+          </div>
+          <div id="rg-decision"></div>
+        </div>
+        <p style="font-size:12px;color:var(--aa-muted);">Stage does not advance until §Render Gate in the source artifact carries a ticked APPROVE row. (PRD-2.5 NON-NEGOTIABLE)</p>
+      </div>
+    </div>
+
+    {% if ev_verdicts %}
+    <!-- Ensemble Agent Verdict -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f5f3ff">🤖</div>
+        <div class="ct">Ensemble Agent Verdict</div>
+      </div>
+      <div class="cb" style="padding:0">
+        <div class="ev-panel">
+          <div class="ev-header {% if ns.has_fail %}fail{% elif ns.has_warn %}cond{% else %}ok{% endif %}">
+            {{ agg_icon }} Constitutional Verdict
+            <span class="ev-badge {% if ns.has_fail %}ev-fail{% elif ns.has_warn %}ev-warn{% else %}ev-pass{% endif %}">{{ agg_label }}</span>
+          </div>
+          <div class="ev-body">
+            {% for v in ev_verdicts %}
+              {% set vl = v.get('verdict', 'PASS') %}
+              <div class="ev-row">
+                <div style="flex:1">
+                  <div class="ev-persona">{{ v.get('persona', '') }}</div>
+                  <div class="ev-law">{{ v.get('law', '') }}</div>
+                  <div class="ev-note">{{ v.get('note', '') }}</div>
+                </div>
+                <span class="ev-badge {% if vl == 'PASS' %}ev-pass{% elif vl == 'WARN' %}ev-warn{% else %}ev-fail{% endif %}">{{ vl }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if avatars %}
+    <!-- Participating Avatars -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f5f3ff">🤖</div><div class="ct">Participating Avatars</div></div>
+      <div class="cb">
+        {% for a in avatars %}
+          {% if a is mapping %}
+          <div class="av">{{ a.get('icon', '🎯') }} {{ a.get('name', '') }}{% if a.get('context') %} <span style="color:#6366f1;font-weight:400;font-size:11px;">· {{ a.context }}</span>{% endif %}</div>
+          {% else %}
+          <div class="av">🎯 {{ a }}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if spec_files %}
+    <!-- Spec Artifacts -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📂</div><div class="ct">Spec Artifacts</div></div>
+      <div class="cb">
+        {% for f in spec_files %}
+        <div class="sf">{{ f.get('icon', '📄') }} {{ f.get('filename', '') }}<span class="ss {% if f.get('status','').upper() in ['OK','RENDERED','APPROVED','FILED','DRAFTED'] %}ss-ok{% elif f.get('status','').upper() in ['WAIT','PENDING'] %}ss-wait{% else %}ss-pend{% endif %}">{{ f.get('status', '') }}</span></div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if stakeholder %}
+    <!-- Stakeholder Approval -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0fdf4">✅</div><div class="ct">Stakeholder Approval</div></div>
+      <div class="cb">
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;">
+          {% if stakeholder.get('approver') %}<div><span class="lbl">Approver</span><div style="font-weight:700;">{{ stakeholder.approver }}</div></div>{% endif %}
+          {% if stakeholder.get('title') %}<div><span class="lbl">Title</span><div>{{ stakeholder.title }}</div></div>{% endif %}
+          {% if stakeholder.get('date') %}<div><span class="lbl">Date</span><div>{{ stakeholder.date }}</div></div>{% endif %}
+          {% if stakeholder.get('method') %}<div><span class="lbl">Method</span><div>{{ stakeholder.method }}</div></div>{% endif %}
+          {% if stakeholder.get('self_cert') is defined %}<div><span class="lbl">Self-cert?</span><div style="color:{% if stakeholder.self_cert %}#991b1b{% else %}#166534{% endif %};font-weight:700;">{% if stakeholder.self_cert %}⚠️ Yes — VIOLATION{% else %}✅ No{% endif %}</div></div>{% endif %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if problem_evidence %}
+    <!-- Problem Evidence Registry (Stage A) -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#fdf2f8">🔍</div>
+        <div class="ct">Problem Evidence Registry</div>
+        <span class="law lp">PRD-2.1<span class="tt"><strong>Problem Validation Law</strong><br>All 4 PRD-2.1 dimensions must be backed by traceable evidence with source_ref, date, and verbatim quote.</span></span>
+      </div>
+      <div class="cb">
+        <div class="prob-ev-list">
+          {% for pe in problem_evidence %}
+          <div class="prob-ev-entry">
+            <div class="prob-ev-header">
+              <span class="prob-ev-id">{{ pe.get('id','') }}</span>
+              <span class="prob-ev-dim">{{ pe.get('dimension','') }}</span>
+              {%- set conf = pe.get('confidence','') | lower %}
+              {%- if conf == 'high' %}<span class="conf-high" style="font-size:9px;">🟢 High</span>
+              {%- elif conf == 'medium' %}<span class="conf-med" style="font-size:9px;">🟡 Medium</span>
+              {%- else %}<span class="conf-low" style="font-size:9px;">🔴 Low</span>{%- endif %}
+            </div>
+            {% if pe.get('claim') %}<div style="font-size:12px;font-weight:600;color:var(--aa-dark);margin-bottom:3px;">{{ pe.claim }}</div>{% endif %}
+            <div class="prob-ev-meta">
+              {% if pe.get('source_type') %}<span>{{ pe.source_type | replace('_',' ') }}</span>{% endif %}
+              {% if pe.get('date') %}<span>📅 {{ pe.date }}</span>{% endif %}
+              {% if pe.get('system_of_record') %}<span>🗄️ {{ pe.system_of_record }}</span>{% endif %}
+            </div>
+            {% if pe.get('source_ref') %}<div class="prob-ev-src">📎 {{ pe.source_ref }}</div>{% endif %}
+            {% if pe.get('quote') %}
+            <div class="prob-ev-quote">"{{ pe.quote | truncate(160) }}"</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if baseline_sources %}
+    <!-- Baseline Source Registry (Stage E) -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#ecfdf5">📊</div>
+        <div class="ct">Baseline Sources</div>
+        <span class="law le">PRD-6.1<span class="tt"><strong>PMF Definition Law</strong><br>All metric baselines must trace to a reproducible source with snapshot timestamp.</span></span>
+        <span class="law lb">ENG-10.1<span class="tt"><strong>Observability Law</strong><br>Metrics must be measurable before committing scope.</span></span>
+      </div>
+      <div class="cb">
+        <div class="bsl-list">
+          {% for b in baseline_sources %}
+          <div class="bsl-entry">
+            <div class="bsl-header">
+              <span class="bsl-id">{{ b.get('id','') }}</span>
+              <span class="bsl-mid">{{ b.get('metric_id','') }}</span>
+              <span class="bsl-metric">{{ b.get('metric','') }}</span>
+            </div>
+            <div style="font-size:13px;font-weight:700;color:var(--aa-dark);margin-bottom:4px;">{{ b.get('baseline_value','') }}</div>
+            <div class="bsl-meta">
+              {% if b.get('tool') %}<span>🛠 {{ b.tool }}</span>{% endif %}
+              {% if b.get('snapshot_at') %}<span>📅 {{ b.snapshot_at }}</span>{% endif %}
+              {% if b.get('owner') %}<span>👤 {{ b.owner }}</span>{% endif %}
+            </div>
+            {% if b.get('query_or_method') %}
+            <div class="bsl-method">{{ b.query_or_method | truncate(120) }}</div>
+            {% endif %}
+            {% if b.get('dashboard_url') and b.get('dashboard_url') != 'internal' %}
+            <div style="font-size:11px;margin-top:4px;"><a href="{{ b.dashboard_url }}" target="_blank" style="color:#1d4ed8;word-break:break-all;">{{ b.dashboard_url }}</a></div>
+            {% endif %}
+            {% if b.get('notes') and b.get('notes') != 'None' %}
+            <div style="font-size:11px;color:var(--aa-muted);margin-top:4px;font-style:italic;">{{ b.notes }}</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if source_registry %}
+    <!-- Source Registry (Stage B) -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#eff6ff">🗂️</div>
+        <div class="ct">Source Registry</div>
+        <span class="law le">PRD-3.1<span class="tt"><strong>User Research Law</strong><br>All insights must be traceable to a registered source with minimum fields.</span></span>
+      </div>
+      <div class="cb">
+        {% if methodology_note %}
+        <div style="background:#f8fafc;border:1px solid var(--aa-border);border-radius:7px;padding:9px 12px;font-size:12px;color:var(--aa-muted);margin-bottom:12px;line-height:1.5">
+          <span style="font-weight:700;color:var(--aa-dark)">Methodology: </span>{{ methodology_note }}
+        </div>
+        {% endif %}
+        <div class="src-list">
+          {% for src in source_registry %}
+          {%- set plat = src.get('platform','other') %}
+          {%- set icon = platform_icons.get(plat, '🔗') %}
+          {%- set chip_cls = {'app_store_ios':'src-apple','google_play':'src-google','reddit':'src-reddit','trustpilot':'src-trustpilot','user_interview':'src-interview'}.get(plat,'src-default') %}
+          <div class="src-entry">
+            <div class="src-entry-header">
+              <span class="src-id">{{ src.get('id','') }}</span>
+              <span class="src-chip {{ chip_cls }}" style="font-size:10px;padding:2px 8px;cursor:default;position:static;">{{ icon }} {{ src.get('label','') }}</span>
+              {% if src.get('record_count') %}<span style="font-size:11px;color:var(--aa-muted)">{{ src.record_count }} records</span>{% endif %}
+            </div>
+            <div class="src-meta">
+              <span>📅 {{ src.get('retrieved','') }}</span>
+              <span>{{ plat | replace('_',' ') }}</span>
+            </div>
+            {% if src.get('url') and src.get('url') != 'internal' %}
+            <div class="src-url"><a href="{{ src.url }}" target="_blank" style="color:#1d4ed8;font-size:11px;word-break:break-all">{{ src.url }}</a></div>
+            {% endif %}
+            {% if src.get('description') %}
+            <div class="src-desc">{{ src.description }}</div>
+            {% endif %}
+            {% if src.get('sample_quotes') %}
+            <div class="src-quotes">
+              {% for q in src.sample_quotes[:2] %}
+              <div class="src-quote-item">
+                "{{ q.get('text','') | truncate(140) }}"
+                <div class="src-quote-meta">{{ q.get('date','') }}{% if q.get('rating') %} · ★{{ q.rating }}{% endif %}{% if q.get('category') %} · {{ q.category }}{% endif %}</div>
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if roadmap_rationale %}
+    <!-- Decision Traceability (Stage F) -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#e0e7ff">🔗</div>
+        <div class="ct">Decision Traceability</div>
+        <span class="law lp">PRD-4.2<span class="tt"><strong>Roadmap Prioritisation Law</strong><br>All roadmap initiatives must be grounded in upstream discovery evidence.</span></span>
+        <span class="law lb">BUS-7.1<span class="tt"><strong>Audit Trail — NON-NEGOTIABLE</strong><br>Every roadmap decision traceable to who/what/when/why.</span></span>
+      </div>
+      <div class="cb">
+        <div class="dt-list">
+          {% for r in roadmap_rationale %}
+          {%- set h = r.get('horizon','') | lower %}
+          <div class="dt-entry">
+            <div class="dt-header">
+              <span class="dt-id">{{ r.get('initiative_id','') }}</span>
+              <span class="dt-label">{{ r.get('initiative','') }}</span>
+              {%- if h == 'now' %}<span class="dt-horizon-now">Now</span>
+              {%- elif h == 'next' %}<span class="dt-horizon-next">Next</span>
+              {%- else %}<span class="dt-horizon-later">Later</span>{%- endif %}
+            </div>
+            {% if r.get('driven_by') %}
+            <div class="dt-driven">
+              {% for d in r.driven_by %}
+              {%- set ref = d.get('ref','') %}
+              {%- set rc = 'dt-ref-a' if ref.startswith('SRC-A') else ('dt-ref-b' if ref.startswith('SRC-B') else ('dt-ref-c' if ref.startswith('EVI-C') else ('dt-ref-e' if ref.startswith('BSL-E') else 'dt-ref-d'))) %}
+              <div class="dt-ref-row">
+                <span class="dt-ref {{ rc }}">{{ ref }}</span>
+                <span style="color:var(--aa-muted)">{{ d.get('type','') | replace('_',' ') }}</span>
+                {% if d.get('reason') %}<span>— {{ d.reason | truncate(90) }}</span>{% endif %}
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <div class="dt-meta">
+              {% if r.get('addresses_assumption') %}<span>🎯 Assumption {{ r.addresses_assumption }}</span>{% endif %}
+              {% if r.get('moves_metric') %}<span>📊 Metric {{ r.moves_metric }}</span>{% endif %}
+              {%- set conf = r.get('rationale_confidence','') | lower %}
+              {%- if conf == 'high' %}<span class="conf-high" style="font-size:9px;">🟢 High</span>
+              {%- elif conf == 'medium' %}<span class="conf-med" style="font-size:9px;">🟡 Medium</span>
+              {%- else %}<span class="conf-low" style="font-size:9px;">🔴 Low</span>{%- endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if laws_applied %}
+    <!-- Active Laws -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#fff1f2">⚖️</div><div class="ct">Active Laws — Stage {{ stage }}</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:7px;">
+        {% for law in laws_applied %}
+          {%- set nn = law in ('PRD-2.5','BUS-7.1','ENG-13.1','ENG-13.3') %}
+          <span class="law {% if nn %}lp{% elif loop.index % 2 == 0 %}lb{% else %}le{% endif %}" style="width:fit-content">
+            {{ law }}{% if nn %} ⚠{% endif %}<span class="tt"><strong>{{ law_names.get(law, law) }}</strong></span>
+          </span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if tmpl_version or tmpl_path or example_path or avatar_path or artifact_status %}
+    <!-- Artifact Info -->
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📎</div><div class="ct">Artifact Info</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:9px;font-size:12px;">
+        {% if artifact_status %}<div><div class="lbl">Status</div><span class="ao {% if artifact_status.upper() in ['DONE','APPROVED','RENDERED'] %}ao-ok{% elif artifact_status.upper() in ['IN_PROGRESS','IP'] %}ao-ip{% else %}ao-wait{% endif %}">{{ artifact_status }}</span></div>{% endif %}
+        {% if tmpl_version %}<div><div class="lbl">Template Version</div><div style="font-weight:600;">v{{ tmpl_version }}</div></div>{% endif %}
+        {% if tmpl_path %}<div><div class="lbl">Template</div><div style="font-family:monospace;font-size:11px;color:#1d4ed8;word-break:break-all;">{{ tmpl_path }}</div></div>{% endif %}
+        {% if example_path %}<div><div class="lbl">Example</div><div style="font-family:monospace;font-size:11px;color:#1d4ed8;word-break:break-all;">{{ example_path }}</div></div>{% endif %}
+        {% if avatar_path %}<div><div class="lbl">Avatar</div><div style="font-family:monospace;font-size:11px;color:#4338ca;word-break:break-all;">{{ avatar_path }}</div></div>{% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div><!-- end side -->
+</div><!-- end body -->
+
+<footer>
+  <div style="display:flex;align-items:center;gap:8px;"><div class="ft-dot"></div>{% if footer_id %}{{ footer_id }} · {% endif %}Stage {{ stage }}{% if render_gate.get('status') %} · {{ render_gate.status | upper }}{% endif %}</div>
+  <div>{{ footer_proj }}</div>
+  {% if footer_branch %}<div>branch: {{ footer_branch }}</div>{% endif %}
+</footer>
+
+<script>
+function rgDecision(d) {
+  var el = document.getElementById('rg-decision');
+  el.style.display = 'block';
+  if (d === 'APPROVE') {
+    el.style.cssText = 'background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x2705; <strong>APPROVE</strong> — This button is a reminder. To actually record approval, tick <code>- [x] APPROVE</code> in the PROPOSAL.md §Render Gate section.';
+  } else if (d === 'ENHANCE') {
+    el.style.cssText = 'background:rgba(124,58,237,.15);color:#c4b5fd;border:1px solid rgba(124,58,237,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x1F504; <strong>ENHANCE</strong> — Describe the enhancement needed in PROPOSAL.md §Render Gate.';
+  } else {
+    el.style.cssText = 'background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x274C; <strong>REJECT</strong> — Document the blocker in PROPOSAL.md §Render Gate. Stage does NOT advance.';
+  }
+}
+</script>
+
+</body>
+</html>

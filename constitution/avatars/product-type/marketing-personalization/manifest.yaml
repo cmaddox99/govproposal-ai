@@ -1,0 +1,263 @@
+# Marketing Personalization & Targeted Offers Avatar Manifest
+
+avatar:
+  id: avatar-product-marketing-personalization
+  type: product
+  name: "Marketing Personalization & Targeted Offers"
+  version: "1.2.0"
+  created: "2026-05-01"
+  last_updated: "2026-06-01"
+
+domain:
+  category: "Customer Offer Targeting & Campaign Management"
+  description: |
+    American Airlines marketing personalization delivers the right offer to the right
+    customer at the right time across email (EMFT/Marigold), app (Cassandra/API),
+    web, and loyalty (Ventana) channels. The platform — known as TOP (Targeted Offer
+    Platform) — covers offer selection and ranking, propensity scoring, customer
+    segmentation, campaign A/B experimentation, and offer attribution.
+    Key value drivers: reducing customer fatigue, maximizing incremental revenue,
+    improving 90-day re-engagement, and earning customer trust through relevance.
+
+  personas:
+    - Campaign Manager
+    - Data Scientist
+    - CRM Analyst
+    - Marketing Strategist
+    - Customer (Traveler)
+  personas_file: "examples/personas.md"
+
+core_journeys:
+  - "Offer Selection & Ranking"
+  - "Campaign Experiment Design (A/B Testing)"
+  - "Customer Segmentation & Targeting"
+  - "Offer Delivery & Attribution"
+  - "Retention Win-Back Campaign"
+
+activates:
+  skills:
+    - skill-spec-governance
+    - skill-02-user-journey-mapping
+    - skill-02-research-synthesis
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+  workflows:
+    - product-discovery-stage-a-f
+    - legacy-rescue-decision-track
+    - legacy-rescue-refactor
+dependencies:
+  - "Customer Data Platform (segmentation source)"
+  - "Propensity Model Service (TOP scoring API)"
+  - "EMFT / Marigold API (email delivery)"
+  - "Cassandra (app/web offer API)"
+  - "Unity Catalog (offer history Delta tables)"
+  - "MLflow / Databricks (model registry)"
+
+specializes_laws:
+  - id: PRD-1.1
+    title: "Continuous Discovery"
+    description: |
+      Continuously research customer offer engagement, CTR patterns, and audience data
+      staleness signals. Analyze campaign performance, unsubscribe rates, and destination
+      mismatch patterns to prioritize TOP platform improvements.
+    key_practices:
+      - "Weekly campaign CTR analysis by customer segment and offer type"
+      - "Monthly customer interviews on offer relevance and frequency fatigue"
+      - "Track offer fatigue signals: unsubscribe rate by send frequency cohort"
+      - "Analyze audience staleness: measure time between segmentation refresh and offer delivery"
+    example_file: examples/PRD-1.1-discovery.md
+    law_citations:
+      - "Customer offer engagement discovery and fatigue signal analysis"
+      - "TOP platform improvement prioritization through usage patterns"
+
+  - id: PRD-1.2
+    title: "Problem-First Development"
+    description: |
+      Before building new personalization features, validate the customer problem.
+      Destination-customer mismatch, audience data staleness, and campaign setup friction
+      must be root-caused before proposing solutions.
+    key_practices:
+      - "Validate mismatch root cause before adding new segmentation dimensions"
+      - "A/B test latency: measure campaign setup time before automating it"
+      - "Define problem statement and evidence before any TOP platform feature begins design"
+    example_file: examples/PRD-1.2-problem-first.md
+    law_citations:
+      - "Personalization feature problem validation"
+
+  - id: PRD-1.5
+    title: "Evidence-Based Decision Law"
+    description: |
+      Personalization decisions must be grounded in measurable customer behavior data.
+      CTR, conversion lift, and revenue attribution from A/B experiments must drive
+      feature investment, not assumption.
+    key_practices:
+      - "Every new propensity model variant must have A/B test results before production rollout"
+      - "Attribution: measure incremental revenue lift from personalized vs. control group"
+      - "Audience refresh: measure CTR uplift from real-time vs. T-24h stale audience"
+    example_file: examples/PRD-1.5-evidence-based.md
+    law_citations:
+      - "Evidence-based personalization investment and A/B test results"
+
+  - id: PRD-2.1
+    title: "User Journey Mapping"
+    description: |
+      Map the offer delivery journey from audience selection through offer delivery to
+      attribution measurement. Capture both Campaign Manager and Customer journeys.
+    key_practices:
+      - "Map campaign journey: Segment → Score → Rank → Deliver → Track → Attribute"
+      - "Map customer journey: Receive offer → Engage or ignore → Convert or lapse"
+      - "Identify channel journeys: email (EMFT/Marigold), app (Cassandra), web, loyalty (Ventana)"
+      - "Measure open rate, CTR, and conversion at each journey step by channel"
+    example_file: examples/PRD-2.1-journey.md
+    law_citations:
+      - "Offer delivery journey from segmentation to attribution"
+      - "Multi-channel customer offer experience mapping"
+
+  - id: PRD-5.1
+    title: "Metrics & Success Definition"
+    description: |
+      Define and track KPIs for offer relevance, campaign performance, customer retention,
+      and revenue attribution. Connect offer metrics to passenger lifetime value.
+    key_practices:
+      - "Offer relevance: CTR by segment, offer type, and channel (target >2.5%)"
+      - "Campaign performance: conversion rate, incremental revenue lift vs. control"
+      - "Fatigue: unsubscribe rate, opt-out rate per campaign"
+      - "Retention: 90-day re-engagement rate for lapsed customers"
+    example_file: examples/PRD-5.1-mvp.md
+    law_citations:
+      - "Marketing personalization KPIs for relevance and revenue"
+
+  - id: PRD-6.2
+    title: "Retention Law"
+    description: |
+      Personalization products must drive passenger retention and re-engagement, not just
+      one-time conversion. Win-back campaigns for lapsed AAdvantage members and 90-day
+      re-engagement tracking are primary retention levers.
+    key_practices:
+      - "Track 90-day re-engagement rate as primary retention KPI for personalization"
+      - "Measure win-back campaign success by member segment and offer type"
+      - "Loyalty-aware personalization: AAdvantage tier must influence offer selection"
+    example_file: examples/PRD-6.2-retention.md
+    law_citations:
+      - "Personalization-driven customer retention and win-back campaigns"
+
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: |
+      CAN-SPAM Act governs commercial email to US customers: unsubscribe mechanism, physical
+      address, no deceptive subject lines. GDPR Article 6(1)(a) consent required for EU
+      marketing communications. CCPA: California customers may opt-out of targeted advertising.
+      TCPA governs SMS marketing.
+    key_practices:
+      - "CAN-SPAM: unsubscribe processed within 10 business days — never re-subscribe without consent"
+      - "GDPR: separate consent for marketing vs. transactional communications; consent withdrawal honored"
+      - "CCPA: 'Do Not Sell or Share' opt-out must suppress from lookalike audience targeting"
+      - "TCPA: explicit written consent required for SMS marketing campaigns"
+    example_file: examples/BUS-2.1-regulatory-mapping.md
+    law_citations:
+      - "CAN-SPAM and GDPR compliance for email marketing campaigns"
+      - "CCPA opt-out for targeted advertising and lookalike audiences"
+
+  - id: BUS-4.3
+    title: "Data Subject Rights"
+    description: |
+      Customers have GDPR Article 15 (access), Article 17 (erasure), and Article 21
+      (object to direct marketing) rights for their segmentation data, offer history,
+      and propensity scores. CCPA gives California customers right to know and delete
+      their behavioral data used for targeting.
+    key_practices:
+      - "Erasure: remove customer from all segmentation models and suppress future targeting within 30 days"
+      - "Access: provide customer's segment membership, offer history, and propensity score tier"
+      - "Object to marketing: suppress from all marketing channels immediately"
+      - "CCPA deletion: remove from Cassandra/Unity Catalog offer history tables"
+    example_file: examples/BUS-4.3-data-subject-rights.md
+    law_citations:
+      - "GDPR Article 21 object to direct marketing for EU customers"
+      - "CCPA right to delete behavioral targeting data"
+
+  - id: BUS-7.1
+    title: "Audit Trail Law"
+    description: |
+      All offer delivery events, A/B test assignments, consent changes, and data subject
+      rights requests must be recorded in an audit log for regulatory compliance and
+      attribution accountability.
+    key_practices:
+      - "Log every offer delivery with: customer_id_hash, segment_id, offer_id, channel, timestamp"
+      - "A/B test assignment must be immutably recorded for audit and attribution"
+      - "Consent change events must be audit-logged with timestamp and source"
+      - "Data subject rights requests: log receipt, processing, completion with timestamps"
+    example_file: examples/BUS-7.1-audit-trail.md
+    law_citations:
+      - "Offer delivery audit log for attribution and regulatory compliance"
+      - "Consent event audit trail for GDPR/CCPA accountability"
+
+project_structure:
+  repos:
+    - name: mobile-offers-bff
+      path: bff/mobile-offers-bff/
+      stack: "Java 25 / Spring Boot 4.0.5"
+      description: "Primary offer serving BFF — offer selection, ranking, and delivery to mobile"
+      key_packages:
+        - "com.aa.offers.mmx.controller (MMXOffersController)"
+        - "com.aa.offers.mmx.service (MMXOffersService, MMXOffersServiceImpl)"
+        - "com.aa.offers.mmx.builder (MMXResponseBuilder)"
+        - "com.aa.offers.connector (OffersConnector, OffersFallbackService)"
+        - "com.aa.offers.mmx.domain.presentation (MMXResponse, MMXOffer, PassengerOffer)"
+        - "com.aa.offers.mmx.domain.upstream (DcfProductInfo, DcfProduct)"
+      integration_tests: "src/integration-test/java/"
+    - name: aa-ct-mobile-airship
+      path: bff/aa-ct-mobile-airship/
+      stack: "Java 25 / Spring Boot 4.0.5 / Kafka"
+      description: "Push notification and messaging BFF — Kafka listeners for PNR feed and ACS events; CHUB erasure for GDPR right-to-erasure"
+      key_packages:
+        - "com.aa.ct.airship.bff.controllers (AirshipController)"
+        - "com.aa.ct.airship.bff.configuration (KafkaConfig, AirshipConfiguration)"
+        - "com.aa.ct.airship.bff.dto (AirshipAction, StatusChangeRequest, DeviceType)"
+        - "com.aa.ct.airship.bff.dto.cps (CPSRulesEngineResponse, Preferences)"
+        - "com.aa.ct.airship.bff.dto.paxhub (PnrDetailsServiceResponse)"
+        - "com.aa.ct.airship.bff.dto.chub (UserKey, StatusPayload, ServiceBusTopicMessage)"
+      docs:
+        - "PnrFeedListenerFlow.md"
+        - "AcsEventListenerFlow.md"
+        - "ChubErasureFlow.md"
+    - name: ai-inspiration-service
+      path: bff/ai-inspiration-service/
+      stack: "Java 25 / Spring Boot 4.0.3"
+      description: "AI-driven inspiration service — destination recommendations via AiServiceConnector; HPA autoscaling"
+      key_packages:
+        - "com.aa.ct.ai.inspiration.api.controller (DestinationsController)"
+        - "com.aa.ct.ai.inspiration.api.connector (AiServiceConnector, FaremapServiceConnector)"
+        - "com.aa.ct.ai.inspiration.config.rest (AiFoundaryConfig, FaremapConfig)"
+  test_pattern: "*Test.java"
+  ci_workflows:
+    - ".github/workflows/deploy-QA.yaml"
+    - ".github/workflows/deploy-IQA.yaml"
+    - ".github/workflows/production-deployment.yaml"
+
+commands:
+  build: "./gradlew clean build"
+  test: "./gradlew test"
+  coverage: "./gradlew jacocoTestReport"
+  run_local: "./gradlew bootRun"
+
+conventions:
+  - "Kafka event listeners for PNR feed (PnrFeedListenerFlow) and ACS events (AcsEventListenerFlow)"
+  - "CHUB erasure events handled by ChubErasureFlow for GDPR right-to-erasure"
+  - "HPA autoscaling configured for ai-inspiration-service (variable load)"
+  - "Integration tests in src/integration-test/java/ for end-to-end offer serving"
+  - "Docker images at docker.aa.com/{env}/{app-name}"
+  - "All offer decisions written to append-only audit log (BUS-7.1)"
+
+tags:
+  - product
+  - marketing
+  - personalization
+  - offers
+  - campaign-management
+  - a-b-testing
+  - propensity-models
+  - customer-retention

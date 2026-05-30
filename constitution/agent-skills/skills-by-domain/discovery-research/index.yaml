@@ -1,0 +1,34 @@
+domain: discovery-research
+title: Discovery & Research
+description: User research, journey mapping, problem discovery
+version: 2.0.0
+laws:
+- PRD-2.1
+- PRD-3.1
+- PRD-3.2
+- BUS-1.1
+keywords:
+- research
+- discovery
+- user
+- journey
+- problem
+skills:
+  - file: spec-governance.md
+    name: Hangar SDD Spec Governance
+    triggers: [new feature, start a change, next step, scaffold a proposal, archive this work, spec-driven, check compliance]
+    laws: [ENG-11.1, ENG-11.2, BUS-7.1, ENG-4.1, PRD-2.1]
+  - file: product-discovery-orchestration.md
+    name: Product Discovery Orchestration
+    triggers: [start a product discovery, explore this problem, begin discovery, stage a-f discovery, justify feature, business case for feature, build vs buy, validate problem, product investment, feature prioritization, why should we build this, customer problem, justify this feature, what problem does this feature solve, haven't identified the user problem, validate the problem is real, evidence before making a product decision, stage gate criteria, validate that the problem, validate an assumption]
+    laws: [PRD-2.1, PRD-2.5, BUS-7.1, PRD-2.3, PRD-4.1]
+  - file: 02-user-journey-mapping.md
+    name: User Journey Mapping
+    triggers: [user journey, pain points, user problems, discovery, journey map]
+    laws: [PRD-3.1, PRD-3.2, PRD-2.3]
+    examples: 02-user-journey-mapping-examples.md
+  - file: 30-taxonomy-governed-avatar-enrichment.md
+    name: Taxonomy-Governed Avatar Enrichment
+    triggers: [avatar enrichment, product taxonomy, taxonomy governance, brownfield enrichment, reject wrong taxonomy]
+    laws: [PRD-3.1, PRD-5.1, BUS-1.1, BUS-7.1, ENG-10.1]
+count: 4

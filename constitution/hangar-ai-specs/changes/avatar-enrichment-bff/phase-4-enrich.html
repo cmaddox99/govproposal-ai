@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 4 — Build/Correct/Enrich | BFF Avatar Clinic</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; color: #1a1a2e; margin: 0; padding: 24px; }
+  h1 { font-size: 1.6rem; font-weight: 700; }
+  h2 { font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; border-bottom: 2px solid #e0e0e0; padding-bottom: 6px; }
+  h3 { font-size: 0.96rem; font-weight: 600; margin: 16px 0 8px; }
+  .header { background: linear-gradient(135deg, #e65100, #bf360c); color: white; border-radius: 10px; padding: 24px 28px; margin-bottom: 28px; }
+  .header .meta { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .header .meta span { background: rgba(255,255,255,0.18); border-radius: 6px; padding: 4px 12px; font-size: 0.82rem; }
+  .section { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+  th { background: #f0f4f8; font-weight: 600; text-align: left; padding: 8px 10px; border-bottom: 2px solid #dde; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; }
+  .corrected { background: #e0f2f1; color: #00695c; }
+  .enriched { background: #f3e5f5; color: #6a1b9a; }
+  .new { background: #e8eaf6; color: #283593; }
+  .pass { background: #e8f5e9; color: #2e7d32; }
+  .verdict { padding: 14px 18px; border-radius: 8px; font-weight: 600; margin-top: 12px; }
+  .verdict.green { background: #e8f5e9; color: #1b5e20; border-left: 5px solid #43a047; }
+  code { font-size: 0.82rem; background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+  footer { text-align: center; color: #aaa; font-size: 0.78rem; margin-top: 32px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 14px 0; }
+  .stat { background: #f0f4f8; border-radius: 8px; padding: 12px; text-align: center; }
+  .stat .num { font-size: 1.8rem; font-weight: 700; color: #e65100; }
+  .stat .lbl { font-size: 0.8rem; color: #555; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>⚙️ Phase 4 — Build / Correct / Enrich</h1>
+  <p>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF Session</p>
+  <div class="meta"><span>📅 2026-04-27</span><span>18 BLOCKINGs resolved</span><span>8 advisories resolved</span><span>3 new tech use cases</span><span>3 product avatar enrichments</span></div>
+</div>
+
+<div class="section">
+  <div class="summary-grid">
+    <div class="stat"><div class="num">18</div><div class="lbl">BLOCKINGs resolved</div></div>
+    <div class="stat"><div class="num">8</div><div class="lbl">Advisories resolved</div></div>
+    <div class="stat"><div class="num">7</div><div class="lbl">Files trimmed (saved -detail.md)</div></div>
+    <div class="stat"><div class="num">3</div><div class="lbl">New java-spring use cases</div></div>
+    <div class="stat"><div class="num">2</div><div class="lbl">New product use cases</div></div>
+    <div class="stat"><div class="num">4</div><div class="lbl">Avatars updated</div></div>
+  </div>
+</div>
+
+<!-- JAVA-SPRING TRACK 1 -->
+<div class="section">
+  <h2>avatar-java-spring — Track 1: Corrections (8 BLOCKINGs + 5 advisories)</h2>
+  <table>
+    <thead><tr><th>File</th><th>Change</th><th>Before</th><th>After</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr><td><code>manifest.yaml</code></td><td>skill- prefix removed (4 entries); Spring Boot version corrected; ENG-10.1 + ENG-11.1 added to specializes_laws</td><td>skill-06-atomic-tdd...</td><td>06-atomic-tdd...</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>guidance.md</code></td><td>Trimmed 691w → 271w. AA BFF fleet reality added (ServiceLocator, mutable singletons, BigDecimal, copy-paste versioning)</td><td>691w BLOCKING</td><td>271w ✅</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>guidance-detail.md</code></td><td>NEW companion — full original guidance (691w)</td><td>—</td><td>691w</td><td><span class="badge new">NEW</span></td></tr>
+      <tr><td><code>examples/ENG-2.1-aggregates.md</code></td><td>Trimmed 1,517w → 278w. AA god-class evidence table added (MobileUtils 2,287 LOC, CuratedFlightEvent 2,139 LOC, ReservationResponseBuilder 1,654 LOC, ConfirmationAnalyticsBuilder 1,564 LOC)</td><td>1,517w BLOCKING</td><td>278w ✅</td><td><span class="badge enriched">ENRICHED</span></td></tr>
+      <tr><td><code>examples/ENG-3.1-complexity.md</code></td><td>Trimmed 1,185w → 291w. Real AA god-class table with confirmed bug counts per file</td><td>1,185w BLOCKING</td><td>291w ✅</td><td><span class="badge enriched">ENRICHED</span></td></tr>
+      <tr><td><code>examples/ENG-2.2-layers.md</code></td><td>Trimmed 1,046w → 241w. ServiceLocator HARD_BLOCK pattern + thread-safety singleton HARD_BLOCK (TravelHubResponseBuilderV2/V3/V4)</td><td>1,046w BLOCKING</td><td>241w ✅</td><td><span class="badge enriched">ENRICHED</span></td></tr>
+      <tr><td><code>examples/ENG-4.1-atomic-tdd.md</code></td><td>Trimmed 818w → 224w. AA BFF test pattern + what kills coverage table</td><td>818w BLOCKING</td><td>224w ✅</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>examples/ENG-3.5-naming.md</code></td><td>Trimmed 782w → 234w. Getter-naming anti-pattern from AA fleet + MobileUtils "Utils" naming warning</td><td>782w BLOCKING</td><td>234w ✅</td><td><span class="badge enriched">ENRICHED</span></td></tr>
+      <tr><td><code>examples/ENG-3.3-demeter.md</code></td><td>Trimmed 757w → 211w. SeatsBuilder AA violation example (O(n³) + 4-layer chain)</td><td>757w BLOCKING</td><td>211w ✅</td><td><span class="badge enriched">ENRICHED</span></td></tr>
+      <tr><td><code>examples/ENG-3.2-immutability.md</code></td><td>617w — already within budget. No change needed.</td><td>617w ✅</td><td>617w ✅</td><td><span class="badge pass">PASS</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Track 2: Enrich — New Use Cases</h3>
+  <table>
+    <thead><tr><th>Use Case</th><th>Words</th><th>Laws</th><th>AA Evidence</th></tr></thead>
+    <tbody>
+      <tr><td><code>use-cases/service-locator-to-di/README.md</code></td><td>302w</td><td>ENG-2.2, ENG-4.1</td><td>Minilith ReservationResponseBuilder — 16 ServiceLocator call sites, incremental migration to constructor injection</td></tr>
+      <tr><td><code>use-cases/currency-precision/README.md</code></td><td>292w</td><td>ENG-3.1, ENG-4.1</td><td>mobile-change-bff ReshopBuilder CRITICAL bug — BigDecimal(double) precision loss, wrong prices to customers</td></tr>
+      <tr><td><code>use-cases/copy-paste-versioning/README.md</code></td><td>354w</td><td>ENG-3.1, ENG-2.1</td><td>travelhub-bff V2/V3/V4 — 1,763 LOC cloned, thread-safety bug exists in all 3, fix via abstract base class</td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green" style="margin-top:8px">✅ java-spring: 8 BLOCKINGs resolved, 5 advisories resolved, version 2.0.0 → 2.1.0, 3 new use cases</div>
+</div>
+
+<!-- LOYALTY TRACK 1 -->
+<div class="section">
+  <h2>avatar-loyalty-aadvantage — Track 1: Corrections (10 BLOCKINGs + 3 advisories)</h2>
+  <table>
+    <thead><tr><th>File</th><th>Change</th><th>Before</th><th>After</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr><td><code>manifest.yaml</code></td><td>ID corrected: avatar-product-loyalty → avatar-loyalty-aadvantage; skill- prefix removed (8 entries); skill-02-research-synthesis removed (no matching file); ENG-10.1 + ENG-11.1 added; version 1.0.0 → 1.1.0</td><td>BLOCKING ID mismatch</td><td>ID correct ✅</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>guidance.md</code></td><td>Trimmed 2,182w → 222w. BFF intelligence note added (loyalty-bff 5.3/10, aadvantage-bff 5.6/10)</td><td>2,182w BLOCKING</td><td>222w ✅</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>examples/PRD-5.1-metrics.md</code></td><td>Trimmed 2,297w → 218w. Analytics bug table added (3 confirmed analytics bugs that corrupt metrics)</td><td>2,297w BLOCKING</td><td>218w ✅</td><td><span class="badge enriched">ENRICHED</span></td></tr>
+      <tr><td><code>examples/PRD-2.1-journey.md</code></td><td>Trimmed 2,082w → 228w. BFF touchpoint quality table added</td><td>2,082w BLOCKING</td><td>228w ✅</td><td><span class="badge enriched">ENRICHED</span></td></tr>
+      <tr><td><code>examples/PRD-3.1-roadmap.md</code></td><td>Trimmed 2,066w → 209w. BFF quality stratification rules for roadmap added</td><td>2,066w BLOCKING</td><td>209w ✅</td><td><span class="badge enriched">ENRICHED</span></td></tr>
+      <tr><td><code>examples/PRD-4.1-mvp.md</code></td><td>Trimmed 1,174w → 218w. BFF quality constraint for MVP timelines added</td><td>1,174w BLOCKING</td><td>218w ✅</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>examples/PRD-1.1-discovery.md</code></td><td>Trimmed 1,326w → 233w. AA member research constraints (ENG-6.4 compliance)</td><td>1,326w BLOCKING</td><td>233w ✅</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>examples/personas.md</code></td><td>Trimmed 1,534w → 183w. Casual/Frequent/Elite/Program Manager personas preserved</td><td>1,534w BLOCKING</td><td>183w ✅</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>use-cases/retention-engagement/README.md</code></td><td>Trimmed 2,762w → 384w. BFF dependency table + loyalty BFF quality context</td><td>2,762w BLOCKING</td><td>384w ✅</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>use-cases/member-acquisition/README.md</code></td><td>Trimmed 1,857w → 372w. Airship ClassCastException risk for enrollment notifications added</td><td>1,857w BLOCKING</td><td>372w ✅</td><td><span class="badge enriched">ENRICHED</span></td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green" style="margin-top:8px">✅ loyalty-aadvantage: 10 BLOCKINGs resolved, 3 advisories resolved, version 1.0.0 → 1.1.0</div>
+</div>
+
+<!-- PRODUCT AVATAR ENRICHMENTS -->
+<div class="section">
+  <h2>Product Avatar BFF Enrichments</h2>
+  <table>
+    <thead><tr><th>Avatar</th><th>New File</th><th>Words</th><th>Laws</th><th>Key Evidence</th><th>Version</th></tr></thead>
+    <tbody>
+      <tr><td><code>avatar-check-in-travel</code></td><td><code>use-cases/bff-checkin-layer/README.md</code></td><td>341w</td><td>PRD-4.1, ENG-11.1, ENG-3.1</td><td>Year-boundary Dec 31/Jan 1 CRITICAL bug in FlifoAdapter; 177-line god method; HTTP in getter names</td><td>1.2.0 → 1.3.0</td></tr>
+      <tr><td><code>avatar-passenger-booking</code></td><td><code>use-cases/bff-booking-layer/README.md</code></td><td>322w</td><td>PRD-1.1, PRD-4.1, ENG-11.1</td><td>booking-bff 7.4/10 reference impl; airfare-search-bff currency precision CRITICAL; multi-passenger bug</td><td>1.2.0 → 1.3.0</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF Session · 2026-04-27</footer>
+</body>
+</html>

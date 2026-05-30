@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposal — Hangar AI Constitution</title>
+<style>
+/* ── AA Constitutional Design System ── */
+@page { size: 1088px 1408px; margin: 0; }
+
+:root {
+  --aa-blue: #003087;
+  --aa-red:  #C8102E;
+  --ink:     #17202a;
+  --muted:   #5f6d7a;
+  --line:    #d9e1ea;
+  --soft:    #f3f7fb;
+  --soft-2:  #eef3f8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* ── Page layout ── */
+.page {
+  width: 1088px;
+  min-height: 1408px;
+  padding: 94px 88px 100px;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  page-break-after: always;
+}
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 12px;
+  background: linear-gradient(90deg, var(--aa-blue), var(--aa-red));
+}
+.page::after {
+  content: "✈";
+  position: absolute;
+  right: 34px; bottom: -10px;
+  font-size: 240px;
+  color: var(--aa-blue);
+  opacity: .03;
+  transform: rotate(18deg);
+  pointer-events: none;
+}
+.page.cover {
+  background:
+    radial-gradient(circle at 85% 16%, rgba(0,48,135,.08), transparent 22%),
+    linear-gradient(180deg, #fbfcfe 0%, #f1f6fa 100%);
+}
+.footer {
+  position: absolute;
+  left: 88px; right: 88px; bottom: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5ebf1;
+  padding-top: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #7f8b97;
+}
+.footer .pn { color: var(--aa-blue); font-weight: 800; }
+
+/* ── Typography ── */
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--aa-red);
+}
+h1 {
+  margin-top: 22px;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--aa-blue);
+  font-weight: 850;
+  max-width: 820px;
+}
+h2 {
+  margin-top: 32px;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -.6px;
+  color: var(--aa-blue);
+  font-weight: 800;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+h3 { margin-top: 20px; font-size: 19px; color: var(--aa-blue); font-weight: 700; }
+h4 { margin-top: 16px; font-size: 16px; color: var(--ink); font-weight: 700; }
+p  { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #32404d; }
+ul, ol { margin-top: 10px; padding-left: 24px; }
+li { font-size: 15px; line-height: 1.55; color: #32404d; margin-top: 4px; }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  background: var(--soft-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+pre {
+  margin-top: 14px;
+  background: #1e2832;
+  color: #c9d1d9;
+  padding: 16px 18px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.4; }
+th { border-top: 0; background: var(--soft); color: var(--aa-blue); font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+blockquote { border-left: 4px solid var(--aa-blue); margin-top: 14px; padding: 10px 16px; background: var(--soft); color: var(--muted); font-size: 14px; }
+
+/* ── Meta / stat cards ── */
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; max-width: 820px; }
+.meta-card { border: 1px solid var(--line); background: #fff; padding: 16px 18px; }
+.meta-card .k { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: var(--aa-red); font-weight: 800; }
+.meta-card .v { margin-top: 7px; font-size: 17px; line-height: 1.4; color: #23303d; }
+.summary-band { margin-top: 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card { border: 1px solid var(--line); background: #fff; padding: 14px; }
+.stat-card .n { font-size: 34px; line-height: 1; color: var(--aa-blue); font-weight: 850; letter-spacing: -1px; }
+.stat-card .l { margin-top: 7px; font-size: 13px; line-height: 1.35; color: #52606d; }
+
+/* ── Status badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.status-badge.proposed  { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.implemented { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.archived  { background: var(--soft-2); color: var(--muted); border: 1px solid var(--line); }
+.status-badge.accepted  { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.deprecated { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.high   { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.medium { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.low    { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+
+/* ── Chip row ── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--aa-blue);
+  letter-spacing: .3px;
+}
+
+/* ── ADR header ── */
+.adr-header {
+  border: 2px solid var(--aa-blue);
+  padding: 20px 24px;
+  margin-top: 24px;
+  background: var(--soft);
+}
+.adr-header .adr-num { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); font-weight: 700; }
+.adr-header h1 { margin-top: 8px; font-size: 32px; }
+.adr-header .adr-meta { display: flex; gap: 20px; margin-top: 14px; align-items: center; flex-wrap: wrap; }
+.adr-header .adr-meta-item { font-size: 13px; color: var(--muted); }
+.adr-header .adr-meta-item strong { color: var(--ink); }
+
+/* ── Confidence band ── */
+.confidence-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-left: 6px solid var(--aa-blue);
+  background: var(--soft);
+  margin-top: 24px;
+}
+.confidence-band .cb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.confidence-band.high  { border-left-color: #1b7a2b; }
+.confidence-band.medium { border-left-color: #b36b00; }
+.confidence-band.low   { border-left-color: var(--aa-red); }
+
+/* ── Tasks / checklist ── */
+.task-done, .task-pending {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 5px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.task-done .cb   { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; background: #1b7a2b; border: 2px solid #1b7a2b; display: flex; align-items: center; justify-content: center; }
+.task-done .cb::after { content: "✓"; color: #fff; font-size: 11px; font-weight: 900; }
+.task-pending .cb { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; border: 2px solid var(--aa-blue); }
+.task-done .task-text   { color: #52606d; text-decoration: line-through; }
+.task-pending .task-text { color: #32404d; }
+.phase-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+.phase-num {
+  background: var(--aa-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+.progress-table { margin-top: 20px; }
+
+/* ── Law citation tooltips (Task 4.4) ── */
+.law-cite {
+  position: relative;
+  display: inline;
+  color: var(--aa-blue);
+  font-weight: 700;
+  border-bottom: 1px dashed var(--aa-blue);
+  cursor: help;
+  white-space: nowrap;
+}
+.law-cite[data-non-negotiable="true"] {
+  color: var(--aa-red);
+  border-bottom-color: var(--aa-red);
+}
+.law-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 9999;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2832;
+  color: #e8edf2;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: normal;
+  min-width: 220px;
+  max-width: 340px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: opacity .15s ease, visibility .15s ease;
+  text-align: left;
+  font-weight: 400;
+}
+.law-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e2832;
+}
+.law-tooltip .law-summary { font-size: 12px; color: #9aaab8; margin-top: 4px; display: block; }
+.law-tooltip em { color: #f0a500; font-style: normal; font-size: 11px; font-weight: 700; }
+.law-cite:hover .law-tooltip,
+.law-cite:focus .law-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+/* Flip tooltip below when near top of viewport */
+.law-cite.flip-below .law-tooltip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.law-cite.flip-below .law-tooltip::after {
+  top: auto; bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1e2832;
+}
+
+@media print {
+  .law-tooltip { display: none; }
+  .law-cite { border-bottom: none; color: inherit; font-weight: inherit; }
+}
+</style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+<!-- COVER PAGE -->
+<div class="page cover">
+  <div class="eyebrow">Hangar AI Constitution — Spec-Driven Development</div>
+  <div style="margin-top: 20px;">
+    <span class="status-badge proposed">PROPOSED</span>
+    
+  </div>
+  <h1>Governance Proposal</h1>
+  
+  
+  <div class="footer">
+    <div>Governance Proposal</div>
+    <div class="pn">1</div>
+  </div>
+</div>
+
+<!-- CONTENT PAGES -->
+<div class="page content">
+  <h1>Stage C: Jobs-To-Be-Done — Evidence Artifact</h1>
+<p><strong>Changeset:</strong> <code>build-adoption-guide-2026-001</code>
+<strong>Stage:</strong> C — Jobs-To-Be-Done (<span class="law-cite" data-law-id="PRD-2.3" data-non-negotiable="false">PRD-2.3<span class="law-tooltip"><strong>Jobs-to-be-Done Law</strong></span></span>, <span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span>, <span class="law-cite" data-law-id="PRD-3.2" data-non-negotiable="false">PRD-3.2<span class="law-tooltip"><strong>Journey Mapping Law</strong></span></span>)
+<strong>Authority:</strong> <span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ (Discovery Stage-Gate Law), <span class="law-cite" data-law-id="PRD-2.3" data-non-negotiable="false">PRD-2.3<span class="law-tooltip"><strong>Jobs-to-be-Done Law</strong></span></span> (Jobs-to-be-Done Law), <span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span> (Persona Development Law), <span class="law-cite" data-law-id="PRD-3.2" data-non-negotiable="false">PRD-3.2<span class="law-tooltip"><strong>Journey Mapping Law</strong></span></span> (Journey Mapping Law)
+<strong>Status:</strong> v1.2 — 2026-05-06 — JURY-CLEARED. DC-07 (Human Agency &amp; Adaptive Scope) ratified 6/6 APPROVE (2 rounds). All 7 design constraints binding on IMPLEMENT.
+<strong>Gate:</strong> Stage D entry — ✅ OPEN for Coach path vertical slice | Architect path BLOCKED until SD-OBL-1 / SC-OBL-2 satisfied</p>
+<hr />
+<h2>Pre-Stage C Gate Verification</h2>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Requirement</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>G3</strong></td>
+<td><code>stage-b-evidence.md</code> jury-validated at Moderate before Stage C</td>
+<td>✅ CLEARED — unanimous Round 2, 2026-05-05</td>
+</tr>
+<tr>
+<td><strong>G5</strong></td>
+<td><code>compliance/threat-model.md</code> filed (<span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</td>
+<td>✅ FILED v1.0 — awaiting Tomás Reyes + Alexandra Pierce APPROVE before IMPLEMENT</td>
+</tr>
+<tr>
+<td><strong>G6</strong></td>
+<td><code>compliance/data-classification.md</code> filed (<span class="law-cite" data-law-id="BUS-3.1" data-non-negotiable="true">BUS-3.1<span class="law-tooltip"><strong>Data Classification Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-6.4" data-non-negotiable="true">ENG-6.4<span class="law-tooltip"><strong>Data Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</td>
+<td>✅ FILED v1.0 — awaiting Carlos Mendez + Alexandra Pierce APPROVE before IMPLEMENT</td>
+</tr>
+<tr>
+<td><strong>G7</strong></td>
+<td><code>compliance/risk-register.md</code> filed (<span class="law-cite" data-law-id="BUS-6.1" data-non-negotiable="true">BUS-6.1<span class="law-tooltip"><strong>Risk Assessment Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</td>
+<td>✅ FILED v1.0 — awaiting Carlos Mendez + Alexandra Pierce APPROVE before IMPLEMENT</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> G5/G6/G7 gates require FILED before Stage C begins; jury APPROVE on these compliance artifacts is required before Stage D IMPLEMENT begins. This is a Stage D entry obligation — not a Stage C blocker.</p>
+</blockquote>
+<hr />
+<h2>§1. Persona Definitions (<span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span>)</h2>
+<h3>How to Read This Section</h3>
+<p>Personas are evidence-based per <span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span>. Each includes:</p>
+<ul>
+<li><strong>Evidence basis</strong> — interview count and data source</li>
+<li><strong>Behavioral attributes</strong> — goals, frustrations, context</li>
+<li><strong><span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span> exception note</strong> — where fewer than 5 interviews are on file</li>
+</ul>
+<hr />
+<h3>Persona 1 — Technical Coach</h3>
+<pre><code>Persona Name: Technical Coach (internal AA AI governance coach)
+
+Who they are:
+- Role/context: Internal American Airlines engineers or architects who have been
+  designated to onboard and coach engineering teams on Hangar AI Constitution adoption.
+  They run onboarding sessions, guide teams through the adoption workflow, and serve
+  as the primary point of human escalation when teams have governance questions.
+- Goals:
+  - Complete a full constitutional adoption session in under 60 minutes
+  - Ensure teams can operate independently after the first session
+  - Build AI trust in teams skeptical of agent-generated code
+  - Give teams a concrete artifact (URL, prompt) they can act on immediately
+- Frustrations:
+  - No single URL — must share multi-step clone instructions via Teams message
+  - Explaining what the agent is doing takes the most time in every session
+  - Teams adopt (run the workflow) but most never complete a constitutionally-governed task
+  - Amendment process, multi-repo handling, and upgrade path questions surface unexpectedly in session
+
+Evidence base:
+- Interviews: 4 conducted (Jay Turpin, Steve Fraser, Wyatt Sutherland, Kenneth Robinson)
+  Combined: 27+ adoptions across 12+ teams
+- PRD-3.1 exception: PRD-3.1 requires minimum 5 interviews per persona. 4 were received.
+  Exception is documented: the 4 respondents represent 27+ combined adoptions (substantially
+  richer than 5 minimal interviews). Qualitative saturation is evident — findings are consistent
+  across all 4 respondents on DA-01, DA-06, NF-02, and DA-03 invalidation. One additional
+  interview would not materially change the JTBD framing. Jury ratification required at T2.3e.
+
+Key jobs to be done:
+1. (Core) Get a new team from &quot;never heard of constitution&quot; to first governed task — fast
+2. Answer &quot;what is the agent doing?&quot; without breaking session flow
+3. Provide upgrade path and amendment process answers on-the-spot
+4. Conduct a 15-min foothold session when teams are time-constrained
+5. Share ready-to-run Teams prompt templates per adoption phase
+
+Success looks like:
+Team completes at least one constitutionally-governed task within 2 weeks of onboarding.
+Coach can run the next session with a different team using the same single URL.
+</code></pre>
+<hr />
+<h3>Persona 2 — Senior Architect</h3>
+<pre><code>Persona Name: Senior Architect
+
+Who they are:
+- Role/context: Senior engineers or architects responsible for evaluating whether
+  AI-governed development aligns with existing architectural standards (DDD, layered
+  architecture, vertical slice). They may be asked by leadership or team leads to
+  provide a go/no-go recommendation on constitutional adoption.
+- Goals:
+  - Map Hangar AI laws to architectural patterns they already know
+  - Determine law precedence and NN status without asking a constitution maintainer
+  - Understand constitutional authority chain for amendment escalation
+- Frustrations:
+  - Law-to-skill-to-enforcement connection requires cross-referencing 3+ files (CA-06)
+  - P2 (Constitutional AI Model Viz) is orphaned — no navigational parent (CA-03)
+  - No architectural alignment view — cannot quickly evaluate DDD compliance posture
+
+Evidence base:
+- Interviews: 0 direct (all Stage B respondents were Technical Coaches)
+- Evidence basis: Repository inspection (CA-06, CA-03), PROPOSAL.md Tomás Reyes persona
+  notes (Rounds 1–7), DA-04 assumption (INSUFFICIENT DATA per §3.3 stage-b-evidence.md)
+- ⚠️ SC-OBL-2 OBLIGATION: ≥ 2 Senior Architect or Engineer interviews required before
+  Stage D IA design for P4 and the Architect path of P3. JTBDs below are HYPOTHESES
+  pending SC-OBL-2 validation. Stage D IA for P4 and Architect path WILL NOT begin
+  until these JTBDs are confirmed or revised based on real respondent data.
+
+Key jobs to be done (HYPOTHESIS — pending SC-OBL-2):
+1. Evaluate constitutional law-to-DDD alignment before recommending adoption to team
+2. Determine NN law precedence and amendment authority for a given edge case
+3. Communicate architectural governance posture to leadership with one artifact
+
+Success looks like:
+Architect can complete their evaluation in a single session and produce a written
+recommendation without asking the constitution maintainer for clarification.
+</code></pre>
+<hr />
+<h3>Persona 3 — Engineer</h3>
+<pre><code>Persona Name: Engineer (constitutionally-governed implementer)
+
+Who they are:
+- Role/context: Software engineers implementing features under constitutional governance.
+  They use the agent to propose, implement, and archive governed tasks.
+- Goals:
+  - Know exactly what to do next for their first governed task
+  - Look up a specific law by keyword mid-task without leaving the IDE
+  - Trust that the agent's output is constitutionally correct
+- Frustrations:
+  - Laws feel abstract and disconnected from daily implementation decisions
+  - SDD workflow (PROPOSE→IMPLEMENT→ARCHIVE) is written for agents, not human engineers
+  - Unclear which law applies to a specific implementation scenario
+
+Evidence base:
+- Interviews: 0 direct
+- Evidence basis: Inference from Technical Coach observations (Steve: engineers need
+  basic coding skills to verify AI output; Jay: teams ask &quot;how do we verify it's using
+  all the laws?&quot;; NF-02: agent comprehension bottleneck affects engineers directly)
+- ⚠️ DEFERRED PERSONA: Engineer quick start path is NOT in MVP scope. Per PROPOSAL.md,
+  the Engineer path is in NEXT slice (P4–P7). JTBDs documented here for completeness;
+  Stage C validation for Engineer path is not required before Stage D MVP begin.
+  ≥ 2 Engineer interviews required before Engineer path enters Stage D IA design.
+
+Key jobs to be done (DEFERRED — Engineer path is NEXT slice):
+1. Complete first governed task without coach help: know exactly what step comes next
+2. Look up any law mid-task by keyword in under 30 seconds
+3. Understand what the agent just proposed and why before approving it
+
+Success looks like:
+Engineer completes first governed PR independently and can explain the constitutional
+rationale for every law cited in the agent's proposal.
+</code></pre>
+<hr />
+<h2>§2. Jobs-To-Be-Done (<span class="law-cite" data-law-id="PRD-2.3" data-non-negotiable="false">PRD-2.3<span class="law-tooltip"><strong>Jobs-to-be-Done Law</strong></span></span>)</h2>
+<h3>JTBD Format (per <span class="law-cite" data-law-id="PRD-2.3" data-non-negotiable="false">PRD-2.3<span class="law-tooltip"><strong>Jobs-to-be-Done Law</strong></span></span>)</h3>
+<pre><code>When [situation],
+I want to [motivation],
+So I can [expected outcome].
+</code></pre>
+<hr />
+<h3>2.1 Technical Coach JTBDs (Evidence-Backed)</h3>
+<hr />
+<p><strong>JTBD-TC-01 — Core Adoption Job</strong></p>
+<blockquote>
+<p>When I sit down with a new engineering team that has never seen the Hangar AI Constitution,
+I want to open a single URL that immediately shows the constitution's value and gives the team a clear first action,
+So I can complete their initial adoption session in under 60 minutes without improvising or switching tabs.</p>
+</blockquote>
+<p><strong>Evidence:</strong> DA-01 CONFIRMED 4/4 (no single URL exists). DA-06 CONFIRMED 3/4 (baseline 1–3 hours). Jay: <em>&quot;Clone the constitution... read adoption-workflow... follow the guidance&quot;</em> — this is 4 steps before any value is shown. Wyatt: teams are &quot;blown away&quot; once they see it — the problem is friction to that moment.</p>
+<p><strong>Functional job:</strong> Navigate a new team to the constitution's entry point and first action.
+<strong>Emotional job:</strong> Feel prepared and confident — not improvising on the spot.
+<strong>Social job:</strong> Be seen as the person who made AI governance accessible, not the person who handed them a wall of docs.</p>
+<hr />
+<p><strong>JTBD-TC-02 — Agent Comprehension Job</strong></p>
+<blockquote>
+<p>When an engineer on my team asks &quot;what is the agent actually doing right now?&quot; during an onboarding session,
+I want a clear, plain-language explanation of each step in the agent's workflow,
+So I can answer confidently and maintain team trust without breaking session flow.</p>
+</blockquote>
+<p><strong>Evidence:</strong> NF-02 (3/4): Jay: <em>&quot;just explaining what the agent is doing&quot;</em>; Steve: <em>&quot;trusting the AI, how to prompt correctly&quot;</em>; Kenneth: <em>&quot;the agent work&quot;</em> — this is the PRIMARY time sink identified by 3 of 4 coaches independently.</p>
+<p><strong>Functional job:</strong> Explain agent behavior at each step without consulting the AGENT.md raw file.
+<strong>Emotional job:</strong> Feel like an expert, not a translator reading from a manual.
+<strong>Social job:</strong> Be perceived as someone who deeply understands the tool — not someone struggling to explain it.</p>
+<hr />
+<p><strong>JTBD-TC-03 — Constitutional Questions Job</strong></p>
+<blockquote>
+<p>When a team asks unpredictable questions about the constitution (upgrade path, multi-repo handling, law verification, amendment process),
+I want quick-reference answers immediately available at the right moment in the session,
+So I can answer authoritatively without deferring to a future follow-up.</p>
+</blockquote>
+<p><strong>Evidence:</strong> NF-04 (amendment process surfaces unprompted in first session, Jay Q2). NF-05 (multi-repo and upgrade path questions surface in first session, Jay Q2). These questions are consistent across sessions — they are predictable unprompted needs.</p>
+<p><strong>Functional job:</strong> Answer first-session edge case questions on the spot.
+<strong>Emotional job:</strong> Feel authoritative rather than exposed.
+<strong>Social job:</strong> Demonstrate mastery of the constitution's governance model to skeptical architects.</p>
+<hr />
+<p><strong>JTBD-TC-04 — Minimal Viable Adoption Job</strong></p>
+<blockquote>
+<p>When a team is under delivery pressure and tells me they cannot commit 3 hours today,
+I want a 15-minute sprint path that demonstrates real value with zero setup,
+So I can establish a foothold for a full adoption session without losing the team entirely.</p>
+</blockquote>
+<p><strong>Evidence:</strong> NF-03: Steve: <em>&quot;These teams are completely overwhelmed with work and have no time to make themselves faster.&quot;</em> Steve's data: 9/12 teams adopted but most never completed a governed task — org bandwidth is co-equal to documentation friction as a blocker (VA-01 partially challenged).</p>
+<p><strong>Functional job:</strong> Run a meaningful constitutional demonstration in &lt; 15 minutes.
+<strong>Emotional job:</strong> Feel that the session was not wasted even when time is short.
+<strong>Social job:</strong> Respect the team's bandwidth constraints and be seen as a practical, not dogmatic, coach.</p>
+<hr />
+<p><strong>JTBD-TC-05 — Prompt Template Sharing Job</strong></p>
+<blockquote>
+<p>When I'm preparing for an onboarding session or sending a follow-up to a team,
+I want a library of copy-paste-ready Teams prompt templates for each adoption phase,
+So I can give the team something concrete to run without asking them to read documentation first.</p>
+</blockquote>
+<p><strong>Evidence:</strong> NF-06: Jay Q3 (shares a ready-to-run multi-step prompt); Steve Q3 (sends Teams prompt template for modification). This is the CURRENT primary artifact coaches use — the guide must provide this, not replace it with a web UI.</p>
+<p><strong>Functional job:</strong> Access and share phase-specific prompt templates instantly.
+<strong>Emotional job:</strong> Feel efficient — not spending 20 minutes composing a Teams message from scratch.
+<strong>Social job:</strong> Appear organized and well-prepared rather than improvising each session.</p>
+<hr />
+<h3>2.2 Senior Architect JTBDs (Hypothesis — SC-OBL-2 Pending)</h3>
+<blockquote>
+<p>⚠️ All Senior Architect JTBDs are HYPOTHESES derived from repository inspection and PROPOSAL.md juror notes. They are NOT evidence-backed. Stage D IA design for the Architect path WILL NOT begin until SC-OBL-2 is satisfied (≥ 2 architect/engineer interviews confirming or revising these JTBDs).</p>
+</blockquote>
+<hr />
+<p><strong>JTBD-SA-01 — Architectural Alignment Evaluation Job (HYPOTHESIS)</strong></p>
+<blockquote>
+<p>When I am asked to evaluate whether AI-governed development practices align with our DDD and layered architecture standards,
+I want a structured map of how Hangar AI laws correspond to architectural patterns I already know,
+So I can produce a recommendation without reverse-engineering the entire law file structure.</p>
+</blockquote>
+<hr />
+<p><strong>JTBD-SA-02 — Law Precedence + NN Resolution Job (HYPOTHESIS)</strong></p>
+<blockquote>
+<p>When I encounter a situation where two laws appear to conflict, or when I need to determine if a law is non-negotiable,
+I want a clear precedence view that shows law hierarchy, NN status, and amendment authority,
+So I can resolve the conflict without needing to consult a constitution maintainer for every edge case.</p>
+</blockquote>
+<hr />
+<p><strong>JTBD-SA-03 — Amendment Authority Communication Job (HYPOTHESIS)</strong></p>
+<blockquote>
+<p>When a team proposes an exception to a non-negotiable law and asks for my approval,
+I want to immediately know what constitutional authority is required to approve or reject the exception,
+So I can give a correct, defensible answer without creating a governance inconsistency.</p>
+</blockquote>
+<hr />
+<h3>2.3 Engineer JTBDs (Deferred — NEXT Slice)</h3>
+<blockquote>
+<p>⚠️ Engineer path is DEFERRED to NEXT slice per PROPOSAL.md. JTBDs documented for completeness; Stage C validation is not required before Stage D MVP begin.</p>
+</blockquote>
+<p><strong>JTBD-ENG-01 — First Task Completion Job (DEFERRED)</strong></p>
+<blockquote>
+<p>When I've been introduced to the constitution and need to complete my first governed task,
+I want step-by-step instructions on which law applies, what the agent will propose, and what a successful output looks like,
+So I can complete the task without asking my Technical Coach at every step.</p>
+</blockquote>
+<p><strong>JTBD-ENG-02 — Mid-Task Law Lookup Job (DEFERRED)</strong></p>
+<blockquote>
+<p>When I'm mid-implementation and need to verify my approach satisfies a specific constitutional law,
+I want to find the relevant law by keyword in under 30 seconds,
+So I can verify compliance and keep momentum without context-switching out of my work.</p>
+</blockquote>
+<p><strong>JTBD-ENG-03 — Agent Output Comprehension Job (DEFERRED)</strong></p>
+<blockquote>
+<p>When the agent produces a proposal, I want to understand exactly what it proposed and why each law was applied,
+So I can approve it confidently — not blindly accept output I don't understand.</p>
+</blockquote>
+<hr />
+<h2>§3. Journey Maps (<span class="law-cite" data-law-id="PRD-3.2" data-non-negotiable="false">PRD-3.2<span class="law-tooltip"><strong>Journey Mapping Law</strong></span></span>)</h2>
+<h3>Journey Map — Technical Coach (MVP Focus, Evidence-Backed)</h3>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th><strong>1 — FIRST CONTACT</strong></th>
+<th><strong>2 — ORIENTATION</strong></th>
+<th><strong>3 — FIRST GOVERNED TASK</strong></th>
+<th><strong>4 — FOLLOW-UP</strong></th>
+<th><strong>5 — INDEPENDENT GOVERNANCE</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Situation</strong></td>
+<td>Coach introduces constitution to new team; session just starting</td>
+<td>Team on P1 landing page; selecting their path</td>
+<td>Team running first adoption prompt with agent guidance</td>
+<td>Coach checks in 1–7 days later; team has questions</td>
+<td>Team operates independently; coach in background</td>
+</tr>
+<tr>
+<td><strong>Actions</strong></td>
+<td>Coach opens guide URL; team encounters landing page for first time</td>
+<td>Coach walks team through P1; team identifies their role</td>
+<td>Coach guides team through P3 direct-instruction path; team runs prompt; reviews agent output</td>
+<td>Team asks about upgrade path, amendment process; coach answers (or cannot)</td>
+<td>Engineers look up laws mid-task; check SDD workflow; file PRs</td>
+</tr>
+<tr>
+<td><strong>Touchpoints</strong></td>
+<td>P1 (Landing Page)</td>
+<td>P1 persona entry points</td>
+<td>P3 (Quick Start — Coach path), Agent, Teams prompt template</td>
+<td>P8 (Compliance Checklist), P10 (Amendment), Teams DM</td>
+<td>P4 (Laws Reference), P7 (SDD Workflow), P8 (Compliance)</td>
+</tr>
+<tr>
+<td><strong>Emotions</strong></td>
+<td>Hopeful; slightly anxious (&quot;will this land?&quot;)</td>
+<td>Curious; evaluating (&quot;is this actually useful?&quot;)</td>
+<td>Engaged but uncertain; &quot;what is the agent doing?&quot; moment occurs here</td>
+<td>&quot;I want to continue but I'm not sure what to do next&quot;</td>
+<td>Coach: &quot;Are they actually using it?&quot; Engineer: &quot;Do I have to do this every time?&quot;</td>
+</tr>
+<tr>
+<td><strong>Pain Today</strong></td>
+<td>No single URL; must share multi-step clone instructions via Teams</td>
+<td>README has no persona filtering; coach must narrate context manually</td>
+<td>P3 doesn't exist; coach improvises; agent comprehension bottleneck kills momentum</td>
+<td>Teams adopted but 9/12 never complete a governed task (Steve); no follow-up path</td>
+<td>No self-service law reference; law lookup requires grep or reading 1,320-line guide</td>
+</tr>
+<tr>
+<td><strong>Opportunity</strong></td>
+<td>P1 opens at single URL; persona-based landing shows immediate value</td>
+<td>P1 surfaces the right path instantly for each role</td>
+<td>P3 direct-instruction-first (SC-OBL-1) with Agent Role Explainer embedded (NF-02); Teams prompt template included</td>
+<td>P3 &quot;What's Next&quot; section + P8 quick-check + P10 amendment reference</td>
+<td>P4 searchable law reference + P7 SDD workflow guide + P8 self-check</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Journey Map — Senior Architect (MVP Focus, Hypothesis-Basis)</h3>
+<blockquote>
+<p>⚠️ Journey map is hypothesis-derived. SC-OBL-2 validation required before Stage D Architect IA design.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th><strong>1 — EVALUATION REQUEST</strong></th>
+<th><strong>2 — ARCHITECTURAL REVIEW</strong></th>
+<th><strong>3 — RECOMMENDATION</strong></th>
+<th><strong>4 — ONGOING OVERSIGHT</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Situation</strong></td>
+<td>Architect is asked to evaluate AI governance alignment with existing architecture standards</td>
+<td>Architect deep-dives into laws, DDD mapping, NN precedence</td>
+<td>Architect produces go/no-go recommendation for leadership</td>
+<td>Architect monitors ongoing compliance; fields exception requests</td>
+</tr>
+<tr>
+<td><strong>Actions</strong></td>
+<td>Opens guide; looks for architectural entry point</td>
+<td>Maps laws to known DDD patterns; checks NN precedence; evaluates amendment authority</td>
+<td>Writes recommendation; needs one-artifact summary</td>
+<td>Reviews exception requests; determines amendment authority</td>
+</tr>
+<tr>
+<td><strong>Touchpoints</strong></td>
+<td>P1 (persona entry for Senior Architect), P3 (Architect path)</td>
+<td>P3 (Architect path), P2 (Constitutional AI Model Viz), P4 (Laws Reference)</td>
+<td>P2 (architectural visualization), P10 (Amendment Process)</td>
+<td>P10 (Amendment Process), P4 (Laws Reference)</td>
+</tr>
+<tr>
+<td><strong>Emotions</strong></td>
+<td>Skeptical: &quot;Is this real governance or theater?&quot;</td>
+<td>Methodical; wants structured evidence; frustrated by manual cross-referencing</td>
+<td>Confident (if evidence is there); frustrated (if law-to-DDD map is absent)</td>
+<td>Cautious; does not want exceptions creeping in without authority</td>
+</tr>
+<tr>
+<td><strong>Pain Today</strong></td>
+<td>P2 is orphaned (CA-03); no architectural entry point in any guide</td>
+<td>CA-06: law-to-skill-to-enforcement requires 3+ files; no DDD alignment view</td>
+<td>No single artifact presents the constitution's governance authority chain</td>
+<td>Amendment process not documented anywhere; constitution maintainer must be consulted</td>
+</tr>
+<tr>
+<td><strong>Opportunity</strong></td>
+<td>P1 → P3 Architect path surfaces DDD law-to-pattern mapping immediately</td>
+<td>P3 Architect path + P4 law lookup + P2 architectural model = one coherent evaluation path</td>
+<td>P2 + P10 combination provides architectural governance communication artifact</td>
+<td>P10 amendment process provides self-service authority chain</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Journey Map — Engineer (DEFERRED to NEXT slice)</h3>
+<blockquote>
+<p>Engineer journey map is DEFERRED. Will be authored in NEXT slice Stage C/D cycle when Engineer path is in scope.</p>
+</blockquote>
+<hr />
+<h2>§4. Design Constraints (SC-OBL-1 — DA-03 Pivot Resolution)</h2>
+<p>These constraints are constitutionally binding on Stage D IA design. They are the formal resolution of SC-OBL-1 from <code>stage-b-evidence.md</code> §5.1. Stage D IA design WILL NOT produce a P3 wireframe that violates these constraints.</p>
+<hr />
+<h3>DC-01 — P3 Technical Coach Path: Direct-Instruction-First</h3>
+<p><strong>Constraint:</strong> The P3 Technical Coach quick start path MUST lead with explicit, prescriptive step-by-step instructions. The primary interaction model is: &quot;Do this, then do this, then do this.&quot;</p>
+<p><strong>Rationale:</strong> DA-03 INVALIDATED (3/4 coaches prefer direct answers for new teams). Steve: <em>&quot;The Socratic method does not correct people about to fall off a cliff.&quot;</em> Jay: <em>&quot;I liked using the agent to prompt the student along the way&quot;</em> — confirms the agent does the Socratic work; the guide should not replicate the agent's role.</p>
+<p><strong>Prohibited in P3 primary flow:</strong> Open-ended questions as the leading interaction (&quot;What do you want to achieve today?&quot;); &quot;Questions to Explore&quot; blocks before the user has completed the first step; implicit navigation without explicit next action.</p>
+<p><strong>Permitted in P3:</strong> Optional &quot;Coaching Notes&quot; sections (clearly marked, collapsed by default) for advanced coaches who want to apply a Socratic layer after the direct path is completed.</p>
+<hr />
+<h3>DC-02 — P3 Senior Architect Path: Structured Evaluation Checklist</h3>
+<p><strong>Constraint:</strong> The P3 Senior Architect path MUST be structured as an evaluation checklist with direct items (e.g., &quot;✅ Check that team has set avatar in AGENTS.md — [link]&quot;) not as a discussion guide.</p>
+<p><strong>Rationale:</strong> Architects are evaluating for compliance — they need a checklist, not a conversation. Socratic prompts are appropriate for teaching; architects are assessing, not learning.</p>
+<hr />
+<h3>DC-03 — Agent Role Explainer: Required on P3</h3>
+<p><strong>Constraint:</strong> P3 MUST include an &quot;Agent Role Explainer&quot; section (or dedicated visual element) that answers, per step: &quot;What is the agent doing here? Why is it writing a proposal? What happens next?&quot; This section must precede the &quot;What's Next&quot; section.</p>
+<p><strong>Rationale:</strong> NF-02 (3/4 coaches): agent comprehension is the primary time sink in every session. This is NOT a nice-to-have — it is the single highest-ROI addition to the guide based on all 4 interview responses.</p>
+<hr />
+<h3>DC-04 — Minimal Viable Adoption Path: Required on P3</h3>
+<p><strong>Constraint:</strong> P3 MUST include a &quot;15-Minute Sprint&quot; path visually distinct from the full adoption path. This path delivers the minimum constitutional demonstration for teams with no available time.</p>
+<p><strong>Rationale:</strong> NF-03 (Steve's data): 9/12 teams adopted but most never completed a governed task. Org bandwidth is a co-equal blocker. A full 3-hour path that overwhelmed teams skip entirely produces zero value; a 15-minute path with immediate value creates a foothold for deeper adoption.</p>
+<hr />
+<h3>DC-05 — Teams Prompt Template Library: Required in Changeset</h3>
+<p><strong>Constraint:</strong> The changeset MUST include a <code>prompt-templates/</code> directory (or equivalent) containing ready-to-use Teams-deliverable prompt templates per adoption phase. This is NOT a P3 page feature — it is a standalone artifact the guide links to.</p>
+<p><strong>Rationale:</strong> NF-06 (2/4 coaches explicitly): Teams prompts are the CURRENT primary onboarding artifact. The guide must match and enhance the workflow coaches already use, not replace it with a web UI that coaches must then translate back into Teams messages.</p>
+<hr />
+<h3>DC-06 — Socratic Elements: Scope and Placement</h3>
+<p><strong>Constraint:</strong> Socratic coaching prompts (per <span class="law-cite" data-law-id="ENG-1.2" data-non-negotiable="false">ENG-1.2<span class="law-tooltip"><strong>AI-Engineer Pairing Law</strong></span></span> and PROPOSAL.md §3) are PERMITTED ONLY in:</p>
+<ol>
+<li>Optional &quot;Coaching Notes&quot; sections on P3 (marked clearly as advanced, collapsed by default)</li>
+<li>P10 (Amendment Process) — returning/advanced users only</li>
+<li>P8 (Compliance Checklist) — &quot;reflection&quot; section at the end, after all direct steps are complete</li>
+</ol>
+<p>Socratic prompts MUST NOT appear as the primary interaction on any page in the MVP (P1 or P3). They MUST NOT precede the direct instruction path on any page.</p>
+<hr />
+<h3>DC-07 — Human Agency &amp; Adaptive Scope Explainer: Required on P3</h3>
+<p><strong>Added:</strong> 2026-05-06 · <strong>Authority:</strong> Stage D amendment per supplemental practitioner evidence (Steve Fraser, post-Stage B field report)</p>
+<p><strong>Constraint:</strong> P3 MUST include a dedicated &quot;How Agentic Workflows Work&quot; section that is <strong>part of the primary flow</strong> (NOT hidden in Coaching Notes). It must appear before or immediately alongside the Full Adoption Path. This section teaches six things in plain English:</p>
+<ol>
+<li>
+<p><strong>Non-determinism.</strong> Constitutional workflows (adoption, legacy rescue, greenfield) are probabilistic guidance systems, not deterministic scripts. The agent reads the constitution and your context, then proposes a path. The same prompt run twice can yield different proposals. This is by design.</p>
+</li>
+<li>
+<p><strong>You control batch size.</strong> The AI will always propose the full scope it can see. You are not obligated to accept the full proposal. At every gate (APPROVE / OBJECT), you can reduce scope, split the proposal into chunks, or defer sections to a later session. The constitution expects iteration.</p>
+</li>
+<li>
+<p><strong>Adoption is compositional.</strong> You can adopt the constitution in parts, in any order:</p>
+<ul>
+<li>Setup + AGENTS.md only → commit → stop</li>
+<li>Code analysis + recommendations → review → stop</li>
+<li>SonarQube adoption → run in a future session</li>
+<li>Product avatar creation → run when the team is ready
+Each part is a valid, complete adoption outcome on its own.</li>
+</ul>
+</li>
+<li>
+<p><strong>SonarQube gate = no new debt, not zero debt.</strong> The SonarQube constitutional gate enforces: <em>new code introduced during this changeset must not add new issues</em>. It does NOT require fixing all pre-existing issues. Large codebases with existing technical debt can adopt constitutionally without first resolving every prior violation.</p>
+</li>
+<li>
+<p><strong><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span> LOC — Open Question (tracked, not yet guidance).</strong> Steve Fraser flagged that the <span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span> line-of-code requirement may cause AI agents to optimise for LOC reduction at the expense of good object design. This concern is noted but requires dedicated law analysis before any coaching guidance can be issued. Workaround prompts MUST NOT appear in the guide until the analysis is complete. See Risk Register R-12.</p>
+<blockquote>
+<p>⚠️ <strong>DC-07 SCOPE EXCLUSION:</strong> Point 5 is a tracked risk item — NOT a prescriptive tip for coaches. Implementers MUST NOT add an <span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span> coaching tip to P3 until R-12 analysis is complete and any required law amendment is jury-ratified.</p>
+</blockquote>
+</li>
+<li>
+<p><strong>Bounded context.</strong> You can scope any workflow — legacy rescue, greenfield, adoption — to a single module, package, or bounded context. Running legacy rescue on <code>com.aa.loyalty.mileage</code> is a complete, valid run. You do not have to process the entire codebase in one session.</p>
+</li>
+</ol>
+<p><strong>Rationale:</strong> Steve Fraser (14 adoptions, 12 teams) identified non-determinism and scope misunderstanding as the #1 post-adoption failure mode: <em>&quot;Teams get a big proposal but what they need is adoption done in smaller chunks so they can do them in sequence iteratively.&quot;</em> This is not a coaching preference — it is a structural cognitive gap that the guide must close at first contact. P9 (Agentic Feedback Loop Guide, LATER slice) is too late; the coach needs this framing before running their first session.</p>
+<p><strong>Prohibited:</strong> Embedding this content only in Coaching Notes or a collapsed <code>&lt;details&gt;</code> element. The section must be visible without interaction on page load.</p>
+<hr />
+<h2>§5. Stage C Evidence Classification (<span class="law-cite" data-law-id="PRD-1.5" data-non-negotiable="true">PRD-1.5<span class="law-tooltip"><strong>Evidence-Based Decision Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Status</th>
+<th>Classification</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Persona 1 (Technical Coach)</td>
+<td>✅ EVIDENCE-BACKED</td>
+<td>Moderate</td>
+<td>4 interviews; qualitative saturation on key JTBDs; <span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span> exception documented</td>
+</tr>
+<tr>
+<td>Persona 2 (Senior Architect)</td>
+<td>⚠️ HYPOTHESIS</td>
+<td>Weak</td>
+<td>0 interviews; SC-OBL-2 pending; JTBDs are inference-based</td>
+</tr>
+<tr>
+<td>Persona 3 (Engineer)</td>
+<td>⚠️ DEFERRED</td>
+<td>N/A</td>
+<td>NEXT slice; not required for Stage D MVP begin</td>
+</tr>
+<tr>
+<td>Journey Map — Technical Coach</td>
+<td>✅ EVIDENCE-BACKED</td>
+<td>Moderate</td>
+<td>Pain points and opportunities sourced from 4 interviews</td>
+</tr>
+<tr>
+<td>Journey Map — Senior Architect</td>
+<td>⚠️ HYPOTHESIS</td>
+<td>Weak</td>
+<td>Hypothesis-basis; CA-06/CA-03 from repo inspection</td>
+</tr>
+<tr>
+<td>Design Constraints (SC-OBL-1)</td>
+<td>✅ EVIDENCE-BACKED</td>
+<td>Moderate</td>
+<td>3/4 interview data; DA-03 invalidation is strong and consistent</td>
+</tr>
+</tbody>
+</table>
+<p><strong>MVP classification (P1 + P3 Technical Coach path): MODERATE</strong> — evidence sufficient for Stage D IA design of P3 Coach path.
+<strong>Architect path classification: WEAK</strong> — SC-OBL-2 must be satisfied before Stage D Architect IA design.</p>
+<hr />
+<h2>§6. Stage C Exit Criteria (<span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</h2>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JTBD framing for all personas (T2.3a)</td>
+<td>✅ COMPLETE</td>
+<td>§2 above — 5 JTBDs for Coach (evidence-backed); 3 for Architect (hypothesis); 3 for Engineer (deferred)</td>
+</tr>
+<tr>
+<td><span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span> interview evidence or exception (T2.3b)</td>
+<td>✅ DOCUMENTED</td>
+<td>Coach: 4 interviews + <span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span> exception; Architect: SC-OBL-2 pending; Engineer: deferred</td>
+</tr>
+<tr>
+<td>Journey maps (T2.3c)</td>
+<td>✅ COMPLETE</td>
+<td>§3 above — Coach and Architect journey maps; Engineer deferred</td>
+</tr>
+<tr>
+<td>Design constraints from DA-03 pivot (SC-OBL-1)</td>
+<td>✅ COMPLETE</td>
+<td>§4 above — 6 binding design constraints (DC-01 through DC-06)</td>
+</tr>
+<tr>
+<td><code>stage-c-evidence.md</code> filed (T2.3d)</td>
+<td>✅ FILED v1.0</td>
+<td>This document</td>
+</tr>
+<tr>
+<td>Jury deliberation: Stage C (T2.3e)</td>
+<td>⏳ PENDING</td>
+<td>6-person jury on this artifact required before Stage D</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>§6.1 Stage D Entry Obligations (Binding per <span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</h2>
+<h3>SD-OBL-1 — SC-OBL-2 Completion Before Architect IA Design (<span class="law-cite" data-law-id="ENG-2.3" data-non-negotiable="false">ENG-2.3<span class="law-tooltip"><strong>Vertical Slice Architecture Law</strong></span></span> Vertical Slice Gate)</h3>
+<p>Stage D IA design for P4 (Laws Reference) and the Architect path of P3 uses a separate vertical slice from the Coach path (per <span class="law-cite" data-law-id="ENG-2.3" data-non-negotiable="false">ENG-2.3<span class="law-tooltip"><strong>Vertical Slice Architecture Law</strong></span></span>). The two slices are sequenced as follows:</p>
+<p><strong>Coach path vertical slice (Stage D can begin immediately):</strong></p>
+<ul>
+<li>P1 (Landing Page) IA design and P3 Coach path IA design may begin as soon as Stage C jury clears.</li>
+<li>No SC-OBL-2 dependency.</li>
+</ul>
+<p><strong>Architect path vertical slice (BLOCKED until SC-OBL-2 is cleared):</strong></p>
+<ul>
+<li>P3 Architect path IA design and P4 (Laws Reference) IA design WILL NOT produce any deliverable until ALL of the following are satisfied:
+<ol>
+<li>≥ 2 structured interviews with Senior Architects or Engineers completed</li>
+<li>Findings confirm or revise JTBD-SA-01, JTBD-SA-02, JTBD-SA-03</li>
+<li>Results documented in <code>stage-c-addendum.md</code></li>
+<li><code>stage-c-addendum.md</code> jury-validated (Tomás Reyes + Priya Kapoor + Alexandra Pierce minimum)</li>
+</ol>
+</li>
+<li>If SC-OBL-2 cannot be satisfied before the Coach path Stage D cycle completes, the Architect path is formally deferred to NEXT slice and <code>stage-c-addendum.md</code> is filed as a NEXT-slice evidence artifact.</li>
+</ul>
+<p><strong>Non-bypass clause:</strong> No partial Architect IA design deliverable (wireframe, content model, page structure) may be produced speculatively before SC-OBL-2 is cleared, even if labelled as a draft. Speculation without evidence violates <span class="law-cite" data-law-id="PRD-2.3" data-non-negotiable="false">PRD-2.3<span class="law-tooltip"><strong>Jobs-to-be-Done Law</strong></span></span> and <span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span>.</p>
+<h3>SD-OBL-2 — G5/G6/G7 Jury Approval Before IMPLEMENT</h3>
+<p><code>compliance/threat-model.md</code>, <code>compliance/data-classification.md</code>, and <code>compliance/risk-register.md</code> are currently DRAFT status. They MUST receive:</p>
+<ul>
+<li>Tomás Reyes + Alexandra Pierce APPROVE on threat-model.md (<span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</li>
+<li>Carlos Mendez + Alexandra Pierce APPROVE on data-classification.md and risk-register.md</li>
+</ul>
+<p>This must happen before Stage D IMPLEMENT begins, not before Stage D design.</p>
+<h3>SD-OBL-3 — Design Constraints Honoured in All IA Artifacts</h3>
+<p>All Stage D information architecture artifacts (wireframes, page structure, content model) MUST demonstrate compliance with DC-01 through DC-06 (§4 above). Jordan Ellis must review Stage D IA artifacts against these constraints as part of Stage D jury deliberation.</p>
+<hr />
+<h2>§8. MVP Hypothesis Update (<span class="law-cite" data-law-id="PRD-5.3" data-non-negotiable="false">PRD-5.3<span class="law-tooltip"><strong>Experiment Design Law</strong></span></span> — Priya Kapoor OBJECT-C2 Remediation)</h2>
+<h3>Why the Hypothesis Must Be Updated Here</h3>
+<p>PROPOSAL.md §2 states the MVP hypothesis:</p>
+<blockquote>
+<p><em>&quot;If we ship P1 + P3, then first-successful-task time will decrease from estimated 45+ minutes (current baseline) to &lt; 20 minutes.&quot;</em></p>
+</blockquote>
+<p>Stage B interview data (stage-b-evidence.md §3.3) definitively revised the baseline:</p>
+<ul>
+<li>Jay Turpin: 2–3 hours</li>
+<li>Wyatt Sutherland: 1–3 hours</li>
+<li>Kenneth Robinson: 2 hours</li>
+<li>Steve Fraser: most teams never complete a task at all</li>
+</ul>
+<p>The 45-minute baseline was an inference-only estimate made at PROPOSAL.md v1.0 before any interviews were conducted. The actual baseline is <strong>1–3 hours</strong>. The &lt; 20-minute target was calibrated against the estimated (wrong) baseline. Stage C JTBD work — which reveals that the primary bottleneck is agent comprehension (NF-02) and org bandwidth (NF-03), not just documentation navigation — further confirms that &lt; 20 minutes was overambitious.</p>
+<h3>Revised MVP Hypothesis</h3>
+<p><strong>Previous (PROPOSAL.md §2 — outdated):</strong></p>
+<blockquote>
+<p>First-successful-task time: &lt; 20 minutes for ≥ 2 of 3 walkthroughs</p>
+</blockquote>
+<p><strong>Revised (stage-c-evidence.md §8 — authoritative from this point forward):</strong></p>
+<blockquote>
+<p>If we ship P1 + P3 (Technical Coach path with Agent Role Explainer, 15-Minute Sprint path, and Teams prompt template library), then first-successful-task time will decrease from the measured baseline of 1–3 hours to <strong>&lt; 60 minutes</strong> for ≥ 2 of 3 facilitator-observed walkthroughs with real adopters.</p>
+</blockquote>
+<h3>Kill-If Criterion Revision</h3>
+<p><strong>Previous:</strong> 0 of 3 walkthroughs achieve task time &lt; 20 min<br />
+<strong>Revised:</strong> 0 of 3 walkthroughs achieve task time &lt; 60 min; or 2 of 3 fail the guardrail metric (coach does not misidentify a NN law)</p>
+<h3>Required PROPOSAL.md Amendment</h3>
+<p>This revision requires a formal PROPOSAL.md amendment before Stage D begins. The amendment must update:</p>
+<ul>
+<li>§2 hypothesis table (time target row): <code>&lt; 20 min</code> → <code>&lt; 60 min</code></li>
+<li>§2 kill-if criterion: <code>&lt; 20 min</code> → <code>&lt; 60 min</code></li>
+<li>§1 MVP Hypothesis paragraph: <code>45+ minutes</code> → <code>1–3 hours (measured)</code></li>
+</ul>
+<p><strong>Gate blocker (SD-OBL-4):</strong> The PROPOSAL.md amendment must be jury-validated before Stage F walkthroughs begin. It may be deferred until the end of Stage D, but must complete before Stage E (Metrics Baseline) begins.</p>
+<hr />
+<h2>§9. Status Log (Updated)</h2>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Action</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-05-05</td>
+<td>Stage C began — G3 cleared (commit 521ade7)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>2026-05-05</td>
+<td>Persona definitions authored (T2.3a/b)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>2026-05-05</td>
+<td>JTBD framing complete (T2.3a)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>2026-05-05</td>
+<td>Journey maps authored (T2.3c)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>2026-05-05</td>
+<td>Design constraints filed (DC-01 through DC-06)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>2026-05-05</td>
+<td>stage-c-evidence.md v1.0 filed (T2.3d)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>2026-05-05</td>
+<td>Jury Round 1: 3 APPROVE / 3 OBJECT (Tomás, Priya, Alexandra)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>2026-05-05</td>
+<td>v1.1 remediation: SD-OBL-1 vertical slice gate strengthened; §8 MVP hypothesis update added</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Next</td>
+<td>Jury Round 2 — 6/6 UNANIMOUS APPROVE — Stage D (Coach path) OPEN</td>
+<td>✅ CLEARED</td>
+</tr>
+</tbody>
+</table>
+
+  <div class="footer">
+    <div>Governance Proposal</div>
+    <div class="pn">2</div>
+  </div>
+</div>
+
+<script>
+// Flip tooltip below the citation when it would overflow the top of the viewport
+document.querySelectorAll('.law-cite').forEach(function(el) {
+  el.addEventListener('mouseenter', function() {
+    var rect = el.getBoundingClientRect();
+    var tooltip = el.querySelector('.law-tooltip');
+    if (!tooltip) return;
+    var tipH = tooltip.offsetHeight || 80;
+    if (rect.top < tipH + 12) {
+      el.classList.add('flip-below');
+    } else {
+      el.classList.remove('flip-below');
+    }
+  });
+  // Keyboard accessibility
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  el.setAttribute('aria-describedby', 'tooltip-' + el.dataset.lawId);
+  var tip = el.querySelector('.law-tooltip');
+  if (tip) tip.id = 'tooltip-' + el.dataset.lawId;
+});
+</script>
+</body>
+</html>

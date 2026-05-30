@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 6 — Commit | Android Avatar Clinic</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; color: #1a1a2e; margin: 0; padding: 24px; }
+  h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; }
+  h2 { font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; border-bottom: 2px solid #e0e0e0; padding-bottom: 6px; }
+  .header { background: linear-gradient(135deg, #1565c0, #0d47a1); color: white; border-radius: 10px; padding: 24px 28px; margin-bottom: 28px; }
+  .header p { opacity: 0.88; margin: 6px 0 0; font-size: 0.92rem; }
+  .header .meta { display: flex; gap: 24px; margin-top: 14px; flex-wrap: wrap; }
+  .header .meta span { background: rgba(255,255,255,0.18); border-radius: 6px; padding: 4px 12px; font-size: 0.82rem; }
+  .section { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+  th { background: #f0f4f8; font-weight: 600; text-align: left; padding: 8px 10px; border-bottom: 2px solid #dde; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; }
+  .pass { background: #e8f5e9; color: #2e7d32; }
+  .blocking { background: #fce4ec; color: #c62828; }
+  .advisory { background: #fff8e1; color: #f57f17; }
+  .new { background: #e8eaf6; color: #283593; }
+  .corrected { background: #e0f2f1; color: #00695c; }
+  .enriched { background: #f3e5f5; color: #6a1b9a; }
+  .verdict { padding: 14px 18px; border-radius: 8px; font-weight: 600; margin-top: 12px; font-size: 1rem; }
+  .verdict.green { background: #e8f5e9; color: #1b5e20; border-left: 5px solid #43a047; }
+  .verdict.blue { background: #e3f2fd; color: #0d47a1; border-left: 5px solid #1565c0; }
+  code { font-size: 0.82rem; background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+  pre { background: #1e1e2e; color: #cdd6f4; padding: 18px; border-radius: 8px; font-size: 0.82rem; overflow-x: auto; line-height: 1.6; }
+  .render-gate { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0; }
+  .render-gate .artifact { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; border-radius: 6px; padding: 6px 14px; font-size: 0.82rem; font-weight: 600; }
+  .avatar-card { border: 1px solid #e0e7ef; border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; }
+  .avatar-card h3 { margin: 0 0 8px; font-size: 0.97rem; }
+  .avatar-card .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 4px 0; font-size: 0.84rem; }
+  .avatar-card .label { color: #666; min-width: 110px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 14px 0; }
+  .stat-box { background: #f0f4f8; border-radius: 8px; padding: 14px 16px; text-align: center; }
+  .stat-box .num { font-size: 2rem; font-weight: 700; color: #1565c0; }
+  .stat-box .lbl { font-size: 0.8rem; color: #555; margin-top: 4px; }
+  footer { text-align: center; color: #aaa; font-size: 0.78rem; margin-top: 32px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚙️ Phase 6 — Commit</h1>
+  <p>Hangar AI Constitution Clinic · Wave 4 Mobile · Android Session</p>
+  <div class="meta">
+    <span>📅 2026-04-27</span>
+    <span>🤖 Mode 2 Correct + Mode 4 Enrich</span>
+    <span>🎯 3 Avatars Updated</span>
+    <span>✅ RAG Validated: 5/5</span>
+    <span>📦 Commit Ready</span>
+  </div>
+</div>
+
+<!-- RENDER GATE -->
+<div class="section">
+  <h2>Step 1 — Render Gate (ENG-13.1 NON-NEGOTIABLE)</h2>
+  <p>All phase artifacts confirmed present in browser before stamping <code>index.yaml</code>.</p>
+  <div class="render-gate">
+    <div class="artifact">✅ phase-0-preflight.html</div>
+    <div class="artifact">✅ phase-1-identify.html</div>
+    <div class="artifact">✅ phase-2-scan.html</div>
+    <div class="artifact">✅ phase-3-discover.html</div>
+    <div class="artifact">✅ phase-4-enrich.html</div>
+    <div class="artifact">✅ phase-5-rag-validate.html</div>
+    <div class="artifact">✅ phase-6-commit.html</div>
+  </div>
+  <div class="verdict green">✅ Render Gate CLEAR — 7/7 artifacts present</div>
+</div>
+
+<!-- INDEX.YAML STAMPS -->
+<div class="section">
+  <h2>Step 2 — index.yaml Stamps Applied</h2>
+
+  <div class="avatar-card">
+    <h3>🤖 <code>avatar-android-kotlin</code> — Technology</h3>
+    <div class="row"><span class="label">version</span> <code>1.0.0</code> → <code>1.1.0</code> (corrections + new use cases = MINOR)</div>
+    <div class="row"><span class="label">rag_validated</span> <code>unknown</code> → <code>true</code></div>
+    <div class="row"><span class="label">status</span> <code>active</code> (unchanged)</div>
+    <div class="row"><span class="label">last_validated</span> <code>null</code> → <code>2026-04-27</code></div>
+    <div class="row"><span class="label">di corrected</span> Hilt assumption → <code>Dagger 2 (AA current) → Hilt (migration target)</code></div>
+    <div class="row"><span class="label">ENG-10.1, ENG-11.1</span> Added to <code>specializes_laws</code></div>
+    <div class="row"><span class="label">skill- prefix</span> Fixed in <code>activates.skills</code> (4 entries)</div>
+  </div>
+
+  <div class="avatar-card">
+    <h3>📦 <code>avatar-passenger-booking</code> — Product</h3>
+    <div class="row"><span class="label">version</span> <code>1.0.0</code> → <code>1.2.0</code> (iOS 1.1.0 + Android 1.2.0 enrichments)</div>
+    <div class="row"><span class="label">rag_validated</span> <code>true</code> (stamped today via product avatar supplemental validation)</div>
+    <div class="row"><span class="label">last_validated</span> <code>2026-04-27</code></div>
+    <div class="row"><span class="label">Android note</span> <code>search-and-book/README.md</code> — BookingViewModel 2,106 LOC, 2 memory leaks, reactive paradigm mismatch</div>
+  </div>
+
+  <div class="avatar-card">
+    <h3>✈️ <code>avatar-check-in-travel</code> — Product</h3>
+    <div class="row"><span class="label">version</span> <code>1.0.0</code> → <code>1.2.0</code> (iOS 1.1.0 + Android 1.2.0 enrichments)</div>
+    <div class="row"><span class="label">rag_validated</span> <code>true</code></div>
+    <div class="row"><span class="label">last_validated</span> <code>2026-04-27</code></div>
+    <div class="row"><span class="label">New use case</span> <code>android-app-checkin/README.md</code> — CheckInManagerV2/V3 critical bugs as product risk</div>
+  </div>
+</div>
+
+<!-- FULL CHANGE INVENTORY -->
+<div class="section">
+  <h2>Step 3 — Full Change Inventory</h2>
+  <p>All files modified or created during this Android clinic session.</p>
+
+  <h3 style="font-size:0.95rem; margin-top:16px;">🔧 Track 1 — Corrections (android-kotlin)</h3>
+  <table>
+    <thead><tr><th>File</th><th>Change</th><th>Law</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr><td><code>manifest.yaml</code></td><td>skill- prefix fixed; version 1.0.0→1.1.0; DI corrected to Dagger 2; ENG-10.1+ENG-11.1 added; ENG-2.2 android_note fixed (removed HiltViewModel)</td><td>ENG-2.2, ENG-10.1, ENG-11.1</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>guidance.md</code></td><td>Trimmed 1,809w → 255w (was BLOCKING); DI reality note added (Dagger 2)</td><td>RAG budget</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>guidance-detail.md</code></td><td>NEW — full original guidance (1,809w) companion file</td><td>—</td><td><span class="badge new">NEW</span></td></tr>
+      <tr><td><code>examples/ENG-4.1-atomic-tdd.md</code></td><td>Trimmed 872w → 188w (was BLOCKING)</td><td>ENG-4.1</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>examples/ENG-4.1-atomic-tdd-detail.md</code></td><td>NEW — full original (872w)</td><td>—</td><td><span class="badge new">NEW</span></td></tr>
+      <tr><td><code>examples/ENG-6.1-security.md</code></td><td>Trimmed 872w → 177w (was BLOCKING)</td><td>ENG-6.1</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>examples/ENG-6.1-security-detail.md</code></td><td>NEW — full original (872w)</td><td>—</td><td><span class="badge new">NEW</span></td></tr>
+      <tr><td><code>examples/ENG-6.4-data-protection.md</code></td><td>Trimmed 797w → 156w (was BLOCKING)</td><td>ENG-6.4</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>examples/ENG-6.4-data-protection-detail.md</code></td><td>NEW — full original (797w)</td><td>—</td><td><span class="badge new">NEW</span></td></tr>
+      <tr><td><code>examples/ENG-6.7-audit-trail.md</code></td><td>Trimmed 876w → 251w (was BLOCKING)</td><td>ENG-6.7</td><td><span class="badge corrected">CORRECTED</span></td></tr>
+      <tr><td><code>examples/ENG-6.7-audit-trail-detail.md</code></td><td>NEW — full original (876w)</td><td>—</td><td><span class="badge new">NEW</span></td></tr>
+      <tr><td><code>examples/ENG-3.1-complexity.md</code></td><td>Enriched with real AA god-class evidence table (5 files, real LOC)</td><td>ENG-3.1</td><td><span class="badge enriched">ENRICHED</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-size:0.95rem; margin-top:20px;">🆕 Track 2 — Enrich (android-kotlin use cases)</h3>
+  <table>
+    <thead><tr><th>File</th><th>Content</th><th>Laws</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr><td><code>use-cases/dagger2-hilt-migration/README.md</code></td><td>449w — Incremental Dagger 2 → Hilt migration with AA DataModule.kt strategy (1,737 LOC monolith)</td><td>ENG-2.2, ENG-4.1</td><td><span class="badge new">NEW</span></td></tr>
+      <tr><td><code>use-cases/sealed-state-machine/README.md</code></td><td>511w — CheckInManagerV2 boolean flag anti-pattern → sealed interface state machine (8,192 implicit states → 6 explicit)</td><td>ENG-3.1, ENG-3.2</td><td><span class="badge new">NEW</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-size:0.95rem; margin-top:20px;">📦 Product Avatar Enrichments</h3>
+  <table>
+    <thead><tr><th>Avatar</th><th>File</th><th>Change</th><th>Laws</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr><td><code>passenger-booking</code></td><td><code>use-cases/search-and-book/README.md</code></td><td>Android architectural note added — BookingViewModel 2,106 LOC, 2 memory leaks (L403, L662 never added to CompositeDisposable), 3 reactive paradigms</td><td>ENG-11.1</td><td><span class="badge enriched">ENRICHED</span></td></tr>
+      <tr><td><code>check-in-travel</code></td><td><code>use-cases/android-app-checkin/README.md</code></td><td>NEW 578w — CheckInManagerV2/V3 3 critical bugs: race condition (TSA), crash (empty passenger list), missing return (Basic Economy). Product risk framing + roadmap gate</td><td>PRD-1.1, PRD-3.1, PRD-4.1, ENG-6.4, ENG-6.7, ENG-11.1</td><td><span class="badge new">NEW</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-size:0.95rem; margin-top:20px;">📋 avatars/index.yaml</h3>
+  <table>
+    <thead><tr><th>Avatar</th><th>Change</th></tr></thead>
+    <tbody>
+      <tr><td><code>avatar-android-kotlin</code></td><td>skill- prefix fixed; version 1.1.0; rag_validated true; last_validated 2026-04-27; DI field added; ENG-10.1/11.1 added to specializes_laws</td></tr>
+      <tr><td><code>avatar-passenger-booking</code></td><td>version 1.2.0; rag_validated true; last_validated 2026-04-27</td></tr>
+      <tr><td><code>avatar-check-in-travel</code></td><td>version 1.2.0; rag_validated true; last_validated 2026-04-27</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SUMMARY STATS -->
+<div class="section">
+  <h2>Session Summary</h2>
+  <div class="summary-grid">
+    <div class="stat-box"><div class="num">6</div><div class="lbl">BLOCKINGs resolved</div></div>
+    <div class="stat-box"><div class="num">5</div><div class="lbl">Advisories resolved</div></div>
+    <div class="stat-box"><div class="num">5</div><div class="lbl">New files created</div></div>
+    <div class="stat-box"><div class="num">4</div><div class="lbl">Example files trimmed</div></div>
+    <div class="stat-box"><div class="num">2</div><div class="lbl">New use cases (tech)</div></div>
+    <div class="stat-box"><div class="num">3</div><div class="lbl">Avatars updated</div></div>
+    <div class="stat-box"><div class="num">5/5</div><div class="lbl">RAG queries pass</div></div>
+    <div class="stat-box"><div class="num">0</div><div class="lbl">Phantom law IDs</div></div>
+  </div>
+</div>
+
+<!-- COMMIT MESSAGE -->
+<div class="section">
+  <h2>Step 4 — Commit Message</h2>
+<pre>avatar(android-kotlin): Mode 2 Correct + Mode 4 Enrich — Android clinic Wave 4 Mobile
+
+Mode: Assess & Correct + Enrich
+Laws corrected: ENG-2.2 (DI reality: Dagger 2, not Hilt), ENG-4.1 (trimmed to budget),
+               ENG-6.1 (trimmed to budget), ENG-6.4 (trimmed to budget),
+               ENG-6.7 (trimmed to budget), ENG-3.1 (god-class evidence enriched)
+RAG: Recall 5/5 | Max tokens 830 (ENG-2.2) | Precision 100%
+Violations resolved: 6 BLOCKING (token budget) + 5 advisory (skill- prefix, DI mismatch,
+                     version missing, ENG-3.1 no evidence, ENG-10.1/11.1 missing)
+
+Product avatars enriched:
+- avatar-passenger-booking v1.2.0: BookingViewModel Android architectural note
+- avatar-check-in-travel v1.2.0: android-app-checkin use case (3 critical bugs as product risk)
+
+Co-authored-by: Copilot &lt;223556219+Copilot@users.noreply.github.com&gt;</pre>
+</div>
+
+<div class="verdict green" style="margin: 0 0 24px;">
+  ✅ Phase 6 Complete — Render gate clear · index.yaml stamped · Ready to commit and push
+</div>
+
+<footer>Hangar AI Constitution Clinic · Wave 4 Mobile · Android Session · 2026-04-27</footer>
+</body>
+</html>

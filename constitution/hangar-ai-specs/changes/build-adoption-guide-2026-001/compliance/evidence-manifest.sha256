@@ -1,0 +1,22 @@
+# Evidence Manifest — SHA-256 Hashes
+# Changeset: build-adoption-guide-2026-001
+# Authority: BUS-7.2 (Evidence Integrity Law)
+# Updated: 2026-05-01 — v2.5 post-Round-6 remediation
+# Note: Update this file at every stage gate transition
+d9560eb77ac23f451f9515e421312b873b36e1b9238caf4860e528c6a3388729  PROPOSAL.md
+066b9ec3b9563b1aff1d4632b2f8329dc56f628aaf89dc310e5b4249b9913bc8  PROPOSAL.html
+fcd335172b56bf17bc9952f95bcba525e128b655fe070025cd6d0a1967bb1bf1  tasks.md
+c5e63fa09445d7c06174b8ff1e0be72c81692be953dcdf1af2242bc078f40d9c  tasks.html
+9e8949edb54a98aae7f71a67fedc7dbb119335100568280bccee1b2f7a27567e  compliance/risk-register.md
+0d0221f8a6951317d547def2b6be99dd3aa0357dd733b61033072faaeb293adb  compliance/raci.md
+3d5b8e5ad62e70b7b03ae7fb18c26cc68f189a732c632efb42f4a985e25ce349  compliance/incident-response.md
+582f3cfea9fd3004071f362aac8b53c5c0aff145e3d9e5d0a2b1516cb9051059  compliance/sonarqube-delta-schema.md
+17faa7974790c2ced4cadfbb13c17b9f9e19ec76686c9e26807225b310bcb7f8  compliance/data-classification.md
+e2fedd5d12be68d6941ddb76daffd6a00608e04306eff18b996fd27accc793c9  compliance/threat-model.md
+8311cb060b8f31f56699f29c09b71c0aca5cf81c6d983ea26e79ee54a1adc1d2  compliance/regulatory-scope.md
+ea71d69c353018ce1a54551d4540137fd2632680e3a8211629b89d130c99456c  stage-a-evidence.md
+751200185091093c7bf5ba001f45276569dfbd927f3c50110ebf8b2d3f5eb8a6  stage-a-evidence.html
+5de903276ff1d811f97482ac5bf64a2763ebb89788abfc960488b5769307db14  PROPOSAL.pdf
+e12e8022d60cf00931605973c9114721c1550c8092f6e176511766e707a1ca4f  tasks.pdf
+9445ee394c5dff3f8d72942390cce7d753388499af4001bfe62112b15c29930d  stage-b-evidence.md
+ec599b7f7d61a4ce9952ae08b5bb87696e51f301e1a578a6340ea1a1bd840144  stage-b-evidence.html

@@ -1,0 +1,313 @@
+$schema: http://json-schema.org/draft-07/schema#
+title: Product Avatar Manifest Schema
+description: Validates manifest.yaml files for product avatars
+type: object
+
+required:
+  - avatar
+  - domain
+  - activates
+  - specializes_laws
+  - rag_index
+
+properties:
+  avatar:
+    type: object
+    required:
+      - id
+      - type
+      - name
+      - version
+    properties:
+      id:
+        type: string
+        pattern: "^avatar-product-[a-z0-9-]+$"
+        description: "Unique ID: avatar-product-{slug}"
+        examples:
+          - avatar-product-cargo
+          - avatar-product-loyalty
+          - avatar-product-check-in
+      
+      type:
+        type: string
+        enum:
+          - product
+        description: "Must be 'product' for product avatars"
+      
+      name:
+        type: string
+        minLength: 3
+        maxLength: 50
+        description: "Display name of product"
+        examples:
+          - Cargo & Freight
+          - AADvantage Loyalty
+          - Check-In Travel
+      
+      version:
+        type: string
+        pattern: "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        description: "Semantic version (1.0.0)"
+      
+      created:
+        type: string
+        format: date
+        description: "ISO 8601 date created"
+      
+      last_updated:
+        type: string
+        format: date
+        description: "ISO 8601 date last updated"
+  
+  domain:
+    type: object
+    required:
+      - category
+      - personas
+    properties:
+      category:
+        type: string
+        minLength: 5
+        maxLength: 100
+        description: "Product category/domain"
+        examples:
+          - "Cargo Booking & Operations"
+          - "Member Loyalty Program"
+          - "Passenger Check-In"
+      
+      description:
+        type: string
+        minLength: 20
+        maxLength: 500
+        description: "What is the product and why does it matter?"
+      
+      personas:
+        type: array
+        minItems: 3
+        maxItems: 5
+        items:
+          type: string
+          minLength: 2
+          maxLength: 50
+        description: "Names of primary personas"
+        examples:
+          - Freight Forwarder
+          - Direct Shipper
+          - Partner Airline
+      
+      personas_file:
+        type: string
+        pattern: "^examples/personas\\.md$"
+        description: "Must be examples/personas.md"
+  
+  core_journeys:
+    type: array
+    minItems: 3
+    maxItems: 8
+    items:
+      type: string
+      minLength: 5
+      maxLength: 100
+    description: "Main user workflows/journeys"
+    examples:
+      - "Rate Quote to Booking"
+      - "Claims Processing"
+      - "Shipment Tracking"
+  
+  activates:
+    type: object
+    required:
+      - skills
+      - workflows
+    properties:
+      skills:
+        type: array
+        minItems: 3
+        maxItems: 15
+        items:
+          type: string
+          pattern: "^skill-[0-9]{2}-.*$"
+        description: "Which agent skills to activate for this product"
+        examples:
+          - skill-spec-governance
+          - skill-02-user-journey-mapping
+          - skill-03-executable-spec
+      
+      workflows:
+        type: array
+        minItems: 1
+        maxItems: 5
+        items:
+          type: string
+          pattern: "^workflow-.*$"
+        description: "Which workflows to activate"
+        examples:
+          - workflow-discovery-to-delivery
+          - workflow-cargo-booking
+  
+  specializes_laws:
+    type: array
+    minItems: 5
+    maxItems: 5
+    description: "Must specialize exactly 5 product laws (PRD-1.1 through PRD-5.1)"
+    items:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - example_file
+      properties:
+        id:
+          type: string
+          enum:
+            - "PRD-1.1"
+            - "PRD-2.1"
+            - "PRD-3.1"
+            - "PRD-4.1"
+            - "PRD-5.1"
+          description: "Product law ID"
+        
+        title:
+          type: string
+          enum:
+            - "Continuous Discovery"
+            - "User Journey Mapping"
+            - "Roadmap Planning"
+            - "MVP & Product-Market Fit"
+            - "Metrics & Success Definition"
+          description: "Law title must match exactly"
+        
+        description:
+          type: string
+          minLength: 10
+          maxLength: 200
+          description: "How this law applies to your product"
+        
+        example_file:
+          type: string
+          pattern: "^examples/PRD-[0-9]\\.[0-9]-.*\\.md$"
+          description: "Path to example demonstrating this law"
+          examples:
+            - "examples/PRD-1.1-discovery.md"
+            - "examples/PRD-2.1-journey.md"
+            - "examples/PRD-3.1-roadmap.md"
+            - "examples/PRD-4.1-mvp.md"
+            - "examples/PRD-5.1-metrics.md"
+        
+        key_practices:
+          type: array
+          minItems: 2
+          maxItems: 5
+          items:
+            type: string
+            minLength: 5
+            maxLength: 100
+          description: "Key practices from law applied to product"
+        
+        law_citations:
+          type: array
+          minItems: 2
+          maxItems: 4
+          items:
+            type: string
+            minLength: 5
+            maxLength: 150
+          description: "Specific citations/sections from law"
+  
+  rag_index:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+        description: "Whether this avatar is indexed for RAG"
+      
+      folders:
+        type: array
+        items:
+          type: string
+          pattern: "^[a-z0-9_/\\-]*/$"
+        description: "Folders to index for RAG"
+        examples:
+          - "examples/"
+          - "use-cases/"
+      
+      max_tokens_per_example:
+        type: integer
+        minimum: 500
+        maximum: 1000
+        default: 800
+        description: "Maximum tokens per indexed document"
+      
+      citation_style:
+        type: string
+        enum:
+          - "law_id_and_title"
+          - "law_id_only"
+          - "title_only"
+        default: "law_id_and_title"
+        description: "How to cite laws in indexed content"
+      
+      refresh_frequency:
+        type: string
+        enum:
+          - "daily"
+          - "weekly"
+          - "monthly"
+        default: "weekly"
+        description: "How often to refresh RAG index"
+  
+  related_products:
+    type: array
+    maxItems: 5
+    items:
+      type: string
+    description: "Other products this one integrates with"
+    examples:
+      - "Ops Control"
+      - "Accounting System"
+      - "CRM Platform"
+  
+  dependencies:
+    type: array
+    maxItems: 10
+    items:
+      type: string
+    description: "External systems this product depends on"
+    examples:
+      - "Rating Engine"
+      - "Shipping APIs"
+      - "Customer Database"
+  
+  tags:
+    type: array
+    minItems: 1
+    items:
+      type: string
+      pattern: "^[a-z0-9-]+$"
+    description: "Tags for discovery and organization"
+    examples:
+      - product
+      - cargo
+      - booking
+
+# Additional validation rules
+additionalProperties: false
+
+# Conditional validations
+allOf:
+  - description: "Validate that avatar id matches product name"
+    properties:
+      avatar:
+        properties:
+          id:
+            description: "Product slug must be derivable from name"
+  
+  - description: "Validate that all example files are PRD-1.1 through PRD-5.1"
+    properties:
+      specializes_laws:
+        description: "Must have exactly PRD-1.1, 2.1, 3.1, 4.1, 5.1"
+        items:
+          properties:
+            id: {}
+            example_file: {}

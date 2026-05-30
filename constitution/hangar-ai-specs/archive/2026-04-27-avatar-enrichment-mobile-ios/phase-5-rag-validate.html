@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 5 — RAG Validate | Hangar AI Constitution Clinic</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0d1117; color: #e6edf3; margin: 0; padding: 0; }
+  .header { background: linear-gradient(135deg, #0a2540 0%, #1a1a2e 100%); padding: 40px 48px 32px; border-bottom: 1px solid #21262d; }
+  .header h1 { margin: 0 0 8px; font-size: 28px; font-weight: 700; color: #fff; }
+  .header .subtitle { color: #8b949e; font-size: 15px; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .pass { background: #1a3d2b; color: #3fb950; border: 1px solid #238636; }
+  .fail { background: #3d1f1f; color: #f85149; border: 1px solid #da3633; }
+  .blocking { background: #3d1f1f; color: #f85149; border: 1px solid #da3633; }
+  .fixed { background: #1a2d3d; color: #58a6ff; border: 1px solid #1f6feb; }
+  .advisory { background: #2d2208; color: #d29922; border: 1px solid #9e6a03; }
+  .section { max-width: 1100px; margin: 0 auto; padding: 32px 48px; }
+  h2 { font-size: 20px; color: #e6edf3; border-bottom: 1px solid #21262d; padding-bottom: 10px; margin-top: 40px; }
+  h3 { font-size: 16px; color: #79c0ff; margin-top: 28px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th { text-align: left; padding: 10px 14px; background: #161b22; color: #8b949e; font-weight: 600; border-bottom: 2px solid #21262d; }
+  td { padding: 10px 14px; border-bottom: 1px solid #21262d; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #161b22; }
+  .avatar-card { border: 1px solid #21262d; border-radius: 8px; margin: 24px 0; overflow: hidden; }
+  .avatar-header { background: #161b22; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+  .avatar-header .name { font-weight: 700; font-size: 15px; }
+  .avatar-header .type { color: #8b949e; font-size: 13px; }
+  .avatar-body { padding: 0; }
+  .verdict-bar { padding: 10px 20px; font-weight: 700; font-size: 13px; }
+  .verdict-pass { background: #1a3d2b; color: #3fb950; }
+  .verdict-blocked { background: #3d1f1f; color: #f85149; }
+  .blocker-note { background: #1c1c0a; border-left: 3px solid #d29922; padding: 10px 16px; margin: 0 20px 16px; font-size: 13px; color: #d29922; border-radius: 0 4px 4px 0; }
+  .fix-note { background: #0d2233; border-left: 3px solid #58a6ff; padding: 10px 16px; margin: 0 20px 16px; font-size: 13px; color: #58a6ff; border-radius: 0 4px 4px 0; }
+  .summary-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin: 24px 0; }
+  .summary-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px; text-align: center; }
+  .summary-card .big { font-size: 32px; font-weight: 700; }
+  .summary-card .label { font-size: 12px; color: #8b949e; margin-top: 4px; }
+  .teaching-note { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 20px 24px; margin: 24px 0; }
+  .teaching-note h4 { color: #79c0ff; margin: 0 0 10px; font-size: 14px; }
+  .teaching-note p { color: #8b949e; margin: 0; font-size: 13px; line-height: 1.6; }
+  code { background: #161b22; border: 1px solid #30363d; border-radius: 3px; padding: 1px 6px; font-size: 12px; color: #79c0ff; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Phase 5 — RAG Validate</h1>
+  <div class="subtitle">Hangar AI Constitution Clinic · Wave 4 Mobile · iOS Session · 2026-04-27</div>
+</div>
+
+<div class="section">
+
+  <h2>What This Phase Does</h2>
+  <p style="color:#8b949e; font-size:14px; line-height:1.7;">
+    Phase 5 simulates what an AI coding agent's RAG retrieval would return when it loads these avatars into context.
+    Five canonical queries are run against every avatar. If retrieval fails — file not findable, token budget blown,
+    phantom law ID cited — it surfaces here before we commit. Any BLOCKING query failure routes back to Phase 4.
+  </p>
+
+  <div class="teaching-note">
+    <h4>🎓 Teaching Point — Why RAG Validate catches what Phase 4 misses</h4>
+    <p>
+      Phase 4 focuses on <em>content</em>: did we enrich the right journeys, use cases, and examples?
+      Phase 5 focuses on <em>retrievability</em>: is each file independently queryable within the 3,500-token response window?
+      This session found all four product <code>guidance.md</code> files over the 450-token budget — unchanged since avatar creation.
+      The schedule-change avatar also had two phantom law citations (<code>ENG-9.4</code>, <code>ENG-2.3</code>) surviving in the guidance prose
+      after they were removed from the manifest in Phase 4. Phase 5 is the safety net that finds these. The fixes were applied before
+      final verdicts were issued — that is the correct workflow.
+    </p>
+  </div>
+
+  <h2>Phase 5 Findings — Pre-Correction</h2>
+  <p style="color:#f85149; font-size:13px;">⚠ Four BLOCKINGs found before verdicts could be issued. Fixes applied inline per workflow protocol.</p>
+
+  <table>
+    <tr>
+      <th>Avatar</th>
+      <th>Finding</th>
+      <th>Classification</th>
+      <th>Resolution</th>
+    </tr>
+    <tr>
+      <td><code>passenger-booking</code></td>
+      <td>guidance.md 625 words — over 450-token budget. Frontmatter had wrong avatar ID (<code>avatar-product-passenger-booking</code>).</td>
+      <td><span class="badge blocking">BLOCKING</span></td>
+      <td><span class="badge fixed">✓ FIXED</span> Trimmed to 300w. ID corrected. Full content → <code>guidance-detail.md</code>.</td>
+    </tr>
+    <tr>
+      <td><code>check-in-travel</code></td>
+      <td>guidance.md 3,336 words — 7× over budget.</td>
+      <td><span class="badge blocking">BLOCKING</span></td>
+      <td><span class="badge fixed">✓ FIXED</span> Trimmed to 318w. Full PRD law breakdowns → <code>guidance-detail.md</code>.</td>
+    </tr>
+    <tr>
+      <td><code>schedule-change-self-serve</code></td>
+      <td>guidance.md 1,063 words — over budget. Prose still cited <code>ENG-9.4</code> and <code>ENG-2.3</code> (phantom laws removed from manifest in Phase 4 but not from guidance prose).</td>
+      <td><span class="badge blocking">BLOCKING</span></td>
+      <td><span class="badge fixed">✓ FIXED</span> Trimmed to 311w. Phantom law citations removed. Full content → <code>guidance-detail.md</code>.</td>
+    </tr>
+    <tr>
+      <td><code>customer-relations-ops</code></td>
+      <td>guidance.md 1,412 words — over budget.</td>
+      <td><span class="badge blocking">BLOCKING</span></td>
+      <td><span class="badge fixed">✓ FIXED</span> Trimmed to 322w. Full content → <code>guidance-detail.md</code>.</td>
+    </tr>
+    <tr>
+      <td>Other avatars (out of scope)</td>
+      <td><code>skill-</code> prefix in guidance.md frontmatter for airport-operations, crew-training-scheduling, customer-service, internal-productivity avatars.</td>
+      <td><span class="badge advisory">ADVISORY</span></td>
+      <td>Out of scope for this iOS session. Flag for separate remediation run.</td>
+    </tr>
+  </table>
+
+  <h2>RAG Validation Results — All 5 Avatars</h2>
+
+  <!-- ios-swift -->
+  <div class="avatar-card">
+    <div class="avatar-header">
+      <span class="badge pass">TECHNOLOGY</span>
+      <span class="name">ios-swift</span>
+      <span class="type">avatar-ios-swift · Swift 5.9+ / XCTest / SwiftUI</span>
+    </div>
+    <div class="verdict-bar verdict-pass">✓ PASS — 5/5 queries · Recall 100% · All law IDs verified · Guidance 309w</div>
+    <div class="avatar-body">
+      <table>
+        <tr><th>Query</th><th>Test</th><th>Result</th><th>Evidence</th></tr>
+        <tr>
+          <td>Q1 — Law coverage</td>
+          <td>"What laws govern iOS development at AA?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>10 laws returned: ENG-4.1, ENG-4.2, ENG-3.1, ENG-3.2, ENG-2.2, ENG-6.1, ENG-6.4, ENG-6.7, ENG-10.1, ENG-11.1 · All verified in registry</td>
+        </tr>
+        <tr>
+          <td>Q2 — Example retrieval</td>
+          <td>"Show me an iOS example for ENG-4.1 Atomic TDD"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>examples/ENG-4.1-atomic-tdd.md</code> present · ENG-10.1 and ENG-11.1 examples present (new additions from Phase 4)</td>
+        </tr>
+        <tr>
+          <td>Q3 — Setup guidance</td>
+          <td>"How do I set up an iOS project at AA?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>guidance.md</code> 309 words ≤ 338 · project structure, fastlane lanes, SPM dependencies, test commands all present</td>
+        </tr>
+        <tr>
+          <td>Q4 — Use case retrieval</td>
+          <td>"What is the use case for MVVM+Combine in iOS?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>use-cases/mvvm-combine/README.md</code> present · <code>use-cases/protocol-di/README.md</code> present</td>
+        </tr>
+        <tr>
+          <td>Q5 — Skill activation</td>
+          <td>"What skills does the ios-swift avatar activate?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>5 skills: 06-atomic-tdd, 07-vertical-slice-dev, 08-code-review, 04-business-domain-modeling, 09-refactoring · 2 workflows: product-discovery-stage-a-f, greenfield-development</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- passenger-booking -->
+  <div class="avatar-card">
+    <div class="avatar-header">
+      <span class="badge advisory">PRODUCT</span>
+      <span class="name">passenger-booking</span>
+      <span class="type">avatar-passenger-booking · Flight Search, Fare Display, PCI-DSS Payment</span>
+    </div>
+    <div class="verdict-bar verdict-pass">✓ PASS — 5/5 queries · Recall 100% · guidance.md corrected from 625w → 300w</div>
+    <div class="avatar-body">
+      <div class="fix-note">guidance.md trimmed from 625w → 300w (pre-fix: BLOCKING). Frontmatter avatar ID corrected to <code>avatar-passenger-booking</code>. Full detail preserved in <code>guidance-detail.md</code>.</div>
+      <table>
+        <tr><th>Query</th><th>Test</th><th>Result</th><th>Evidence</th></tr>
+        <tr>
+          <td>Q1 — Law coverage</td>
+          <td>"What laws govern Passenger Booking at AA?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>BUS-2.1, BUS-2.2, BUS-2.4, ENG-6.1, ENG-6.4 in manifest + PRD non-negs in guidance · All verified in registry</td>
+        </tr>
+        <tr>
+          <td>Q2 — Example retrieval</td>
+          <td>"Show me a booking example for PRD-1.2 Problem-First"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>examples/PRD-1.2-problem-first.md</code> present · PRD-5.1, PRD-6.2, PRD-1.5, PRD-2.5 examples all present</td>
+        </tr>
+        <tr>
+          <td>Q3 — Setup guidance</td>
+          <td>"How do I approach booking product work at AA?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>guidance.md</code> 300w ≤ 338 · core laws table, key patterns, anti-patterns all retrievable</td>
+        </tr>
+        <tr>
+          <td>Q4 — Use case retrieval</td>
+          <td>"What is the use case for award booking?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>use-cases/award-booking/README.md</code> present · <code>use-cases/search-and-book/README.md</code> present</td>
+        </tr>
+        <tr>
+          <td>Q5 — Skill activation</td>
+          <td>"What skills does the passenger-booking avatar activate?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>11 skills: spec-governance, 02-user-journey-mapping, 02-research-synthesis, 03-executable-spec, 04-business-domain-modeling, 05-business-rules, 06-atomic-tdd, 07-vertical-slice-dev, 08-code-review, 10-security-review, 27-constitution-compliance</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- check-in-travel -->
+  <div class="avatar-card">
+    <div class="avatar-header">
+      <span class="badge advisory">PRODUCT</span>
+      <span class="name">check-in-travel</span>
+      <span class="type">avatar-check-in-travel · Mobile Check-In, Boarding Operations</span>
+    </div>
+    <div class="verdict-bar verdict-pass">✓ PASS — 5/5 queries · Recall 100% · guidance.md corrected from 3,336w → 318w</div>
+    <div class="avatar-body">
+      <div class="fix-note">guidance.md trimmed from 3,336w → 318w (pre-fix: BLOCKING — most severe overrun in this session). Full law applications, discovery examples, competitor benchmarks preserved in <code>guidance-detail.md</code>.</div>
+      <table>
+        <tr><th>Query</th><th>Test</th><th>Result</th><th>Evidence</th></tr>
+        <tr>
+          <td>Q1 — Law coverage</td>
+          <td>"What laws govern Check-In at AA?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>10 laws in manifest: PRD-1.1, PRD-2.1, PRD-3.1, PRD-4.1, PRD-5.1, BUS-2.1, BUS-2.2, BUS-2.4, ENG-6.4, ENG-6.7 · All verified in registry</td>
+        </tr>
+        <tr>
+          <td>Q2 — Example retrieval</td>
+          <td>"Show me a check-in example for PRD-1.1 Continuous Discovery"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>examples/PRD-1.1-discovery.md</code> present · 16 example files total, all ≤ 638w individually</td>
+        </tr>
+        <tr>
+          <td>Q3 — Setup guidance</td>
+          <td>"How do I approach check-in product work at AA?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>guidance.md</code> 318w ≤ 338 · 4 personas, 8 core laws, key patterns, anti-patterns retrievable</td>
+        </tr>
+        <tr>
+          <td>Q4 — Use case retrieval</td>
+          <td>"What is the use case for mobile check-in?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>use-cases/mobile-check-in/README.md</code> 661w ≤ 1,125w · digital-check-in (527w) and gate-operations (577w) also present</td>
+        </tr>
+        <tr>
+          <td>Q5 — Skill activation</td>
+          <td>"What skills does the check-in-travel avatar activate?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>9 skills: 01-customer-discovery, 02-user-journey-mapping, 02-research-synthesis, 03-executable-spec, 04-business-domain-modeling, 05-business-rules, 07-operational-excellence, 10-security-review, 27-constitution-compliance</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- schedule-change-self-serve -->
+  <div class="avatar-card">
+    <div class="avatar-header">
+      <span class="badge advisory">PRODUCT</span>
+      <span class="name">schedule-change-self-serve</span>
+      <span class="type">avatar-schedule-change-self-serve · Eligibility, Rebooking, Audit Trail</span>
+    </div>
+    <div class="verdict-bar verdict-pass">✓ PASS — 5/5 queries · Recall 100% · guidance.md 1,063w → 311w · phantom laws removed</div>
+    <div class="avatar-body">
+      <div class="fix-note">Two phantom law citations found in guidance prose: <code>ENG-9.4</code> (non-existent) and <code>ENG-2.3</code> (removed from manifest in Phase 4 but survived in guidance narrative). Both removed. guidance.md trimmed from 1,063w → 311w. Full content in <code>guidance-detail.md</code>.</div>
+      <table>
+        <tr><th>Query</th><th>Test</th><th>Result</th><th>Evidence</th></tr>
+        <tr>
+          <td>Q1 — Law coverage</td>
+          <td>"What laws govern Schedule Change at AA?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>10 laws in guidance frontmatter: PRD-1.1, PRD-2.1, PRD-3.1, PRD-4.1, PRD-5.1, BUS-2.1, BUS-2.2, BUS-2.4, ENG-6.4, ENG-6.7 · All verified · No phantom IDs remain</td>
+        </tr>
+        <tr>
+          <td>Q2 — Example retrieval</td>
+          <td>"Show me a schedule change example for PRD-3.1 Roadmap"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>examples/PRD-3.1-roadmap.md</code> present · 10 example files all present and ≤ 638w</td>
+        </tr>
+        <tr>
+          <td>Q3 — Setup guidance</td>
+          <td>"How do I approach schedule change product work at AA?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>guidance.md</code> 311w ≤ 338 · scope, law table, key patterns, anti-patterns all retrievable · no phantom laws</td>
+        </tr>
+        <tr>
+          <td>Q4 — Use case retrieval</td>
+          <td>"What is the conversational eligibility agent use case?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>use-cases/conversational-eligibility-agent/README.md</code> present · eligibility-check-reason-codes and self-serve-rebooking also present</td>
+        </tr>
+        <tr>
+          <td>Q5 — Skill activation</td>
+          <td>"What skills does the schedule-change avatar activate?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>9 skills: spec-governance, 02-user-journey-mapping, 04-business-domain-modeling, 05-business-rules, 12-api-design, 13-observability, 21-prompt-engineering, 23-ai-agents, product-discovery-stage-a-f + 2 workflows</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- customer-relations-ops -->
+  <div class="avatar-card">
+    <div class="avatar-header">
+      <span class="badge advisory">PRODUCT</span>
+      <span class="name">customer-relations-ops</span>
+      <span class="type">avatar-customer-relations-ops · AI Complaint Response, Compensation Decision</span>
+    </div>
+    <div class="verdict-bar verdict-pass">✓ PASS — 5/5 queries · Recall 100% · guidance.md corrected from 1,412w → 322w</div>
+    <div class="avatar-body">
+      <div class="fix-note">guidance.md trimmed from 1,412w → 322w. Journey maps, PRD law applications, agentic pipeline design preserved in <code>guidance-detail.md</code>.</div>
+      <table>
+        <tr><th>Query</th><th>Test</th><th>Result</th><th>Evidence</th></tr>
+        <tr>
+          <td>Q1 — Law coverage</td>
+          <td>"What laws govern Customer Relations Operations at AA?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>10 laws in guidance frontmatter: PRD-1.2, PRD-1.5, PRD-2.5, PRD-5.1, PRD-6.2, BUS-1.1, BUS-4.3, BUS-7.1, ENG-6.4, ENG-6.7 · All verified in registry</td>
+        </tr>
+        <tr>
+          <td>Q2 — Example retrieval</td>
+          <td>"Show me a CRO example for PRD-1.2 Problem-First"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>examples/PRD-1.2-problem-first.md</code> present · 6 example files all present and within budget</td>
+        </tr>
+        <tr>
+          <td>Q3 — Setup guidance</td>
+          <td>"How do I approach customer relations product work at AA?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>guidance.md</code> 322w ≤ 338 · silent pipeline, key laws, patterns, anti-patterns retrievable</td>
+        </tr>
+        <tr>
+          <td>Q4 — Use case retrieval</td>
+          <td>"What is the service recovery draft use case?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td><code>use-cases/service-recovery-draft/README.md</code> present (created Phase 4 advisory) · compensation-decision and complaint-draft-generation also present</td>
+        </tr>
+        <tr>
+          <td>Q5 — Skill activation</td>
+          <td>"What skills does the customer-relations-ops avatar activate?"</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>Skills list present in manifest: 21-prompt-engineering, 23-ai-agents, 05-business-rules, 13-observability, 10-security-review + workflows</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <h2>Summary</h2>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="big" style="color:#3fb950">5</div>
+      <div class="label">Avatars validated</div>
+    </div>
+    <div class="summary-card">
+      <div class="big" style="color:#3fb950">25/25</div>
+      <div class="label">Queries passed</div>
+    </div>
+    <div class="summary-card">
+      <div class="big" style="color:#3fb950">100%</div>
+      <div class="label">Recall</div>
+    </div>
+    <div class="summary-card">
+      <div class="big" style="color:#f85149">4</div>
+      <div class="label">BLOCKINGs found + fixed</div>
+    </div>
+    <div class="summary-card">
+      <div class="big" style="color:#d29922">1</div>
+      <div class="label">Advisory (out-of-scope avatars)</div>
+    </div>
+  </div>
+
+  <table>
+    <tr>
+      <th>Avatar</th>
+      <th>Q1 Laws</th>
+      <th>Q2 Examples</th>
+      <th>Q3 Guidance</th>
+      <th>Q4 Use Cases</th>
+      <th>Q5 Skills</th>
+      <th>Verdict</th>
+    </tr>
+    <tr>
+      <td><code>ios-swift</code></td>
+      <td><span class="badge pass">PASS</span> 10 laws</td>
+      <td><span class="badge pass">PASS</span> 10 files</td>
+      <td><span class="badge pass">PASS</span> 309w</td>
+      <td><span class="badge pass">PASS</span> 2 use cases</td>
+      <td><span class="badge pass">PASS</span> 5 skills</td>
+      <td><span class="badge pass">✓ PASS</span></td>
+    </tr>
+    <tr>
+      <td><code>passenger-booking</code></td>
+      <td><span class="badge pass">PASS</span> 5+ laws</td>
+      <td><span class="badge pass">PASS</span> 5 files</td>
+      <td><span class="badge pass">PASS</span> 300w</td>
+      <td><span class="badge pass">PASS</span> 2 use cases</td>
+      <td><span class="badge pass">PASS</span> 11 skills</td>
+      <td><span class="badge pass">✓ PASS</span></td>
+    </tr>
+    <tr>
+      <td><code>check-in-travel</code></td>
+      <td><span class="badge pass">PASS</span> 10 laws</td>
+      <td><span class="badge pass">PASS</span> 16 files</td>
+      <td><span class="badge pass">PASS</span> 318w</td>
+      <td><span class="badge pass">PASS</span> 3 use cases</td>
+      <td><span class="badge pass">PASS</span> 9 skills</td>
+      <td><span class="badge pass">✓ PASS</span></td>
+    </tr>
+    <tr>
+      <td><code>schedule-change-self-serve</code></td>
+      <td><span class="badge pass">PASS</span> 10 laws</td>
+      <td><span class="badge pass">PASS</span> 10 files</td>
+      <td><span class="badge pass">PASS</span> 311w</td>
+      <td><span class="badge pass">PASS</span> 3 use cases</td>
+      <td><span class="badge pass">PASS</span> 9 skills</td>
+      <td><span class="badge pass">✓ PASS</span></td>
+    </tr>
+    <tr>
+      <td><code>customer-relations-ops</code></td>
+      <td><span class="badge pass">PASS</span> 10 laws</td>
+      <td><span class="badge pass">PASS</span> 6 files</td>
+      <td><span class="badge pass">PASS</span> 322w</td>
+      <td><span class="badge pass">PASS</span> 3 use cases</td>
+      <td><span class="badge pass">PASS</span> 5+ skills</td>
+      <td><span class="badge pass">✓ PASS</span></td>
+    </tr>
+  </table>
+
+  <div class="teaching-note">
+    <h4>🎓 Teaching Point — The companion file pattern</h4>
+    <p>
+      Every <code>guidance.md</code> trimmed in this phase has a companion <code>guidance-detail.md</code> alongside it.
+      The trim file is agent-facing: dense signal, within the RAG token window, structured for retrieval.
+      The detail file is human-facing: full law breakdowns, journey maps, personas, benchmarks.
+      Agents load the trim. Humans read the detail. Neither loses information — they serve different readers.
+    </p>
+  </div>
+
+  <div class="teaching-note">
+    <h4>🎓 Teaching Point — Phantom laws are the hardest bug to catch</h4>
+    <p>
+      The <code>schedule-change-self-serve</code> guidance prose cited <code>ENG-9.4</code> and <code>ENG-2.3</code> — both removed from the manifest in Phase 4 —
+      because the manifest and the prose are separate files. Fixing one does not fix the other.
+      Phase 5 Q1 (law coverage) and Q3 (guidance retrieval) together surface this pattern.
+      When you remove a law from a manifest, grep the full avatar directory for that law ID before declaring the fix done.
+    </p>
+  </div>
+
+  <h2>Cleared for Phase 6 — Commit</h2>
+  <p style="color:#3fb950; font-size:14px; font-weight:600;">All 5 avatars: 5/5 queries PASS · Recall 100% · Zero phantom law citations · All files within token budget</p>
+  <p style="color:#8b949e; font-size:13px;">
+    Phase 6 will: update <code>avatars/index.yaml</code> for all 5 avatars (set <code>rag_validated: true</code>, <code>status: active</code>, <code>last_validated: 2026-04-27</code>, bump MINOR versions),
+    run the ENG-13.1 Render Gate, and commit all avatar changes to the hangar-ai-constitution repository.
+  </p>
+
+</div>
+</body>
+</html>

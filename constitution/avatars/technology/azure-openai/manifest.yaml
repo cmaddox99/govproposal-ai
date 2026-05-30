@@ -1,0 +1,123 @@
+# Azure OpenAI Avatar Manifest
+
+avatar:
+  id: avatar-azure-openai
+  type: technology
+  name: Azure OpenAI Service
+  version: "1.0.0"
+  created: "2026-03-18"
+  last_updated: "2026-03-18"
+
+stack:
+  language: Python 3.11+
+  platform: Azure OpenAI Service
+  frameworks:
+    - Azure OpenAI REST API
+    - openai SDK (azure transport)
+    - langchain-openai (AzureChatOpenAI)
+  testing:
+    - pytest
+    - pytest-asyncio
+    - responses (HTTP mock)
+    - unittest.mock
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - openai: ">=1.0,<2.0"
+    - langchain-openai: ">=0.1,<2.0"
+    - langchain-core: ">=1.2,<2.0"
+    - httpx: ">=0.28,<1.0"
+    - tenacity: ">=9.0,<10.0"
+  dev:
+    - pytest: ">=8.0,<9.0"
+    - pytest-asyncio: ">=0.22,<1.0"
+    - responses: ">=0.25,<1.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-21-prompt-engineering
+    - skill-07-vertical-slice-dev
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD
+    focus: LLM wrapper must be unit-testable with mocked HTTP responses; no live API calls in unit tests
+    example_file: "examples/ENG-4.1-wrapper-tdd.md"
+
+  - id: ENG-6.5
+    title: Input Validation
+    focus: Validate payload structure and required fields before every Azure OpenAI API call
+    example_file: "guidance.md"
+
+  - id: ENG-6.1
+    title: Security
+    focus: API keys must never be logged; Managed Identity preferred for production; key from env var only
+    example_file: "guidance.md"
+
+  - id: ENG-6.7
+    title: Audit Trail (Engineering)
+    focus: Transaction ID (TID) must propagate through every LLM call for end-to-end traceability
+    example_file: "guidance.md"
+
+env_vars:
+  required:
+    - name: AZURE_OPENAI_KEY
+      description: Azure OpenAI Service API key
+      security: Never log; rotate quarterly; use Managed Identity in production when available
+    - name: AZURE_OPENAI_MODEL
+      description: Deployment name (not model name) — e.g., "gpt-4o", "gpt-4.1"
+      note: Azure OpenAI routes by deployment name, not model name
+    - name: AZURE_OPENAI_VERSION
+      description: API version string — e.g., "2024-12-01-preview"
+      note: Pin this; breaking changes occur between versions
+    - name: AZURE_OPENAI_SERVICE
+      description: Azure OpenAI resource name (subdomain only, not full URL)
+      note: Endpoint is constructed as https://{AZURE_OPENAI_SERVICE}.openai.azure.com
+
+endpoint_pattern:
+  format: "https://{AZURE_OPENAI_SERVICE}.openai.azure.com"
+  note: |
+    Do NOT pass the full URL as an env var — pass only the service name and
+    construct the endpoint in code. This prevents misconfiguration from trailing
+    slashes or wrong subdomains.
+  correct: |
+    self.endpoint = f"https://{settings.azure_openai_service}.openai.azure.com"
+  incorrect: |
+    self.endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")  # fragile — accepts malformed URLs
+
+conventions:
+  tid_propagation:
+    description: Every LLM call must receive and propagate a Transaction ID (TID) for audit traceability
+    pattern: "_call_llm(self, tid: str, payload: dict) -> str"
+    anti_pattern: "_call_llm(self, payload: dict) -> str  # no TID — untraceable"
+
+  wrapper_class:
+    description: Custom LLM wrapper class that encapsulates Azure OpenAI specifics
+    recommended_name: AzureLLMWrapper
+    benefits:
+      - Centralized API version management
+      - TID propagation enforced at single point
+      - Retry logic colocated with transport
+      - Testable without live Azure credentials
+
+  logging:
+    do:
+      - Log TID, model deployment name, token usage (prompt + completion)
+      - Log finish_reason and content_filter_results
+    never:
+      - Log API key or any part of the Authorization header
+      - Log full prompt content in production (may contain PII)
+      - Log customer complaint text in any log level
+
+commands:
+  test:
+    all: pytest tests/
+    unit: pytest tests/unit/ -v
+    coverage: pytest --cov=app --cov-report=html

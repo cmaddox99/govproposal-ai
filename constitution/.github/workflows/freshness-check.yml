@@ -1,0 +1,212 @@
+name: Freshness Check
+
+# ENG-11.3 — Spec Freshness Law
+# OR-logic: fail if (source SHA changed since last render) OR (page age > 30 days)
+# Applies to: all auto-generated pages (data-source-commit), all manual pages (data-registry-version)
+# Required status check on main — PRs cannot merge with a failing result.
+#
+# Paths filter: only runs when the adoption-guide changeset itself or its genuine
+# source files (laws/index.yaml) are modified. Broad directory tracking (agent-skills/,
+# avatars/) caused false positives on every unrelated PR — jury finding 2026-05-26.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'hangar-ai-specs/changes/build-adoption-guide-2026-001/**'
+      - 'laws/index.yaml'
+  push:
+    branches: [main]
+    paths:
+      - 'hangar-ai-specs/changes/build-adoption-guide-2026-001/**'
+      - 'laws/index.yaml'
+
+jobs:
+
+  # ── GATE 1: Generated-page SHA + age check ────────────────────────────────
+  freshness-check:
+    name: ENG-11.3 Freshness Gate
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    outputs:
+      failed: ${{ steps.check.outputs.FAILED }}
+      manual_failures: ${{ steps.check.outputs.MANUAL_FAILURES }}
+
+    steps:
+      - name: Checkout (full history for SHA comparison)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check all adoption-guide HTML pages
+        id: check
+        run: |
+          set -euo pipefail
+          FAILED=0
+          NOW=$(date +%s)
+          THIRTY_DAYS_SECS=$((30 * 24 * 3600))
+          CHANGESET="hangar-ai-specs/changes/build-adoption-guide-2026-001"
+
+          # Get current law registry version for manual-page check
+          # Strip YAML quotes: `version: "2.0.0"` → awk yields `"2.0.0"` → tr strips to `2.0.0`
+          REGISTRY_VERSION=$(grep -m1 '^version:' laws/index.yaml 2>/dev/null \
+            | awk '{print $2}' | tr -d '"' || echo "unknown")
+
+          echo "## ENG-11.3 Freshness Report" >> "$GITHUB_STEP_SUMMARY"
+          echo "Registry version: \`$REGISTRY_VERSION\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Auto-generated pages" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Page | Source SHA | Age | Status |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|------|-----------|-----|--------|" >> "$GITHUB_STEP_SUMMARY"
+
+          # ── Auto-generated pages (data-source-commit) ────────────────────
+          while IFS= read -r html_file; do
+            PAGE=$(basename "$html_file")
+
+            EMBEDDED_SHA=$(grep -oP 'data-source-commit="\K[^"]+' "$html_file" | head -1 || echo "")
+            EMBEDDED_TS=$(grep -oP 'data-render-timestamp="\K[^"]+' "$html_file" | head -1 || echo "")
+            SOURCE_FILES=$(grep -oP 'data-source-files="\K[^"]+' "$html_file" | head -1 || echo "")
+
+            SHA_STATUS="✅"
+            AGE_STATUS="✅"
+            PAGE_FAILED=0
+
+            # OR-condition 1: source SHA changed
+            if [ -n "$SOURCE_FILES" ] && [ -n "$EMBEDDED_SHA" ]; then
+              # shellcheck disable=SC2086
+              LATEST_SHA=$(git log --format="%H" -1 -- \
+                $(echo "$SOURCE_FILES" | tr ',' ' ') 2>/dev/null | head -1 || echo "")
+              if [ -n "$LATEST_SHA" ] && [ "$LATEST_SHA" != "$EMBEDDED_SHA" ]; then
+                SHA_STATUS="❌ stale (was ${EMBEDDED_SHA:0:7}, now ${LATEST_SHA:0:7})"
+                PAGE_FAILED=1
+              fi
+            fi
+
+            # OR-condition 2: page timestamp > 30 days
+            if [ -n "$EMBEDDED_TS" ]; then
+              FILE_TS=$(date -d "$EMBEDDED_TS" +%s 2>/dev/null || echo 0)
+              AGE=$(( NOW - FILE_TS ))
+              DAYS=$(( AGE / 86400 ))
+              if [ "$AGE" -gt "$THIRTY_DAYS_SECS" ]; then
+                AGE_STATUS="❌ ${DAYS}d (>30)"
+                PAGE_FAILED=1
+              else
+                AGE_STATUS="✅ ${DAYS}d"
+              fi
+            fi
+
+            ROW_STATUS="✅ FRESH"
+            if [ "$PAGE_FAILED" -eq 1 ]; then
+              ROW_STATUS="❌ STALE"
+              FAILED=1
+              echo "::error file=$html_file::STALE — re-render required (ENG-11.3)"
+            fi
+
+            echo "| \`$PAGE\` | $SHA_STATUS | $AGE_STATUS | $ROW_STATUS |" >> "$GITHUB_STEP_SUMMARY"
+          done < <(grep -rl --include='*.html' 'data-source-commit' "$CHANGESET" 2>/dev/null || true)
+
+          # ── Manual pages (data-registry-version) ─────────────────────────
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Manual pages" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Page | Embedded Version | Registry Version | Status |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|------|-----------------|-----------------|--------|" >> "$GITHUB_STEP_SUMMARY"
+
+          MANUAL_FAILURES=""
+          while IFS= read -r html_file; do
+            PAGE=$(basename "$html_file")
+            EMBEDDED_VER=$(grep -oP 'data-registry-version="\K[^"]+' "$html_file" | head -1 || echo "")
+            if [ -n "$EMBEDDED_VER" ] && [ "$EMBEDDED_VER" != "$REGISTRY_VERSION" ]; then
+              echo "| \`$PAGE\` | $EMBEDDED_VER | $REGISTRY_VERSION | ❌ VERSION DRIFT |" >> "$GITHUB_STEP_SUMMARY"
+              MANUAL_FAILURES="${MANUAL_FAILURES}\n- \`$PAGE\` (embedded: \`$EMBEDDED_VER\`, current: \`$REGISTRY_VERSION\`)"
+              FAILED=1
+              echo "::warning file=$html_file::Registry version drift — manual re-render required"
+            else
+              echo "| \`$PAGE\` | $EMBEDDED_VER | $REGISTRY_VERSION | ✅ CURRENT |" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done < <(grep -rl --include='*.html' 'data-registry-version' "$CHANGESET" 2>/dev/null || true)
+
+          # Export outputs
+          if [ -n "$MANUAL_FAILURES" ]; then
+            {
+              echo "MANUAL_FAILURES<<EOF"
+              echo -e "$MANUAL_FAILURES"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "FAILED=$FAILED" >> "$GITHUB_OUTPUT"
+          exit $FAILED
+
+      # Post PR comment when manual pages need re-render
+      - name: Comment — manual page review needed
+        if: failure() && steps.check.outputs.manual_failures != '' && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const failures = process.env.MANUAL_FAILURES;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: [
+                '## ⚠️ ENG-11.3 Manual Page Review Required',
+                '',
+                'The law registry version has bumped since these pages were last rendered.',
+                'Re-render and commit before merging:',
+                failures,
+                '',
+                '_This comment is posted automatically by the ENG-11.3 freshness gate._'
+              ].join('\n')
+            });
+        env:
+          MANUAL_FAILURES: ${{ steps.check.outputs.MANUAL_FAILURES }}
+
+  # ── GATE 2: Vitest unit tests ─────────────────────────────────────────────
+  vitest:
+    name: Vitest Unit Tests (ENG-4.1 ⛔)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hangar-ai-specs/changes/build-adoption-guide-2026-001
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect package.json
+        id: detect
+        run: |
+          if [ -f "package.json" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No package.json found — Vitest gate skipped (T3.3 not yet complete)"
+          fi
+
+      - name: Detect test files
+        id: detect-tests
+        if: steps.detect.outputs.exists == 'true'
+        run: |
+          if find . -type f \( -name '*.test.*' -o -name '*.spec.*' \) 2>/dev/null | grep -q .; then
+            echo "has_tests=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_tests=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No test files found — Vitest gate skipped (T3.3b not yet complete)"
+          fi
+
+      - name: Setup Node.js 20
+        if: steps.detect.outputs.exists == 'true' && steps.detect-tests.outputs.has_tests == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: hangar-ai-specs/changes/build-adoption-guide-2026-001/package-lock.json
+
+      - name: Install dependencies
+        if: steps.detect.outputs.exists == 'true' && steps.detect-tests.outputs.has_tests == 'true'
+        run: npm ci
+
+      - name: Run Vitest
+        if: steps.detect.outputs.exists == 'true' && steps.detect-tests.outputs.has_tests == 'true'
+        run: npx vitest run --reporter=verbose

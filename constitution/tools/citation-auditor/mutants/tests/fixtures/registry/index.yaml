@@ -1,0 +1,25 @@
+---
+# Minimal fixture registry for unit tests
+# Mirrors structure of real laws/index.yaml (Phase 4 §4.1 + §3.3)
+
+domains:
+  engineering:
+    files:
+      - laws/engineering/naming.md
+      - laws/engineering/testing.md
+    articles:
+      III: naming
+      IV: testing
+
+law_ids:
+  engineering:
+    - ENG-3.5
+    - ENG-4.6
+
+non_negotiable:
+  engineering:
+    - ENG-4.6
+
+law_counts:
+  engineering: 2
+  total: 2

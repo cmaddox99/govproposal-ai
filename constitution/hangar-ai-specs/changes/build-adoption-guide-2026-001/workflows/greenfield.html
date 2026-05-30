@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="en"
+  data-page-id="P9-GF"
+  data-registry-version="2.0.0"
+  data-render-timestamp="2026-05-07T18:00:00Z">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌱 Greenfield Development Workflow — Hangar AI Constitution Adoption Guide</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   ADOPTION GUIDE DESIGN SYSTEM v2 — ENG-13.1 ⛔ COMPLIANT
+   Zero external deps. System fonts only. Inner pages.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── RESET & TOKENS ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #132033;
+  background:
+    radial-gradient(circle at top right, rgba(199,155,44,0.12), transparent 30%),
+    radial-gradient(circle at left 20%, rgba(0,51,102,0.06), transparent 25%),
+    linear-gradient(180deg, #fdfcf8 0%, #f2f5fa 50%, #f8f2ea 100%);
+  min-height: 100vh;
+}
+a { color: inherit; }
+h1,h2,h3,h4 {
+  margin: 0;
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-weight: 700;
+  line-height: 1.08;
+}
+p { margin: 0 0 1rem; }
+ul, ol { margin: 0 0 1rem; padding-left: 1.4rem; }
+li { margin-bottom: 0.4rem; }
+code {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88em;
+  background: rgba(0,51,102,0.07);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+pre {
+  background: #0f1f3d;
+  color: #e8f0f8;
+  padding: 20px;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────────────── */
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+main { padding-bottom: 72px; }
+section { margin-top: 56px; }
+.section-head { margin-bottom: 28px; }
+.section-label {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #cc0000;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.section-head h2 {
+  font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+  letter-spacing: -0.03em;
+  color: #132033;
+}
+.section-head p {
+  margin: 12px 0 0;
+  max-width: 680px;
+  color: #566579;
+  font-size: 1rem;
+}
+
+/* ── STICKY NAV ──────────────────────────────────────────────────── */
+.site-nav {
+  background: #001a40;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+  gap: 16px;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.88);
+  text-decoration: none;
+}
+.nav-brand-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fff, #f7ca66);
+  flex-shrink: 0;
+}
+.nav-links { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.nav-link {
+  color: rgba(255,255,255,0.68);
+  text-decoration: none;
+  font-size: 0.83rem;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+.nav-link:hover { color: #fff; }
+.btn-nav-home {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: #fff;
+  font-size: 0.80rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btn-nav-home:hover { background: rgba(255,255,255,0.18); }
+
+/* ── PAGE HERO ───────────────────────────────────────────────────── */
+.page-hero-wrap { padding: 36px 0 28px; }
+.page-hero {
+  padding: 44px 44px 40px;
+  border-radius: 30px;
+  background: linear-gradient(140deg, #001a40 0%, #003366 58%, #0d4080 100%);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 20px 60px rgba(0,26,64,0.22);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: auto -8% -40% 55%;
+  height: 280px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+  transform: rotate(-8deg);
+}
+.page-hero::after {
+  content: "";
+  position: absolute;
+  right: -50px; top: -50px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.07);
+  pointer-events: none;
+}
+.eyebrow {
+  display: inline-block;
+  color: #ffd880;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.page-hero h1 {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-top: 14px;
+  text-shadow: 0 2px 20px rgba(0,26,64,0.30);
+}
+.page-hero .subtitle {
+  margin: 16px 0 0;
+  max-width: 680px;
+  color: rgba(255,255,255,0.80);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+.persona-routing { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.routing-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* ── CONTENT CARDS ───────────────────────────────────────────────── */
+.card {
+  padding: 28px 26px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  box-shadow: 0 14px 36px rgba(0,26,64,0.09);
+  margin-bottom: 16px;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 48px rgba(0,26,64,0.14);
+}
+.card h3 {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: #132033;
+  margin-bottom: 10px;
+}
+
+/* ── CALLOUTS ────────────────────────────────────────────────────── */
+.callout-warning, .callout-amber {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(255,215,0,0.08); border-left: 4px solid #c79b2c;
+  margin: 12px 0;
+}
+.callout-danger, .callout-red {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(204,0,0,0.06); border-left: 4px solid #cc0000;
+  margin: 12px 0;
+}
+.callout-info, .callout-blue {
+  padding: 16px 20px; border-radius: 14px;
+  background: #eaf0f7; border-left: 4px solid #0066cc;
+  margin: 12px 0;
+}
+.callout-success, .callout-green {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(0,153,76,0.07); border-left: 4px solid #009934;
+  margin: 12px 0;
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: #003366;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-primary:hover { background: #001a40; transform: translateY(-1px); }
+
+.btn-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: rgba(0,51,102,0.08);
+  border: 1px solid rgba(0,51,102,0.14);
+  color: #003366;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.btn-copy:hover { background: rgba(0,51,102,0.14); }
+.btn-copy.copied { background: rgba(0,153,76,0.12); border-color: rgba(0,153,76,0.20); color: #007a2e; }
+
+/* ── ACCORDIONS ──────────────────────────────────────────────────── */
+details {
+  border-radius: 14px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+details[open] { box-shadow: 0 8px 24px rgba(0,26,64,0.09); }
+summary {
+  padding: 18px 20px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #132033;
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  gap: 12px;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after {
+  content: "▾";
+  color: #566579;
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+  font-family: sans-serif;
+  flex-shrink: 0;
+}
+details[open] summary::after { transform: rotate(180deg); }
+.details-body { padding: 4px 20px 20px; }
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+th {
+  background: #003366;
+  color: #fff;
+  padding: 12px 14px;
+  font-size: 0.83rem;
+  text-align: left;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0,51,102,0.09);
+  vertical-align: top;
+  font-size: 0.92rem;
+  color: #132033;
+}
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: rgba(0,51,102,0.03); }
+
+/* ── TAGS / PILLS ────────────────────────────────────────────────── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #eaf0f7;
+  color: #003366;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.tag-gold { background: rgba(199,155,44,0.15); color: #7a5800; }
+.tag-red { background: rgba(204,0,0,0.08); color: #cc0000; }
+.tag-green { background: rgba(0,153,76,0.10); color: #007a2e; }
+.tag-navy { background: rgba(0,51,102,0.12); color: #003366; }
+
+/* ── PHASE STEPS (design system base) ───────────────────────────── */
+.phase-step {
+  padding: 28px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  box-shadow: 0 14px 36px rgba(0,26,64,0.08);
+  margin-bottom: 20px;
+}
+
+/* ── GRID HELPERS ────────────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 820px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* ── FOOTER ──────────────────────────────────────────────────────── */
+footer {
+  background: #003366;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.82rem;
+  padding: 36px 24px;
+  text-align: center;
+  line-height: 2;
+  border-top: 2px solid #001a40;
+}
+.footer-inner { max-width: 1180px; margin: 0 auto; }
+.footer-title {
+  color: rgba(255,255,255,0.82);
+  font-weight: 700;
+  font-size: 0.92rem;
+  margin-bottom: 4px;
+}
+footer a { color: rgba(106,171,221,0.90); text-decoration: none; font-weight: 600; }
+footer a:hover { text-decoration: underline; color: #fff; }
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin-top: 12px;
+}
+.footer-sep { color: rgba(255,255,255,0.20); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PAGE-SPECIFIC STYLES — P9-GF Greenfield Workflow
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Page tokens (used by page components) ── */
+:root {
+  --navy:   #003366;
+  --red:    #cc0000;
+  --blue:   #0066cc;
+  --light:  #f4f6f9;
+  --eng:    #1a6b3a;
+  --eng-bg: #f0faf4;
+  --eng-bdr:#34a853;
+  --radius: 10px;
+  --shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+/* ── Page content wrapper ── */
+.page { max-width: 1180px; margin: 0 auto; padding: 36px 24px 80px; }
+
+/* ── Section title ── */
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: #666;
+  margin: 36px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #dde3ea;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.section-title::before {
+  content: '';
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--blue);
+  display: inline-block;
+}
+.section-title.red::before   { background: var(--red); }
+.section-title.green::before { background: var(--eng); }
+.section-title.navy::before  { background: var(--navy); }
+
+/* ── DC-12 Persona badges (visible) ── */
+.persona-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  padding: 14px 20px;
+  background: var(--navy);
+  border-radius: var(--radius);
+}
+.persona-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #8aabcc;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-right: 4px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.persona-pill {
+  background: rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #cdf;
+}
+
+/* ── DC-08 When to Use ── */
+.when-box {
+  background: #fff;
+  border: 1px solid #e4eaf2;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px 28px 28px;
+  margin-bottom: 24px;
+}
+.when-box h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.when-box .dc-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 4px;
+  padding: 2px 7px;
+  letter-spacing: .4px;
+}
+.when-box .subtitle {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 20px;
+}
+.when-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+@media (max-width: 620px) { .when-cols { grid-template-columns: 1fr; } }
+.when-col h3 {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid;
+}
+.when-col.use h3   { color: var(--eng); border-color: var(--eng-bdr); }
+.when-col.avoid h3 { color: var(--red); border-color: var(--red); }
+.when-col ul { list-style: none; display: flex; flex-direction: column; gap: 7px; padding-left: 0; margin: 0; }
+.when-col li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: #2a3a50;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+.when-col li .icon { flex-shrink: 0; margin-top: 1px; }
+
+/* ── DC-11 Non-determinism (green) ── */
+.nondeterminism-box {
+  background: var(--eng-bg);
+  border-left: 4px solid var(--eng-bdr);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.nd-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.nd-body .dc-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.dc-tag {
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--eng);
+  color: #fff;
+  border-radius: 4px;
+  padding: 2px 7px;
+  letter-spacing: .4px;
+}
+.nd-body h2 { font-size: 15px; font-weight: 700; color: #0a4020; margin-bottom: 8px; }
+.nd-body p  { font-size: 13px; color: #1a4028; line-height: 1.65; }
+.nd-body strong { color: #0a3820; }
+
+/* ── ENG-4.1 TDD callout (red-bordered, visible) ── */
+.tdd-callout {
+  background: #fff5f5;
+  border: 2px solid var(--red);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.tdd-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.tdd-body h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--red);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tdd-body p { font-size: 13px; color: #4a1010; line-height: 1.6; }
+.tdd-body strong { color: var(--red); }
+
+/* ── Phase Timeline ── */
+.timeline-wrap {
+  overflow-x: auto;
+  padding: 8px 0 4px;
+  margin-bottom: 28px;
+}
+.timeline {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-width: 680px;
+}
+.tl-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+.tl-step::after {
+  content: '→';
+  position: absolute;
+  right: -10px;
+  top: 24px;
+  font-size: 16px;
+  color: #99b;
+  z-index: 1;
+}
+.tl-step:last-child::after { display: none; }
+.tl-bubble {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+  transition: transform .15s;
+}
+.tl-bubble.tdd-phase  { background: var(--red); box-shadow: 0 2px 8px rgba(204,0,0,.35); }
+.tl-bubble.ship-phase { background: var(--eng); box-shadow: 0 2px 8px rgba(26,107,58,.35); }
+.tl-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-top: 8px;
+  text-align: center;
+  line-height: 1.3;
+}
+.tl-sublabel {
+  font-size: 10px;
+  color: #888;
+  text-align: center;
+  margin-top: 2px;
+  max-width: 68px;
+}
+.tl-badge {
+  font-size: 9px;
+  font-weight: 700;
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin-top: 4px;
+}
+.tl-badge.law  { background: #ffeeee; color: var(--red); }
+.tl-badge.ship { background: var(--eng-bg); color: var(--eng); }
+
+/* ── Trigger box ── */
+.trigger-box {
+  background: #fff;
+  border: 1px solid #e4eaf2;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+.trigger-box h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.trigger-phrase-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.trigger-code {
+  flex: 1;
+  background: #1a2332;
+  color: #a8d8a8;
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.copy-btn {
+  flex-shrink: 0;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+  white-space: nowrap;
+}
+.copy-btn:hover  { background: #004fa3; }
+.copy-btn:active { transform: scale(.97); }
+.copy-btn:focus  { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+/* ── Phase cards ── */
+.phase-card {
+  background: #fff;
+  border: 1px solid #e4eaf2;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.phase-card.collapsed .phase-body { display: none; }
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 16px 20px;
+  transition: background .12s;
+  margin-bottom: 0;
+}
+.phase-header:hover  { background: var(--light); }
+.phase-header:focus  { outline: 2px solid var(--blue); outline-offset: -2px; }
+.phase-num {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: none;
+}
+.phase-num.tdd  { background: var(--red); }
+.phase-num.ship { background: var(--eng); }
+.phase-title-wrap { flex: 1; }
+.phase-title-wrap h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.3;
+  letter-spacing: normal;
+}
+.phase-title-wrap .phase-sub {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.phase-tags { display: flex; gap: 6px; align-items: center; }
+.phase-tag {
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 2px 7px;
+}
+.phase-tag.law  { background: #ffeeee; color: var(--red); border: 1px solid #ffcccc; }
+.phase-tag.ship { background: var(--eng-bg); color: var(--eng); border: 1px solid #b2dfc0; }
+.expand-icon {
+  font-size: 18px;
+  color: #99b;
+  flex-shrink: 0;
+  transition: transform .2s;
+  user-select: none;
+}
+.phase-card:not(.collapsed) .expand-icon { transform: rotate(180deg); }
+.phase-body { padding: 0 20px 24px; }
+
+/* ── Prompt tabs ── */
+.prompt-tabs { display: flex; gap: 0; margin-bottom: 0; border-bottom: 1px solid #dde3ea; }
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color .12s, border-color .12s;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.tab-btn[aria-selected="true"] { color: var(--blue); border-bottom-color: var(--blue); }
+.tab-btn:hover  { color: var(--blue); }
+.tab-btn:focus  { outline: 2px solid var(--blue); outline-offset: 2px; }
+.tab-panel { display: none; padding: 16px 0 0; }
+.tab-panel.active { display: block; }
+.prompt-wrap { display: flex; align-items: flex-start; gap: 10px; }
+.prompt-code {
+  flex: 1;
+  background: #1a2332;
+  color: #a8d8a8;
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 0;
+}
+.prompt-code.ide  { color: #b8d0ee; }
+.prompt-code.yaml { color: #f0c080; }
+
+/* ── DC-10 Gate evidence ── */
+.gate-card {
+  background: #f9fbfd;
+  border: 1px solid #d0dcea;
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-top: 16px;
+}
+.gate-card h4 {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.gate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 660px) { .gate-grid { grid-template-columns: 1fr; } }
+.gate-item { display: flex; flex-direction: column; gap: 4px; }
+.gate-item .gi-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #888;
+}
+.gate-item .gi-value {
+  font-size: 13px;
+  color: #1a2332;
+  line-height: 1.5;
+  margin: 0;
+}
+.gate-item .gi-value code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  background: #e8edf5;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: var(--navy);
+}
+.drift-list { list-style: none; display: flex; flex-direction: column; gap: 6px; padding-left: 0; margin: 0; }
+.drift-item {
+  font-size: 12px;
+  color: #5a2a0a;
+  background: #fff5ee;
+  border-left: 3px solid #e06010;
+  border-radius: 0 4px 4px 0;
+  padding: 5px 10px;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+.drift-item strong { color: #c04800; }
+
+/* ── Decision question ── */
+.decision-q {
+  background: #eef4ff;
+  border: 1px solid #b8cff0;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #001a60;
+  margin-top: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.decision-q::before {
+  content: '❓';
+  flex-shrink: 0;
+}
+
+/* ── Key decisions table ── */
+.decisions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: #fff;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.decisions-table th {
+  background: var(--navy);
+  color: #fff;
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.decisions-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #e8edf5;
+  vertical-align: top;
+  color: #2a3a50;
+  line-height: 1.5;
+  font-size: 13px;
+}
+.decisions-table tr:last-child td { border-bottom: none; }
+.decisions-table tr:nth-child(even) td { background: #f7f9fc; }
+.decisions-table .tdd-row td { border-left: 3px solid var(--red); }
+.decisions-table .ship-row td { border-left: 3px solid var(--eng); }
+.gate-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 2px 7px;
+  background: #e8edf5;
+  color: var(--navy);
+}
+.gate-badge.red   { background: #ffeeee; color: var(--red); }
+.gate-badge.green { background: var(--eng-bg); color: var(--eng); }
+
+/* ── Utility ── */
+.divider { height: 1px; background: #dde3ea; margin: 20px 0; }
+.law-chip {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  background: #ffeeee;
+  color: var(--red);
+  border: 1px solid #ffcccc;
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin: 0 2px 2px 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.law-chip.blue { background: #eef0ff; color: var(--blue); border-color: #b8cff0; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Site navigation">
+  <div class="nav-inner">
+    <a href="../p1-landing.html" class="nav-brand" aria-label="Adoption Guide Home">
+      <div class="nav-brand-dot" aria-hidden="true"></div>
+      Hangar AI · Adoption Guide
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">All Workflows</a>
+      <a href="../phase-gate-guide.html" class="nav-link">Phase Gate Guide</a>
+      <a href="../p1-landing.html" class="btn-nav-home">← Guide Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="page-hero-wrap">
+    <div class="page-hero">
+      <div class="eyebrow">WORKFLOW · GREENFIELD</div>
+      <h1>Greenfield Development Workflow</h1>
+      <p class="subtitle">Eight phases to build a new system under constitutional AI governance from the first commit — ENG-4.1 ⛔ TDD enforced at every phase gate.</p>
+      <div class="persona-routing" aria-label="Intended audiences">
+        <span class="routing-chip">🎓 Coach ✅</span>
+        <span class="routing-chip">🏗️ Architect ✅</span>
+        <span class="routing-chip">⚙️ Engineer ✅</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ─── DC-12 Persona routing (visible) ─────────────────── -->
+  <div class="persona-row" role="note" aria-label="DC-12 persona routing">
+    <span class="persona-label">👥 DC-12 · Who uses this:</span>
+    <span class="persona-pill">Technical Coach ✅</span>
+    <span class="persona-pill">Senior Architect ✅</span>
+    <span class="persona-pill">Engineer ✅</span>
+  </div>
+
+  <!-- ─── DC-08 When to Use (VISIBLE — NOT in accordion) ──── -->
+  <div class="when-box" id="when-to-use" role="region" aria-label="DC-08 When to Use">
+    <h2>
+      <span>🎯 When to Use Greenfield</span>
+      <span class="dc-badge">DC-08</span>
+    </h2>
+    <div class="subtitle">Read this before starting. Choosing the wrong workflow wastes a sprint.</div>
+    <div class="when-cols">
+      <div class="when-col use">
+        <h3>✅ Use Greenfield when…</h3>
+        <ul>
+          <li><span class="icon">✅</span> Building a net-new service, API, or module from scratch</li>
+          <li><span class="icon">✅</span> No existing code to characterise — clean slate</li>
+          <li><span class="icon">✅</span> Constitution has already been adopted (<code>AGENTS.md</code> + <code>hangar-ai-specs/</code> exist)</li>
+          <li><span class="icon">✅</span> You have a defined bounded context and domain model</li>
+        </ul>
+      </div>
+      <div class="when-col avoid">
+        <h3>❌ Do NOT use Greenfield if…</h3>
+        <ul>
+          <li><span class="icon">❌</span> The code already exists — use <strong>Legacy Rescue</strong> instead</li>
+          <li><span class="icon">❌</span> The repo is not adopted yet — run <strong>Adoption</strong> first</li>
+          <li><span class="icon">❌</span> You haven't defined your domain — Phase 1 will scaffold it, but you need a starting concept</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── DC-11 Non-Determinism callout (VISIBLE green box) ── -->
+  <div class="nondeterminism-box" id="dc-11-callout" role="note">
+    <div class="nd-icon">🎲</div>
+    <div class="nd-body">
+      <div class="dc-tags">
+        <span class="dc-tag">DC-11</span>
+        <span class="dc-tag">Non-Determinism</span>
+      </div>
+      <h2>Greenfield output varies between runs</h2>
+      <p>Domain models, API contracts, and test structures the agent produces are <strong>starting proposals — not final designs.</strong> At <strong>Phase 2 (Spec)</strong>, you <strong>MUST review and approve</strong> the constitutional spec before any code is written. The spec is the constitution of your new service.</p>
+      <p>Every subsequent phase is governed by it. If the spec is wrong, everything built on top of it is wrong. Treat Phase 2 approval as a <strong>non-negotiable human checkpoint.</strong></p>
+    </div>
+  </div>
+
+  <!-- ─── ENG-4.1 TDD callout (red-bordered, VISIBLE) ─────── -->
+  <div class="tdd-callout" id="eng-4-1-callout" role="alert">
+    <div class="tdd-icon">⛔</div>
+    <div class="tdd-body">
+      <h3>⛔ ENG-4.1 — Tests First. Always.</h3>
+      <p>The Greenfield workflow enforces TDD: <strong>Phase 4 writes failing tests before any implementation.</strong> If the agent writes implementation before tests at any phase, <strong>OBJECT immediately.</strong> This is a non-negotiable constitutional law. A codebase where tests are written after implementation does not comply with ENG-4.1. The PR must not merge.</p>
+    </div>
+  </div>
+
+  <!-- ─── 8-Phase Visual Timeline ──────────────────────────── -->
+  <div class="section-title navy">8-Phase Build Timeline</div>
+  <div class="timeline-wrap" role="img" aria-label="Greenfield 8-phase build timeline">
+    <div class="timeline">
+      <div class="tl-step">
+        <div class="tl-bubble">1</div>
+        <div class="tl-label">Domain</div>
+        <div class="tl-sublabel">Bounded context &amp; model</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-bubble">2</div>
+        <div class="tl-label">Spec</div>
+        <div class="tl-sublabel">Constitutional spec</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-bubble">3</div>
+        <div class="tl-label">Slice</div>
+        <div class="tl-sublabel">Vertical slice</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-bubble tdd-phase">4</div>
+        <div class="tl-label">TDD ⛔</div>
+        <div class="tl-sublabel">Tests first</div>
+        <div class="tl-badge law">ENG-4.1</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-bubble">5</div>
+        <div class="tl-label">API</div>
+        <div class="tl-sublabel">Contract validation</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-bubble">6</div>
+        <div class="tl-label">Security</div>
+        <div class="tl-sublabel">BUS law review</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-bubble">7</div>
+        <div class="tl-label">Mutation</div>
+        <div class="tl-sublabel">≥ 90% score</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-bubble ship-phase">8</div>
+        <div class="tl-label">Ship 🚀</div>
+        <div class="tl-sublabel">Certification &amp; delivery</div>
+        <div class="tl-badge ship">Milestone</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── YAML Trigger Phrase ──────────────────────────────── -->
+  <div class="section-title">Workflow trigger phrase</div>
+  <div class="trigger-box">
+    <h3>📌 Invoke this workflow</h3>
+    <div class="trigger-phrase-wrap">
+      <pre class="trigger-code" id="trigger-text">workflow: greenfield-development
+name: "Greenfield Development — 8-Phase Build"
+trigger: "Run Greenfield Development for [service name — e.g. loyalty-points-api]"
+preceded_by: adoption
+laws: [ENG-4.1, ENG-6.1, ENG-6.4, BUS-7.1, ENG-11.1, ENG-12.1]</pre>
+      <button
+        class="copy-btn"
+        aria-label="Copy workflow trigger phrase to clipboard"
+        onclick="copyPrompt(this, document.getElementById('trigger-text').textContent)">
+        📋 Copy
+      </button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════
+       PER-PHASE SECTIONS (DC-09 prompts + DC-10 gates)
+  ════════════════════════════════════════════════════ -->
+  <div class="section-title">Phase Deep-Dives — Prompts &amp; Gate Evidence</div>
+
+  <!-- ╔══ PHASE 1 — DOMAIN ══╗ -->
+  <div class="phase-card" id="phase-1">
+    <button
+      class="phase-header"
+      aria-expanded="true"
+      aria-controls="phase-1-body"
+      onclick="togglePhase(this)">
+      <div class="phase-num">1</div>
+      <div class="phase-title-wrap">
+        <h3>Phase 1 — Domain</h3>
+        <div class="phase-sub">Domain model · bounded context · ubiquitous language</div>
+      </div>
+      <div class="phase-tags">
+        <span class="law-chip blue">ENG-2.1</span>
+      </div>
+      <span class="expand-icon" aria-hidden="true">▼</span>
+    </button>
+    <div class="phase-body" id="phase-1-body">
+      <p style="font-size:13px;color:#3a4a5c;margin-bottom:14px">Define the bounded context, aggregates, entities, value objects, and ubiquitous language that will govern every subsequent phase. Everything downstream is scoped by this decision.</p>
+
+      <!-- DC-09 Prompt library -->
+      <div class="prompt-tabs" role="tablist" aria-label="Phase 1 prompt channels">
+        <button class="tab-btn" role="tab" aria-selected="true"  aria-controls="p1-cli"  id="p1-cli-tab"  onclick="switchTab(this,'p1-cli')">🖥 CLI</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p1-ide"  id="p1-ide-tab"  onclick="switchTab(this,'p1-ide')">💬 IDE Chat</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p1-yaml" id="p1-yaml-tab" onclick="switchTab(this,'p1-yaml')">📄 YAML</button>
+      </div>
+      <div class="tab-panel active" id="p1-cli" role="tabpanel" aria-labelledby="p1-cli-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code" id="p1-cli-text">gh copilot ask "Run Greenfield Phase 1 Domain: define the domain model for [service name — e.g. loyalty-points-api]. Identify bounded contexts, aggregates, entities, value objects, and ubiquitous language following ENG-2.1. Produce a phase artifact."</pre>
+          <button class="copy-btn" aria-label="Copy Phase 1 CLI prompt" onclick="copyPrompt(this, document.getElementById('p1-cli-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p1-ide" role="tabpanel" aria-labelledby="p1-ide-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code ide" id="p1-ide-text">Define the domain model for [service name — e.g. loyalty-points-api]. Identify bounded contexts, aggregates, and ubiquitous language.</pre>
+          <button class="copy-btn" aria-label="Copy Phase 1 IDE prompt" onclick="copyPrompt(this, document.getElementById('p1-ide-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p1-yaml" role="tabpanel" aria-labelledby="p1-yaml-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code yaml" id="p1-yaml-text">phase: 1
+name: domain
+trigger: "Run Greenfield Phase 1 Domain for [service name — e.g. loyalty-points-api]"
+skill: skill-04-business-domain-modeling
+law: ENG-2.1
+artifact: phase-1-domain.html</pre>
+          <button class="copy-btn" aria-label="Copy Phase 1 YAML trigger" onclick="copyPrompt(this, document.getElementById('p1-yaml-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+
+      <!-- DC-10 Gate evidence -->
+      <div class="gate-card">
+        <h4>🔍 DC-10 · Phase Gate Evidence</h4>
+        <div class="gate-grid">
+          <div class="gate-item">
+            <span class="gi-label">Artifact</span>
+            <div class="gi-value"><code>phase-1-domain.html</code></div>
+          </div>
+          <div class="gate-item">
+            <span class="gi-label">What to read</span>
+            <div class="gi-value">Domain model table · bounded context map · ubiquitous language glossary</div>
+          </div>
+        </div>
+        <div class="decision-q">Is this domain model accurate for our bounded context?</div>
+        <div style="margin-top:12px">
+          <div class="gi-label" style="margin-bottom:6px">⚠️ Drift signals</div>
+          <ul class="drift-list">
+            <li class="drift-item"><strong>Domain model spans multiple bounded contexts</strong> → scope down; this is one service, not a platform</li>
+            <li class="drift-item"><strong>No ubiquitous language defined</strong> → Phase 1 is incomplete; re-run before proceeding</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╔══ PHASE 2 — SPEC ══╗ -->
+  <div class="phase-card" id="phase-2">
+    <button
+      class="phase-header"
+      aria-expanded="false"
+      aria-controls="phase-2-body"
+      onclick="togglePhase(this)">
+      <div class="phase-num">2</div>
+      <div class="phase-title-wrap">
+        <h3>Phase 2 — Spec</h3>
+        <div class="phase-sub">Constitutional specification · API contract · kill-if criteria</div>
+      </div>
+      <div class="phase-tags">
+        <span class="law-chip blue">ENG-1.5</span>
+      </div>
+      <span class="expand-icon" aria-hidden="true">▼</span>
+    </button>
+    <div class="phase-body" id="phase-2-body">
+      <p style="font-size:13px;color:#3a4a5c;margin-bottom:14px">Create the governing constitutional specification for the service. This document is the constitution of your new service — every phase after this is measured against it. <strong>You must approve it before any code is written.</strong></p>
+
+      <div class="prompt-tabs" role="tablist" aria-label="Phase 2 prompt channels">
+        <button class="tab-btn" role="tab" aria-selected="true"  aria-controls="p2-cli"  id="p2-cli-tab"  onclick="switchTab(this,'p2-cli')">🖥 CLI</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p2-ide"  id="p2-ide-tab"  onclick="switchTab(this,'p2-ide')">💬 IDE Chat</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p2-yaml" id="p2-yaml-tab" onclick="switchTab(this,'p2-yaml')">📄 YAML</button>
+      </div>
+      <div class="tab-panel active" id="p2-cli" role="tabpanel" aria-labelledby="p2-cli-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code" id="p2-cli-text">gh copilot ask "Run Greenfield Phase 2 Spec: create the constitutional specification for [service name — e.g. loyalty-points-api]. Include API contract, applicable law citations (ENG-2.x, ENG-4.1), kill-if criteria, and scope boundary. This spec governs all subsequent phases."</pre>
+          <button class="copy-btn" aria-label="Copy Phase 2 CLI prompt" onclick="copyPrompt(this, document.getElementById('p2-cli-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p2-ide" role="tabpanel" aria-labelledby="p2-ide-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code ide" id="p2-ide-text">Create the constitutional spec for this service. Include API contract, law citations, and kill-if criteria.</pre>
+          <button class="copy-btn" aria-label="Copy Phase 2 IDE prompt" onclick="copyPrompt(this, document.getElementById('p2-ide-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p2-yaml" role="tabpanel" aria-labelledby="p2-yaml-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code yaml" id="p2-yaml-text">phase: 2
+name: spec
+trigger: "Run Greenfield Phase 2 Spec for [service name — e.g. loyalty-points-api]"
+skill: skill-spec-governance
+laws: [ENG-1.5, ENG-2.1, ENG-4.1]
+artifact: phase-2-spec.html
+human_approval_required: true</pre>
+          <button class="copy-btn" aria-label="Copy Phase 2 YAML trigger" onclick="copyPrompt(this, document.getElementById('p2-yaml-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+
+      <div class="gate-card">
+        <h4>🔍 DC-10 · Phase Gate Evidence</h4>
+        <div class="gate-grid">
+          <div class="gate-item">
+            <span class="gi-label">Artifact</span>
+            <div class="gi-value"><code>phase-2-spec.html</code></div>
+          </div>
+          <div class="gate-item">
+            <span class="gi-label">What to read</span>
+            <div class="gi-value">Law citation table · API contract · kill-if criteria · scope boundary</div>
+          </div>
+        </div>
+        <div class="decision-q">Do I approve this spec as the governing document for this service?</div>
+        <div style="margin-top:12px">
+          <div class="gi-label" style="margin-bottom:6px">⚠️ Drift signals</div>
+          <ul class="drift-list">
+            <li class="drift-item"><strong>Spec has no law citations</strong> → agent didn't read the constitution; re-run with explicit law context</li>
+            <li class="drift-item"><strong>Kill-if criteria are vague</strong> → demand measurable, observable criteria before approving</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╔══ PHASE 3 — SLICE ══╗ -->
+  <div class="phase-card" id="phase-3">
+    <button
+      class="phase-header"
+      aria-expanded="false"
+      aria-controls="phase-3-body"
+      onclick="togglePhase(this)">
+      <div class="phase-num">3</div>
+      <div class="phase-title-wrap">
+        <h3>Phase 3 — Slice</h3>
+        <div class="phase-sub">First vertical slice · one feature end-to-end · no stubs</div>
+      </div>
+      <div class="phase-tags">
+        <span class="law-chip blue">ENG-2.3</span>
+      </div>
+      <span class="expand-icon" aria-hidden="true">▼</span>
+    </button>
+    <div class="phase-body" id="phase-3-body">
+      <p style="font-size:13px;color:#3a4a5c;margin-bottom:14px">Implement one feature end-to-end following the Phase 2 spec. No stubs. No placeholders. A vertical slice proves the architecture works before you invest further.</p>
+
+      <div class="prompt-tabs" role="tablist" aria-label="Phase 3 prompt channels">
+        <button class="tab-btn" role="tab" aria-selected="true"  aria-controls="p3-cli"  id="p3-cli-tab"  onclick="switchTab(this,'p3-cli')">🖥 CLI</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p3-ide"  id="p3-ide-tab"  onclick="switchTab(this,'p3-ide')">💬 IDE Chat</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p3-yaml" id="p3-yaml-tab" onclick="switchTab(this,'p3-yaml')">📄 YAML</button>
+      </div>
+      <div class="tab-panel active" id="p3-cli" role="tabpanel" aria-labelledby="p3-cli-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code" id="p3-cli-text">gh copilot ask "Run Greenfield Phase 3 Slice: implement the first vertical slice for [feature — e.g. earn miles]. One feature end-to-end. No stubs. Follow the spec from Phase 2."</pre>
+          <button class="copy-btn" aria-label="Copy Phase 3 CLI prompt" onclick="copyPrompt(this, document.getElementById('p3-cli-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p3-ide" role="tabpanel" aria-labelledby="p3-ide-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code ide" id="p3-ide-text">Implement the first vertical slice for [feature name — e.g. earn miles] following the Phase 2 spec.</pre>
+          <button class="copy-btn" aria-label="Copy Phase 3 IDE prompt" onclick="copyPrompt(this, document.getElementById('p3-ide-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p3-yaml" role="tabpanel" aria-labelledby="p3-yaml-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code yaml" id="p3-yaml-text">phase: 3
+name: slice
+trigger: "Run Greenfield Phase 3 Slice for [feature name — e.g. earn miles]"
+skill: skill-07-vertical-slice-dev
+depends_on: phase-2-spec
+artifact: phase-3-slice.html</pre>
+          <button class="copy-btn" aria-label="Copy Phase 3 YAML trigger" onclick="copyPrompt(this, document.getElementById('p3-yaml-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+
+      <div class="gate-card">
+        <h4>🔍 DC-10 · Phase Gate Evidence</h4>
+        <div class="gate-grid">
+          <div class="gate-item">
+            <span class="gi-label">Artifact</span>
+            <div class="gi-value"><code>phase-3-slice.html</code></div>
+          </div>
+          <div class="gate-item">
+            <span class="gi-label">What to read</span>
+            <div class="gi-value">Implemented feature list · spec compliance check · integration points</div>
+          </div>
+        </div>
+        <div class="decision-q">Does this slice match the Phase 2 spec?</div>
+        <div style="margin-top:12px">
+          <div class="gi-label" style="margin-bottom:6px">⚠️ Drift signals</div>
+          <ul class="drift-list">
+            <li class="drift-item"><strong>Slice implements features not in the spec</strong> → OBJECT; scope creep before Phase 3 is complete</li>
+            <li class="drift-item"><strong>No tests in the slice</strong> → TDD gate missed; this is an ENG-4.1 precursor violation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╔══ PHASE 4 — TDD (ENG-4.1 ⛔) ══╗ -->
+  <div class="phase-card" id="phase-4">
+    <button
+      class="phase-header"
+      aria-expanded="false"
+      aria-controls="phase-4-body"
+      onclick="togglePhase(this)">
+      <div class="phase-num tdd">4</div>
+      <div class="phase-title-wrap">
+        <h3>Phase 4 — TDD ⛔</h3>
+        <div class="phase-sub">Failing tests first · ENG-4.1 non-negotiable · coverage ≥ 90%</div>
+      </div>
+      <div class="phase-tags">
+        <span class="phase-tag law">⛔ ENG-4.1</span>
+      </div>
+      <span class="expand-icon" aria-hidden="true">▼</span>
+    </button>
+    <div class="phase-body" id="phase-4-body">
+      <div class="tdd-callout" style="margin-bottom:14px">
+        <div class="tdd-icon">⛔</div>
+        <div class="tdd-body">
+          <h3>ENG-4.1 — Tests MUST exist before implementation</h3>
+          <p>If the agent writes implementation code before the test file exists, that is a <strong>constitutional violation.</strong> Stop. OBJECT. Do not let it proceed until tests are written first.</p>
+        </div>
+      </div>
+
+      <div class="prompt-tabs" role="tablist" aria-label="Phase 4 prompt channels">
+        <button class="tab-btn" role="tab" aria-selected="true"  aria-controls="p4-cli"  id="p4-cli-tab"  onclick="switchTab(this,'p4-cli')">🖥 CLI</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p4-ide"  id="p4-ide-tab"  onclick="switchTab(this,'p4-ide')">💬 IDE Chat</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p4-yaml" id="p4-yaml-tab" onclick="switchTab(this,'p4-yaml')">📄 YAML</button>
+      </div>
+      <div class="tab-panel active" id="p4-cli" role="tabpanel" aria-labelledby="p4-cli-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code" id="p4-cli-text">gh copilot ask "Run Greenfield Phase 4 TDD: write failing tests first for [feature/class], then implement to make them pass. ENG-4.1 ⛔ — tests must exist before implementation. Target new_coverage ≥ 90% for this changeset."</pre>
+          <button class="copy-btn" aria-label="Copy Phase 4 CLI prompt" onclick="copyPrompt(this, document.getElementById('p4-cli-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p4-ide" role="tabpanel" aria-labelledby="p4-ide-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code ide" id="p4-ide-text">Write failing tests first for [feature — e.g. earn miles]. Then implement to make them pass. Tests before code — ENG-4.1.</pre>
+          <button class="copy-btn" aria-label="Copy Phase 4 IDE prompt" onclick="copyPrompt(this, document.getElementById('p4-ide-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p4-yaml" role="tabpanel" aria-labelledby="p4-yaml-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code yaml" id="p4-yaml-text">phase: 4
+name: tdd
+trigger: "Run Greenfield Phase 4 TDD for [feature/class]"
+skill: skill-06-atomic-tdd
+law: ENG-4.1  # NON-NEGOTIABLE
+target_coverage: "≥ 90% new_coverage"
+cycle: RED → GREEN → REFACTOR → VERIFY → COMMIT → REPEAT
+artifact: phase-4-tdd.html</pre>
+          <button class="copy-btn" aria-label="Copy Phase 4 YAML trigger" onclick="copyPrompt(this, document.getElementById('p4-yaml-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+
+      <div class="gate-card">
+        <h4>🔍 DC-10 · Phase Gate Evidence</h4>
+        <div class="gate-grid">
+          <div class="gate-item">
+            <span class="gi-label">Artifact</span>
+            <div class="gi-value"><code>phase-4-tdd.html</code></div>
+          </div>
+          <div class="gate-item">
+            <span class="gi-label">What to read</span>
+            <div class="gi-value">Test file timestamps vs implementation timestamps · coverage report · RED/GREEN cycle evidence</div>
+          </div>
+        </div>
+        <div class="decision-q">Were tests written before implementation? Coverage ≥ 90%?</div>
+        <div style="margin-top:12px">
+          <div class="gi-label" style="margin-bottom:6px">⚠️ Drift signals</div>
+          <ul class="drift-list">
+            <li class="drift-item"><strong>All tests written after implementation</strong> → ENG-4.1 ⛔ violation; OBJECT; this cannot merge</li>
+            <li class="drift-item"><strong>Coverage 0%</strong> → tests exist but are not running; fix the test harness before proceeding</li>
+            <li class="drift-item"><strong>Coverage below 90%</strong> → add tests for uncovered paths; do not advance to Phase 5</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╔══ PHASE 5 — API ══╗ -->
+  <div class="phase-card" id="phase-5">
+    <button
+      class="phase-header"
+      aria-expanded="false"
+      aria-controls="phase-5-body"
+      onclick="togglePhase(this)">
+      <div class="phase-num">5</div>
+      <div class="phase-title-wrap">
+        <h3>Phase 5 — API</h3>
+        <div class="phase-sub">API contract validation · request/response schemas · RESTful constraints</div>
+      </div>
+      <div class="phase-tags">
+        <span class="law-chip blue">ENG-1.5</span>
+      </div>
+      <span class="expand-icon" aria-hidden="true">▼</span>
+    </button>
+    <div class="phase-body" id="phase-5-body">
+      <p style="font-size:13px;color:#3a4a5c;margin-bottom:14px">Validate that the implemented API matches the contract defined in Phase 2. Check every endpoint, schema, error code, and RESTful constraint.</p>
+
+      <div class="prompt-tabs" role="tablist" aria-label="Phase 5 prompt channels">
+        <button class="tab-btn" role="tab" aria-selected="true"  aria-controls="p5-cli"  id="p5-cli-tab"  onclick="switchTab(this,'p5-cli')">🖥 CLI</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p5-ide"  id="p5-ide-tab"  onclick="switchTab(this,'p5-ide')">💬 IDE Chat</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p5-yaml" id="p5-yaml-tab" onclick="switchTab(this,'p5-yaml')">📄 YAML</button>
+      </div>
+      <div class="tab-panel active" id="p5-cli" role="tabpanel" aria-labelledby="p5-cli-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code" id="p5-cli-text">gh copilot ask "Run Greenfield Phase 5 API: validate the API contract for [service — e.g. loyalty-points-api] against the Phase 2 spec. Verify request/response schemas, error handling, and RESTful constraints. Produce an API contract artifact."</pre>
+          <button class="copy-btn" aria-label="Copy Phase 5 CLI prompt" onclick="copyPrompt(this, document.getElementById('p5-cli-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p5-ide" role="tabpanel" aria-labelledby="p5-ide-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code ide" id="p5-ide-text">Validate the API contract against the Phase 2 spec. Check request/response schemas and error handling.</pre>
+          <button class="copy-btn" aria-label="Copy Phase 5 IDE prompt" onclick="copyPrompt(this, document.getElementById('p5-ide-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p5-yaml" role="tabpanel" aria-labelledby="p5-yaml-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code yaml" id="p5-yaml-text">phase: 5
+name: api
+trigger: "Run Greenfield Phase 5 API for [service name — e.g. loyalty-points-api]"
+skill: skill-12-api-design
+law: ENG-1.5
+depends_on: phase-2-spec
+artifact: phase-5-api.html</pre>
+          <button class="copy-btn" aria-label="Copy Phase 5 YAML trigger" onclick="copyPrompt(this, document.getElementById('p5-yaml-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+
+      <div class="gate-card">
+        <h4>🔍 DC-10 · Phase Gate Evidence</h4>
+        <div class="gate-grid">
+          <div class="gate-item">
+            <span class="gi-label">Artifact</span>
+            <div class="gi-value"><code>phase-5-api.html</code></div>
+          </div>
+          <div class="gate-item">
+            <span class="gi-label">What to read</span>
+            <div class="gi-value">Contract validation table · endpoint delta vs Phase 2 spec · error code coverage</div>
+          </div>
+        </div>
+        <div class="decision-q">Does the API match what we specified in Phase 2?</div>
+        <div style="margin-top:12px">
+          <div class="gi-label" style="margin-bottom:6px">⚠️ Drift signals</div>
+          <ul class="drift-list">
+            <li class="drift-item"><strong>API has endpoints not in Phase 2 spec</strong> → scope creep; OBJECT; update spec first or remove endpoints</li>
+            <li class="drift-item"><strong>Error codes missing or non-standard</strong> → incomplete contract; review RFC 7807 problem details</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╔══ PHASE 6 — SECURITY ══╗ -->
+  <div class="phase-card" id="phase-6">
+    <button
+      class="phase-header"
+      aria-expanded="false"
+      aria-controls="phase-6-body"
+      onclick="togglePhase(this)">
+      <div class="phase-num">6</div>
+      <div class="phase-title-wrap">
+        <h3>Phase 6 — Security</h3>
+        <div class="phase-sub">BUS law review · OWASP · auth/authz gaps · vulnerability triage</div>
+      </div>
+      <div class="phase-tags">
+        <span class="law-chip blue">ENG-6.1</span>
+        <span class="law-chip blue">BUS-7.1</span>
+      </div>
+      <span class="expand-icon" aria-hidden="true">▼</span>
+    </button>
+    <div class="phase-body" id="phase-6-body">
+      <p style="font-size:13px;color:#3a4a5c;margin-bottom:14px">Review the service against constitutional security and BUS laws. Every vulnerability must be either fixed or explicitly accepted with documented rationale.</p>
+
+      <div class="prompt-tabs" role="tablist" aria-label="Phase 6 prompt channels">
+        <button class="tab-btn" role="tab" aria-selected="true"  aria-controls="p6-cli"  id="p6-cli-tab"  onclick="switchTab(this,'p6-cli')">🖥 CLI</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p6-ide"  id="p6-ide-tab"  onclick="switchTab(this,'p6-ide')">💬 IDE Chat</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p6-yaml" id="p6-yaml-tab" onclick="switchTab(this,'p6-yaml')">📄 YAML</button>
+      </div>
+      <div class="tab-panel active" id="p6-cli" role="tabpanel" aria-labelledby="p6-cli-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code" id="p6-cli-text">gh copilot ask "Run Greenfield Phase 6 Security: review [service — e.g. loyalty-points-api] against the constitutional security and BUS laws. Identify vulnerabilities, input validation gaps, and auth/authz issues. Produce a security review artifact."</pre>
+          <button class="copy-btn" aria-label="Copy Phase 6 CLI prompt" onclick="copyPrompt(this, document.getElementById('p6-cli-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p6-ide" role="tabpanel" aria-labelledby="p6-ide-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code ide" id="p6-ide-text">Run security review against constitutional BUS laws. Identify vulnerabilities and auth gaps.</pre>
+          <button class="copy-btn" aria-label="Copy Phase 6 IDE prompt" onclick="copyPrompt(this, document.getElementById('p6-ide-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p6-yaml" role="tabpanel" aria-labelledby="p6-yaml-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code yaml" id="p6-yaml-text">phase: 6
+name: security
+trigger: "Run Greenfield Phase 6 Security for [service name — e.g. loyalty-points-api]"
+skill: skill-10-security-review
+laws: [ENG-6.1, ENG-6.4, ENG-6.7, BUS-7.1]
+sonarqube_gate: vulnerabilities=0, security_rating=A
+artifact: phase-6-security.html</pre>
+          <button class="copy-btn" aria-label="Copy Phase 6 YAML trigger" onclick="copyPrompt(this, document.getElementById('p6-yaml-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+
+      <div class="gate-card">
+        <h4>🔍 DC-10 · Phase Gate Evidence</h4>
+        <div class="gate-grid">
+          <div class="gate-item">
+            <span class="gi-label">Artifact</span>
+            <div class="gi-value"><code>phase-6-security.html</code></div>
+          </div>
+          <div class="gate-item">
+            <span class="gi-label">What to read</span>
+            <div class="gi-value">Vulnerability table · BUS law compliance matrix · auth/authz coverage · SonarQube security rating</div>
+          </div>
+        </div>
+        <div class="decision-q">Are all critical security findings addressed?</div>
+        <div style="margin-top:12px">
+          <div class="gi-label" style="margin-bottom:6px">⚠️ Drift signals</div>
+          <ul class="drift-list">
+            <li class="drift-item"><strong>No BUS law citations in the review</strong> → security review is incomplete; agent didn't read the constitution</li>
+            <li class="drift-item"><strong>Vulnerabilities marked 'accepted' without rationale</strong> → demand written justification with risk owner sign-off</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╔══ PHASE 7 — MUTATION ══╗ -->
+  <div class="phase-card" id="phase-7">
+    <button
+      class="phase-header"
+      aria-expanded="false"
+      aria-controls="phase-7-body"
+      onclick="togglePhase(this)">
+      <div class="phase-num">7</div>
+      <div class="phase-title-wrap">
+        <h3>Phase 7 — Mutation</h3>
+        <div class="phase-sub">Mutation testing · target ≥ 90% score · surviving mutant review</div>
+      </div>
+      <div class="phase-tags">
+        <span class="law-chip blue">ENG-4.11</span>
+      </div>
+      <span class="expand-icon" aria-hidden="true">▼</span>
+    </button>
+    <div class="phase-body" id="phase-7-body">
+      <p style="font-size:13px;color:#3a4a5c;margin-bottom:14px">Run mutation testing to verify that tests actually catch bugs. A mutation score below 90% means your tests have gaps. Every surviving mutant must be reviewed — either killed with a new test or explicitly accepted with documented rationale.</p>
+
+      <div class="prompt-tabs" role="tablist" aria-label="Phase 7 prompt channels">
+        <button class="tab-btn" role="tab" aria-selected="true"  aria-controls="p7-cli"  id="p7-cli-tab"  onclick="switchTab(this,'p7-cli')">🖥 CLI</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p7-ide"  id="p7-ide-tab"  onclick="switchTab(this,'p7-ide')">💬 IDE Chat</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p7-yaml" id="p7-yaml-tab" onclick="switchTab(this,'p7-yaml')">📄 YAML</button>
+      </div>
+      <div class="tab-panel active" id="p7-cli" role="tabpanel" aria-labelledby="p7-cli-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code" id="p7-cli-text">gh copilot ask "Run Greenfield Phase 7 Mutation: run mutation testing on [service — e.g. loyalty-points-api]. Target mutation score ≥ 90%. Review surviving mutants and either kill them with new tests or document explicit acceptance with rationale."</pre>
+          <button class="copy-btn" aria-label="Copy Phase 7 CLI prompt" onclick="copyPrompt(this, document.getElementById('p7-cli-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p7-ide" role="tabpanel" aria-labelledby="p7-ide-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code ide" id="p7-ide-text">Run mutation testing. Target ≥ 90% mutation score. Review surviving mutants.</pre>
+          <button class="copy-btn" aria-label="Copy Phase 7 IDE prompt" onclick="copyPrompt(this, document.getElementById('p7-ide-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p7-yaml" role="tabpanel" aria-labelledby="p7-yaml-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code yaml" id="p7-yaml-text">phase: 7
+name: mutation
+trigger: "Run Greenfield Phase 7 Mutation for [service name — e.g. loyalty-points-api]"
+skill: skill-11-mutation-testing
+law: ENG-4.11
+target_mutation_score: "≥ 90%"
+sonarqube_gate: mutation_score≥85 (critical paths)
+artifact: phase-7-mutation.html</pre>
+          <button class="copy-btn" aria-label="Copy Phase 7 YAML trigger" onclick="copyPrompt(this, document.getElementById('p7-yaml-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+
+      <div class="gate-card">
+        <h4>🔍 DC-10 · Phase Gate Evidence</h4>
+        <div class="gate-grid">
+          <div class="gate-item">
+            <span class="gi-label">Artifact</span>
+            <div class="gi-value"><code>phase-7-mutation.html</code></div>
+          </div>
+          <div class="gate-item">
+            <span class="gi-label">What to read</span>
+            <div class="gi-value">Mutation score percentage · surviving mutant list · kill/accept decisions per mutant</div>
+          </div>
+        </div>
+        <div class="decision-q">Score ≥ 90%? Each surviving mutant reviewed and documented?</div>
+        <div style="margin-top:12px">
+          <div class="gi-label" style="margin-bottom:6px">⚠️ Drift signals</div>
+          <ul class="drift-list">
+            <li class="drift-item"><strong>Score 45% with no review</strong> → tests are structurally weak; return to Phase 4 and add assertions</li>
+            <li class="drift-item"><strong>All mutants marked 'accepted' without rationale</strong> → suspicious; demand individual review of each surviving mutant</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╔══ PHASE 8 — SHIP ══╗ -->
+  <div class="phase-card" id="phase-8">
+    <button
+      class="phase-header"
+      aria-expanded="false"
+      aria-controls="phase-8-body"
+      onclick="togglePhase(this)">
+      <div class="phase-num ship">8</div>
+      <div class="phase-title-wrap">
+        <h3>Phase 8 — Ship 🚀</h3>
+        <div class="phase-sub">Final certification · proposal archived · governed trail complete</div>
+      </div>
+      <div class="phase-tags">
+        <span class="phase-tag ship">🏁 Delivery</span>
+        <span class="law-chip blue">ENG-11.1</span>
+      </div>
+      <span class="expand-icon" aria-hidden="true">▼</span>
+    </button>
+    <div class="phase-body" id="phase-8-body">
+      <p style="font-size:13px;color:#3a4a5c;margin-bottom:14px">Produce the final constitutional certification, archive the governing proposal, and verify that all phase artifacts are committed. The PR description must reference the proposal ID. Do not merge without a complete governed trail.</p>
+
+      <div class="prompt-tabs" role="tablist" aria-label="Phase 8 prompt channels">
+        <button class="tab-btn" role="tab" aria-selected="true"  aria-controls="p8-cli"  id="p8-cli-tab"  onclick="switchTab(this,'p8-cli')">🖥 CLI</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p8-ide"  id="p8-ide-tab"  onclick="switchTab(this,'p8-ide')">💬 IDE Chat</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="p8-yaml" id="p8-yaml-tab" onclick="switchTab(this,'p8-yaml')">📄 YAML</button>
+      </div>
+      <div class="tab-panel active" id="p8-cli" role="tabpanel" aria-labelledby="p8-cli-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code" id="p8-cli-text">gh copilot ask "Run Greenfield Phase 8 Ship: produce the final constitutional certification for [service — e.g. loyalty-points-api]. Archive the governing proposal. Confirm all phase artifacts are committed. Verify PR description references the proposal ID."</pre>
+          <button class="copy-btn" aria-label="Copy Phase 8 CLI prompt" onclick="copyPrompt(this, document.getElementById('p8-cli-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p8-ide" role="tabpanel" aria-labelledby="p8-ide-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code ide" id="p8-ide-text">Produce the final constitutional certification. Archive the proposal. Confirm all artifacts are committed.</pre>
+          <button class="copy-btn" aria-label="Copy Phase 8 IDE prompt" onclick="copyPrompt(this, document.getElementById('p8-ide-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div class="tab-panel" id="p8-yaml" role="tabpanel" aria-labelledby="p8-yaml-tab">
+        <div class="prompt-wrap">
+          <pre class="prompt-code yaml" id="p8-yaml-text">phase: 8
+name: ship
+trigger: "Run Greenfield Phase 8 Ship for [service name — e.g. loyalty-points-api]"
+skill: skill-spec-governance
+law: ENG-11.1
+archive_path: "hangar-ai-specs/archive/"
+sonarqube_gate: final HARD_BLOCK + all PHASE_GATE metrics at threshold
+artifact: phase-8-ship.html</pre>
+          <button class="copy-btn" aria-label="Copy Phase 8 YAML trigger" onclick="copyPrompt(this, document.getElementById('p8-yaml-text').textContent)">📋 Copy</button>
+        </div>
+      </div>
+
+      <div class="gate-card">
+        <h4>🔍 DC-10 · Phase Gate Evidence</h4>
+        <div class="gate-grid">
+          <div class="gate-item">
+            <span class="gi-label">Artifact</span>
+            <div class="gi-value"><code>phase-8-ship.html</code></div>
+          </div>
+          <div class="gate-item">
+            <span class="gi-label">What to read</span>
+            <div class="gi-value">Final certification table · archive confirmation · phase artifact commit list · PR proposal ID reference</div>
+          </div>
+        </div>
+        <div class="decision-q">Is the governed trail complete? Safe to merge?</div>
+        <div style="margin-top:12px">
+          <div class="gi-label" style="margin-bottom:6px">⚠️ Drift signals</div>
+          <ul class="drift-list">
+            <li class="drift-item"><strong>Proposal not archived in <code>hangar-ai-specs/archive/</code></strong> → ARCHIVE step missing; do not merge</li>
+            <li class="drift-item"><strong>Phase artifacts not committed</strong> → incomplete governed trail; commit all phase artifacts before merging</li>
+            <li class="drift-item"><strong>PR description has no proposal ID</strong> → link is broken; the PR cannot be traced back to its governing document</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Key Decisions Summary Table ──────────────────────── -->
+  <div class="section-title navy">Key Decisions Summary</div>
+  <div style="overflow-x:auto;margin-bottom:28px">
+    <table class="decisions-table" role="table" aria-label="Key phase gate decisions">
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Gate type</th>
+          <th>Key decision</th>
+          <th>Constitutional consequence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1 · Domain</strong></td>
+          <td><span class="gate-badge">Domain</span></td>
+          <td>"Is this the right bounded context?"</td>
+          <td>All subsequent phases are scoped by this decision</td>
+        </tr>
+        <tr>
+          <td><strong>2 · Spec</strong></td>
+          <td><span class="gate-badge">Approval</span></td>
+          <td>"Does this spec accurately govern this service?"</td>
+          <td>Every other phase is measured against this; wrong spec = wrong service</td>
+        </tr>
+        <tr>
+          <td><strong>3 · Slice</strong></td>
+          <td><span class="gate-badge">Compliance</span></td>
+          <td>"Does this slice match the Phase 2 spec?"</td>
+          <td>Scope creep at Phase 3 compounds into every subsequent phase</td>
+        </tr>
+        <tr class="tdd-row">
+          <td><strong>4 · TDD ⛔</strong></td>
+          <td><span class="gate-badge red">⛔ ENG-4.1</span></td>
+          <td>"Were tests written before code?"</td>
+          <td>Non-negotiable — reject the PR if violated; tests after code is a constitutional breach</td>
+        </tr>
+        <tr>
+          <td><strong>5 · API</strong></td>
+          <td><span class="gate-badge">Contract</span></td>
+          <td>"Does the API match Phase 2 spec?"</td>
+          <td>Undocumented endpoints are uncontracted; they cannot be certified</td>
+        </tr>
+        <tr>
+          <td><strong>6 · Security</strong></td>
+          <td><span class="gate-badge">Security</span></td>
+          <td>"Are all critical security findings addressed?"</td>
+          <td>Open vulnerabilities block certification; BUS laws cannot be waived</td>
+        </tr>
+        <tr>
+          <td><strong>7 · Mutation</strong></td>
+          <td><span class="gate-badge">Quality</span></td>
+          <td>"Score ≥ 90% with surviving mutants reviewed?"</td>
+          <td>Certify only if yes; weak tests mean the service is untested in practice</td>
+        </tr>
+        <tr class="ship-row">
+          <td><strong>8 · Ship 🚀</strong></td>
+          <td><span class="gate-badge green">🏁 Delivery</span></td>
+          <td>"Is the governed trail complete?"</td>
+          <td>Do not merge without it; an incomplete trail means the service has no constitutional history</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── Enforced Laws quick reference ────────────────────── -->
+  <div class="section-title green">Enforced Constitutional Laws</div>
+  <div style="background:#fff;border:1px solid #e4eaf2;border-radius:var(--radius);padding:18px 22px;box-shadow:var(--shadow);margin-bottom:28px">
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <span class="law-chip">PRD-2.1</span>
+      <span class="law-chip">PRD-2.3</span>
+      <span class="law-chip">ENG-1.5</span>
+      <span class="law-chip">ENG-2.1</span>
+      <span class="law-chip">ENG-2.3</span>
+      <span class="law-chip" style="background:#ffdddd;font-size:11px">⛔ ENG-4.1 NON-NEGOTIABLE</span>
+      <span class="law-chip">ENG-4.6</span>
+      <span class="law-chip">ENG-4.11</span>
+      <span class="law-chip" style="background:#ffdddd;font-size:11px">⛔ ENG-6.1 NON-NEGOTIABLE</span>
+      <span class="law-chip" style="background:#ffdddd;font-size:11px">⛔ ENG-6.4 NON-NEGOTIABLE</span>
+      <span class="law-chip">ENG-6.7</span>
+      <span class="law-chip">BUS-7.1</span>
+      <span class="law-chip">ENG-11.1</span>
+      <span class="law-chip" style="background:#ffdddd;font-size:11px">⛔ ENG-12.1 NON-NEGOTIABLE</span>
+      <span class="law-chip">ENG-12.2</span>
+      <span class="law-chip">ENG-12.3</span>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-title">Hangar AI Constitution — Adoption Guide</div>
+    <div>American Airlines · Hangar AI Program · Adoption Guide v1.0.0</div>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="../p1-landing.html">Guide Home</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="index.html">All Workflows</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="adoption.html">Adoption</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="legacy-rescue.html">Legacy Rescue</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="../phase-gate-guide.html">Phase Gate Guide</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+/* ── Copy to clipboard ── */
+function copyPrompt(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✅ Copied!';
+    setTimeout(() => { btn.innerHTML = orig; }, 2000);
+  }).catch(() => {
+    btn.innerHTML = '⚠️ Copy manually';
+    setTimeout(() => { btn.innerHTML = '📋 Copy'; }, 3000);
+  });
+}
+
+/* ── Toggle phase accordion ── */
+function togglePhase(btn) {
+  const card = btn.closest('.phase-card');
+  card.classList.toggle('collapsed');
+  btn.setAttribute('aria-expanded', String(!card.classList.contains('collapsed')));
+}
+
+/* ── Prompt tab switching ── */
+function switchTab(btn, panelId) {
+  const tablist = btn.closest('[role="tablist"]');
+  tablist.querySelectorAll('.tab-btn').forEach(b => {
+    b.setAttribute('aria-selected', 'false');
+  });
+  btn.setAttribute('aria-selected', 'true');
+
+  const card = btn.closest('.phase-body');
+  card.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const panel = card.querySelector('#' + panelId);
+  if (panel) panel.classList.add('active');
+}
+
+/* ── Collapse all except Phase 1 on load (Phase 1 already open via aria-expanded=true) ── */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.phase-card').forEach(card => {
+    const btn = card.querySelector('.phase-header');
+    if (btn && btn.getAttribute('aria-expanded') === 'false') {
+      card.classList.add('collapsed');
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+# Angular Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-angular
+  type: technology
+  name: Angular
+  version: "2.0.0"
+
+stack:
+  language: TypeScript 5+
+  framework: Angular 17+
+  testing:
+    - Jest
+    - Angular Testing Library
+    - Jasmine/Karma
+  tools:
+    formatter: prettier
+    linter: eslint
+    type_checker: typescript
+
+dependencies:
+  required:
+    - "@angular/core": "^17.0.0"
+    - rxjs: "^7.8.0"
+    - zone.js: "~0.14.0"
+  dev:
+    - "@angular/cli": "^17.0.0"
+    - jest: "^29.0.0"
+    - "@testing-library/angular": "^15.0.0"
+    - prettier: "^3.0.0"
+    - eslint: "^8.0.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+    - greenfield-development
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-3.2
+    title: Immutability Law
+    example_file: examples/ENG-3.2-immutability.md
+  - id: ENG-2.2
+    title: Layered Architecture
+    example_file: examples/ENG-2.2-layers.md
+  - id: ENG-3.5
+    title: Naming Conventions
+    example_file: examples/ENG-3.5-naming.md
+
+conventions:
+  naming:
+    components: PascalCase + Component
+    services: PascalCase + Service
+    directives: PascalCase + Directive
+    pipes: PascalCase + Pipe
+    modules: PascalCase + Module
+    files: kebab-case
+    selectors: app-kebab-case
+    test_files: "*.spec.ts"
+
+  patterns:
+    smart_component: "Container component with data/logic"
+    presentational_component: "ChangeDetectionStrategy.OnPush"
+    service: "@Injectable({ providedIn: 'root' })"
+    signal_state: "signal<T>()"
+    reactive_state: "BehaviorSubject + asObservable"
+
+commands:
+  test:
+    all: ng test
+    ci: ng test --watch=false --browsers=ChromeHeadless
+    coverage: ng test --code-coverage
+    specific: ng test --include=**/order*.spec.ts
+  dev:
+    start: ng serve
+    build: ng build --configuration production
+    generate_component: ng generate component features/orders/components/order-item
+    generate_service: ng generate service core/services/order
+  lint:
+    check: ng lint
+    format: npm run format
+
+project_structure: |
+  src/app/
+  ├── core/                    # Singleton services, guards
+  │   ├── services/
+  │   ├── guards/
+  │   └── interceptors/
+  ├── shared/                  # Reusable components, pipes
+  │   ├── components/
+  │   ├── pipes/
+  │   └── directives/
+  ├── features/                # Feature modules
+  │   └── orders/
+  │       ├── components/
+  │       ├── services/
+  │       ├── models/
+  │       └── orders.routes.ts
+  ├── app.component.ts
+  ├── app.config.ts
+  └── app.routes.ts

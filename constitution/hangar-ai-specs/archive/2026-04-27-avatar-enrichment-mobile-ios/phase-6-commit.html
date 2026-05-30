@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 6 — Commit | Hangar AI Constitution Clinic</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0d1117; color: #e6edf3; margin: 0; padding: 0; }
+  .header { background: linear-gradient(135deg, #0a2540 0%, #1a1a2e 100%); padding: 40px 48px 32px; border-bottom: 1px solid #21262d; }
+  .header h1 { margin: 0 0 8px; font-size: 28px; font-weight: 700; color: #fff; }
+  .header .subtitle { color: #8b949e; font-size: 15px; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .done { background: #1a3d2b; color: #3fb950; border: 1px solid #238636; }
+  .section { max-width: 1100px; margin: 0 auto; padding: 32px 48px; }
+  h2 { font-size: 20px; color: #e6edf3; border-bottom: 1px solid #21262d; padding-bottom: 10px; margin-top: 40px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th { text-align: left; padding: 10px 14px; background: #161b22; color: #8b949e; font-weight: 600; border-bottom: 2px solid #21262d; }
+  td { padding: 10px 14px; border-bottom: 1px solid #21262d; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #161b22; }
+  code { background: #161b22; border: 1px solid #30363d; border-radius: 3px; padding: 1px 6px; font-size: 12px; color: #79c0ff; }
+  .commit-block { background: #161b22; border: 1px solid #238636; border-radius: 8px; padding: 20px 24px; margin: 20px 0; font-family: monospace; font-size: 13px; color: #3fb950; white-space: pre-wrap; }
+  .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+  .summary-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px; text-align: center; }
+  .summary-card .big { font-size: 28px; font-weight: 700; }
+  .summary-card .label { font-size: 12px; color: #8b949e; margin-top: 4px; }
+  .phase-row { display: flex; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid #21262d; }
+  .phase-row:last-child { border-bottom: none; }
+  .phase-num { background: #1f6feb; color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .teaching-note { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 20px 24px; margin: 24px 0; }
+  .teaching-note h4 { color: #79c0ff; margin: 0 0 10px; font-size: 14px; }
+  .teaching-note p { color: #8b949e; margin: 0; font-size: 13px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Phase 6 — Commit <span class="badge done">✓ COMPLETE</span></h1>
+  <div class="subtitle">Hangar AI Constitution Clinic · Wave 4 Mobile · iOS Session · 2026-04-27 · Commit ce8de9f</div>
+</div>
+
+<div class="section">
+
+  <h2>ENG-13.1 Render Gate</h2>
+  <p style="color:#8b949e; font-size:14px;">All phase HTML artifacts rendered and confirmed in browser before index.yaml was updated. This is the non-negotiable gate — evidence must be visible before the registry is stamped.</p>
+  <table>
+    <tr><th>Artifact</th><th>Phase</th><th>Status</th></tr>
+    <tr><td><code>phase-0-preflight.html</code></td><td>Pre-flight — taxonomy gates, scope, run order</td><td><span class="badge done">✓ Rendered</span></td></tr>
+    <tr><td><code>phase-1-identify.html</code></td><td>Identify — avatar registry confirmation</td><td><span class="badge done">✓ Rendered</span></td></tr>
+    <tr><td><code>phase-2-scan.html</code></td><td>Scan — 14 BLOCKINGs, 3 advisories found</td><td><span class="badge done">✓ Rendered</span></td></tr>
+    <tr><td><code>phase-3-discover.html</code></td><td>Discover — 168 laws verified, ENG-9.4 confirmed non-existent</td><td><span class="badge done">✓ Rendered</span></td></tr>
+    <tr><td><code>phase-4-enrich.html</code></td><td>Enrich — all BLOCKINGs resolved, all advisories fixed</td><td><span class="badge done">✓ Rendered</span></td></tr>
+    <tr><td><code>phase-5-rag-validate.html</code></td><td>RAG Validate — 25/25 queries PASS after 4 inline fixes</td><td><span class="badge done">✓ Rendered</span></td></tr>
+    <tr><td><code>phase-6-commit.html</code></td><td>This document</td><td><span class="badge done">✓ Rendered</span></td></tr>
+  </table>
+
+  <h2>index.yaml — Registry Updates</h2>
+  <table>
+    <tr><th>Avatar</th><th>rag_validated</th><th>last_validated</th><th>version</th><th>status</th></tr>
+    <tr>
+      <td><code>avatar-ios-swift</code></td>
+      <td><span class="badge done">true</span></td>
+      <td>2026-04-27</td>
+      <td>1.1.0 <small style="color:#8b949e">(was 1.0.0)</small></td>
+      <td>active</td>
+    </tr>
+    <tr>
+      <td><code>avatar-passenger-booking</code></td>
+      <td><span class="badge done">true</span></td>
+      <td>2026-04-27</td>
+      <td>1.1.0</td>
+      <td>active</td>
+    </tr>
+    <tr>
+      <td><code>avatar-check-in-travel</code></td>
+      <td><span class="badge done">true</span></td>
+      <td>2026-04-27</td>
+      <td>1.1.0</td>
+      <td>active</td>
+    </tr>
+    <tr>
+      <td><code>avatar-schedule-change-self-serve</code></td>
+      <td><span class="badge done">true</span></td>
+      <td>2026-04-27</td>
+      <td>1.1.0</td>
+      <td>active</td>
+    </tr>
+    <tr>
+      <td><code>avatar-customer-relations-ops</code></td>
+      <td><span class="badge done">true</span></td>
+      <td>2026-04-27</td>
+      <td>1.1.0</td>
+      <td>active</td>
+    </tr>
+  </table>
+
+  <p style="color:#8b949e; font-size:13px;">
+    Version bump rationale: MINOR (1.0.0 → 1.1.0) — new use cases, journeys, and examples added per versioning protocol.
+    No law specializations were removed (that would be MAJOR). Bug fixes to manifests alone would be PATCH.
+  </p>
+
+  <h2>Commit</h2>
+  <div class="commit-block">commit ce8de9f
+avatar(ios-w4-mobile): enrich — Wave 4 Mobile iOS avatar clinic (Phases 0-6)
+
+48 files changed · 2,386 insertions · 4,038 deletions
+22 new files created (journeys, use cases, examples, guidance-detail companions)</div>
+
+  <h2>Full Change Inventory</h2>
+  <table>
+    <tr><th>Track</th><th>Change</th><th>Files</th></tr>
+    <tr>
+      <td>Corrections</td>
+      <td>Removed ENG-9.4 + ENG-2.3 from schedule-change manifest and guidance prose</td>
+      <td><code>schedule-change-self-serve/manifest.yaml</code> · <code>guidance.md</code></td>
+    </tr>
+    <tr>
+      <td>Corrections</td>
+      <td>skill- prefix stripped from activates.skills in all 5 target manifests</td>
+      <td>All 5 manifest.yaml files</td>
+    </tr>
+    <tr>
+      <td>Corrections</td>
+      <td>Manifest IDs aligned to index.yaml (avatar-product-* → avatar-*)</td>
+      <td>4 product manifest.yaml files</td>
+    </tr>
+    <tr>
+      <td>Corrections</td>
+      <td>ios-swift guidance.md trimmed 2,214w → 309w</td>
+      <td><code>technology/ios-swift/guidance.md</code></td>
+    </tr>
+    <tr>
+      <td>Corrections</td>
+      <td>4 product guidance.md trimmed to ≤322w each; full detail preserved in companion files</td>
+      <td>4× <code>guidance.md</code> + 4× <code>guidance-detail.md</code></td>
+    </tr>
+    <tr>
+      <td>Product Enrichment</td>
+      <td>passenger-booking: journey + 2 use cases created</td>
+      <td><code>journeys/search-and-book.md</code> · <code>use-cases/search-and-book/</code> · <code>use-cases/award-booking/</code></td>
+    </tr>
+    <tr>
+      <td>Product Enrichment</td>
+      <td>check-in-travel: journey + 6 example files split + 3 use cases trimmed to budget</td>
+      <td>1 journey · 6 split examples · 6 companion examples · 3 use-case READMEs</td>
+    </tr>
+    <tr>
+      <td>Product Enrichment</td>
+      <td>schedule-change-self-serve: journey created</td>
+      <td><code>journeys/involuntary-schedule-change.md</code></td>
+    </tr>
+    <tr>
+      <td>Product Enrichment</td>
+      <td>customer-relations-ops: journey + 2 use cases created (compensation-decision + service-recovery-draft)</td>
+      <td><code>journeys/complaint-intake-draft.md</code> · 2× use-case READMEs</td>
+    </tr>
+    <tr>
+      <td>iOS Tech Enrichment</td>
+      <td>ENG-10.1 + ENG-11.1 added to manifest + example files created</td>
+      <td><code>manifest.yaml</code> · <code>examples/ENG-10.1-*.md</code> · <code>examples/ENG-11.1-*.md</code></td>
+    </tr>
+    <tr>
+      <td>iOS Tech Enrichment</td>
+      <td>ENG-3.1 complexity example enriched with real god-class evidence table from codebase</td>
+      <td><code>examples/ENG-3.1-complexity.md</code></td>
+    </tr>
+    <tr>
+      <td>iOS Tech Enrichment</td>
+      <td>2 use cases created: protocol-di + mvvm-combine</td>
+      <td><code>use-cases/protocol-di/README.md</code> · <code>use-cases/mvvm-combine/README.md</code></td>
+    </tr>
+    <tr>
+      <td>Advisory (out-of-scope)</td>
+      <td>skill- prefix + avatar-product-* ID fixed in 4 non-target avatar guidance.md files</td>
+      <td>airport-operations · crew-training-scheduling · customer-service · internal-productivity</td>
+    </tr>
+    <tr>
+      <td>Phase 6</td>
+      <td>index.yaml: 5 avatars stamped rag_validated:true, last_validated:2026-04-27, version:1.1.0</td>
+      <td><code>avatars/index.yaml</code></td>
+    </tr>
+    <tr>
+      <td>Constitution hygiene</td>
+      <td>CC-AI-CONSTITUTION references removed from AGENTS.md (IP concern)</td>
+      <td><code>AGENTS.md</code></td>
+    </tr>
+  </table>
+
+  <h2>Session Summary — What the Team Learned</h2>
+
+  <div class="phase-row">
+    <div class="phase-num">0</div>
+    <div><strong>Pre-flight:</strong> Taxonomy gates decide if a label is a product avatar. "Mobile" fails all 5 gates — map sub-products (passenger-booking, check-in) instead. Always scope before scanning.</div>
+  </div>
+  <div class="phase-row">
+    <div class="phase-num">1</div>
+    <div><strong>Identify:</strong> Check index.yaml for duplicates first. IDs must match exactly — folder name = index.yaml id = manifest id. Three places that must agree.</div>
+  </div>
+  <div class="phase-row">
+    <div class="phase-num">2</div>
+    <div><strong>Scan:</strong> Run every structural check before touching a file. Token budgets, law domain boundaries, journeys, use cases — find all gaps at once, classify BLOCKING vs ADVISORY, then go fix.</div>
+  </div>
+  <div class="phase-row">
+    <div class="phase-num">3</div>
+    <div><strong>Discover:</strong> Read the law registry before citing any law. ENG-9.4 looked plausible — it doesn't exist. Read before you propose.</div>
+  </div>
+  <div class="phase-row">
+    <div class="phase-num">4</div>
+    <div><strong>Enrich:</strong> Two tracks always run together — correct first, then enrich. Enrichment grounded in real codebase evidence (reports/ios/) not invented content.</div>
+  </div>
+  <div class="phase-row">
+    <div class="phase-num">5</div>
+    <div><strong>RAG Validate:</strong> Simulates agent retrieval. Catches over-budget files and phantom law citations that survive Phase 4. When you remove a law from a manifest, grep the full avatar directory for it.</div>
+  </div>
+  <div class="phase-row" style="border-bottom:none">
+    <div class="phase-num">6</div>
+    <div><strong>Commit:</strong> ENG-13.1 Render Gate first — all evidence HTML visible in browser. Then stamp index.yaml. Then commit. Order is non-negotiable.</div>
+  </div>
+
+  <div class="teaching-note" style="margin-top:32px">
+    <h4>🎓 Repeating this for Android and BFF</h4>
+    <p>
+      This session covered <strong>iOS only</strong>. The same 6-phase workflow runs separately for Android (androidapps monorepo intelligence) and BFF (~25 services).
+      Each produces its own HTML phase artifacts and its own commit to hangar-ai-constitution.
+      The avatars updated will be different (android-kotlin tech avatar, bff product avatars), but the workflow is identical.
+      Your teams can now run it independently — you've seen every phase, every classification, every fix pattern.
+    </p>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="big" style="color:#3fb950">5</div>
+      <div class="label">Avatars enriched &amp; validated</div>
+    </div>
+    <div class="summary-card">
+      <div class="big" style="color:#3fb950">22</div>
+      <div class="label">New files created</div>
+    </div>
+    <div class="summary-card">
+      <div class="big" style="color:#3fb950">0</div>
+      <div class="label">Open blockers at commit</div>
+    </div>
+    <div class="summary-card">
+      <div class="big" style="color:#3fb950">7</div>
+      <div class="label">HTML phase artifacts</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,252 @@
+avatar:
+  id: avatar-travel-docs-compliance
+  type: product
+  name: "American Airlines Travel Documents Readiness"
+  version: "1.2.0"
+  created: "2026-03-09"
+  last_updated: "2026-04-30"
+
+domain:
+  category: "International Travel Documentation and Compliance"
+  description: |
+    TravelDocs determines whether a passenger is document-ready to travel for
+    each itinerary segment. It orchestrates visa, passport, health, contact
+    tracing, and security verification dependencies before departure and check-in.
+
+  personas:
+    - International Passenger (self-service)
+    - Check-In Agent (airport support)
+    - Compliance Analyst (policy and audit)
+    - Operations Manager (departure readiness)
+  personas_file: "examples/personas.md"
+
+core_journeys:
+  - "Pre-departure requirements lookup"
+  - "72-hour readiness check"
+  - "Health document verification"
+  - "Passport verification"
+  - "Exception handling for missing or expired docs"
+
+activates:
+  skills:
+    - spec-governance
+    - 02-user-journey-mapping
+    - 04-business-domain-modeling
+    - 05-business-rules
+    - 11-incident-response
+    - 12-api-design
+    - 13-observability
+    - 10-security-review
+    - 27-constitution-compliance
+
+  workflows:
+    - product-discovery-stage-a-f
+    - legacy-rescue-decision-track
+    - legacy-rescue-refactor
+
+specializes_laws:
+  - id: PRD-1.1
+    title: "Continuous Discovery"
+    description: |
+      Continuously research passenger document readiness friction and document verification
+      failure patterns. Analyze TIMATIC false-positive rates, passport scan failure rates,
+      and health documentation confusion signals to prioritize improvements.
+    key_practices:
+      - "Track TIMATIC false-positive rate (passengers blocked incorrectly) — target <0.5%"
+      - "Interview gate agents on document exception handling frequency and root causes"
+      - "Analyze scan failure rates by document type (passport, visa, health cert)"
+      - "Benchmark: compare document verification success rates against peer carriers"
+    example_file: examples/PRD-1.1-discovery.md
+    law_citations:
+      - "Travel document verification failure discovery and false-positive analysis"
+
+  - id: PRD-2.1
+    title: "User Journey Mapping"
+    description: |
+      Map both external (passenger, gate agent) and internal (compliance, ops) journeys
+      through the document readiness lifecycle. Cover the full arc from pre-trip requirement
+      lookup through exception handling and APIS submission at departure.
+    key_practices:
+      - "Map passenger journey: pre-trip question → requirement checklist → readiness decision → boarding"
+      - "Map agent journey: document exception alert → diagnosis → override or escalation"
+      - "Map compliance journey: regulatory rule change → TIMATIC update → system propagation"
+      - "Capture failure states: TIMATIC timeout, MRZ parse error, health cert not recognized"
+    example_file: "examples/PRD-2.1-journey.md"
+
+  - id: PRD-3.1
+    title: "Roadmap Planning"
+    description: |
+      Prioritize travel-docs roadmap by compliance accuracy first, then explainability,
+      then latency and reliability. Each roadmap item must specify the readiness outcome
+      it improves and define measurable exit criteria.
+    key_practices:
+      - "Order: compliance correctness > explainability > latency > automation"
+      - "Every roadmap item must reference a validated discovery output (PRD-1.1)"
+      - "Regulatory deadlines (APIS, EES, health rules) are non-negotiable — plan around them"
+      - "Include rollback plan for any change to TIMATIC cache TTL or rule evaluation logic"
+    example_file: "guidance.md"
+
+  - id: PRD-4.1
+    title: "MVP & Product-Market Fit"
+    description: |
+      Validate each change with explicit hypothesis, risk controls (false-ready and false-block
+      guardrails), and a defined experimental cohort (route or client subset). Exit criteria
+      must show measurable improvement before broader rollout.
+    key_practices:
+      - "Define hypothesis: which readiness outcome improves and by how much"
+      - "Set false-ready and false-block guardrails before starting any experiment"
+      - "Use a specific route or client subset as the experimental cohort"
+      - "Exit criteria: measurable error reduction or faster remediation cycle"
+    example_file: "guidance.md"
+
+  - id: PRD-5.1
+    title: "Metrics & Success Definition"
+    description: |
+      Define and track document readiness metrics from experimental baselines until replaced
+      by measured telemetry. Core metrics: TIMATIC false-positive rate, passport scan failure
+      rate, p95 decision latency, APIS submission success rate, and manual intervention rate.
+    key_practices:
+      - "TIMATIC false-positive rate: baseline 1.8%, target <0.8% — passenger blocks without valid cause"
+      - "Passport NFC scan failure rate: baseline 4.2%, track by document type and device model"
+      - "p95 decision latency: baseline 2500 ms, target ≤1800 ms for 72-hour readiness check"
+      - "APIS submission success rate: must be 100% — any gap is a regulatory event"
+      - "Mark all baselines as hypotheses until replaced by measured telemetry"
+    example_file: "guidance.md"
+
+  - id: ENG-6.1
+    title: "Security by Design"
+    description: |
+      Passport scan data, MRZ data, and biometric information must be treated as sensitive PII
+      from the point of capture. Encryption at rest and in transit is mandatory. Data must not
+      be logged in plaintext; access must be role-scoped.
+    key_practices:
+      - "MRZ data and passport scan results: encrypt at rest; never log raw PII"
+      - "Biometric/facial match data: role-scoped access; explicit consent before capture"
+      - "TIMATIC API responses: cache with TTL; do not persist raw rule payloads beyond TTL"
+      - "APIS transmission: TLS 1.2+ mandatory; submission errors must not expose passenger PII in logs"
+    example_file: "guidance.md"
+
+  - id: ENG-6.7
+    title: "Audit Trail"
+    description: |
+      Every document readiness decision, APIS submission, override, and denied-boarding event
+      must produce an immutable audit record. Audit records are required for regulatory
+      inspection and incident investigation.
+    key_practices:
+      - "Audit record required for every readiness decision: decision, rule version, timestamp, agent if applicable"
+      - "APIS submission audit: transmission timestamp, acknowledgment reference, any rejection and resolution"
+      - "Override events: supervisor ID, reason code, outcome — DOT documentation compliance"
+      - "Denied-boarding events: regulatory reference (14 CFR, CBP, EU EES) must be included"
+    example_file: "guidance.md"
+
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: |
+      IATA TIMATIC governs passport, visa, and entry requirement rules for each origin-destination
+      pair. APIS (Advance Passenger Information System) is mandatory for international departures
+      per CBP/TSA regulations. Health documentation rules (CDC, destination health authorities)
+      apply to specific routes. EU Entry/Exit System (EES) is an emerging obligation.
+    key_practices:
+      - "TIMATIC check is mandatory before allowing check-in for international itineraries"
+      - "APIS submission to CBP is a legal obligation — never skip for performance reasons"
+      - "Health documentation requirements are route-specific and update frequently"
+      - "Visa requirement changes must propagate within 24 hours of IATA TIMATIC update"
+    example_file: examples/BUS-2.1-regulatory-mapping.md
+    law_citations:
+      - "IATA TIMATIC visa and passport rules for international passengers"
+      - "CBP APIS mandatory pre-departure submission"
+
+  - id: BUS-4.3
+    title: "Data Subject Rights"
+    description: |
+      Passport scan data, visa data, and health documentation constitute sensitive PII.
+      EU passengers have GDPR Article 9 special category rights for health data.
+      Passport scan data retention: 72 hours post-departure (APIS requirement).
+      Facial match data subject to biometric data laws in California (CCPA/BIPA).
+    key_practices:
+      - "Passport scan data: erasure within 72 hours post-departure per APIS retention rules"
+      - "Health document data: erasure after trip completion; GDPR Article 9 special category"
+      - "Access request: provide document verification status and submission timestamps"
+      - "Facial match / biometric data: explicit consent required; CCPA erasure on request"
+    example_file: examples/BUS-4.3-data-subject-rights.md
+    law_citations:
+      - "GDPR Article 9 health data and biometric data rights"
+      - "CCPA data subject rights for biometric travel document data"
+
+compliance_domains:
+  - standard: "IATA TIMATIC"
+    scope: "Passport, visa, and entry requirement rules per O-D pair"
+    key_controls: ["24h propagation of rule changes", "Fallback to cached rules with staleness flag"]
+  - standard: "CBP APIS (49 CFR Part 122)"
+    scope: "Advance Passenger Information System — mandatory for international departures"
+    key_controls: ["100% submission rate", "Submission errors never expose passenger PII in logs"]
+  - standard: "GDPR Article 9"
+    scope: "Health documentation (special category data)"
+    key_controls: ["Erasure within 72h post-departure", "Explicit consent before health data capture"]
+  - standard: "CCPA / BIPA"
+    scope: "Biometric/facial match data for California residents"
+    key_controls: ["Explicit consent before biometric capture", "Erasure on request"]
+
+dependencies:
+  - Timatic4
+  - Sherpa
+  - VeriFly
+  - Retrieve Reservation Service
+  - Sabre Web Services
+  - Redis cache
+
+project_structure:
+  traveldocuments_ios:
+    root: ios/traveldocuments-ios/
+    key_dirs:
+      - Sources/AirportSecurity/        # TouchlessEligibilityViewController, TouchlessEligibilityViewModel, TouchlessEligibilityView, AirportSecurityFlowManager
+      - Sources/Passport/ScanPassport/  # ScanPassportViewController, PassportScanOptionsViewController, MRZ/MrzData, MrzScanner
+      - Sources/Relevance/              # FeatureToggles.swift (AAFeaturePassportCameraScanAsPrimary, AAFeatureCameraPassportScanNative)
+    key_files:
+      - AirportSecurityFlowManager.swift              # top-level flow orchestration for TSA touchless
+      - TouchlessEligibilityViewController.swift      # eligibility check entry point
+      - TouchlessEligibilityViewModel.swift           # eligibility state management
+      - TouchlessEligibilityEndpoint.swift            # BFF endpoint for touchless eligibility
+      - TouchlessConsentEndpoint.swift                # consent capture
+      - ScanPassportViewController.swift              # MRZ scan entry point
+      - PassportScanOptionsViewController.swift       # scan vs manual entry options
+      - MrzScanner.swift                              # MRZ parsing and validation
+      - MrzData.swift                                 # MRZ data model
+      - TravelDocumentsEnvironment.swift              # environment/dependency injection root
+    test_dir: ios/traveldocuments-ios/Tests/
+    config: ios/fastlane/Fastfile
+
+commands:
+  ios:
+    setup: "fastlane ios setup_dependencies"
+    test: "fastlane ios run_unit_tests"
+    build: "fastlane ios build_ios"
+    release: "fastlane ios create_framework_release"
+    signing: "fastlane ios sync_signing_assets_jenkins"
+
+conventions:
+  ios_naming:
+    view_controllers: "*ViewController.swift (TouchlessEligibilityViewController, ScanPassportViewController, PassportScanOptionsViewController)"
+    view_models: "*ViewModel.swift (TouchlessEligibilityViewModel)"
+    views: "*View.swift (TouchlessEligibilityView)"
+    endpoints: "*Endpoint.swift (TouchlessEligibilityEndpoint, TouchlessConsentEndpoint)"
+    data_models: "*Data.swift, *Parameters.swift (MrzData, TouchlessParameters, TouchlessAction)"
+    scanners: "*Scanner.swift (MrzScanner)"
+    helpers: "*Helper.swift, *Utils.swift (MRZStringHelper, StringUtils)"
+    feature_flags: "AAFeature*.swift (AAFeaturePassportCameraScanAsPrimary, AAFeatureCameraPassportScanNative)"
+    analytics: "*_Analytics.swift (PassportScanOptionsViewController_Analytics, ScanPassportViewController_Analytics)"
+    tests: "*Tests.swift (MrzDataTests, TouchlessEligibilityViewModelTests, ConfirmPassportDataTests)"
+  testing:
+    ios: "XCTest; key tests: MrzDataTests, TouchlessEndpointTests_ConsentResponses, VerifyTravelDocumentsViewControllerTests, UpdateTravelDocumentsEndpointV2Tests"
+  security_conventions:
+    - "MRZ data: never log raw PII; encrypt at rest per ENG-6.1"
+    - "Biometric data: explicit consent via TouchlessConsentEndpoint before capture"
+    - "TIMATIC API responses: cached with TTL; raw rule payload not persisted beyond TTL"
+    - "Feature flags: AAFeaturePassportCameraScanAsPrimary controls camera scan rollout"
+
+tags:
+  - product
+  - travel-docs
+  - compliance
+  - check-in
+  - api

@@ -1,0 +1,178 @@
+# Python/Streamlit Avatar Manifest
+# Defines stack configuration and law specializations for Streamlit dashboard development
+
+avatar:
+  id: avatar-python-streamlit
+  type: technology
+  name: Python/Streamlit
+  version: "1.0.0"
+  created: "2026-02-20"
+  last_updated: "2026-02-20"
+
+stack:
+  language: Python 3.11+
+  framework: Streamlit
+  testing:
+    - pytest
+    - pytest-cov
+    - selenium (for UI testing)
+  data_libraries:
+    - pandas
+    - numpy
+    - plotly
+    - altair
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - streamlit>=1.30.0
+    - pandas>=2.1.0
+    - numpy>=1.26.0
+    - plotly>=5.18.0
+    - altair>=5.2.0
+  dev:
+    - pytest>=8.0.0
+    - pytest-cov>=4.1.0
+    - ruff>=0.1.0
+    - mypy>=1.8.0
+    - selenium>=4.15.0
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+    - skill-30-taxonomy-governed-avatar-enrichment
+  workflows:
+    - product-discovery-stage-a-f
+    - legacy-rescue-decision-track
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    description: "Write tests for dashboard logic, data transformations, and API integrations before implementation"
+    example_file: examples/ENG-4.1-atomic-tdd.md
+    key_practices:
+      - "Test data transformation logic before building dashboard"
+      - "Test API client before integrating with Streamlit widgets"
+      - "Use pytest fixtures for mock data and API responses"
+  
+  - id: ENG-3.1
+    title: Complexity Limits
+    description: "Keep dashboard functions simple (cyclomatic complexity ≤10), extract complex logic to tested modules"
+    example_file: examples/ENG-3.1-complexity.md
+    key_practices:
+      - "Extract data processing to separate modules (not in streamlit app.py)"
+      - "Keep widget callback functions under 10 lines"
+      - "Use helper functions for chart generation and filtering"
+  
+  - id: ENG-2.2
+    title: Layered Architecture
+    description: "Separate presentation (Streamlit), business logic (domain modules), and data access (API clients)"
+    example_file: examples/ENG-2.2-layers.md
+    key_practices:
+      - "Presentation: streamlit app.py (widgets, charts, layout)"
+      - "Business Logic: domain modules (data transformations, calculations)"
+      - "Data Access: API clients (calls to backend services or legacy models)"
+  
+  - id: ENG-6.5
+    title: Input Validation
+    description: "Validate user input from Streamlit widgets before processing"
+    example_file: examples/ENG-6.5-validation.md
+    key_practices:
+      - "Validate date ranges, numeric inputs, dropdown selections"
+      - "Display user-friendly error messages in Streamlit UI"
+      - "Sanitize inputs before passing to API or database queries"
+  
+  - id: ENG-10.1
+    title: Brownfield Integration
+    description: "Use Streamlit to build MVPs that call legacy models (R, PySpark) via API wrappers—no rewrite required"
+    example_file: examples/ENG-10.1-brownfield.md
+    key_practices:
+      - "Build Streamlit dashboard that calls containerized R models via FastAPI"
+      - "Preserve legacy model logic—dashboard is presentation layer only"
+      - "Test API integration with mock responses before connecting to production models"
+
+conventions:
+  file_structure: |
+    streamlit_app/
+      app.py                    # Main Streamlit entry point
+      pages/                    # Multi-page app structure
+        01_route_analysis.py
+        02_scenario_comparison.py
+      domain/                   # Business logic (tested)
+        profitability.py
+        scenarios.py
+      clients/                  # API clients (tested)
+        profitability_api.py
+      tests/
+        test_profitability.py
+        test_scenarios.py
+        test_api_client.py
+      requirements.txt
+      Dockerfile
+
+  streamlit_conventions:
+    - name: "Page Layout"
+      description: "Use st.set_page_config for wide layout, title, and favicon"
+    - name: "State Management"
+      description: "Use st.session_state for user selections and filters"
+    - name: "Caching"
+      description: "Use @st.cache_data for data loading, @st.cache_resource for API clients"
+    - name: "Error Handling"
+      description: "Use st.error for user-facing errors, log exceptions to backend"
+    - name: "Widget Organization"
+      description: "Use st.columns, st.expander, st.tabs for layout organization"
+
+use_cases:
+  - "MVP dashboards for internal analysts and planners"
+  - "Brownfield integration with legacy R/PySpark models via API"
+  - "Interactive scenario modeling and what-if analysis"
+  - "Data visualization and reporting for non-technical stakeholders"
+  - "Proof-of-concept tools before building production web apps"
+
+anti_patterns:
+  - name: "Business Logic in app.py"
+    description: "DO NOT put data transformations, calculations, or complex logic in Streamlit app.py—extract to tested modules"
+  - name: "Direct Database/Model Access"
+    description: "DO NOT call R scripts, PySpark jobs, or database queries directly from Streamlit—use API layer"
+  - name: "No Tests"
+    description: "DO NOT skip tests for data transformations and API clients—Streamlit UI is hard to test, but logic modules are not"
+  - name: "Production-Critical Dashboards"
+    description: "DO NOT use Streamlit for production-critical systems with high concurrency—use FastAPI + React instead"
+
+brownfield_context:
+  description: |
+    Streamlit is ideal for building MVP dashboards that integrate with legacy systems:
+    - **Legacy R Models:** Build Streamlit dashboard that calls containerized R models via FastAPI wrapper
+    - **PySpark Pipelines:** Use Streamlit to trigger PySpark jobs and visualize results
+    - **Jupyter Notebooks:** Extract reusable logic from notebooks, wrap in Streamlit UI for non-technical users
+    
+    **Key Principle:** Streamlit is presentation layer—preserve legacy logic, don't rewrite.
+  
+  brownfield_workflow: "docs/guides/adoption/taxonomy-aligned-avatar-enrichment-workflow.md"
+  preservation_policy: "docs/guides/adoption/brownfield-code-preservation.md"
+
+related_avatars:
+  technology:
+    - python-fastapi
+    - legacy-ml-interop
+    - python-pyspark
+    - azure-ml
+  products:
+    - network-planning-optimization
+    - cargo-freight
+
+rag_retrieval:
+  triggers:
+    - "streamlit"
+    - "dashboard development"
+    - "interactive visualization"
+    - "MVP dashboard"
+    - "brownfield dashboard"
+    - "legacy model visualization"
+    - "analyst tools"
+    - "scenario modeling UI"

@@ -1,0 +1,779 @@
+# Product-Type Avatars Registry
+# Domain-specific implementations of AA Product Laws (PRD)
+# Enables selective loading of product guidance, examples, use-cases by domain
+
+registry:
+  name: AA Product-Type Avatars
+  version: "2.0.0"
+  base_constitution: ../../laws/index.yaml
+  prd_reference: ../../docs/guides/avatars/prd-laws-reference.md
+  description: Product-domain specializations of PRD-1.1 through PRD-5.1 laws
+
+token_optimization:
+  strategy: Selective document loading by law and use-case
+  guidance_file: 750-800 tokens per PRD law application
+  example_file: 750-800 tokens per discovery/journey/roadmap/metrics
+  use_case_file: 1200-1500 tokens per phased workflow
+  total_per_avatar: ~8000-12000 tokens for complete avatar
+
+rag_structure:
+  query_types:
+    - "How do we discover customer needs for [product]?" → PRD-1.1 examples
+    - "What's the user journey for [persona]?" → PRD-2.1 examples  
+    - "What features should we prioritize?" → PRD-3.1 roadmap
+    - "How do we validate this feature?" → PRD-4.1 use-cases
+    - "What metrics define success?" → PRD-5.1 metrics
+  retrieval_method: Cite specific file + law ID + snippet
+  fallback: Load full guidance.md if context unclear
+
+avatars:
+
+  - id: cargo-freight
+    name: Cargo & Freight
+    path: cargo-freight/
+    description: Logistics, PAL applications, AWB, dangerous goods handling
+    category: Product (Operational)
+    established: "2026-02"
+    
+    personas:
+      - Alice (Freight Forwarder)
+      - Carlos (Direct Shipper)  
+      - Roberto (Partner Airline)
+    
+    structure:
+      manifest: manifest.yaml (95 lines)
+      guidance: guidance.md (207 lines)
+      personas: examples/personas.md
+      discovery: examples/PRD-1.1-discovery.md (~2500 tokens)
+      journey: examples/PRD-2.1-journey.md (~2800 tokens)
+      roadmap: examples/PRD-3.1-roadmap.md (~3000 tokens)
+      mvp: examples/PRD-4.1-mvp.md (~2600 tokens)
+      metrics: examples/PRD-5.1-metrics.md (~2400 tokens)
+      use_cases:
+        - quote-booking-workflow/
+        - integration-api/
+        - partnership-expansion/
+    
+    specializes_laws:
+      - id: PRD-1.1
+        title: Continuous Discovery
+        focus: Freight forwarder pain points, market trends
+        example_file: examples/PRD-1.1-discovery.md
+        
+      - id: PRD-2.1
+        title: User Journey Mapping
+        focus: Quote → Booking → Pickup → Delivery → Exception handling
+        example_file: examples/PRD-2.1-journey.md
+        
+      - id: PRD-3.1
+        title: Roadmap Planning
+        focus: Speed first (quotes <15s), then reliability, then API
+        example_file: examples/PRD-3.1-roadmap.md
+        
+      - id: PRD-4.1
+        title: MVP & Product-Market Fit
+        focus: Validate quote engine with 3 forwarders before scaling
+        example_file: examples/PRD-4.1-mvp.md
+        
+      - id: PRD-5.1
+        title: Metrics & Success Definition
+        focus: Quote speed, completion rate, NPS, on-time delivery
+        example_file: examples/PRD-5.1-metrics.md
+    
+    key_metrics:
+      quote_speed: "<15 seconds (95th percentile)"
+      completion_rate: "85%+"
+      nps: "40+"
+      on_time_delivery: "98%+"
+    
+    business_impact:
+      annual_revenue: "$7.5M+"
+      estimated_roi: "5-7x"
+      labor_efficiency: "40% faster booking"
+
+  - id: loyalty-aadvantage
+    name: Loyalty (AADvantage)
+    path: loyalty-aadvantage/
+    description: Member program, points, elite status, partnerships, recognition
+    category: Product (Customer Engagement)
+    established: "2026-02"
+    
+    personas:
+      - Sarah (Casual Member)
+      - Marcus (Frequent Traveler)
+      - Jennifer (Elite Member)
+      - Diana (Program Manager)
+    
+    structure:
+      manifest: manifest.yaml (140 lines)
+      guidance: guidance.md (324 lines)
+      personas: examples/personas.md
+      discovery: examples/PRD-1.1-discovery.md (~2500 tokens)
+      journey: examples/PRD-2.1-journey.md (~3100 tokens)
+      roadmap: examples/PRD-3.1-roadmap.md (~3500 tokens)
+      metrics: examples/PRD-5.1-metrics.md (~3200 tokens)
+      use_cases:
+        - member-acquisition/
+        - retention-engagement/
+    
+    specializes_laws:
+      - id: PRD-1.1
+        title: Continuous Discovery
+        focus: Member satisfaction, churn causes, competitive comparison
+        example_file: examples/PRD-1.1-discovery.md
+        
+      - id: PRD-2.1
+        title: User Journey Mapping
+        focus: Casual → Frequent → Elite progression and renewal
+        example_file: examples/PRD-2.1-journey.md
+        
+      - id: PRD-3.1
+        title: Roadmap Planning
+        focus: Mobile redesign (88), award expansion (88), elite tracking (93)
+        example_file: examples/PRD-3.1-roadmap.md
+        
+      - id: PRD-4.1
+        title: MVP & Product-Market Fit
+        focus: Progress tracker MVP validates hypothesis before full launch
+        example_file: examples/PRD-4.1-mvp.md
+        
+      - id: PRD-5.1
+        title: Metrics & Success Definition
+        focus: NPS, redemption rate, elite achievement, lifetime value
+        example_file: examples/PRD-5.1-metrics.md
+    
+    key_metrics:
+      member_satisfaction: "6.2 → 7.5 NPS"
+      redemption_rate: "45% → 65%"
+      elite_achievement: "25% → 35%"
+      lifetime_value: "$650 → $750"
+    
+    business_impact:
+      incremental_revenue: "$260M+"
+      estimated_roi: "28.9x"
+      retention_improvement: "25-30% churn reduction"
+
+  - id: check-in-travel
+    name: Check-In & Boarding
+    path: check-in-travel/
+    description: Mobile/counter/kiosk check-in, gate operations, boarding optimization
+    category: Product (Operations)
+    established: "2026-02"
+    
+    personas:
+      - Alex (Digital Traveler)
+      - Maria (Airport Prefer)
+      - Kevin (Gate Agent)
+      - Patricia (Operations Manager)
+    
+    structure:
+      manifest: manifest.yaml (100 lines)
+      guidance: guidance.md (444 lines)
+      personas: examples/personas.md
+      discovery: examples/PRD-1.1-discovery.md (~2400 tokens)
+      journey: examples/PRD-2.1-journey.md (~2800 tokens)
+      roadmap: examples/PRD-3.1-roadmap.md (~2600 tokens)
+      metrics: examples/PRD-5.1-metrics.md (~2900 tokens)
+      use_cases:
+        - digital-check-in/
+        - mobile-check-in/
+        - gate-operations/
+    
+    specializes_laws:
+      - id: PRD-1.1
+        title: Continuous Discovery
+        focus: Passenger barriers, gate-level failures, operational bottlenecks
+        example_file: examples/PRD-1.1-discovery.md
+        
+      - id: PRD-2.1
+        title: User Journey Mapping
+        focus: Digital vs. counter vs. gate perspectives; friction maps
+        example_file: examples/PRD-2.1-journey.md
+        
+      - id: PRD-3.1
+        title: Roadmap Planning
+        focus: Reliability first (mobile 92% → 99.9%), then efficiency
+        example_file: examples/PRD-3.1-roadmap.md
+        
+      - id: PRD-4.1
+        title: MVP & Product-Market Fit
+        focus: Offline barcode MVP proves reliability before scale
+        example_file: examples/PRD-4.1-mvp.md
+        
+      - id: PRD-5.1
+        title: Metrics & Success Definition
+        focus: Mobile adoption, boarding time, on-time %, labor savings
+        example_file: examples/PRD-5.1-metrics.md
+    
+    key_metrics:
+      mobile_adoption: "52% → 72%"
+      boarding_time: "40 → 35.2 minutes"
+      on_time_performance: "78% → 82.1%"
+      gate_efficiency: "40 → 6 manual lookups/flight"
+    
+    business_impact:
+      labor_savings: "$13M+ annually"
+      on_time_revenue: "$8M+ annually"
+      operational_resilience: "$2-5M savings"
+      estimated_roi: "4.8x"
+
+  - id: travel-docs-compliance
+    name: TravelDocs Compliance
+    path: travel-docs-compliance/
+    description: Travel-document readiness, compliance verification, and exception handling
+    category: Product (Compliance)
+    established: "2026-03"
+
+    personas:
+      - International Passenger
+      - Check-In Agent
+      - Compliance Analyst
+      - Operations Manager
+
+    structure:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      personas: examples/personas.md
+      use_cases:
+        - pre-departure-document-readiness/
+
+    specializes_laws:
+      - id: PRD-1.1
+        title: Continuous Discovery
+        focus: Passenger and agent friction in readiness decisioning
+        example_file: use-cases/pre-departure-document-readiness/README.md
+
+      - id: PRD-2.1
+        title: User Journey Mapping
+        focus: Passenger and operations journeys for readiness and exception resolution
+        example_file: use-cases/pre-departure-document-readiness/README.md
+
+      - id: PRD-3.1
+        title: Roadmap Planning
+        focus: Prioritize correctness, explainability, and reliability over feature breadth
+        example_file: guidance.md
+
+      - id: PRD-4.1
+        title: MVP & Product-Market Fit
+        focus: Controlled rollout by client, route, and segment risk profile
+        example_file: guidance.md
+
+      - id: PRD-5.1
+        title: Metrics & Success Definition
+        focus: Latency, false-block reduction, manual intervention, readiness rates
+        example_file: guidance.md
+
+    key_metrics:
+      readiness_latency_p95: "2500ms experimental baseline"
+      passenger_ready_rate_d1: "78% experimental baseline"
+      false_block_rate: "1.8% experimental baseline"
+      manual_intervention_per_1k: "45 experimental baseline"
+
+    business_impact:
+      compliance_risk_reduction: "Targeted through decision explainability and auditability"
+      airport_efficiency: "Reduced manual exception handling and escalations"
+      estimated_roi: "To validate during pilot phase"
+
+  - id: network-automation
+    name: Network Automation
+    path: network-automation/
+    description: IT network infrastructure automation — Nautobot device management, DNS lifecycle, firewall rule management, MOCCA monitoring, PaaS subnet provisioning
+    category: Product (Internal Operations)
+    established: "2026-04-28"
+    version: "1.0.0"
+    status: active
+    rag_validated: true
+    last_validated: "2026-04-28"
+
+    taxonomy_validation:
+      domain_gate: PASS
+      user_journey_gate: PASS
+      boundary_gate: PASS
+      stability_gate: PASS
+      retrieval_gate: PASS
+
+    personas:
+      - Network Engineer
+      - NOC Operator
+      - Platform/Cloud Engineer
+      - IT Change Manager
+
+    structure:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      discovery: examples/PRD-1.1-discovery.md
+      journey: examples/PRD-2.1-journey.md
+      metrics: examples/PRD-5.1-metrics.md
+      change_compliance: examples/BUS-2.1-change-compliance.md
+      audit_trail: examples/BUS-7.1-audit-trail.md
+      use_cases:
+        - network-change-automation/
+
+    specializes_laws:
+      - id: PRD-1.1
+        title: Customer-Centric Law
+        focus: Network engineer and NOC operator pain points — cross-system validation friction
+        example_file: examples/PRD-1.1-discovery.md
+      - id: PRD-2.1
+        title: Problem Validation Law
+        focus: 8-step current-state manual change workflow with 3 failure modes
+        example_file: examples/PRD-2.1-journey.md
+      - id: PRD-5.1
+        title: MVP Law
+        focus: Compliance gate + audit trail as MVP gates; MTTR and audit completeness metrics
+        example_file: examples/PRD-5.1-metrics.md
+      - id: BUS-2.1
+        title: Regulatory Mapping Law
+        focus: IT change management (CAB approval, maintenance window, rollback plan) as hard gate
+        example_file: examples/BUS-2.1-change-compliance.md
+      - id: BUS-7.1
+        title: Audit Trail Law
+        focus: Immutable audit record for every change action (push, block, rollback)
+        example_file: examples/BUS-7.1-audit-trail.md
+
+    key_metrics:
+      mean_time_to_push: "45 min → ≤10 min"
+      out_of_window_incidents: "3/6mo → 0"
+      audit_completeness: "~60% → 100%"
+      cab_rejection_rate: "15% → ≤3%"
+
+  - id: network-planning-optimization
+    name: Network Planning & Optimization
+    path: network-planning-optimization/
+    description: Route profitability forecasting, capacity planning, network optimization
+    category: Product (Operations)
+    established: "2026-02"
+
+    personas:
+      - Lisa Chen (Network Planning Analyst - Domestic)
+      - Marcus Rodriguez (Capacity Planning Manager - International)
+      - Rachel Kim (Operations Research Engineer)
+      - David Park (Revenue Management Strategist)
+
+    structure:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      personas: examples/personas.md
+      adoption: ADOPTION.md
+      use_cases:
+        - route-profitability-analysis/
+
+    specializes_laws:
+      - id: PRD-1.1
+        title: Continuous Discovery
+        focus: Network planner pain points, strategic planning bottlenecks
+        example_file: examples/personas.md
+
+      - id: PRD-2.1
+        title: User Journey Mapping
+        focus: Data collection → analysis → scenario modeling → recommendation journey
+        example_file: guidance.md
+
+      - id: PRD-3.1
+        title: Roadmap Planning
+        focus: Data pipeline first (unlocks all work), then forecasting, then optimization
+        example_file: guidance.md
+
+      - id: PRD-4.1
+        title: MVP & Product-Market Fit
+        focus: Pilot with 2-3 analysts, validate time-to-insight and accuracy improvements
+        example_file: use-cases/route-profitability-analysis.md
+
+      - id: PRD-5.1
+        title: Metrics & Success Definition
+        focus: Time-to-insight, forecast accuracy, scenario throughput, analyst NPS
+        example_file: guidance.md
+
+      - id: ENG-4.1
+        title: Atomic TDD
+        focus: Test planning logic, forecast models, optimization algorithms with regression tests
+        example_file: use-cases/route-profitability-analysis.md
+
+      - id: ENG-10.1
+        title: Brownfield Code Preservation
+        focus: Preserve R/PySpark logic with containerization, require side-by-side validation
+        example_file: ADOPTION.md
+
+    key_metrics:
+      time_to_insight: "4 days → <2 hours (80% reduction)"
+      forecast_accuracy: "9% MAPE → 6% MAPE (or maintain 9% with preserved models)"
+      scenario_throughput: "1/week → 5/week (5x increase)"
+      analyst_nps: "30 → 50+"
+
+    business_impact:
+      revenue_optimization: "+$10M/year from optimized network capacity"
+      analyst_productivity: "40% time savings from automated data pipelines"
+      decision_quality: "Better forecast accuracy and scenario analysis"
+      estimated_roi: "5-8x"
+
+    brownfield_notes: |
+      This avatar was created to support ORAA brownfield codebases with legacy R scripts,
+      PySpark pipelines, and Jupyter notebooks. Default strategy: preserve existing logic
+      with containerization, do NOT rewrite without validated accuracy/performance improvements
+      and stakeholder approval. See ADOPTION.md for brownfield guidance.
+
+  - id: schedule-change-self-serve
+    name: Schedule Change Self-Serve
+    path: schedule-change-self-serve/
+    description: Passenger-initiated flight changes, eligibility determination, rebooking, and agentic change assistance
+    category: Product (Service Recovery)
+    established: "2026-03"
+
+    taxonomy_validation:
+      domain_gate: PASS
+      user_journey_gate: PASS
+      boundary_gate: PASS  # Distinct from passenger-booking (initial ticket) and check-in-travel (airport)
+      stability_gate: PASS
+      retrieval_gate: PASS
+
+    personas:
+      - Sam (Leisure Traveler)
+      - Jordan (Business Traveler / AAdvantage Executive)
+      - Morgan (Group Lead / Corporate Coordinator)
+      - Alex (Airport Agent — Override Authority)
+      - Taylor (Compliance Analyst)
+
+    structure:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      personas: examples/personas.md
+      discovery: examples/PRD-1.1-discovery.md
+      journey: examples/PRD-2.1-journey.md
+      roadmap: examples/PRD-3.1-roadmap.md
+      mvp: examples/PRD-4.1-mvp.md
+      metrics: examples/PRD-5.1-metrics.md
+      use_cases:
+        - eligibility-check-reason-codes/
+        - self-serve-rebooking/
+        - conversational-eligibility-agent/
+
+    specializes_laws:
+      - id: PRD-1.1
+        title: Continuous Discovery
+        focus: Passenger ineligibility abandonment, agent override patterns, competitor UX benchmarks
+        example_file: examples/PRD-1.1-discovery.md
+
+      - id: PRD-2.1
+        title: User Journey Mapping
+        focus: Mobile/web self-serve, agent console override, proactive disruption offer
+        example_file: examples/PRD-2.1-journey.md
+
+      - id: PRD-3.1
+        title: Roadmap Planning
+        focus: Eligibility transparency → rebooking success → conversational agent → proactive offer
+        example_file: examples/PRD-3.1-roadmap.md
+
+      - id: PRD-4.1
+        title: MVP & Product-Market Fit
+        focus: Reason code enrichment (read-only, low-risk) as first pilot
+        example_file: examples/PRD-4.1-mvp.md
+
+      - id: PRD-5.1
+        title: Metrics & Success Definition
+        focus: Self-serve success rate, agent escalation rate, BFF latency, audit completeness
+        example_file: examples/PRD-5.1-metrics.md
+
+      - id: ENG-2.3
+        title: Vertical Slice Development
+        focus: 4-slice delivery sequence with standalone user value per slice
+        example_file: examples/PRD-3.1-roadmap.md
+
+      - id: ENG-6.4
+        title: Compliance and Audit Trail
+        focus: Immutable record of eligibility decisions and agent overrides
+        example_file: guidance.md
+
+      - id: ENG-9.4
+        title: Human Override Law
+        focus: Agent approval gate before conversational agent mutations any booking
+        example_file: use-cases/conversational-eligibility-agent/README.md
+
+    key_metrics:
+      self_serve_change_success_rate: "78% experimental baseline → 88% target"
+      agent_escalation_rate: "20% experimental baseline → 10% target"
+      bff_p95_latency: "3200ms experimental baseline → 1800ms target"
+      audit_trail_completeness: "82% experimental baseline → 99% target"
+
+    business_impact:
+      agent_capacity: "Reduce manual override queue at hub airports"
+      idb_risk: "Reduce IDB contributions from abandoned change attempts"
+      estimated_roi: "To validate during Slice 1 pilot"
+
+  - id: customer-relations-ops
+    name: Customer Relations Operations
+    path: customer-relations-ops/
+    description: AI-assisted complaint response drafting for internal Customer Relations Representatives
+    category: Product (Internal Operations)
+    established: "2026-03-18"
+    personas:
+      - CR Specialist
+      - CR Supervisor
+      - Compliance Reviewer
+    core_journeys:
+      - Complaint Intake and Category Classification
+      - Template Selection and Compensation Validation
+      - PII-Safe LLM Draft Generation
+      - Draft Review and Acceptance
+      - Case Close and Audit Trace
+    specializes_laws:
+      - id: BUS-1.1
+        focus: Company policy compliance always outranks tone/style in all agent decisions
+      - id: BUS-7.1
+        focus: Append-only audit trace — LLM calls and compensation decisions immutably logged
+      - id: ENG-6.5
+        focus: PII stripped at LLM boundary before API call; restored deterministically after
+      - id: ENG-4.1
+        focus: PII redaction, template selection, and compliance rules individually testable
+      - id: PRD-2.1
+        focus: CR Rep journey stages modeled and measurable
+      - id: PRD-5.1
+        focus: Draft acceptance rate, compliance violation rate, audit completeness
+    key_metrics:
+      draft_acceptance_rate: ">80% target"
+      compliance_violation_rate: "0% in delivered drafts"
+      pii_in_llm_payload_rate: "0% (audited)"
+      audit_trace_completeness: "100%"
+    taxonomy_gates:
+      domain_gate: PASS
+      journey_gate: PASS
+      boundary_gate: PASS
+      stability_gate: PASS
+      retrieval_gate: PASS
+    hangar_ai_specs_change: cr-genai-draft-response-avatar-enrichment
+
+  - id: ground-ops-staffing-analytics
+    name: Ground Ops Staffing Analytics
+    path: ground-ops-staffing-analytics/
+    description: ML-driven airport ramp staffing optimization, bag delivery routing, quantile staffing selection
+    category: Product (Operations Analytics)
+    established: "2026-03-26"
+    contributed_by: "ABR-Staffing constitutional adoption"
+
+    personas:
+      - Jordan Rivera (Ground Ops Analyst)
+      - Marcus Webb (Ramp Operations Supervisor)
+      - Priya Nair (Station Operations Manager)
+      - Alex Torres (Airport Planning Engineer)
+
+    structure:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      personas: examples/personas.md
+      adoption: ADOPTION.md
+
+    specializes_laws:
+      - id: PRD-1.1
+        title: Continuous Discovery
+        focus: Ramp supervisor pain points, IROP post-mortems, pull-time gap analysis
+        example_file: guidance.md
+
+      - id: PRD-2.1
+        title: User Journey Mapping
+        focus: Staffing plan generation journey (config → extract → train → review)
+        example_file: guidance.md
+
+      - id: PRD-3.1
+        title: Roadmap Planning
+        focus: Safety net first, then extraction, then enrichment, then dashboard
+        example_file: guidance.md
+
+      - id: PRD-4.1
+        title: MVP & Product-Market Fit
+        focus: Single-station accuracy validation before expansion
+        example_file: guidance.md
+
+      - id: PRD-5.1
+        title: Metrics & Success Definition
+        focus: Staffing accuracy, pull-time SLA, labor cost variance, pipeline reliability
+        example_file: guidance.md
+
+      - id: ENG-4.1
+        title: Atomic TDD
+        focus: Characterization tests for utils/ first; extract notebook logic second
+        example_file: ADOPTION.md
+
+      - id: ENG-4.4
+        title: Test-First Brownfield
+        focus: Baseline specs for notebooks before any extraction; no cell edits in Phase 1
+        example_file: ADOPTION.md
+
+      - id: ENG-6.4
+        title: Data Protection
+        focus: No passenger PII in outputs; DB credentials in .env files
+        example_file: guidance.md
+
+      - id: ENG-6.7
+        title: Audit Trail
+        focus: run_id traceability across all pipeline stages and log entries
+        example_file: guidance.md
+
+    key_metrics:
+      staffing_accuracy: "Predicted vs. actual within 15% on 80%+ shifts"
+      pull_time_sla: "≥85% of flights within station first_pulltime threshold"
+      over_staffing_reduction: "20% labor waste reduction"
+      station_coverage: "CLT, DFW, PHX, MIA (expanding)"
+
+    business_impact:
+      labor_efficiency: "Targeted 20% reduction in over-staffing waste"
+      bag_reliability: "Improved pull-time SLA compliance"
+      station_expansion: "Scale from 4 to 8+ stations with same pipeline"
+
+    taxonomy_gates:
+      domain_gate: PASS
+      journey_gate: PASS
+      boundary_gate: PASS
+      stability_gate: PASS
+      retrieval_gate: PASS
+
+  - id: ballot-trading
+    name: Pilot Ballot & Trip Trading
+    path: ballot-trading/
+    description: CBA-governed pilot trip-pairing trades, ballot submissions, real-time and batch matching across CCA (rules engine), DOTC Portal (reserve visibility), and PTTS/BTS (matching engine).
+    category: "Crew Self-Service & Trip Trading"
+    established: "2026-04-27"
+
+    personas:
+      - Line Pilot (trading/bidding for trip pairings)
+      - Reserve Pilot (monitoring availability windows)
+      - Crew Scheduler (oversight, exception handling)
+      - CBA Compliance Analyst (audit, contract review)
+
+    core_journeys:
+      - Real-time trip trade submission and award
+      - CBA eligibility validation against seniority and duty limits
+      - Batch ballot period matching and award
+      - Reserve availability check via DOTC Portal
+      - Trade dispute and audit trail review
+
+    structure:
+      manifest: manifest.yaml (~140 tokens)
+      guidance: guidance.md (~420 tokens)
+      discovery: examples/PRD-1.1-discovery.md
+      problem_first: examples/PRD-1.2-problem-first.md
+      evidence_based: examples/PRD-1.5-evidence-based.md
+      journey: examples/PRD-2.1-journey.md
+      stage_gate: examples/PRD-2.5-stage-gate.md
+      metrics: examples/PRD-5.1-metrics.md
+      retention: examples/PRD-6.2-retention.md
+      audit_trail: examples/BUS-7.1-audit-trail.md
+      control_framework: examples/BUS-2.2-control-framework.md
+      data_classification: examples/BUS-3.1-data-classification.md
+      use_cases:
+        - pilot-trip-trade/
+
+    specializes_laws:
+      - id: PRD-1.1
+        title: Continuous Discovery
+        focus: Pilot trade friction, CBA rule interpretation gaps, ballot-period experience
+        example_file: examples/PRD-1.1-discovery.md
+      - id: PRD-1.2
+        title: Problem-First (NON-NEGOTIABLE)
+        focus: Validate specific pilot friction with evidence before solution work
+        example_file: examples/PRD-1.2-problem-first.md
+      - id: PRD-1.5
+        title: Evidence-Based Decisions
+        focus: CBA-evidence-ranked awards; deviation requires logged justification
+        example_file: examples/PRD-1.5-evidence-based.md
+      - id: PRD-2.1
+        title: User Journey Mapping
+        focus: Trade intent through eligibility to award or batch queue; all personas mapped
+        example_file: examples/PRD-2.1-journey.md
+      - id: PRD-2.5
+        title: Stage-Gate Reviews
+        focus: Sequential discovery gates; CBA domain review before spec work
+        example_file: examples/PRD-2.5-stage-gate.md
+      - id: PRD-5.1
+        title: MVP & Experimentation (NON-NEGOTIABLE)
+        focus: Real-time eligible-trade slice first; Tier 1-3 KPIs
+        example_file: examples/PRD-5.1-metrics.md
+      - id: PRD-6.2
+        title: Retention Over Acquisition
+        focus: Pilot trust over new trade scenarios; opaque rejections block acquisition
+        example_file: examples/PRD-6.2-retention.md
+      - id: BUS-7.1
+        title: Audit Trail (NON-NEGOTIABLE)
+        focus: Immutable log of every trade decision for CBA dispute defensibility
+        example_file: examples/BUS-7.1-audit-trail.md
+      - id: BUS-2.2
+        title: Control Framework
+        focus: CBA as authoritative control; bidirectional traceability to CBA articles
+        example_file: examples/BUS-2.2-control-framework.md
+      - id: BUS-3.1
+        title: Data Classification
+        focus: Pilot/schedule data Confidential; retention and access controls defined
+        example_file: examples/BUS-3.1-data-classification.md
+
+    key_metrics:
+      trade_success_rate: "≥85% self-serve real-time award"
+      time_to_award: "<60 seconds (real-time path)"
+      batch_completion_rate: "≥99% within SLA window"
+      audit_completeness: "≥99.9% (BUS-7.1)"
+      cba_compliance_incidents: "0 disputed awards"
+
+    taxonomy_gates:
+      domain_gate: PASS
+      journey_gate: PASS
+      boundary_gate: PASS
+      stability_gate: PASS
+      retrieval_gate: PASS
+    taxonomy_extension_status: "PENDING — awaiting Director+ approval per hangar-ai-specs/changes/taxonomy-extension-ballot-trading/PROPOSAL.md (entry is provisional until independent named approver signs off)"
+
+  - id: passenger-booking
+    name: Passenger Booking & Reservations
+    path: passenger-booking/
+    description: Flight search, booking, ancillaries, payment, PNR management
+    category: "Passenger Booking & Reservations"
+    established: "2026-03-31"
+    version: "1.4.0"
+    rag_validated: unknown
+    last_validated: null
+    note: "Manifest exists at v1.4.0 — moved from planned: to active 2026-04-30 (correction: was listed as planned despite manifest existing)"
+
+# Planned avatars (Q2-Q3 2026)
+planned:
+
+  - id: airport-operations
+    name: Airport Operations
+    description: Gate management, crew scheduling, IROP handling
+    status: In-scope for Phase 3b
+    
+  - id: customer-service
+    name: Customer Service
+    description: Rebooking, refunds, complaints, accessibility
+    status: In-scope for Phase 3b
+    
+  - id: internal-productivity
+    name: Internal Productivity
+    description: Employee tools, workflows, dashboards
+    status: Exploratory
+
+# Cross-cutting concerns
+cross_cutting:
+  accessibility:
+    - All avatars must address accessibility per PRD laws
+    - Maria (airport prefer, accessibility focus) is persona in Check-In
+    - Design patterns: Large buttons, plain language, no jargon
+    
+  compliance:
+    - Product laws must align with BUS (business) laws
+    - Check-In addresses DOT/TSA compliance (BUS-2.2, BUS-2.3)
+    - Loyalty addresses financial accuracy (BUS-3.4)
+    - Cargo addresses dangerous goods (BUS-2.x)
+
+# Discovery guidance for AI agents
+ai_guidance:
+  when_to_use_avatar: "Product manager designing feature for specific domain"
+  entry_points:
+    - "How do I discover needs for this product?" → Load PRD-1.1 example + guidance
+    - "Which features should I prioritize?" → Load PRD-3.1 roadmap
+    - "How do I validate before launch?" → Load PRD-4.1 use-case workflow
+    - "What metrics define success?" → Load PRD-5.1 metrics framework
+  
+  selective_loading:
+    - Use manifest.yaml to understand structure
+    - Load guidance.md for law-specific context
+    - Load specific example file based on PRD law question
+    - Load use-case workflow for end-to-end execution
+    - Fallback to PRD-LAWS-REFERENCE.md if unclear
+  
+  citation_format: "[PRD-N.N: Title](path/to/file.md) — {{ brief context }}"

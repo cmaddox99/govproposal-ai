@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jury Deliberation — Discovery Workflow Traceability Enhancement · 2026-04-30</title>
+  <style>
+    :root{
+      --aa-red:#c8102e;--aa-dark:#0a0d14;--aa-navy:#131825;--aa-blue:#0f3460;
+      --aa-gold:#f5a623;--aa-green:#22c55e;--aa-green-dk:#16a34a;
+      --aa-purple:#7c3aed;--aa-surface:#f4f6fa;--aa-border:#dde3ee;
+      --aa-text:#1e293b;--aa-muted:#64748b;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--aa-surface);color:var(--aa-text);font-size:14px;line-height:1.6}
+    header{background:linear-gradient(140deg,#070a12 0%,#0f3460 60%,#1a4f8a 100%);color:#fff;padding:36px 52px 30px;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;right:-80px;top:-80px;width:360px;height:360px;background:radial-gradient(circle,rgba(200,16,46,.15) 0%,transparent 70%);border-radius:50%}
+    .h-eyebrow{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px}
+    .h-title{font-size:30px;font-weight:800;letter-spacing:-.5px}
+    .h-sub{font-size:15px;color:rgba(255,255,255,.6);margin-top:6px;margin-bottom:20px}
+    .h-meta{display:flex;flex-wrap:wrap;gap:8px}
+    .badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+    .b-red{background:var(--aa-red);color:#fff}
+    .b-purple{background:rgba(124,58,237,.35);color:#c4b5fd;border:1px solid rgba(124,58,237,.4)}
+    .b-gold{background:rgba(245,166,35,.2);color:var(--aa-gold);border:1px solid rgba(245,166,35,.3)}
+    .b-green{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .b-muted{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.15)}
+    .container{max-width:1080px;margin:0 auto;padding:32px 20px}
+    .section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--aa-muted);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .section-label::after{content:'';flex:1;height:1px;background:var(--aa-border)}
+
+    /* Phase containers */
+    .phase{background:#fff;border:1px solid var(--aa-border);border-radius:12px;overflow:hidden;margin-bottom:36px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+    .phase-header{padding:20px 26px;display:flex;align-items:flex-start;gap:16px;border-bottom:2px solid var(--aa-border)}
+    .phase-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .ph-blue{background:#eff6ff}
+    .ph-green{background:#f0fdf4}
+    .phase-title{font-size:18px;font-weight:800;color:var(--aa-dark)}
+    .phase-sub{font-size:13px;color:var(--aa-muted);margin-top:3px}
+    .phase-law{font-size:11px;font-weight:700;color:var(--aa-red);margin-top:5px;display:flex;gap:6px;flex-wrap:wrap}
+    .phase-body{padding:26px}
+
+    /* Juror panel */
+    .jurors-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px}
+    .juror-card{border-radius:10px;overflow:hidden;border:1px solid var(--aa-border)}
+    .juror-header{padding:12px 14px;display:flex;align-items:center;gap:10px}
+    .juror-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .juror-name{font-weight:700;font-size:13px;color:var(--aa-dark)}
+    .juror-role{font-size:11px;color:var(--aa-muted)}
+    .juror-body{padding:10px 14px 14px;font-size:12px;color:var(--aa-text);line-height:1.5;background:var(--aa-surface);border-top:1px solid var(--aa-border)}
+    .juror-bias{font-size:11px;color:var(--aa-muted);margin-top:6px;font-style:italic}
+
+    /* Deliberation rounds */
+    .round{border:1px solid var(--aa-border);border-radius:10px;margin-bottom:20px;overflow:hidden}
+    .round-header{background:linear-gradient(90deg,#1e1b4b 0%,#312e81 100%);color:#fff;padding:12px 18px;display:flex;justify-content:space-between;align-items:center}
+    .round-title{font-weight:700;font-size:13px;color:#c4b5fd}
+    .round-focus{font-size:11px;color:rgba(255,255,255,.6)}
+    .round-body{padding:0}
+    .voice{padding:14px 18px;border-bottom:1px solid #f1f5f9;display:flex;gap:12px;align-items:flex-start}
+    .voice:last-child{border-bottom:none}
+    .voice-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;margin-top:2px}
+    .voice-name{font-weight:700;font-size:12px;color:var(--aa-dark)}
+    .voice-stance{display:inline-block;padding:1px 7px;border-radius:8px;font-size:10px;font-weight:700;margin-left:6px}
+    .vs-for{background:#dcfce7;color:#166534}
+    .vs-against{background:#fee2e2;color:#991b1b}
+    .vs-condition{background:#fef3c7;color:#92400e}
+    .vs-abstain{background:#f1f5f9;color:#475569}
+    .voice-text{font-size:12.5px;color:var(--aa-text);line-height:1.6;margin-top:4px}
+    .voice-quote{background:#f8fafc;border-left:3px solid var(--aa-purple);padding:7px 12px;border-radius:0 6px 6px 0;font-size:12px;font-style:italic;color:#4338ca;margin-top:6px}
+
+    /* Verdict */
+    .verdict-card{border-radius:10px;overflow:hidden;margin-top:6px}
+    .verdict-header{padding:14px 20px;display:flex;align-items:center;gap:12px;justify-content:space-between}
+    .vh-approved{background:linear-gradient(90deg,#052e16 0%,#14532d 100%)}
+    .vh-conditions{background:linear-gradient(90deg,#422006 0%,#78350f 100%)}
+    .verdict-label{font-size:14px;font-weight:800;color:#fff}
+    .verdict-icon{font-size:24px}
+    .verdict-body{padding:16px 20px;background:#fff;border:1px solid var(--aa-border);border-top:none;border-radius:0 0 10px 10px}
+    .decision-list{display:flex;flex-direction:column;gap:10px}
+    .decision-item{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--aa-surface);border-radius:8px;border:1px solid var(--aa-border)}
+    .di-number{width:22px;height:22px;border-radius:50%;background:var(--aa-purple);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .di-title{font-weight:700;font-size:13px;color:var(--aa-dark)}
+    .di-desc{font-size:12px;color:var(--aa-muted);margin-top:2px;line-height:1.5}
+    .di-law{font-size:10px;font-weight:700;color:var(--aa-red);margin-top:4px}
+
+    /* Enhancement spec */
+    .spec-card{background:#fff;border:1px solid var(--aa-border);border-radius:10px;overflow:hidden;margin-bottom:20px}
+    .spec-header{padding:14px 18px;background:linear-gradient(90deg,#0c1445 0%,#0f3460 100%);display:flex;gap:10px;align-items:center}
+    .spec-title{font-weight:700;font-size:14px;color:#fff}
+    .spec-file{font-size:11px;color:rgba(255,255,255,.55);font-family:monospace;margin-top:1px}
+    .spec-body{padding:18px}
+    .change-block{border-radius:8px;overflow:hidden;margin-bottom:12px}
+    .cb-before{background:#fef2f2;border:1px solid #fecaca}
+    .cb-after{background:#f0fdf4;border:1px solid #bbf7d0}
+    .cb-label{padding:6px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+    .cbl-before{background:#fecaca;color:#991b1b}
+    .cbl-after{background:#bbf7d0;color:#166534}
+    .cb-content{padding:10px 12px;font-family:'Cascadia Code','Fira Code',monospace;font-size:11.5px;line-height:1.7;white-space:pre-wrap;color:#1e293b}
+
+    /* Evidence samples */
+    .evidence-samples{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+    .ev-sample{background:var(--aa-surface);border:1px solid var(--aa-border);border-radius:8px;padding:12px 14px}
+    .ev-sample-meta{display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+    .ev-source-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:10px;font-size:10px;font-weight:700}
+    .esc-apple{background:#1c1c1e;color:#fff}
+    .esc-android{background:#0f9d58;color:#fff}
+    .esc-reddit{background:#ff4500;color:#fff}
+    .esc-trustpilot{background:#00b67a;color:#fff}
+    .ev-date{font-size:10px;color:var(--aa-muted)}
+    .ev-rating{font-size:11px;font-weight:700;color:var(--aa-red)}
+    .ev-text{font-size:12.5px;color:var(--aa-text);line-height:1.6;font-style:italic}
+    .ev-cite-id{font-size:10px;font-weight:700;color:var(--aa-purple);background:#f5f3ff;border:1px solid #ede9fe;padding:1px 7px;border-radius:8px;font-family:monospace;margin-left:auto;flex-shrink:0}
+
+    /* Summary banner */
+    .summary-banner{background:linear-gradient(135deg,#052e16 0%,#0f3460 60%,#1a4f8a 100%);border-radius:12px;padding:28px 32px;color:#fff;margin-bottom:32px}
+    .sb-title{font-size:20px;font-weight:800;margin-bottom:6px}
+    .sb-sub{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:20px}
+    .sb-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+    .sb-stat{background:rgba(255,255,255,.08);border-radius:8px;padding:12px 16px}
+    .sb-stat-n{font-size:24px;font-weight:800;color:var(--aa-gold)}
+    .sb-stat-l{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+
+    footer{background:var(--aa-dark);color:rgba(255,255,255,.4);padding:14px 52px;font-size:11px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="h-eyebrow">Hangar AI Constitution · Product Discovery Workflow · Enhancement Jury</div>
+  <div class="h-title">Discovery Traceability Enhancement</div>
+  <div class="h-sub">Jury Deliberation — Source Citations for Stage B &amp; Evidence Glossary for Stage C</div>
+  <div class="h-meta">
+    <span class="badge b-red">Jury Session</span>
+    <span class="badge b-purple">2026-04-30</span>
+    <span class="badge b-gold">Phase 1: Stage B Citations</span>
+    <span class="badge b-gold">Phase 2: Stage C Glossary</span>
+    <span class="badge b-green">2 Rounds / Phase</span>
+    <span class="badge b-muted">Hangar Wave 4 Engage</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Summary banner -->
+  <div class="summary-banner">
+    <div class="sb-title">Why This Jury Exists</div>
+    <div class="sb-sub">The question asked most in every discovery review: <em>"Where is this information coming from?"</em> — Today we answer it with enforceable structure.</div>
+    <div class="sb-stats">
+      <div class="sb-stat"><div class="sb-stat-n">372</div><div class="sb-stat-l">Real user complaints collected by Shayne &amp; Ken (AA Mobile, Apr 2026)</div></div>
+      <div class="sb-stat"><div class="sb-stat-n">8</div><div class="sb-stat-l">Complaint categories across App Store, Google Play, Reddit, Trustpilot</div></div>
+      <div class="sb-stat"><div class="sb-stat-n">2</div><div class="sb-stat-l">Workflow stages being enhanced: B (Field Study) and C (Code Evidence)</div></div>
+      <div class="sb-stat"><div class="sb-stat-n">4</div><div class="sb-stat-l">Jurors per phase · 2 rounds of deliberation · constitutional mandate</div></div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- PHASE 1: STAGE B — FIELD STUDY SOURCE CITATIONS                 -->
+  <!-- ================================================================ -->
+  <div class="section-label">Phase 1 of 2</div>
+
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-icon ph-blue">🔍</div>
+      <div>
+        <div class="phase-title">Stage B — Field Study: Source Citation Traceability</div>
+        <div class="phase-sub">Should every insight in Stage B carry a traceable source reference — URL, verbatim quote, platform, retrieval date, and citation ID?</div>
+        <div class="phase-law">
+          <span>PRD-3.1 — User Research Law</span>
+          <span>PRD-2.3 — JTBD Law</span>
+          <span>BUS-7.1 — Audit Trail (NON-NEGOTIABLE)</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase-body">
+
+      <!-- Jurors -->
+      <div class="section-label" style="margin-top:0">Phase 1 · Jury Panel</div>
+      <div class="jurors-grid">
+
+        <div class="juror-card">
+          <div class="juror-header" style="background:#eff6ff">
+            <div class="juror-avatar" style="background:#bfdbfe">👩‍💼</div>
+            <div>
+              <div class="juror-name">Sarah Chen</div>
+              <div class="juror-role">Senior Product Coach · Hangar Wave 4</div>
+            </div>
+          </div>
+          <div class="juror-body">
+            Coaches PMs and POs in accelerated discovery. Hears "where does this data come from?" on every engagement. Deeply invested in making the process credible to skeptical stakeholders.
+            <div class="juror-bias">Bias: Strongly for citations — credibility is the coach's currency.</div>
+          </div>
+        </div>
+
+        <div class="juror-card">
+          <div class="juror-header" style="background:#f5f3ff">
+            <div class="juror-avatar" style="background:#ede9fe">🧑‍💻</div>
+            <div>
+              <div class="juror-name">Marcus Webb</div>
+              <div class="juror-role">Principal PM · Digital Experience</div>
+            </div>
+          </div>
+          <div class="juror-body">
+            Has lost stakeholder confidence when an insight couldn't be traced back to a source mid-room. Wants structured citations he can share in a deck or defend to a VP with zero prep time.
+            <div class="juror-bias">Bias: For citations, but concerned about adding friction to fast discovery.</div>
+          </div>
+        </div>
+
+        <div class="juror-card">
+          <div class="juror-header" style="background:#fff1f2">
+            <div class="juror-avatar" style="background:#fecdd3">👩‍🔬</div>
+            <div>
+              <div class="juror-name">Dr. Priya Nair</div>
+              <div class="juror-role">UX Research Lead</div>
+            </div>
+          </div>
+          <div class="juror-body">
+            Professional researcher. Knows that verbatim quotes, source platform, retrieval date, and sample size are minimum standards for any claim that drives a product decision.
+            <div class="juror-bias">Bias: Cites research standards — this is table stakes, not enhancement.</div>
+          </div>
+        </div>
+
+        <div class="juror-card">
+          <div class="juror-header" style="background:#f0fdf4">
+            <div class="juror-avatar" style="background:#bbf7d0">🧑‍⚖️</div>
+            <div>
+              <div class="juror-name">James O'Brien</div>
+              <div class="juror-role">Legal &amp; Compliance Counsel</div>
+            </div>
+          </div>
+          <div class="juror-body">
+            Responsible for ensuring BUS-7.1 audit trail covers not just transitions but the evidence that drives them. Wants machine-readable source IDs, not just prose references.
+            <div class="juror-bias">Bias: Constitutional compliance — BUS-7.1 implies source provenance for every claim acted upon.</div>
+          </div>
+        </div>
+
+      </div><!-- /jurors-grid -->
+
+      <!-- Round 1 -->
+      <div class="section-label">Round 1 · Opening Arguments</div>
+      <div class="round">
+        <div class="round-header">
+          <span class="round-title">🗣️ Round 1 — Opening Arguments</span>
+          <span class="round-focus">Focus: Does the problem exist? What is the minimum viable citation structure?</span>
+        </div>
+        <div class="round-body">
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#bfdbfe">👩‍💼</div>
+            <div>
+              <div class="voice-name">Sarah Chen <span class="voice-stance vs-for">FOR</span></div>
+              <div class="voice-text">Every single coaching engagement, the moment discovery outputs go into a room with a VP or a product leadership team, the first question is: "Where did you get this?" Right now, Stage B has a beautiful format — personas, JTBD, competitive analysis — but if an insight says "users struggle with login," there is zero way to point at the source without digging back through notes or memory. We are asking PMs to defend claims with no ammunition. The fix is simple and structural: a source registry in the frontmatter, referenced inline.</div>
+              <div class="voice-quote">"Right now we give PMs insights without evidence handles. That is a credibility trap we set ourselves."</div>
+            </div>
+          </div>
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#fecdd3">👩‍🔬</div>
+            <div>
+              <div class="voice-name">Dr. Priya Nair <span class="voice-stance vs-for">FOR</span></div>
+              <div class="voice-text">In academic and professional research, every claim requires source attribution. The minimum standard is: platform or venue, date of access, sample size, and at least one verbatim quote. We have 372 real user complaints from Shayne and Ken — collected from App Store iOS, Google Play, Reddit, and Trustpilot — with exact dates and ratings. Not citing these is actively wasteful. We should structure Stage B so that every insight block has a citation ID like <code>[SRC-B-001]</code> that resolves to a full source entry. This isn't overhead — it's what makes the insight defensible.</div>
+              <div class="voice-quote">"An uncited insight is an opinion. A cited insight with a verbatim quote is evidence."</div>
+            </div>
+          </div>
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#ede9fe">🧑‍💻</div>
+            <div>
+              <div class="voice-name">Marcus Webb <span class="voice-stance vs-condition">CONDITIONS</span></div>
+              <div class="voice-text">I agree citations are needed, but I'm worried about the implementation. If we make every insight require a structured frontmatter entry before the discovery can advance, we risk slowing down accelerated discovery runs. The citation system needs to be designed for speed. My condition: the source registry must be addable incrementally — you can start with a URL and a description, and the record count and verbatim quotes can be enriched as the stage progresses. The exit gate check should require at least one verbatim quote per insight category, not per individual insight.</div>
+            </div>
+          </div>
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#bbf7d0">🧑‍⚖️</div>
+            <div>
+              <div class="voice-name">James O'Brien <span class="voice-stance vs-for">FOR</span></div>
+              <div class="voice-text">BUS-7.1 requires an audit trail for every stage transition — but an audit trail is only meaningful if the evidence it cites is traceable. Right now, Stage B can advance with the statement "3 user insights validated" and no citation of where those insights came from. That fails a downstream audit. We need machine-readable citation IDs in the frontmatter. The structure: <code>source_registry</code> list with ID, label, platform, URL, retrieval date, record count, and description. Each insight references one or more IDs. The rendered artifact shows the registry as a card panel. This is an audit trail — not a nice-to-have.</div>
+              <div class="voice-quote">"BUS-7.1 audit trail without source citations is an audit trail of conclusions, not evidence."</div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /round 1 -->
+
+      <!-- Sample evidence we're working with -->
+      <div class="section-label">Round 1 Context · Real Evidence from Shayne &amp; Ken's Collection</div>
+      <div class="evidence-samples">
+        <div class="ev-sample">
+          <div class="ev-sample-meta">
+            <span class="ev-source-chip esc-apple">🍎 App Store iOS</span>
+            <span class="ev-date">2026-04-16</span>
+            <span class="ev-rating">★1</span>
+            <span class="ev-cite-id">[SRC-B-001]</span>
+          </div>
+          <div class="ev-text">"Unable to login through app. I almost missed my flight because I rely on my digital boarding pass and the gate changed last minute. I must have tried a thousand times - I cannot seem to log into my aa account from the app... So frustrating because all other airline apps work just fine on my phone. I am now committed to not flying American until they can fix their tech issues."</div>
+        </div>
+        <div class="ev-sample">
+          <div class="ev-sample-meta">
+            <span class="ev-source-chip esc-android">🤖 Google Play</span>
+            <span class="ev-date">2026-04-21</span>
+            <span class="ev-rating">★1</span>
+            <span class="ev-cite-id">[SRC-B-002]</span>
+          </div>
+          <div class="ev-text">"hard to find the place to redeem miles. The app design logic needs to be clarified. It makes no sense. The current flight information jumps in on the day when you are flying but remains disappeared before and after. And you need to enter your flight confirmation number to see your flight reservation. Isn't it supposed to automatically link to your name and account????"</div>
+        </div>
+        <div class="ev-sample">
+          <div class="ev-sample-meta">
+            <span class="ev-source-chip esc-apple">🍎 App Store iOS</span>
+            <span class="ev-date">2026-04-16</span>
+            <span class="ev-rating">★1</span>
+            <span class="ev-cite-id">[SRC-B-001]</span>
+          </div>
+          <div class="ev-text">"They keep kicking me out while booking a flight. I have tried to book multiple flights now that when I get to the payment page, the app locks up and kicks me out. When I go back in, it hasn't saved my booking and the price has increased every time."</div>
+        </div>
+        <div class="ev-sample">
+          <div class="ev-sample-meta">
+            <span class="ev-source-chip esc-android">🤖 Google Play</span>
+            <span class="ev-date">2026-01-26</span>
+            <span class="ev-rating">★1</span>
+            <span class="ev-cite-id">[SRC-B-002]</span>
+          </div>
+          <div class="ev-text">"The app breaks down under no pressure. Riddled with flaws. Logs me out continuously with no warning. Removes my flight. Gives me the wrong gate. Gives me updates with a 40 min delay. Laggy. Unable to handle last-minute changes from the airline's side, not user changes. Just an overall nightmare to use."</div>
+        </div>
+      </div>
+
+      <!-- Round 2 -->
+      <div class="section-label" style="margin-top:24px">Round 2 · Refinement &amp; Convergence</div>
+      <div class="round">
+        <div class="round-header">
+          <span class="round-title">🗣️ Round 2 — Refinement</span>
+          <span class="round-focus">Focus: Exact schema, exit gate conditions, rendering requirements</span>
+        </div>
+        <div class="round-body">
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#fecdd3">👩‍🔬</div>
+            <div>
+              <div class="voice-name">Dr. Priya Nair <span class="voice-stance vs-for">REFINED</span></div>
+              <div class="voice-text">Having heard Marcus's concern about speed, I propose the citation structure be split into two tiers: a <strong>required minimum</strong> (id, label, platform, URL, retrieval date) and an <strong>enriched form</strong> (record_count, description, sample_quotes array). The exit gate requires at least the minimum for each source cited. The enriched form is required at Tier 2. This gives accelerated runs a fast path while ensuring Tier 2 deep discoveries are fully sourced. The rendered artifact should show source chips — clickable links with platform icons and record counts.</div>
+              <div class="voice-quote">"Minimum fields: id, label, platform, url, retrieved. Enriched: record_count, sample_quotes. Tier 1 needs minimum; Tier 2 needs enriched."</div>
+            </div>
+          </div>
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#bfdbfe">👩‍💼</div>
+            <div>
+              <div class="voice-name">Sarah Chen <span class="voice-stance vs-for">ALIGNED</span></div>
+              <div class="voice-text">That tiered structure works for coaching too. When I'm pairing with a PM in a Wave 4 Engage session, I can say: "Start with the source registry minimum — just drop the URL and give it an ID. Then we fill in the quotes together as we read through the evidence." The key thing for coaching is the inline citation syntax. Every insight statement in the prose body should carry a <code>[SRC-B-NNN]</code> reference that renders as a clickable chip in the HTML artifact. That way, a VP can hover over a chip and see exactly where the insight came from — platform, date, URL. That answers the question before it's asked.</div>
+            </div>
+          </div>
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#ede9fe">🧑‍💻</div>
+            <div>
+              <div class="voice-name">Marcus Webb <span class="voice-stance vs-for">ALIGNED</span></div>
+              <div class="voice-text">I'm satisfied with the tiered approach. One addition: the <code>source_registry</code> should include a <code>methodology_note</code> field at the top level — a short sentence explaining how the evidence was collected. For Shayne and Ken's dataset, this would say something like: "372 complaints filtered from 1,009 voice records via three-gate keyword, sentiment, and context filter." That context is essential for anyone who asks "how were these reviews selected?" It also satisfies PRD-3.1's research methodology documentation requirement.</div>
+              <div class="voice-quote">"A methodology note isn't bureaucracy — it's the difference between evidence and anecdote."</div>
+            </div>
+          </div>
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#bbf7d0">🧑‍⚖️</div>
+            <div>
+              <div class="voice-name">James O'Brien <span class="voice-stance vs-for">FINAL APPROVAL</span></div>
+              <div class="voice-text">Agreed on all points. For audit purposes, I want one additional exit gate item explicitly added to Stage B: "source_registry populated — all cited sources have minimum required fields (id, label, platform, url, retrieved); verbatim quote provided for each insight category." This makes it unambiguous in the BUS-7.1 audit event. The discovery cannot advance to Stage C without this. The rendered HTML must show a Source Registry card in the sidebar, not buried in the prose. Stakeholders look at the sidebar first.</div>
+              <div class="voice-quote">"Source registry in the sidebar. Non-negotiable from an audit trail perspective."</div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /round 2 -->
+
+      <!-- Phase 1 Verdict -->
+      <div class="section-label">Phase 1 · Jury Verdict</div>
+      <div class="verdict-card">
+        <div class="verdict-header vh-approved">
+          <div>
+            <div class="verdict-label">✅ APPROVED — Stage B Source Citation System</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:3px">Vote: 4 FOR · 0 AGAINST · 0 ABSTAIN</div>
+          </div>
+          <div class="verdict-icon">⚖️</div>
+        </div>
+        <div class="verdict-body">
+          <div class="decision-list">
+            <div class="decision-item">
+              <div class="di-number">1</div>
+              <div>
+                <div class="di-title">Add <code>source_registry</code> frontmatter block to stage-b-field-study.md template</div>
+                <div class="di-desc">Required minimum fields: <code>id</code>, <code>label</code>, <code>platform</code>, <code>url</code>, <code>retrieved</code>. Enriched fields (Tier 2): <code>record_count</code>, <code>description</code>, <code>sample_quotes</code>. Top-level <code>methodology_note</code> field required.</div>
+                <div class="di-law">PRD-3.1 · BUS-7.1</div>
+              </div>
+            </div>
+            <div class="decision-item">
+              <div class="di-number">2</div>
+              <div>
+                <div class="di-title">Add inline citation syntax <code>[SRC-B-NNN]</code> rendered as clickable source chips in HTML</div>
+                <div class="di-desc">Each insight statement must cite at least one source ID. Chips render with platform icon, label, and link. Hover shows full source metadata.</div>
+                <div class="di-law">PRD-3.1</div>
+              </div>
+            </div>
+            <div class="decision-item">
+              <div class="di-number">3</div>
+              <div>
+                <div class="di-title">Add Source Registry card to the rendered HTML sidebar</div>
+                <div class="di-desc">Not buried in prose — visible in the sidebar alongside Stakeholder Approval and Active Laws. Shows platform, URL (linked), retrieval date, record count.</div>
+                <div class="di-law">ENG-13.1 · BUS-7.1</div>
+              </div>
+            </div>
+            <div class="decision-item">
+              <div class="di-number">4</div>
+              <div>
+                <div class="di-title">Add Source Registry exit gate item to Stage B checklist</div>
+                <div class="di-desc">"source_registry populated — all cited sources have minimum required fields; at least one verbatim quote per insight category documented."</div>
+                <div class="di-law">PRD-2.5 · BUS-7.1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /verdict -->
+
+    </div><!-- /phase-body -->
+  </div><!-- /phase 1 -->
+
+
+  <!-- ================================================================ -->
+  <!-- PHASE 2: STAGE C — CODE EVIDENCE GLOSSARY                       -->
+  <!-- ================================================================ -->
+  <div class="section-label">Phase 2 of 2</div>
+
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-icon ph-green">🧬</div>
+      <div>
+        <div class="phase-title">Stage C — Code Evidence: Evidence Traceability Glossary</div>
+        <div class="phase-sub">Should every quantitative claim and critical finding in Stage C be tied to a source file, section, and verbatim quote — enforced via an evidence glossary?</div>
+        <div class="phase-law">
+          <span>ENG-3.1 — Tech Debt Law</span>
+          <span>ENG-6.7 — Domain Model Law</span>
+          <span>BUS-7.1 — Audit Trail (NON-NEGOTIABLE)</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase-body">
+
+      <!-- Jurors -->
+      <div class="section-label" style="margin-top:0">Phase 2 · Jury Panel</div>
+      <div class="jurors-grid">
+
+        <div class="juror-card">
+          <div class="juror-header" style="background:#f0fdf4">
+            <div class="juror-avatar" style="background:#bbf7d0">🧑‍💻</div>
+            <div>
+              <div class="juror-name">Alex Torres</div>
+              <div class="juror-role">Engineering Lead · iOS Platform</div>
+            </div>
+          </div>
+          <div class="juror-body">
+            Reviews Stage C evidence as the technical approver. Has challenged discovery outputs when claims like "80 god objects" or "2,286 LOC file" appeared without file paths. Wants verification paths, not just assertions.
+            <div class="juror-bias">Bias: Evidence must be independently verifiable. Claims without paths are opinions.</div>
+          </div>
+        </div>
+
+        <div class="juror-card">
+          <div class="juror-header" style="background:#fef3c7">
+            <div class="juror-avatar" style="background:#fde68a">👩‍💼</div>
+            <div>
+              <div class="juror-name">Keisha Brown</div>
+              <div class="juror-role">Director of Product · Mobile Platform</div>
+            </div>
+          </div>
+          <div class="juror-body">
+            Executive sponsor for discovery. Reads Stage C outputs to make investment decisions. Has had engineers push back on claims in Discovery Gate reviews, causing the entire discovery to lose credibility.
+            <div class="juror-bias">Bias: Evidence challenges happen in the room. The glossary is defensive armor.</div>
+          </div>
+        </div>
+
+        <div class="juror-card">
+          <div class="juror-header" style="background:#eff6ff">
+            <div class="juror-avatar" style="background:#bfdbfe">🧑‍🏫</div>
+            <div>
+              <div class="juror-name">David Park</div>
+              <div class="juror-role">Senior Engineering Coach · Hangar</div>
+            </div>
+          </div>
+          <div class="juror-body">
+            Teaches teams how to use the constitution. Sees Stage C as the stage where engineering teams most commonly get confrontational ("the AI made this up"). Wants the glossary to teach a verification mindset.
+            <div class="juror-bias">Bias: The glossary is pedagogical — it teaches teams to verify before they act.</div>
+          </div>
+        </div>
+
+        <div class="juror-card">
+          <div class="juror-header" style="background:#fff1f2">
+            <div class="juror-avatar" style="background:#fecdd3">👩‍🔧</div>
+            <div>
+              <div class="juror-name">Nina Russo</div>
+              <div class="juror-role">Quality Engineering Lead</div>
+            </div>
+          </div>
+          <div class="juror-body">
+            Responsible for code quality standards. Has seen tech debt inventories that cite "architectural debt" without pointing to a single file. Wants each tech debt item to carry an <code>evidence_ids</code> array.
+            <div class="juror-bias">Bias: Unverified claims in tech debt inventories lead to misallocated engineering investment.</div>
+          </div>
+        </div>
+
+      </div><!-- /jurors-grid -->
+
+      <!-- Round 1 -->
+      <div class="section-label">Round 1 · Opening Arguments</div>
+      <div class="round">
+        <div class="round-header">
+          <span class="round-title">🗣️ Round 1 — Opening Arguments</span>
+          <span class="round-focus">Focus: Current state of Stage C claims and minimum glossary requirements</span>
+        </div>
+        <div class="round-body">
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#bbf7d0">🧑‍💻</div>
+            <div>
+              <div class="voice-name">Alex Torres <span class="voice-stance vs-for">FOR</span></div>
+              <div class="voice-text">Let me be direct. When I reviewed our last Stage C output, there were claims like "BookingViewModel.kt has 2,286 LOC and uses three mixed reactive frameworks." That's a verifiable claim. But the tech debt table just said "BookingViewModel — mixed reactive frameworks — HIGH severity" with no pointer. If I'm the Engineering Lead approving Stage C, I need to be able to run <code>wc -l app/booking/BookingViewModel.kt</code> and get 2,286. The glossary needs: claim ID, the claim text, source file path, section, and a verbatim quote from the source document. That's my minimum.</div>
+              <div class="voice-quote">"A claim without a file path is not code evidence — it is a rumor about code."</div>
+            </div>
+          </div>
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#fde68a">👩‍💼</div>
+            <div>
+              <div class="voice-name">Keisha Brown <span class="voice-stance vs-for">FOR</span></div>
+              <div class="voice-text">From the product side, I've seen Stage C outputs used in executive briefings where an engineering VP questions a specific number. Right now, the coach or PM has to scramble to find the source — and that panic is visible to the room. If every critical finding in Stage C has a glossary entry, the response is simply: "Evidence ID EVI-C-003, source file reports/android/executive-summary-android.md, section §1, quote on screen." That's composure. That's credibility. The glossary is a product coaching tool as much as a governance tool.</div>
+              <div class="voice-quote">"When you can cite evidence ID and file path in real time, the room stops challenging and starts listening."</div>
+            </div>
+          </div>
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#bfdbfe">🧑‍🏫</div>
+            <div>
+              <div class="voice-name">David Park <span class="voice-stance vs-condition">CONDITIONS</span></div>
+              <div class="voice-text">I support the glossary concept, but I want to be careful that we don't create a system where coaches spend more time writing glossary entries than doing actual discovery. My condition: the glossary must be co-generated — the agent writes the initial entries from the evidence corpus it analyzed (the code quality reports, the statechart analyses), and the human coach reviews and approves them. The agent has already read the reports; it should extract the claims and source references automatically. The human gate is verification, not authorship.</div>
+            </div>
+          </div>
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#fecdd3">👩‍🔧</div>
+            <div>
+              <div class="voice-name">Nina Russo <span class="voice-stance vs-for">FOR</span></div>
+              <div class="voice-text">Every item in the tech debt inventory should have an <code>evidence_ids</code> array — even if it's a single entry. The glossary should also include a <code>verification_method</code> field: how was this claim verified? Options could be "direct file inspection," "automated metrics extraction," "code quality report cross-reference," or "manual code review." This field teaches verification culture — when teams see it, they understand that every claim went through a process. That's the pedagogical value David is talking about.</div>
+              <div class="voice-quote">"verification_method is not a checkbox. It is a commitment to a standard of proof."</div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /round 1 -->
+
+      <!-- Round 2 -->
+      <div class="section-label">Round 2 · Refinement &amp; Convergence</div>
+      <div class="round">
+        <div class="round-header">
+          <span class="round-title">🗣️ Round 2 — Refinement</span>
+          <span class="round-focus">Focus: Glossary schema, tech debt linkage, rendered output, exit gate</span>
+        </div>
+        <div class="round-body">
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#bbf7d0">🧑‍💻</div>
+            <div>
+              <div class="voice-name">Alex Torres <span class="voice-stance vs-for">REFINED</span></div>
+              <div class="voice-text">Based on what Nina said, here is the glossary schema I'd approve: <code>id</code> (EVI-C-NNN), <code>claim</code> (the assertion being cited), <code>source_file</code> (relative path to the evidence document), <code>section</code> (section heading or §label), <code>quote</code> (verbatim extract from source), <code>verified_by</code> (name or system + date), <code>verification_method</code> (one of the four methods). And in the tech debt table, each row gains an <code>evidence_ids</code> field. The rendered HTML shows the glossary as a collapsible table — not hidden, but not dominating the flow.</div>
+            </div>
+          </div>
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#bfdbfe">🧑‍🏫</div>
+            <div>
+              <div class="voice-name">David Park <span class="voice-stance vs-for">ALIGNED</span></div>
+              <div class="voice-text">I've accepted the agent-generated first-draft model. The important thing is that the exit gate explicitly requires human review of each glossary entry — the <code>verified_by</code> field must contain a name, not "GitHub Copilot CLI" alone. An agent can author a claim, but only a human can certify it. I'd add a fifth verification method: "agent-extracted, human-verified" for the common case where the agent generates the entry from the corpus and the Engineering Lead or Product Owner confirms it during the Stage C review.</div>
+              <div class="voice-quote">"Agent authors the draft. Human certifies. That's the model."</div>
+            </div>
+          </div>
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#fde68a">👩‍💼</div>
+            <div>
+              <div class="voice-name">Keisha Brown <span class="voice-stance vs-for">ALIGNED</span></div>
+              <div class="voice-text">One thing I want added to the rendered output: an evidence confidence indicator for each glossary entry. If the source is a direct file inspection (wc -l, grep), confidence is High. If it's derived from an AI-assisted quality score, confidence is Medium. If it's extrapolated from indirect signals, confidence is Low. This is not about doubting the AI — it's about giving stakeholders the right calibration for each claim. A "High confidence" claim with a file path is different from a "Medium confidence" claim from an aggregate score.</div>
+              <div class="voice-quote">"Confidence level is part of the evidence contract, not a weakness disclosure."</div>
+            </div>
+          </div>
+
+          <div class="voice">
+            <div class="voice-avatar" style="background:#fecdd3">👩‍🔧</div>
+            <div>
+              <div class="voice-name">Nina Russo <span class="voice-stance vs-for">FINAL APPROVAL</span></div>
+              <div class="voice-text">I'll add the confidence field to the schema: <code>confidence</code> — High / Medium / Low with a required rationale. That resolves Keisha's concern and adds epistemic honesty to the glossary. One last thing: the evidence glossary should be referenced in the Stage C exit gate alongside "no unreviewed critical findings." The full exit gate item should read: "Evidence glossary populated — all critical findings and tech debt items carry at least one EVI-C-NNN entry with source file, quote, verification method, and confidence level."</div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /round 2 -->
+
+      <!-- Phase 2 Verdict -->
+      <div class="section-label">Phase 2 · Jury Verdict</div>
+      <div class="verdict-card">
+        <div class="verdict-header vh-approved">
+          <div>
+            <div class="verdict-label">✅ APPROVED — Stage C Evidence Traceability Glossary</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:3px">Vote: 4 FOR · 0 AGAINST · 0 ABSTAIN</div>
+          </div>
+          <div class="verdict-icon">⚖️</div>
+        </div>
+        <div class="verdict-body">
+          <div class="decision-list">
+            <div class="decision-item">
+              <div class="di-number">1</div>
+              <div>
+                <div class="di-title">Add <code>evidence_glossary</code> frontmatter block to stage-c-code-evidence.md template</div>
+                <div class="di-desc">Schema: <code>id</code> (EVI-C-NNN), <code>claim</code>, <code>source_file</code>, <code>section</code>, <code>quote</code>, <code>verified_by</code>, <code>verification_method</code> (direct-file-inspection / automated-metrics / report-cross-reference / manual-code-review / agent-extracted-human-verified), <code>confidence</code> (High/Medium/Low with rationale).</div>
+                <div class="di-law">ENG-3.1 · ENG-6.7 · BUS-7.1</div>
+              </div>
+            </div>
+            <div class="decision-item">
+              <div class="di-number">2</div>
+              <div>
+                <div class="di-title">Add <code>evidence_ids</code> array to each tech debt inventory row</div>
+                <div class="di-desc">Every row in the tech debt table references one or more <code>EVI-C-NNN</code> IDs. Rows without evidence IDs fail the exit gate.</div>
+                <div class="di-law">ENG-3.1</div>
+              </div>
+            </div>
+            <div class="decision-item">
+              <div class="di-number">3</div>
+              <div>
+                <div class="di-title">Render Evidence Glossary as a collapsible card in the HTML artifact (main column)</div>
+                <div class="di-desc">Shows claim, source file (linked if applicable), section, truncated quote, verification method badge, and confidence indicator (High=green/Medium=yellow/Low=red). Agent authors first draft; human certifies via <code>verified_by</code> field.</div>
+                <div class="di-law">ENG-13.1</div>
+              </div>
+            </div>
+            <div class="decision-item">
+              <div class="di-number">4</div>
+              <div>
+                <div class="di-title">Update Stage C exit gate: evidence glossary completeness required</div>
+                <div class="di-desc">"Evidence glossary populated — all critical findings and HIGH/MEDIUM severity tech debt items carry at least one EVI-C-NNN entry with source_file, quote, verification_method, and confidence."</div>
+                <div class="di-law">PRD-2.5 · BUS-7.1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /verdict -->
+
+    </div><!-- /phase-body -->
+  </div><!-- /phase 2 -->
+
+
+  <!-- ================================================================ -->
+  <!-- CONSTITUTIONAL SUMMARY OF CHANGES                               -->
+  <!-- ================================================================ -->
+  <div class="section-label">Enhancement Summary · Files Being Modified</div>
+
+  <div class="spec-card">
+    <div class="spec-header">
+      <div>
+        <div class="spec-title">Files Modified by This Jury's Decisions</div>
+        <div class="spec-file">Hangar AI Constitution — tools/templates/product-discovery/ · tools/artifact-renderer/ · workflows/</div>
+      </div>
+    </div>
+    <div class="spec-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+
+        <div style="background:var(--aa-surface);border:1px solid var(--aa-border);border-radius:8px;padding:14px;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:8px">Stage B Template</div>
+          <div style="font-family:monospace;font-size:11px;color:#0f3460;margin-bottom:8px">tools/templates/product-discovery/stage-b-field-study.md</div>
+          <ul style="font-size:12px;color:var(--aa-text);padding-left:16px;line-height:1.8">
+            <li>Add <code>methodology_note</code> frontmatter field</li>
+            <li>Add <code>source_registry</code> frontmatter list</li>
+            <li>Add <code>## Source Registry</code> markdown section</li>
+            <li>Add citation syntax examples in comments</li>
+            <li>Add source registry exit gate checklist item</li>
+          </ul>
+        </div>
+
+        <div style="background:var(--aa-surface);border:1px solid var(--aa-border);border-radius:8px;padding:14px;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:8px">Stage C Template</div>
+          <div style="font-family:monospace;font-size:11px;color:#0f3460;margin-bottom:8px">tools/templates/product-discovery/stage-c-code-evidence.md</div>
+          <ul style="font-size:12px;color:var(--aa-text);padding-left:16px;line-height:1.8">
+            <li>Add <code>evidence_glossary</code> frontmatter list</li>
+            <li>Add <code>evidence_ids</code> to tech debt table rows</li>
+            <li>Add <code>## Evidence Glossary</code> markdown section</li>
+            <li>Add evidence glossary exit gate checklist item</li>
+          </ul>
+        </div>
+
+        <div style="background:var(--aa-surface);border:1px solid var(--aa-border);border-radius:8px;padding:14px;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:8px">HTML Renderer Template</div>
+          <div style="font-family:monospace;font-size:11px;color:#0f3460;margin-bottom:8px">tools/artifact-renderer/src/aa_artifact_render/templates/discovery.html</div>
+          <ul style="font-size:12px;color:var(--aa-text);padding-left:16px;line-height:1.8">
+            <li>Add CSS: source chip, glossary table, confidence badges</li>
+            <li>Add sidebar card: Source Registry (Stage B)</li>
+            <li>Add main column card: Evidence Glossary (Stage C)</li>
+            <li>Render platform icons for source chips</li>
+          </ul>
+        </div>
+
+        <div style="background:var(--aa-surface);border:1px solid var(--aa-border);border-radius:8px;padding:14px;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:8px">Workflow Documentation</div>
+          <div style="font-family:monospace;font-size:11px;color:#0f3460;margin-bottom:8px">workflows/product-discovery-stage-a-f.md</div>
+          <ul style="font-size:12px;color:var(--aa-text);padding-left:16px;line-height:1.8">
+            <li>Add <code>## Evidence Traceability Requirements</code> section</li>
+            <li>Document source_registry schema</li>
+            <li>Document evidence_glossary schema</li>
+            <li>Update Stage B and C exit gate descriptions</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Human-in-the-loop note -->
+  <div style="background:linear-gradient(90deg,#1e1b4b 0%,#312e81 100%);border-radius:10px;padding:20px 24px;color:#fff;margin-bottom:32px">
+    <div style="font-size:13px;font-weight:700;color:#c4b5fd;margin-bottom:8px">⚠️ Render Gate Reminder — ENG-13.1 NON-NEGOTIABLE</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.6">
+      This jury deliberation document itself is a governance artifact. Before any of the above template changes are applied to the discovery workflow, this HTML must be reviewed and <strong>APPROVED</strong> by a named product coach or discovery sponsor. The jury verdict alone does not authorize implementation — the human render gate decision does.
+    </div>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+      <button onclick="juryDecision('APPROVE')" style="padding:8px 20px;border-radius:8px;font-size:12px;font-weight:700;border:none;cursor:pointer;background:#22c55e;color:#fff">✅ APPROVE — Proceed with Enhancements</button>
+      <button onclick="juryDecision('ENHANCE')" style="padding:8px 20px;border-radius:8px;font-size:12px;font-weight:700;border:none;cursor:pointer;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25)">🔄 ENHANCE — Needs Changes</button>
+      <button onclick="juryDecision('REJECT')" style="padding:8px 20px;border-radius:8px;font-size:12px;font-weight:700;border:none;cursor:pointer;background:#ef4444;color:#fff">❌ REJECT — Do Not Proceed</button>
+    </div>
+    <div id="jury-decision" style="margin-top:10px;display:none"></div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  <div>Hangar AI Constitution · Jury Deliberation · Discovery Traceability Enhancement · 2026-04-30</div>
+  <div>PRD-3.1 · ENG-3.1 · BUS-7.1 · ENG-13.1 · Hangar Wave 4 Engage</div>
+</footer>
+
+<script>
+function juryDecision(d) {
+  var el = document.getElementById('jury-decision');
+  el.style.display = 'block';
+  if (d === 'APPROVE') {
+    el.style.cssText = 'background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3);padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600';
+    el.innerHTML = '✅ <strong>APPROVE</strong> — Jury decisions ratified. Record this decision in the source artifact audit log and in the workflow changelog. Template enhancements may proceed.';
+  } else if (d === 'ENHANCE') {
+    el.style.cssText = 'background:rgba(124,58,237,.15);color:#c4b5fd;border:1px solid rgba(124,58,237,.3);padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600';
+    el.innerHTML = '🔄 <strong>ENHANCE</strong> — Describe the needed changes and initiate a new enhancement round. Maximum 3 rounds before escalation to Discovery Sponsor.';
+  } else {
+    el.style.cssText = 'background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600';
+    el.innerHTML = '❌ <strong>REJECT</strong> — Jury decisions rejected. Document the blocker. Template enhancements do NOT proceed.';
+  }
+}
+</script>
+
+</body>
+</html>

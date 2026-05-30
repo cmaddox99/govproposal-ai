@@ -1,0 +1,147 @@
+test_cases:
+
+  # --- Atomic TDD skill (development-practices/06-atomic-tdd.md) ---
+
+  - id: tc-sk-001
+    question: "I need to write tests for a new API endpoint"
+    expected_laws: [ENG-4.1]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: []
+    category: skills
+
+  - id: tc-sk-002
+    question: "Walk me through red-green-refactor for this function"
+    expected_laws: [ENG-4.1]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: []
+    category: skills
+
+  - id: tc-sk-003
+    question: "Help me do TDD for this new service class"
+    expected_laws: [ENG-4.1]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: []
+    category: skills
+
+  # --- Code Review (development-practices/08-code-review.md) ---
+
+  - id: tc-sk-004
+    question: "Can you review this code for compliance issues?"
+    expected_laws: [ENG-3.1]
+    expected_skills: [08-code-review.md]
+    expected_avatars: []
+    category: skills
+
+  - id: tc-sk-005
+    question: "Do a PR review on this pull request"
+    expected_laws: [ENG-3.1]
+    expected_skills: [08-code-review.md]
+    expected_avatars: []
+    category: skills
+
+  # --- Refactoring (development-practices/09-refactoring.md) ---
+
+  - id: tc-sk-006
+    question: "This method has too many code smells — help me refactor it"
+    expected_laws: [ENG-3.1]
+    expected_skills: [09-refactoring.md]
+    expected_avatars: []
+    category: skills
+
+  - id: tc-sk-007
+    question: "How do I make this code cleaner and improve code quality?"
+    expected_laws: [ENG-3.1]
+    expected_skills: [09-refactoring.md]
+    expected_avatars: []
+    category: skills
+
+  # --- Security Review (platform-engineering/10-security-review.md) ---
+
+  - id: tc-sk-008
+    question: "Please do a security review of this service"
+    expected_laws: [ENG-6.1]
+    expected_skills: [10-security-review.md]
+    expected_avatars: []
+    category: skills
+
+  - id: tc-sk-009
+    question: "Run an OWASP security audit on my code"
+    expected_laws: [ENG-6.1]
+    expected_skills: [10-security-review.md]
+    expected_avatars: []
+    category: skills
+
+  # --- API Design (platform-engineering/12-api-design.md) ---
+
+  - id: tc-sk-010
+    question: "Help me design a REST API contract for this service"
+    expected_laws: [ENG-2.2]
+    expected_skills: [12-api-design.md]
+    expected_avatars: []
+    category: skills
+
+  - id: tc-sk-011
+    question: "What versioning strategy should I use for this API endpoint?"
+    expected_laws: [ENG-2.2]
+    expected_skills: [12-api-design.md]
+    expected_avatars: []
+    category: skills
+
+  # --- Roadmapping (product-planning/01-roadmapping.md) ---
+
+  - id: tc-sk-012
+    question: "Help me build a product roadmap using now next later"
+    expected_laws: [PRD-4.1]
+    expected_skills: [01-roadmapping.md]
+    expected_avatars: []
+    category: skills
+
+  # --- User Journey Mapping (discovery-research/02-user-journey-mapping.md) ---
+
+  - id: tc-sk-013
+    question: "Map the user journey for the check-in experience"
+    expected_laws: [PRD-3.1]
+    expected_skills: [02-user-journey-mapping.md]
+    expected_avatars: []
+    category: skills
+
+  # --- Constitution Compliance (platform-engineering/27-constitution-compliance.md) ---
+
+  - id: tc-sk-014
+    question: "Validate this code against the constitution laws"
+    expected_laws: [ENG-10.1]
+    expected_skills: [27-constitution-compliance.md]
+    expected_avatars: []
+    category: skills
+
+  # --- RAG Architecture (ml-ai/22-rag-architecture.md) ---
+
+  - id: tc-sk-015
+    question: "How do I build a RAG system grounded on our knowledge base?"
+    expected_laws: [ENG-2.1]
+    expected_skills: [22-rag-architecture.md]
+    expected_avatars: []
+    category: skills
+
+  # --- Legacy Refactor Rhythm (development-practices/12-legacy-refactor-rhythm.md) ---
+
+  - id: tc-sk-016
+    question: "Show me the step-by-step cycle for committing characterization tests"
+    expected_laws: [ENG-4.14]
+    expected_skills: [12-legacy-refactor-rhythm.md]
+    expected_avatars: []
+    category: skills
+
+  - id: tc-sk-017
+    question: "How do I use verification checkpoints when committing refactors?"
+    expected_laws: [ENG-4.14]
+    expected_skills: [12-legacy-refactor-rhythm.md]
+    expected_avatars: []
+    category: skills
+
+  - id: tc-sk-018
+    question: "What IDE integration exists for commit rhythm enforcement?"
+    expected_laws: [ENG-4.14]
+    expected_skills: [12-legacy-refactor-rhythm.md]
+    expected_avatars: []
+    category: skills

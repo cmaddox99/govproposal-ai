@@ -1,0 +1,121 @@
+# PostgreSQL/SQLAlchemy Avatar Manifest
+
+avatar:
+  id: avatar-postgresql-sqlalchemy
+  type: technology
+  name: PostgreSQL / SQLAlchemy (Async)
+  version: "1.0.0"
+  created: "2026-03-18"
+  last_updated: "2026-03-18"
+
+stack:
+  language: Python 3.11+
+  database: PostgreSQL 14+
+  frameworks:
+    - SQLAlchemy 2.x (async)
+    - asyncpg
+    - psycopg2-binary (sync fallback / migrations)
+  testing:
+    - pytest
+    - pytest-asyncio
+    - unittest.mock (for DBConnector unit tests)
+    - Docker Compose PostgreSQL (for integration tests)
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - SQLAlchemy: ">=2.0,<3.0"
+    - asyncpg: ">=0.30,<1.0"
+    - psycopg2-binary: ">=2.9,<3.0"
+    - cryptography: ">=42.0,<47.0"
+  dev:
+    - pytest: ">=8.0,<9.0"
+    - pytest-asyncio: ">=0.22,<1.0"
+    - anyio: ">=4.0,<5.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-15-data-modeling
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD
+    focus: DB connectors and repositories testable with mocked sessions; integration tests use real Docker Compose containers
+    example_file: "examples/ENG-4.1-db-tdd.md"
+
+  - id: ENG-4.2
+    title: Test Pyramid
+    focus: Unit tests mock SQLAlchemy sessions; integration tests use real PostgreSQL via Docker Compose
+    example_file: "guidance.md"
+
+  - id: ENG-6.7
+    title: Audit Trail (Engineering)
+    focus: Trace tables must be append-only; no UPDATE or DELETE on audit/trace records ever
+    example_file: "guidance.md"
+
+  - id: ENG-6.5
+    title: Input Validation
+    focus: PII fields validated and typed before DB write; column constraints enforced at model layer
+    example_file: "guidance.md"
+
+  - id: ENG-6.1
+    title: Security
+    focus: DB credentials from env vars only; PII encryption key never logged; connection strings never serialized to logs
+    example_file: "guidance.md"
+
+env_vars:
+  required:
+    - name: DB_HOST
+      description: PostgreSQL host
+    - name: DB_PORT
+      description: PostgreSQL port (default 5432)
+    - name: DB_NAME
+      description: Database name
+    - name: DB_SCHEMA
+      description: Schema name
+    - name: DB_USER
+      description: Database user
+    - name: DB_PASSWORD
+      description: Database password — never log
+      security: Load from env; never hardcode or commit
+    - name: PII_ENCRYPTION_KEY
+      description: Key used for PII column encryption (Fernet or AES)
+      security: Never log; rotate on compromise; load from env only
+    - name: PII_ENCRYPTION_SALT
+      description: Salt used combinatorially with PII_ENCRYPTION_KEY
+      security: Never log
+
+patterns:
+  connector: DBConnector (single-class, environment-driven, health-check capable)
+  session_scope: "Acquire session per request; commit on success; rollback on exception"
+  audit_tables: "Append-only — no UPDATE/DELETE on trace/audit rows"
+  pii_columns: "Encrypt before write; hash for non-reversible lookup fields"
+  migrations: "Raw SQL scripts versioned in scripts/*.sql; idempotent; rollback-safe"
+
+conventions:
+  connection_string_logging:
+    do: "Log connection health status (connected/failed/latency)"
+    never: "Log connection string, password, or full DSN"
+  audit_immutability:
+    required: "All LLM trace records are INSERT-only"
+    forbidden: "UPDATE or DELETE on any row in the traces table"
+  pii_handling:
+    encrypt_before_write: true
+    hash_for_lookup: true
+    key_source: "PII_ENCRYPTION_KEY env var only — never hardcode"
+
+commands:
+  test:
+    unit: pytest tests/unit/ -v
+    integration: docker-compose up -d postgres && pytest tests/integration/ -v
+    all: pytest -v
+  migrations:
+    apply: psql $DATABASE_URL -f scripts/create_traces_table.sql
+    verify: psql $DATABASE_URL -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_name='traces';"

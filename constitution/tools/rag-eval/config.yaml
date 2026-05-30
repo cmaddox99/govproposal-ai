@@ -1,0 +1,14 @@
+thresholds:
+  law_retrieval: 0.85
+  skill_routing: 0.80
+  avatar_selection: 0.80
+  index_integrity: 0.95
+  cross_reference_consistency: 0.95
+  overall: 0.85
+
+evaluation:
+  top_k: 3
+  fail_on_threshold_breach: true
+
+output:
+  reports_dir: tools/rag-eval/reports

@@ -1,0 +1,122 @@
+# Google Cloud Vertex AI Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-vertex-ai
+  type: technology
+  name: Google Cloud Vertex AI
+  version: "2.0.0"
+
+stack:
+  language: Python 3.11+
+  platform: Google Cloud Vertex AI
+  frameworks:
+    - google-cloud-aiplatform
+    - Kubeflow Pipelines (KFP v2)
+  testing:
+    - pytest
+    - google-cloud-aiplatform
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - google-cloud-aiplatform: ">=1.40.0"
+    - kfp: ">=2.4.0"
+  dev:
+    - pytest: ">=8.0.0"
+    - pytest-cov: ">=4.1.0"
+    - ruff: ">=0.1.0"
+    - mypy: ">=1.8.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-6.1
+    title: Observability Law
+    example_file: examples/ENG-6.1-observability.md
+  - id: ENG-2.1
+    title: Simplicity Law
+    example_file: examples/ENG-2.1-simplicity.md
+
+conventions:
+  naming:
+    modules: snake_case
+    functions: snake_case
+    classes: PascalCase
+    experiments: lowercase-dashes
+    pipelines: lowercase-dashes
+    endpoints: lowercase-dashes
+
+  patterns:
+    trainer: "VertexTrainer wrapper class"
+    pipeline: "KFP DSL pipeline definition"
+    predictor: "VertexPredictor for endpoints"
+    tracker: "ExperimentTracker for Vertex Experiments"
+
+commands:
+  test:
+    all: pytest
+    unit: pytest tests/ -m "not integration"
+    integration: pytest tests/integration/ --run-gcp
+    coverage: pytest --cov=src --cov-report=html
+  dev:
+    authenticate: gcloud auth application-default login
+    set_project: gcloud config set project PROJECT_ID
+  pipeline:
+    compile: "python -c 'from pipelines import training_pipeline; ...'"
+    submit: python scripts/submit_pipeline.py
+    describe: gcloud ai pipelines describe PIPELINE_ID
+
+project_structure: |
+  vertex_project/
+  ├── src/
+  │   ├── training/                # Training code
+  │   │   ├── __init__.py
+  │   │   ├── train.py             # Training script
+  │   │   ├── trainer.py           # Vertex trainer wrapper
+  │   │   └── hyperparameters.py
+  │   ├── inference/               # Inference code
+  │   │   ├── __init__.py
+  │   │   ├── predictor.py         # Endpoint predictor
+  │   │   └── handler.py           # Custom prediction handler
+  │   ├── pipelines/               # Vertex Pipelines
+  │   │   ├── __init__.py
+  │   │   ├── training_pipeline.py
+  │   │   ├── components/
+  │   │   │   ├── preprocess.py
+  │   │   │   ├── train.py
+  │   │   │   └── evaluate.py
+  │   │   └── utils.py
+  │   ├── feature_store/           # Vertex Feature Store
+  │   │   ├── __init__.py
+  │   │   └── features.py
+  │   ├── experiments/             # Vertex Experiments
+  │   │   ├── __init__.py
+  │   │   └── tracker.py
+  │   └── utils/
+  │       ├── __init__.py
+  │       └── gcs_utils.py
+  ├── tests/
+  │   ├── training/
+  │   │   └── test_trainer.py
+  │   ├── inference/
+  │   │   └── test_predictor.py
+  │   ├── pipelines/
+  │   │   └── test_pipeline.py
+  │   └── conftest.py
+  ├── configs/
+  │   ├── training.yaml
+  │   └── pipeline.yaml
+  ├── requirements.txt
+  └── README.md

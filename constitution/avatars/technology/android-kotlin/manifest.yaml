@@ -1,0 +1,194 @@
+# Android Kotlin Avatar Manifest
+# Defines stack configuration and law specializations
+# Authority: Jeroen Mols (jeroenmols.com), Philipp Hauer (phauer.com),
+#            Fernando Cejas (fernandocejas.com), Google Now in Android (nowinandroid)
+
+avatar:
+  id: avatar-android-kotlin
+  type: technology
+  name: Android / Kotlin
+  version: "1.3.0"
+
+stack:
+  language: Kotlin 2.1.0
+  ui: Jetpack Compose (808 files) + legacy Views/XML (migration in progress)
+  minimum_sdk: 26   # Android 8.0 — Keystore symmetric key support
+  compile_sdk: 36   # Android 16
+  target_sdk: 36    # Android 16
+  build_tool: Gradle (Groovy DSL for app modules; version catalog via libs.versions.toml)
+  annotation_processing: kapt (Dagger) + ksp (Room, Glide)
+  testing:
+    unit: JUnit 4 (dominant — 416 files; JUnit 5 not yet adopted)
+    unit_kotlin: MockK 1.13.12 + Turbine 1.1.0
+    integration: Robolectric + Hilt testing
+    ui: Espresso + Compose testing
+    cicd: gradlew direct (no fastlane in repo)
+  architecture: MVVM + Clean Architecture (Cejas)
+  di: Dagger 2 (56 @Module, 316 @Provides — Hilt not yet adopted)
+  async: RxJava 1.x/2.x/3.x (mixed, legacy) + Kotlin Coroutines + Flow
+  code_quality: ktlint 12.1.0 + Android Lint + SonarQube
+
+dependencies:
+  required:
+    - "androidx.compose.ui:ui"
+    - "androidx.lifecycle:lifecycle-viewmodel-ktx"
+    - "com.google.dagger:dagger"         # Dagger 2 — active DI (not yet Hilt)
+    - "com.google.dagger:dagger-android"
+    - "org.jetbrains.kotlinx:kotlinx-coroutines-android"
+  data:
+    - "androidx.room:room-ktx"
+    - "com.squareup.retrofit2:retrofit: 2.9.0"
+    - "com.squareup.okhttp3:okhttp: 4.10.0"
+    - "com.squareup.moshi:moshi: 1.15.1"
+  rx_legacy:
+    - "io.reactivex:rxjava: 1.3.0"      # RxJava 1.x — still present
+    - "io.reactivex.rxjava2:rxjava: 2.1.1" # RxJava 2.x — still present
+    - "io.reactivex.rxjava3:rxjava: 3.0.0" # RxJava 3.x — 3 versions coexist; new code: Coroutines/Flow
+  security:
+    - "androidx.security:security-crypto"       # EncryptedSharedPreferences
+    - "com.google.android.play:integrity"       # Play Integrity API
+    - "com.google.firebase:firebase-crashlytics-gradle"
+    - "com.google.firebase:perf-plugin"
+  testing:
+    unit:
+      - "junit:junit: 4.13.2"              # JUnit 4 — dominant (not JUnit 5)
+      - "io.mockk:mockk-android: 1.13.12"  # MockK
+      - "app.cash.turbine:turbine: 1.1.0"  # Turbine for Flow testing
+      - "org.robolectric:robolectric"
+      - "org.jetbrains.kotlinx:kotlinx-coroutines-test"
+    ui:
+      - "androidx.compose.ui:ui-test-junit4"
+      - "androidx.test.espresso:espresso-core: 3.5.0"
+
+activates:
+  skills:
+    - 06-atomic-tdd
+    - 07-vertical-slice-dev
+    - 08-code-review
+    - 25-ux-design
+  workflows:
+    - greenfield-development
+    - legacy-rescue-decision-track
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-6.1
+    title: Security by Design Law
+    example_file: examples/ENG-6.1-security.md
+  - id: ENG-6.4
+    title: Data Protection Law
+    example_file: examples/ENG-6.4-data-protection.md
+  - id: ENG-6.7
+    title: Audit Trail Law
+    example_file: examples/ENG-6.7-audit-trail.md
+  - id: ENG-4.2
+    title: Test Pyramid Law
+    example_file: examples/ENG-4.2-test-pyramid.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-3.2
+    title: Immutability Law
+    example_file: examples/ENG-3.2-immutability.md
+  - id: ENG-2.2
+    title: Layered Architecture
+    example_file: examples/ENG-2.2-layers.md
+  - id: ENG-10.1
+    title: Constitution Metrics Collection Law
+  - id: ENG-11.1
+    title: Hangar SDD Law
+  - id: ENG-12.1
+    title: Agentic Feedback Loop Law
+    example_file: examples/ENG-12.1-agentic-feedback-loop.md
+  - id: ENG-13.1
+    title: Artifact Rendering Standard
+    example_file: examples/ENG-13.1-artifact-rendering.md
+
+conventions:
+  naming:
+    classes: PascalCase
+    functions: camelCase
+    properties: camelCase
+    constants: SCREAMING_SNAKE_CASE  # companion object or top-level val
+    packages: "com.aa.{module}  # e.g., com.aa.network2, com.aa.android.ui.american"
+    test_functions: |
+      # MIXED — both conventions present in codebase:
+      # Underscore pattern (dominant — 582 occurrences): funGetAuthHeader_nullToken_expectEmpty()
+      # Backtick pattern (289 occurrences): `adding item updates total`
+      # New code SHOULD use backtick sentences (Philipp Hauer) for readability
+    build_variants: "debug | qa | beta | betaRelease | release"
+  patterns:
+    entity: "data class (domain) or @Entity class (Room)"
+    value_object: "@JvmInline value class"
+    use_case: "class ...UseCase { operator fun invoke(...) }"
+    repository_protocol: "interface ...Repository (domain layer)"
+    repository_impl: "class ...RepositoryImpl @Inject constructor (data layer)"
+    viewmodel: "class ...ViewModel @Inject constructor : ViewModel()  # Dagger 2 — no Hilt yet"
+    ui_state: "sealed interface ...UiState { data object Loading; data class Success; data class Error }"
+  test_idioms:
+    # Per Philipp Hauer (KotlinConf 2018) — backtick naming is the target style
+    # JUnit 4 is dominant (not JUnit 5) in live codebase
+    instance_lifecycle: "class ...Test { private val dependency = mockk<Dependency>() }"
+    mock_declaration: "private val dependency = mockk<Dependency>()"
+    coroutine_test: "@get:Rule val coroutineRule = TestCoroutineRule()  # JUnit 4 rule style"
+    flow_test: "flow.test { val item = awaitItem(); assertEquals(expected, item) }"
+    nested_contexts: "# JUnit 4: inner class convention varies; backtick test names for context grouping"
+
+commands:
+  test:
+    unit: "./gradlew testDebugUnitTest -Papp.isJenkins=true"
+    unit_with_coverage: "./gradlew testDebugUnitTest testDebugUnitTestCoverage --no-daemon -Papp.isJenkins=true -Papp.writeToRemoteCache=true"
+    single: "./gradlew :network2:testDebugUnitTest --tests '*.NetworkClientTest'"
+    instrumented: "./gradlew connectedAndroidTest"
+    coverage: "./gradlew jacocoTestReport"
+  build:
+    debug: "./gradlew app:assembleDebug --no-daemon -Papp.isJenkins=true -PbuildNumber=1"
+    qa: "./gradlew app:assembleQa --no-daemon -Papp.isJenkins=true -PbuildNumber=1"
+    beta: "./gradlew app:assembleBeta --no-daemon -Papp.isJenkins=true -PbuildNumber=1"
+    release_bundle: "./gradlew app:bundleRelease"
+  lint:
+    android: "./gradlew lint"
+    ktlint: "./gradlew ktlintCheck"
+    sonar: "./gradlew sonarqube"
+    constitution: "aa-constitution-lint ."
+
+project_structure: |
+  american-airlines-android/      # Multi-module monorepo (61 Gradle modules)
+  ├── app/                        # Main application module
+  │   └── src/
+  │       ├── main/java/com/aa/android/
+  │       │   ├── di/             # Dagger 2 @Component, @Module
+  │       │   └── ui/
+  │       ├── debug/              # Debug flavor sources
+  │       ├── qa/                 # QA flavor sources
+  │       ├── beta/               # Beta flavor sources
+  │       └── androidTest/java/com/aa/android/di/  # Test DI components
+  ├── core/                       # Core shared module
+  ├── core_network/               # Network layer
+  ├── core_base/                  # Base classes
+  ├── core_business/              # Business logic
+  ├── network2/                   # Network client (Retrofit + OkHttp + Moshi)
+  │   └── src/test/java/com/aa/network2/  # JUnit 4 unit tests
+  ├── ui/                         # UI components
+  │   └── compose/                # Jetpack Compose components (808 files)
+  ├── ui_american/                # AA-branded UI module
+  ├── {feature}/                  # Feature modules (account, booking, checkin, etc.)
+  │   └── src/
+  │       ├── main/kotlin/com/aa/android/{feature}/
+  │       └── test/kotlin/com/aa/android/{feature}/
+  ├── lintchecks/                 # Custom Android Lint rules
+  ├── gradle/
+  │   ├── libs.versions.toml      # Version catalog (centralized deps)
+  │   └── wrapper/
+  ├── build.gradle                # Root Gradle (Groovy DSL)
+  ├── settings.gradle             # Module declarations
+  ├── buildall.sh                 # CI build script (-Papp.isJenkins=true)
+  ├── sonarqube.gradle            # SonarQube quality gate config
+  └── aa.yaml                     # AA metadata (squad, app)
+
+compliance_domains:
+  - mobile-ios
+  - mobile-android
+  - engineering

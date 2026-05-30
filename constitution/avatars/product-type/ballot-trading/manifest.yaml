@@ -1,0 +1,24 @@
+avatar:
+  id: avatar-product-ballot-trading
+  type: product
+  name: "Pilot Ballot & Trip Trading"
+  version: "1.0.0"
+domain:
+  category: "Crew Self-Service & Trip Trading"
+  description: "CBA-governed pilot trip trading and ballot submissions across CCA, DOTC Portal, and PTTS/BTS."
+  personas: [Line Pilot, Reserve Pilot, Crew Scheduler, CBA Compliance Analyst]
+activates:
+  skills: [skill-spec-governance, skill-02-user-journey-mapping, skill-05-business-rules, skill-27-constitution-compliance]
+  workflows: [avatar-workflow, greenfield-development]
+specializes_laws:
+  - {id: PRD-1.1, title: "Continuous Discovery", example_file: examples/PRD-1.1-discovery.md}
+  - {id: PRD-1.2, title: "Problem-First Law", example_file: examples/PRD-1.2-problem-first.md}
+  - {id: PRD-1.5, title: "Evidence-Based Decision Law", example_file: examples/PRD-1.5-evidence-based.md}
+  - {id: PRD-2.1, title: "User Journey Mapping", example_file: examples/PRD-2.1-journey.md}
+  - {id: PRD-2.5, title: "Discovery Stage-Gate Law", example_file: examples/PRD-2.5-stage-gate.md}
+  - {id: PRD-5.1, title: "MVP & Experimentation", example_file: examples/PRD-5.1-metrics.md}
+  - {id: PRD-6.2, title: "Retention Over Acquisition", example_file: examples/PRD-6.2-retention.md}
+  - {id: BUS-7.1, title: "Audit Trail", example_file: examples/BUS-7.1-audit-trail.md}
+  - {id: BUS-2.2, title: "Control Framework", example_file: examples/BUS-2.2-control-framework.md}
+  - {id: BUS-3.1, title: "Data Classification", example_file: examples/BUS-3.1-data-classification.md}
+tags: [product, ballot-trading, cba-compliance]

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 6 — Commit | BFF Avatar Clinic</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; color: #1a1a2e; margin: 0; padding: 24px; }
+  h1 { font-size: 1.6rem; font-weight: 700; }
+  h2 { font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; border-bottom: 2px solid #e0e0e0; padding-bottom: 6px; }
+  .header { background: linear-gradient(135deg, #1b5e20, #2e7d32); color: white; border-radius: 10px; padding: 24px 28px; margin-bottom: 28px; }
+  .header .meta { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .header .meta span { background: rgba(255,255,255,0.18); border-radius: 6px; padding: 4px 12px; font-size: 0.82rem; }
+  .section { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+  th { background: #f0f4f8; font-weight: 600; text-align: left; padding: 8px 10px; border-bottom: 2px solid #dde; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; }
+  .stamp { background: #e8f5e9; color: #1b5e20; }
+  .new { background: #e8eaf6; color: #283593; }
+  .moved { background: #fff8e1; color: #e65100; }
+  .verdict { padding: 14px 18px; border-radius: 8px; font-weight: 600; margin-top: 16px; }
+  .verdict.green { background: #e8f5e9; color: #1b5e20; border-left: 5px solid #43a047; }
+  code { font-size: 0.82rem; background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+  footer { text-align: center; color: #aaa; font-size: 0.78rem; margin-top: 32px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 14px 0; }
+  .stat { background: #f0f4f8; border-radius: 8px; padding: 12px; text-align: center; }
+  .stat .num { font-size: 1.8rem; font-weight: 700; color: #2e7d32; }
+  .stat .lbl { font-size: 0.8rem; color: #555; }
+  .chip-pass { display: inline-block; background: #e8f5e9; color: #2e7d32; border-radius: 10px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>✅ Phase 6 — Commit</h1>
+  <p>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF Session</p>
+  <div class="meta"><span>📅 2026-04-27</span><span>4 avatars stamped rag_validated</span><span>6 HTML artifacts committed</span><span>hangar-ai-constitution pushed</span></div>
+</div>
+
+<div class="section">
+  <div class="summary-grid">
+    <div class="stat"><div class="num">4</div><div class="lbl">Avatars rag_validated</div></div>
+    <div class="stat"><div class="num">6</div><div class="lbl">HTML artifacts committed</div></div>
+    <div class="stat"><div class="num">28</div><div class="lbl">BLOCKINGs resolved this session</div></div>
+    <div class="stat"><div class="num">5</div><div class="lbl">New use cases created</div></div>
+    <div class="stat"><div class="num">3</div><div class="lbl">Sessions complete (iOS, Android, BFF)</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Render Gate (ENG-13.1) — All 6 HTML Artifacts Present</h2>
+  <table>
+    <thead><tr><th>Phase</th><th>File</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Phase 0</td><td><code>phase-0-preflight.html</code></td><td><span class="chip-pass">✅ Present</span></td></tr>
+      <tr><td>Phase 1</td><td><code>phase-1-identify.html</code></td><td><span class="chip-pass">✅ Present</span></td></tr>
+      <tr><td>Phase 2</td><td><code>phase-2-scan.html</code></td><td><span class="chip-pass">✅ Present</span></td></tr>
+      <tr><td>Phase 3</td><td><code>phase-3-discover.html</code></td><td><span class="chip-pass">✅ Present</span></td></tr>
+      <tr><td>Phase 4</td><td><code>phase-4-enrich.html</code></td><td><span class="chip-pass">✅ Present</span></td></tr>
+      <tr><td>Phase 5</td><td><code>phase-5-rag-validate.html</code></td><td><span class="chip-pass">✅ Present</span></td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green">✅ Render gate cleared — all 6 artifacts present</div>
+</div>
+
+<div class="section">
+  <h2>index.yaml Stamps</h2>
+  <table>
+    <thead><tr><th>Avatar</th><th>Version</th><th>rag_validated</th><th>last_validated</th></tr></thead>
+    <tbody>
+      <tr><td><code>avatar-java-spring</code></td><td>2.1.0</td><td><span class="badge stamp">true ← stamped</span></td><td>2026-04-27</td></tr>
+      <tr><td><code>avatar-loyalty-aadvantage</code></td><td>1.1.0</td><td><span class="badge stamp">true ← stamped</span></td><td>2026-04-27</td></tr>
+      <tr><td><code>avatar-check-in-travel</code></td><td>1.3.0</td><td><span class="badge stamp">true (was already)</span></td><td>2026-04-27</td></tr>
+      <tr><td><code>avatar-passenger-booking</code></td><td>1.3.0</td><td><span class="badge stamp">true (was already)</span></td><td>2026-04-27</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>HTML Artifacts — Moved to Constitution</h2>
+  <p>Artifacts moved from <code>codebases/hangar-w4-dp-mobile/hangar-ai-specs/changes/avatar-enrichment-bff/</code> → <code>hangar-ai-constitution/hangar-ai-specs/changes/avatar-enrichment-bff/</code></p>
+  <table>
+    <thead><tr><th>File</th><th>Destination</th></tr></thead>
+    <tbody>
+      <tr><td><code>phase-0-preflight.html</code></td><td><span class="badge moved">Committed to constitution</span></td></tr>
+      <tr><td><code>phase-1-identify.html</code></td><td><span class="badge moved">Committed to constitution</span></td></tr>
+      <tr><td><code>phase-2-scan.html</code></td><td><span class="badge moved">Committed to constitution</span></td></tr>
+      <tr><td><code>phase-3-discover.html</code></td><td><span class="badge moved">Committed to constitution</span></td></tr>
+      <tr><td><code>phase-4-enrich.html</code></td><td><span class="badge moved">Committed to constitution</span></td></tr>
+      <tr><td><code>phase-5-rag-validate.html</code></td><td><span class="badge moved">Committed to constitution</span></td></tr>
+      <tr><td><code>phase-6-commit.html</code></td><td><span class="badge moved">Committed to constitution</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>BFF Session — Full Change Summary</h2>
+  <table>
+    <thead><tr><th>Track</th><th>BLOCKINGs</th><th>Advisories</th><th>New Use Cases</th><th>Version</th></tr></thead>
+    <tbody>
+      <tr><td><code>avatar-java-spring</code></td><td>8 resolved</td><td>5 resolved</td><td>3 (service-locator-to-di, currency-precision, copy-paste-versioning)</td><td>2.0.0 → 2.1.0</td></tr>
+      <tr><td><code>avatar-loyalty-aadvantage</code></td><td>10 resolved</td><td>3 resolved</td><td>0 new (2 trimmed to budget)</td><td>1.0.0 → 1.1.0</td></tr>
+      <tr><td><code>avatar-check-in-travel</code></td><td>—</td><td>—</td><td>1 (bff-checkin-layer)</td><td>1.2.0 → 1.3.0</td></tr>
+      <tr><td><code>avatar-passenger-booking</code></td><td>—</td><td>—</td><td>1 (bff-booking-layer)</td><td>1.2.0 → 1.3.0</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Wave 4 Mobile Clinic — Sessions Complete</h2>
+  <table>
+    <thead><tr><th>Session</th><th>Avatars Enriched</th><th>Commit</th></tr></thead>
+    <tbody>
+      <tr><td>iOS</td><td>ios-swift (1.1.0), check-in-travel (1.1.0 → 1.2.0), passenger-booking (1.1.0 → 1.2.0), schedule-change-self-serve (1.1.0)</td><td>1bf64cf</td></tr>
+      <tr><td>Android</td><td>android-kotlin (1.1.0), passenger-booking (1.2.0), check-in-travel (1.2.0)</td><td>rebased onto main</td></tr>
+      <tr><td>BFF</td><td>java-spring (2.1.0), loyalty-aadvantage (1.1.0), check-in-travel (1.3.0), passenger-booking (1.3.0)</td><td>this commit</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.85rem; color:#555; margin-top:10px"><strong>Deferred:</strong> nodejs-typescript BFF session (5 TS/Node repos, 20% of fleet) — separate clinic session.</p>
+  <div class="verdict green">✅ BFF session complete · hangar-ai-constitution pushed · Wave 4 Mobile clinic 3/3 sessions done</div>
+</div>
+
+<footer>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF Session · 2026-04-27</footer>
+</body>
+</html>

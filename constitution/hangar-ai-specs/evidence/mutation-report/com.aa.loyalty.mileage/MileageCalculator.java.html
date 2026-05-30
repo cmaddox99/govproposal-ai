@@ -1,0 +1,3514 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>MileageCalculator.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package com.aa.loyalty.mileage;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.stereotype.Component;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.HashMap;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Map;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * Mileage accrual calculator.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * VIOLATIONS: High cyclomatic complexity (&#62;30), long method, duplicate logic, magic numbers.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@Component</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>public class MileageCalculator {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // VIOLATION: hardcoded route distances &#8212; should be in database</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    private static final Map&#60;String, Integer&#62; ROUTE_DISTANCES = new HashMap&#60;&#62;();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    static {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;DFW-LAX&#34;, 1235);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;DFW-JFK&#34;, 1391);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;DFW-ORD&#34;, 802);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;DFW-MIA&#34;, 1121);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;DFW-LHR&#34;, 4751);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;DFW-CDG&#34;, 4934);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;DFW-NRT&#34;, 6353);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;LAX-JFK&#34;, 2475);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;LAX-ORD&#34;, 1745);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;LAX-LHR&#34;, 5456);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;JFK-LHR&#34;, 3450);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;MIA-GRU&#34;, 4079);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;DFW-MEX&#34;, 936);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ROUTE_DISTANCES.put(&#34;ORD-LHR&#34;, 3941);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * VIOLATION: Method is 120+ lines, cyclomatic complexity ~35.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Does distance lookup, booking class multiplier, elite bonus, partner bonus,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * promo bonus, minimum floor, expiry check, and cap &#8212; all in one method.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public long calculateAccruedMiles(String origin, String destination,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                                      String bookingClass, String memberTier,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                                      String partnerCode, boolean isPromo,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                                      int flightSegments) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Step 1: get base distance</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        String routeKey = origin + &#34;-&#34; + destination;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        String reverseKey = destination + &#34;-&#34; + origin;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        int distance = 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_47'/>
+47
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_47'>2</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (ROUTE_DISTANCES.containsKey(routeKey)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            distance = ROUTE_DISTANCES.get(routeKey);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_49'/>
+49
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_49'>2</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (ROUTE_DISTANCES.containsKey(reverseKey)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            distance = ROUTE_DISTANCES.get(reverseKey);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            // VIOLATION: silently returns minimum instead of throwing</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            distance = 500;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_55'/>
+55
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_55'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_56'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Step 2: booking class multiplier &#8212; VIOLATION: magic numbers scattered</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        double classMultiplier = 1.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_58'/>
+58
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_58'>2</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (bookingClass == null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            classMultiplier = 0.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_60'/>
+60
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_60'>4</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+4. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (bookingClass.equals(&#34;F&#34;) || bookingClass.equals(&#34;A&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            classMultiplier = 1.5;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_62'/>
+62
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_62'>6</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+4. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+5. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+6. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (bookingClass.equals(&#34;J&#34;) || bookingClass.equals(&#34;C&#34;) || bookingClass.equals(&#34;D&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_63'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            classMultiplier = 1.5;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_64'/>
+64
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_64'>4</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+4. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (bookingClass.equals(&#34;Y&#34;) || bookingClass.equals(&#34;B&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_65'/>
+65
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_65'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            classMultiplier = 1.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_66'/>
+66
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_66'>6</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+4. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+5. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+6. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (bookingClass.equals(&#34;M&#34;) || bookingClass.equals(&#34;H&#34;) || bookingClass.equals(&#34;K&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_67'/>
+67
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_67'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            classMultiplier = 1.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_68'/>
+68
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_68'>4</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+4. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (bookingClass.equals(&#34;V&#34;) || bookingClass.equals(&#34;W&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_69'/>
+69
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_69'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            classMultiplier = 0.75;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_70'/>
+70
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_70'>4</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; SURVIVED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; SURVIVED<br/>
+3. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+4. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        } else if (bookingClass.equals(&#34;S&#34;) || bookingClass.equals(&#34;L&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_71'/>
+71
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_71'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            classMultiplier = 0.5;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_72'/>
+72
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_72'>4</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; SURVIVED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; SURVIVED<br/>
+3. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+4. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        } else if (bookingClass.equals(&#34;G&#34;) || bookingClass.equals(&#34;Q&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_73'/>
+73
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_73'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            classMultiplier = 0.5;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_74'/>
+74
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_74'>2</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (bookingClass.equals(&#34;N&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_75'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            classMultiplier = 0.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_76'/>
+76
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_76'>2</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (bookingClass.equals(&#34;O&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_77'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            classMultiplier = 0.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_78'/>
+78
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_78'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_79'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            classMultiplier = 0.5;  // VIOLATION: default case for unknown booking class silently accrues</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_80'/>
+80
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_80'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_81'/>
+81
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_81'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_82'/>
+82
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_82'>1</a>
+<span>
+1. calculateAccruedMiles : Replaced double multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        long baseMiles = Math.round(distance * classMultiplier);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_83'/>
+83
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_83'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_84'/>
+84
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_84'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Step 3: elite tier bonus &#8212; VIOLATION: duplicated logic from TierCalculator</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_85'/>
+85
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_85'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        double eliteBonus = 0.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_86'/>
+86
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_86'>4</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; SURVIVED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+4. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        if (memberTier == null || memberTier.equals(&#34;GENERAL&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_87'/>
+87
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_87'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            eliteBonus = 0.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_88'/>
+88
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_88'>2</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (memberTier.equals(&#34;GOLD&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_89'/>
+89
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_89'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            eliteBonus = 0.25;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_90'/>
+90
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_90'>2</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (memberTier.equals(&#34;PLATINUM&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_91'/>
+91
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_91'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            eliteBonus = 0.50;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_92'/>
+92
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_92'>2</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (memberTier.equals(&#34;PLATINUM_PRO&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_93'/>
+93
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_93'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            eliteBonus = 0.75;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_94'/>
+94
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_94'>2</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; SURVIVED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        } else if (memberTier.equals(&#34;EXECUTIVE_PLATINUM&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_95'/>
+95
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_95'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            eliteBonus = 1.00;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_96'/>
+96
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_96'>2</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; SURVIVED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        } else if (memberTier.equals(&#34;CONCIERGE_KEY&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_97'/>
+97
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_97'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            eliteBonus = 1.00;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_98'/>
+98
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_98'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_99'/>
+99
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_99'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_100'/>
+100
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_100'>1</a>
+<span>
+1. calculateAccruedMiles : Replaced double multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        long eliteBonusMiles = Math.round(baseMiles * eliteBonus);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_101'/>
+101
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_101'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_102'/>
+102
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_102'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Step 4: partner bonus</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_103'/>
+103
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_103'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        long partnerBonusMiles = 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_104'/>
+104
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_104'>2</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (partnerCode != null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_105'/>
+105
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_105'>4</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+4. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            if (partnerCode.equals(&#34;BA&#34;) || partnerCode.equals(&#34;IB&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_106'/>
+106
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_106'>1</a>
+<span>
+1. calculateAccruedMiles : Replaced double multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                partnerBonusMiles = Math.round(baseMiles * 0.10);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_107'/>
+107
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_107'>4</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+3. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+4. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            } else if (partnerCode.equals(&#34;QF&#34;) || partnerCode.equals(&#34;CX&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_108'/>
+108
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_108'>1</a>
+<span>
+1. calculateAccruedMiles : Replaced double multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                partnerBonusMiles = Math.round(baseMiles * 0.10);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_109'/>
+109
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_109'>4</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+3. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+4. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            } else if (partnerCode.equals(&#34;JAL&#34;) || partnerCode.equals(&#34;FJ&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_110'/>
+110
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_110'>1</a>
+<span>
+1. calculateAccruedMiles : Replaced double multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                partnerBonusMiles = Math.round(baseMiles * 0.10);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_111'/>
+111
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_111'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_112'/>
+112
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_112'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                partnerBonusMiles = 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_113'/>
+113
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_113'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_114'/>
+114
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_114'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_115'/>
+115
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_115'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_116'/>
+116
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_116'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Step 5: promo multiplier</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_117'/>
+117
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_117'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        long promoBonus = 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_118'/>
+118
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_118'>2</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculateAccruedMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (isPromo) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_119'/>
+119
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_119'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            // VIOLATION: hardcoded 2x promo &#8212; should be configurable</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_120'/>
+120
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_120'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            promoBonus = baseMiles;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_121'/>
+121
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_121'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_122'/>
+122
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_122'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_123'/>
+123
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_123'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Step 6: segment bonus</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_124'/>
+124
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_124'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        long segmentBonus = 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_125'/>
+125
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_125'>3</a>
+<span>
+1. calculateAccruedMiles : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+2. calculateAccruedMiles : changed conditional boundary &rarr; KILLED<br/>
+3. calculateAccruedMiles : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (flightSegments &#62; 1) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_126'/>
+126
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_126'>1</a>
+<span>
+1. calculateAccruedMiles : Replaced long multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            segmentBonus = flightSegments * 100L;  // VIOLATION: magic number 100</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_127'/>
+127
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_127'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_128'/>
+128
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_128'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_129'/>
+129
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_129'>4</a>
+<span>
+1. calculateAccruedMiles : Replaced long addition with subtraction &rarr; KILLED<br/>
+2. calculateAccruedMiles : Replaced long addition with subtraction &rarr; KILLED<br/>
+3. calculateAccruedMiles : Replaced long addition with subtraction &rarr; KILLED<br/>
+4. calculateAccruedMiles : Replaced long addition with subtraction &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        long totalMiles = baseMiles + eliteBonusMiles + partnerBonusMiles + promoBonus + segmentBonus;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_130'/>
+130
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_130'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_131'/>
+131
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_131'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Step 7: minimum floor  &#8212; VIOLATION: hardcoded 500 minimum</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_132'/>
+132
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_132'>6</a>
+<span>
+1. calculateAccruedMiles : changed conditional boundary &rarr; SURVIVED<br/>
+2. calculateAccruedMiles : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+3. calculateAccruedMiles : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+4. calculateAccruedMiles : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+5. calculateAccruedMiles : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+6. calculateAccruedMiles : changed conditional boundary &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        if (totalMiles &#60; 500 &#38;&#38; classMultiplier &#62; 0) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_133'/>
+133
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_133'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            totalMiles = 500;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_134'/>
+134
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_134'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_135'/>
+135
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_135'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_136'/>
+136
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_136'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Step 8: cap &#8212; VIOLATION: hardcoded 100,000 cap per transaction</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_137'/>
+137
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_137'>3</a>
+<span>
+1. calculateAccruedMiles : changed conditional boundary &rarr; SURVIVED<br/>
+2. calculateAccruedMiles : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+3. calculateAccruedMiles : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        if (totalMiles &#62; 100000) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_138'/>
+138
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_138'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            totalMiles = 100000;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_139'/>
+139
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_139'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_140'/>
+140
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_140'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_141'/>
+141
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_141'>1</a>
+<span>
+1. calculateAccruedMiles : replaced long return with 0 for com/aa/loyalty/mileage/MileageCalculator::calculateAccruedMiles &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return totalMiles;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_142'/>
+142
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_142'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_143'/>
+143
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_143'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_144'/>
+144
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_144'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // VIOLATION: nearly identical method duplicated below for &#34;partner accrual&#34; </span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_145'/>
+145
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_145'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public long calculatePartnerMiles(String partnerCode, double spendAmount, String memberTier) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_146'/>
+146
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_146'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        double ratePerDollar = 1.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_147'/>
+147
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_147'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_148'/>
+148
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_148'>2</a>
+<span>
+1. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (partnerCode == null) return 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_149'/>
+149
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_149'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_150'/>
+150
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_150'>6</a>
+<span>
+1. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+3. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+4. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+5. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+6. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (partnerCode.equals(&#34;HERTZ&#34;) || partnerCode.equals(&#34;AVIS&#34;) || partnerCode.equals(&#34;BUDGET&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_151'/>
+151
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_151'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            ratePerDollar = 1.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_152'/>
+152
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_152'>6</a>
+<span>
+1. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+3. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+4. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+5. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+6. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (partnerCode.equals(&#34;MARRIOTT&#34;) || partnerCode.equals(&#34;HILTON&#34;) || partnerCode.equals(&#34;HYATT&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_153'/>
+153
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_153'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            ratePerDollar = 1.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_154'/>
+154
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_154'>4</a>
+<span>
+1. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+3. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+4. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (partnerCode.equals(&#34;CITIBANK_VISA&#34;) || partnerCode.equals(&#34;BARCLAYS&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_155'/>
+155
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_155'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            ratePerDollar = 1.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_156'/>
+156
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_156'>2</a>
+<span>
+1. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; SURVIVED<br/>
+2. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        } else if (partnerCode.equals(&#34;STARBUCKS&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_157'/>
+157
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_157'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            ratePerDollar = 0.5;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_158'/>
+158
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_158'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_159'/>
+159
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_159'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            ratePerDollar = 0.5;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_160'/>
+160
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_160'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_161'/>
+161
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_161'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_162'/>
+162
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_162'>1</a>
+<span>
+1. calculatePartnerMiles : Replaced double multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        long baseMiles = Math.round(spendAmount * ratePerDollar);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_163'/>
+163
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_163'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_164'/>
+164
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_164'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // VIOLATION: copy-paste of elite bonus logic from calculateAccruedMiles</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_165'/>
+165
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_165'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        double eliteBonus = 0.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_166'/>
+166
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_166'>4</a>
+<span>
+1. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; SURVIVED<br/>
+2. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+3. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+4. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        if (memberTier == null || memberTier.equals(&#34;GENERAL&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_167'/>
+167
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_167'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            eliteBonus = 0.0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_168'/>
+168
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_168'>2</a>
+<span>
+1. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (memberTier.equals(&#34;GOLD&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_169'/>
+169
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_169'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            eliteBonus = 0.25;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_170'/>
+170
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_170'>2</a>
+<span>
+1. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (memberTier.equals(&#34;PLATINUM&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_171'/>
+171
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_171'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            eliteBonus = 0.50;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_172'/>
+172
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_172'>2</a>
+<span>
+1. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (memberTier.equals(&#34;PLATINUM_PRO&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_173'/>
+173
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_173'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            eliteBonus = 0.75;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_174'/>
+174
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_174'>2</a>
+<span>
+1. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+2. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (memberTier.equals(&#34;EXECUTIVE_PLATINUM&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_175'/>
+175
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_175'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            eliteBonus = 1.00;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_176'/>
+176
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_176'>2</a>
+<span>
+1. calculatePartnerMiles : removed conditional - replaced equality check with true &rarr; KILLED<br/>
+2. calculatePartnerMiles : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        } else if (memberTier.equals(&#34;CONCIERGE_KEY&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_177'/>
+177
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_177'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            eliteBonus = 1.00;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_178'/>
+178
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_178'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_179'/>
+179
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_179'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_180'/>
+180
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_180'>1</a>
+<span>
+1. calculatePartnerMiles : Replaced double multiplication with division &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        long eliteBonusMiles = Math.round(baseMiles * eliteBonus);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_181'/>
+181
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_181'>1</a>
+<span>
+1. calculatePartnerMiles : Replaced long addition with subtraction &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        long total = baseMiles + eliteBonusMiles;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_182'/>
+182
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_182'>3</a>
+<span>
+1. calculatePartnerMiles : changed conditional boundary &rarr; SURVIVED<br/>
+2. calculatePartnerMiles : removed conditional - replaced comparison check with false &rarr; KILLED<br/>
+3. calculatePartnerMiles : removed conditional - replaced comparison check with true &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        if (total &#60; 0) total = 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_183'/>
+183
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_183'>1</a>
+<span>
+1. calculatePartnerMiles : replaced long return with 0 for com/aa/loyalty/mileage/MileageCalculator::calculatePartnerMiles &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return total;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_184'/>
+184
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_184'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@780c0_185'/>
+185
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@780c0_185'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_47'>47</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_47'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_reverseRoute_returnsDistanceMiles()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classA_appliesFirstMultiplier()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_49'>49</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_49'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_unknownRoute_usesDefaultFiveHundred()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_reverseRoute_returnsDistanceMiles()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_58'>58</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_58'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nullBookingClass_returnsZero()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classA_appliesFirstMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_60'>60</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_60'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classA_appliesFirstMultiplier()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_firstClass_appliesOnePointFiveMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_goldTier_appliesTwentyFivePercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_goldTier_appliesTwentyFivePercentBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_62'>62</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_62'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_goldTier_appliesTwentyFivePercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_goldTier_appliesTwentyFivePercentBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_businessClass_appliesOnePointFiveMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classD_appliesFirstMultiplier()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_goldTier_appliesTwentyFivePercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classC_appliesFirstMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_64'>64</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_64'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classL_appliesCheapestMultiplier()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classL_appliesCheapestMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classB_appliesFullFareMultiplier()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_goldTier_appliesTwentyFivePercentBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_66'>66</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_66'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classM_appliesFullFareMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classL_appliesCheapestMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classK_appliesMidDiscountMultiplier()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classL_appliesCheapestMultiplier()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classH_appliesFullFareMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classL_appliesCheapestMultiplier()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_68'>68</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_68'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classW_appliesDiscountMultiplier()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classL_appliesCheapestMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classL_appliesCheapestMultiplier()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_discountClass_appliesPointSevenFiveMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_70'>70</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_70'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>none</span></span> removed conditional - replaced equality check with false &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nonEarningClass_returnsFloorFiveHundred()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nonEarningClass_returnsFloorFiveHundred()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>none</span></span> removed conditional - replaced equality check with true &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_72'>72</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_72'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nonEarningClass_returnsFloorFiveHundred()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nonEarningClass_returnsFloorFiveHundred()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>none</span></span> removed conditional - replaced equality check with true &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>none</span></span> removed conditional - replaced equality check with false &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_74'>74</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_74'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nonEarningClass_returnsFloorFiveHundred()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_unknownBookingClass_appliesDefaultHalfMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_76'>76</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_76'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_unknownBookingClass_appliesDefaultHalfMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classO_zeroMultiplier_noFloor()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_82'>82</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_82'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nullBookingClass_returnsZero()]</span></span> Replaced double multiplication with division &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_86'>86</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_86'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>none</span></span> removed conditional - replaced equality check with false &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nullTier_treatedAsGeneral()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_goldTier_appliesTwentyFivePercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_goldTier_appliesTwentyFivePercentBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_88'>88</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_88'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_platinumTier_appliesFiftyPercentBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_goldTier_appliesTwentyFivePercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_90'>90</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_90'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_platinumProTier_appliesSeventyFivePercentBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_platinumTier_appliesFiftyPercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_92'>92</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_92'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_execPlatTier_appliesOneHundredPercentBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_platinumProTier_appliesSeventyFivePercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_94'>94</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_94'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_justAboveCap_returnsCap()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>none</span></span> removed conditional - replaced equality check with true &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_96'>96</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_96'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>none</span></span> removed conditional - replaced equality check with true &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_conciergeKeyTier_sameAsExecPlat()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_100'>100</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_100'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classA_appliesFirstMultiplier()]</span></span> Replaced double multiplication with division &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_104'>104</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_104'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeBA_applies10PctBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nullBookingClass_returnsZero()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_105'>105</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_105'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeIB_applies10PctBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_unknownPartnerCode_noBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_unknownPartnerCode_noBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeBA_applies10PctBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_106'>106</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_106'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeIB_applies10PctBonus()]</span></span> Replaced double multiplication with division &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_107'>107</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_107'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeQF_applies10PctBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeCX_applies10PctBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_unknownPartnerCode_noBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_unknownPartnerCode_noBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_108'>108</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_108'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeCX_applies10PctBonus()]</span></span> Replaced double multiplication with division &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_109'>109</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_109'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_unknownPartnerCode_noBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_unknownPartnerCode_noBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeJAL_applies10PctBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeFJ_applies10PctBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_110'>110</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_110'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeFJ_applies10PctBonus()]</span></span> Replaced double multiplication with division &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_118'>118</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_118'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_promoFlag_doublesBaseMiles()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classA_appliesFirstMultiplier()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_125'>125</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_125'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_justAboveCap_returnsCap()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nullBookingClass_returnsZero()]</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nullBookingClass_returnsZero()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_126'>126</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_126'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_justAboveCap_returnsCap()]</span></span> Replaced long multiplication with division &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_129'>129</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_129'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeBA_applies10PctBonus()]</span></span> Replaced long addition with subtraction &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_promoFlag_doublesBaseMiles()]</span></span> Replaced long addition with subtraction &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_justAboveCap_returnsCap()]</span></span> Replaced long addition with subtraction &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_goldTier_appliesTwentyFivePercentBonus()]</span></span> Replaced long addition with subtraction &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_132'>132</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_132'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_shortRoute_appliesMinimumFloor()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classA_appliesFirstMultiplier()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>none</span></span> changed conditional boundary &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_shortRoute_appliesMinimumFloor()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nullBookingClass_returnsZero()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nullBookingClass_returnsZero()]</span></span> changed conditional boundary &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_137'>137</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_137'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_justAboveCap_returnsCap()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>none</span></span> changed conditional boundary &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nullBookingClass_returnsZero()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_141'>141</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_141'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateAccruedMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classA_appliesFirstMultiplier()]</span></span> replaced long return with 0 for com/aa/loyalty/mileage/MileageCalculator::calculateAccruedMiles &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_148'>148</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_148'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_nullPartnerCode_returnsZero()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_avis_earnsOneMilePerDollar()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_150'>150</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_150'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownPartner_earnsHalfMilePerDollar()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_avis_earnsOneMilePerDollar()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownPartner_earnsHalfMilePerDollar()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_budget_earnsOneMilePerDollar()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_hertz_earnsOneMilePerDollar()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownPartner_earnsHalfMilePerDollar()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_152'>152</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_152'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownPartner_earnsHalfMilePerDollar()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownPartner_earnsHalfMilePerDollar()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_marriott_earnsOneMilePerDollar()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_hyatt_earnsOneMilePerDollar()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_hilton_earnsOneMilePerDollar()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownPartner_earnsHalfMilePerDollar()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_154'>154</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_154'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownPartner_earnsHalfMilePerDollar()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_barclays_earnsOneMilePerDollar()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownPartner_earnsHalfMilePerDollar()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_citibank_earnsOneMilePerDollar()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_156'>156</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_156'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>none</span></span> removed conditional - replaced equality check with true &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>none</span></span> removed conditional - replaced equality check with false &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_162'>162</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_162'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownPartner_earnsHalfMilePerDollar()]</span></span> Replaced double multiplication with division &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_166'>166</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_166'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_goldTier_addsTwentyFivePercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_nullTier_noBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_goldTier_addsTwentyFivePercentBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>none</span></span> removed conditional - replaced equality check with false &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_168'>168</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_168'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_goldTier_addsTwentyFivePercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_platinumTier_addsFiftyPercentBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_170'>170</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_170'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_platinumTier_addsFiftyPercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_platinumProTier_addsSeventyFivePercentBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_172'>172</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_172'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownTier_noEliteBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_platinumProTier_addsSeventyFivePercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_174'>174</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_174'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_execPlatTier_addsOneHundredPercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownTier_noEliteBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_176'>176</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_176'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownTier_noEliteBonus()]</span></span> removed conditional - replaced equality check with true &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_conciergeKeyTier_addsOneHundredPercentBonus()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_180'>180</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_180'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_avis_earnsOneMilePerDollar()]</span></span> Replaced double multiplication with division &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_181'>181</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_181'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_goldTier_addsTwentyFivePercentBonus()]</span></span> Replaced long addition with subtraction &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_182'>182</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_182'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_negativeSpend_clampedToZero()]</span></span> removed conditional - replaced comparison check with false &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>none</span></span> changed conditional boundary &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_avis_earnsOneMilePerDollar()]</span></span> removed conditional - replaced comparison check with true &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@780c0_183'>183</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@780c0_183'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePartnerMiles<br/><b>Killed by : </b>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_avis_earnsOneMilePerDollar()]</span></span> replaced long return with 0 for com/aa/loyalty/mileage/MileageCalculator::calculatePartnerMiles &rarr; KILLED</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>EXPERIMENTAL_SWITCH</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_ELSE</li>
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_IF</li>
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_ELSE</li>
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_IF</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classL_appliesCheapestMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_cheapestClass_appliesPointFiveMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classW_appliesDiscountMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classS_appliesHalfMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_shortRoute_appliesMinimumFloor()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nonEarningClass_returnsFloorFiveHundred()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_exactlyAtFloorBoundary_appliesFloor()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_floor_shortRouteBelowMinimum()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_unknownBookingClass_appliesDefaultHalfMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classQ_appliesHalfMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classO_zeroMultiplier_noFloor()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classG_appliesHalfMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classN_zeroMultiplier_noFloor()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_avis_earnsOneMilePerDollar()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_budget_earnsOneMilePerDollar()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_hertz_earnsOneMilePerDollar()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_zeroSpend_returnsZero()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_goldTier_addsTwentyFivePercentBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_platinumTier_addsFiftyPercentBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_negativeSpend_clampedToZero()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_nullTier_noBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_platinumProTier_addsSeventyFivePercentBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_conciergeKeyTier_addsOneHundredPercentBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_citibank_earnsOneMilePerDollar()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_barclays_earnsOneMilePerDollar()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownTier_noEliteBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_marriott_earnsOneMilePerDollar()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_hilton_earnsOneMilePerDollar()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_hyatt_earnsOneMilePerDollar()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_execPlatTier_addsOneHundredPercentBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_unknownPartner_earnsHalfMilePerDollar()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_starbucks_earnsHalfMilePerDollar()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classM_appliesFullFareMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classH_appliesFullFareMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classK_appliesMidDiscountMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_discountClass_appliesPointSevenFiveMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nullBookingClass_returnsZero()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classA_appliesFirstMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_businessClass_appliesOnePointFiveMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classC_appliesFirstMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_firstClass_appliesOnePointFiveMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeBA_applies10PctBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_goldTier_appliesTwentyFivePercentBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classB_appliesFullFareMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_reverseRoute_returnsDistanceMiles()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_classD_appliesFirstMultiplier()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_justAboveCap_returnsCap()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeIB_applies10PctBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_totalAboveCap_returnsCap()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeBA_addsTenPercentBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_platinumTier_appliesFiftyPercentBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_multipleSegments_addsSegmentBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_knownRoute_fullFare_general_returnsBaseMiles()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_nullTier_treatedAsGeneral()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_platinumProTier_appliesSeventyFivePercentBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_unknownRoute_usesDefaultFiveHundred()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_veryLongFlight_capsAt100000()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_promoFlag_doublesBaseMiles()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeFJ_applies10PctBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeCX_applies10PctBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_unknownPartnerCode_noBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_execPlatTier_appliesOneHundredPercentBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeQF_applies10PctBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_conciergeKeyTier_sameAsExecPlat()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculateAccruedMiles_partnerCodeJAL_applies10PctBonus()] (0 ms)</li><li>com.aa.loyalty.mileage.MileageCalculatorTest.[engine:junit-jupiter]/[class:com.aa.loyalty.mileage.MileageCalculatorTest]/[method:calculatePartnerMiles_nullPartnerCode_returnsZero()] (0 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.15.3
+
+</body>
+</html>

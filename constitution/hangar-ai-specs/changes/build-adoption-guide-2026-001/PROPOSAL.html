@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposal — Hangar AI Constitution</title>
+<style>
+/* ── AA Constitutional Design System ── */
+@page { size: 1088px 1408px; margin: 0; }
+
+:root {
+  --aa-blue: #003087;
+  --aa-red:  #C8102E;
+  --ink:     #17202a;
+  --muted:   #5f6d7a;
+  --line:    #d9e1ea;
+  --soft:    #f3f7fb;
+  --soft-2:  #eef3f8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* ── Page layout ── */
+.page {
+  width: 1088px;
+  min-height: 1408px;
+  padding: 94px 88px 100px;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  page-break-after: always;
+}
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 12px;
+  background: linear-gradient(90deg, var(--aa-blue), var(--aa-red));
+}
+.page::after {
+  content: "✈";
+  position: absolute;
+  right: 34px; bottom: -10px;
+  font-size: 240px;
+  color: var(--aa-blue);
+  opacity: .03;
+  transform: rotate(18deg);
+  pointer-events: none;
+}
+.page.cover {
+  background:
+    radial-gradient(circle at 85% 16%, rgba(0,48,135,.08), transparent 22%),
+    linear-gradient(180deg, #fbfcfe 0%, #f1f6fa 100%);
+}
+.footer {
+  position: absolute;
+  left: 88px; right: 88px; bottom: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5ebf1;
+  padding-top: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #7f8b97;
+}
+.footer .pn { color: var(--aa-blue); font-weight: 800; }
+
+/* ── Typography ── */
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--aa-red);
+}
+h1 {
+  margin-top: 22px;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--aa-blue);
+  font-weight: 850;
+  max-width: 820px;
+}
+h2 {
+  margin-top: 32px;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -.6px;
+  color: var(--aa-blue);
+  font-weight: 800;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+h3 { margin-top: 20px; font-size: 19px; color: var(--aa-blue); font-weight: 700; }
+h4 { margin-top: 16px; font-size: 16px; color: var(--ink); font-weight: 700; }
+p  { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #32404d; }
+ul, ol { margin-top: 10px; padding-left: 24px; }
+li { font-size: 15px; line-height: 1.55; color: #32404d; margin-top: 4px; }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  background: var(--soft-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+pre {
+  margin-top: 14px;
+  background: #1e2832;
+  color: #c9d1d9;
+  padding: 16px 18px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.4; }
+th { border-top: 0; background: var(--soft); color: var(--aa-blue); font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+blockquote { border-left: 4px solid var(--aa-blue); margin-top: 14px; padding: 10px 16px; background: var(--soft); color: var(--muted); font-size: 14px; }
+
+/* ── Meta / stat cards ── */
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; max-width: 820px; }
+.meta-card { border: 1px solid var(--line); background: #fff; padding: 16px 18px; }
+.meta-card .k { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: var(--aa-red); font-weight: 800; }
+.meta-card .v { margin-top: 7px; font-size: 17px; line-height: 1.4; color: #23303d; }
+.summary-band { margin-top: 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card { border: 1px solid var(--line); background: #fff; padding: 14px; }
+.stat-card .n { font-size: 34px; line-height: 1; color: var(--aa-blue); font-weight: 850; letter-spacing: -1px; }
+.stat-card .l { margin-top: 7px; font-size: 13px; line-height: 1.35; color: #52606d; }
+
+/* ── Status badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.status-badge.proposed  { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.implemented { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.archived  { background: var(--soft-2); color: var(--muted); border: 1px solid var(--line); }
+.status-badge.accepted  { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.deprecated { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.high   { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.medium { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.low    { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+
+/* ── Chip row ── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--aa-blue);
+  letter-spacing: .3px;
+}
+
+/* ── ADR header ── */
+.adr-header {
+  border: 2px solid var(--aa-blue);
+  padding: 20px 24px;
+  margin-top: 24px;
+  background: var(--soft);
+}
+.adr-header .adr-num { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); font-weight: 700; }
+.adr-header h1 { margin-top: 8px; font-size: 32px; }
+.adr-header .adr-meta { display: flex; gap: 20px; margin-top: 14px; align-items: center; flex-wrap: wrap; }
+.adr-header .adr-meta-item { font-size: 13px; color: var(--muted); }
+.adr-header .adr-meta-item strong { color: var(--ink); }
+
+/* ── Confidence band ── */
+.confidence-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-left: 6px solid var(--aa-blue);
+  background: var(--soft);
+  margin-top: 24px;
+}
+.confidence-band .cb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.confidence-band.high  { border-left-color: #1b7a2b; }
+.confidence-band.medium { border-left-color: #b36b00; }
+.confidence-band.low   { border-left-color: var(--aa-red); }
+
+/* ── Tasks / checklist ── */
+.task-done, .task-pending {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 5px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.task-done .cb   { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; background: #1b7a2b; border: 2px solid #1b7a2b; display: flex; align-items: center; justify-content: center; }
+.task-done .cb::after { content: "✓"; color: #fff; font-size: 11px; font-weight: 900; }
+.task-pending .cb { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; border: 2px solid var(--aa-blue); }
+.task-done .task-text   { color: #52606d; text-decoration: line-through; }
+.task-pending .task-text { color: #32404d; }
+.phase-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+.phase-num {
+  background: var(--aa-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+.progress-table { margin-top: 20px; }
+
+/* ── Law citation tooltips (Task 4.4) ── */
+.law-cite {
+  position: relative;
+  display: inline;
+  color: var(--aa-blue);
+  font-weight: 700;
+  border-bottom: 1px dashed var(--aa-blue);
+  cursor: help;
+  white-space: nowrap;
+}
+.law-cite[data-non-negotiable="true"] {
+  color: var(--aa-red);
+  border-bottom-color: var(--aa-red);
+}
+.law-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 9999;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2832;
+  color: #e8edf2;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: normal;
+  min-width: 220px;
+  max-width: 340px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: opacity .15s ease, visibility .15s ease;
+  text-align: left;
+  font-weight: 400;
+}
+.law-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e2832;
+}
+.law-tooltip .law-summary { font-size: 12px; color: #9aaab8; margin-top: 4px; display: block; }
+.law-tooltip em { color: #f0a500; font-style: normal; font-size: 11px; font-weight: 700; }
+.law-cite:hover .law-tooltip,
+.law-cite:focus .law-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+/* Flip tooltip below when near top of viewport */
+.law-cite.flip-below .law-tooltip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.law-cite.flip-below .law-tooltip::after {
+  top: auto; bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1e2832;
+}
+
+@media print {
+  .law-tooltip { display: none; }
+  .law-cite { border-bottom: none; color: inherit; font-weight: inherit; }
+}
+</style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+<!-- COVER PAGE -->
+<div class="page cover">
+  <div class="eyebrow">Hangar AI Constitution — Spec-Driven Development</div>
+  <div style="margin-top: 20px;">
+    <span class="status-badge proposed">PROPOSED</span>
+    
+  </div>
+  <h1>Governance Proposal</h1>
+  
+  
+  <div class="footer">
+    <div>Governance Proposal</div>
+    <div class="pn">1</div>
+  </div>
+</div>
+
+<!-- CONTENT PAGES -->
+<div class="page content">
+  <h1>PROPOSAL: Hangar AI Constitution — Complete Adoption Guide</h1>
+<p><strong>Changeset ID:</strong> <code>build-adoption-guide-2026-001</code>
+<strong>SDD Phase:</strong> PROPOSE
+<strong>Authority:</strong> <span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ (NON-NEGOTIABLE)
+<strong>Status:</strong> APPROVED — ADVANCE TO IMPLEMENT
+<strong>Version:</strong> 2.6 — SD-OBL-4 amendment (2026-05-07): <code>&lt; 20 min</code> → <code>&lt; 60 min</code> per Stage B interview evidence | Jury-cleared 2026-05-07
+<strong>Round 1 Summary:</strong> 79 objections across 6 jurors; 1 active BLOCK (<span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span>); 10 missing NN citations; 4 fabricated law titles; 3 misapplications; structural gaps in MVP scoping, personas, and compliance. All items remediated in v2.0.
+<strong>Round 2 Summary:</strong> 5 OBJECT / 1 APPROVE. 17 findings. All remediated in v2.1 (Teaching Loop, P3 outcome, coach mode, <span class="law-cite" data-law-id="ENG-2.3" data-non-negotiable="false">ENG-2.3<span class="law-tooltip"><strong>Vertical Slice Architecture Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> audit arch, <span class="law-cite" data-law-id="PRD-5.1" data-non-negotiable="true">PRD-5.1<span class="law-tooltip"><strong>MVP Law</strong> · <em>NON-NEGOTIABLE</em></span></span> Timeline, <span class="law-cite" data-law-id="PRD-5.3" data-non-negotiable="false">PRD-5.3<span class="law-tooltip"><strong>Experiment Design Law</strong></span></span> full experiment design, <span class="law-cite" data-law-id="PRD-3.3" data-non-negotiable="false">PRD-3.3<span class="law-tooltip"><strong>User Story Law</strong></span></span> user story task, <span class="law-cite" data-law-id="BUS-3.6" data-non-negotiable="true">BUS-3.6<span class="law-tooltip"><strong>Monetary Precision Law</strong> · <em>NON-NEGOTIABLE</em></span></span> scoped out, <span class="law-cite" data-law-id="BUS-3.3" data-non-negotiable="false">BUS-3.3<span class="law-tooltip"><strong>Data Retention Law</strong></span></span> calendar minimums, <span class="law-cite" data-law-id="BUS-9.3" data-non-negotiable="true">BUS-9.3<span class="law-tooltip"><strong>Breach Notification Law</strong> · <em>NON-NEGOTIABLE</em></span></span> DPO Stage B, R-08 <span class="law-cite" data-law-id="BUS-3.1" data-non-negotiable="true">BUS-3.1<span class="law-tooltip"><strong>Data Classification Law</strong> · <em>NON-NEGOTIABLE</em></span></span> added, evidence rubric, sonarqube-delta-schema.md, CI/CD spec, Vitest, Phase 0 gates closed, <span class="law-cite" data-law-id="PRD-6.3" data-non-negotiable="false">PRD-6.3<span class="law-tooltip"><strong>Pivot Criteria Law</strong></span></span> cited).
+<strong>Round 3 Summary:</strong> 4 OBJECT / 2 APPROVE. 6 findings. Remediated in v2.2: <span class="law-cite" data-law-id="PRD-5.1" data-non-negotiable="true">PRD-5.1<span class="law-tooltip"><strong>MVP Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ kill-if contradiction resolved; <span class="law-cite" data-law-id="ENG-11.3" data-non-negotiable="false">ENG-11.3<span class="law-tooltip"><strong>Spec Freshness Law</strong></span></span> freshness check OR-logic; <span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ SIEM scope-out; T3.2d added; T3.3f added; T4.8b clarified; crosswalk note P10; <span class="law-cite" data-law-id="ENG-1.4" data-non-negotiable="false">ENG-1.4<span class="law-tooltip"><strong>Incremental Improvement Law</strong></span></span> added; citation count 72; <span class="law-cite" data-law-id="BUS-3.6" data-non-negotiable="true">BUS-3.6<span class="law-tooltip"><strong>Monetary Precision Law</strong> · <em>NON-NEGOTIABLE</em></span></span> in R-08.
+<strong>Round 4 Summary:</strong> 2 OBJECT / 4 APPROVE. Remediated in v2.3: T6.1 §1.4 specified; <span class="law-cite" data-law-id="ENG-2.1" data-non-negotiable="false">ENG-2.1<span class="law-tooltip"><strong>Domain-Driven Design Law</strong></span></span>/2.2 scope-outs added; §2 MVT guardrail AND condition added; §12 R-08 updated to 6 anomalies; raci.md <span class="law-cite" data-law-id="BUS-1.3" data-non-negotiable="false">BUS-1.3<span class="law-tooltip"><strong>Accountability Law</strong></span></span> deferral; <span class="law-cite" data-law-id="ENG-10.1" data-non-negotiable="true">ENG-10.1<span class="law-tooltip"><strong>Constitution Metrics Collection Law</strong> · <em>NON-NEGOTIABLE</em></span></span>/<span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> titles confirmed; citation count 74.
+<strong>Round 5 Summary:</strong> 1 OBJECT / 5 APPROVE. Remediated in v2.4: §2 MVT quantifier &quot;2 of 3&quot; → &quot;≥ 2 of 3&quot; in both legs; §8 NOW bullet dual-condition added; R-08 escalation updated with 7th anomaly (ENG-12.x absent from law_ids.engineering).
+<strong>Round 6 Summary:</strong> 1 OBJECT / 5 APPROVE. Remediated in v2.5: §12 inline risk table row updated to &quot;7 anomalies total&quot; with ENG-12.x enumerated — body now consistent with the Round 5 Summary header declaration and the full risk-register.md escalation.
+<strong>Round 7 Summary:</strong> UNANIMOUS 6/6 APPROVE (2026-05-02). Alexandra Pierce constitutional clearance granted — all 23 NNs verified, all law titles confirmed non-fabricated, §12 body/escalation fully consistent. Proposal cleared to ADVANCE TO IMPLEMENT per <span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-11.2" data-non-negotiable="false">ENG-11.2<span class="law-tooltip"><strong>Proposal Completeness Law</strong></span></span>, <span class="law-cite" data-law-id="BUS-6.1" data-non-negotiable="true">BUS-6.1<span class="law-tooltip"><strong>Risk Assessment Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="BUS-1.1" data-non-negotiable="true">BUS-1.1<span class="law-tooltip"><strong>Priority Hierarchy Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔.</p>
+<hr />
+<h2>1. Problem Statement (<span class="law-cite" data-law-id="PRD-1.2" data-non-negotiable="true">PRD-1.2<span class="law-tooltip"><strong>Problem-First Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</h2>
+<p>Engineers, technical coaches, and senior architects adopting the Hangar AI Constitution encounter a fragmented onboarding experience. The laws, skills, avatars, and RAG model exist as isolated artifacts across <code>laws/</code>, <code>agent-skills/</code>, <code>avatars/</code>, and <code>docs/</code> — but there is no unified, navigable, persona-aware entry point connecting all components into a coherent adoption path.</p>
+<p><strong>Evidence Classification (<span class="law-cite" data-law-id="PRD-1.5" data-non-negotiable="true">PRD-1.5<span class="law-tooltip"><strong>Evidence-Based Decision Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔):</strong> WEAK — repository structural inspection only; no customer interviews on file at time of proposal. This is a known weak-evidence submission per <span class="law-cite" data-law-id="PRD-1.5" data-non-negotiable="true">PRD-1.5<span class="law-tooltip"><strong>Evidence-Based Decision Law</strong> · <em>NON-NEGOTIABLE</em></span></span>. A validation plan is provided below. Stage C (JTBD) WILL NOT begin until evidence is reclassified to Moderate (3+ structured interviews or equivalent quantitative proxy).</p>
+<p><strong>Observed Evidence (Repository Inspection):</strong></p>
+<ul>
+<li>No landing page exists — <code>README.md</code> is the only structural index</li>
+<li>No persona-based quick start exists for distinct adopter types</li>
+<li>The RAG model visualization has no parent navigation or guide context</li>
+<li>Technical coaches cannot present a single URL that walks a new team through adoption</li>
+<li>The SDD workflow guide (PROPOSE→IMPLEMENT→ARCHIVE) has no interactive reference format</li>
+<li>The 168 laws are navigable only by reading raw markdown files</li>
+<li>Avatar selection requires manual exploration of <code>avatars/</code> — no wizard or decision path</li>
+</ul>
+<p><strong><span class="law-cite" data-law-id="PRD-1.2" data-non-negotiable="true">PRD-1.2<span class="law-tooltip"><strong>Problem-First Law</strong> · <em>NON-NEGOTIABLE</em></span></span> Problem Template:</strong></p>
+<ul>
+<li><strong>Who:</strong> Technical coaches and senior architects onboarding new engineering teams to the Hangar AI Constitution</li>
+<li><strong>Problem:</strong> No unified, navigable, persona-aware entry point; adopters must manually explore 10+ fragmented entry points</li>
+<li><strong>Evidence:</strong> Repository inspection (WEAK — see validation plan below)</li>
+<li><strong>Frequency:</strong> Every new team onboarding; estimated 3–5 engagements per quarter per coach</li>
+<li><strong>Severity:</strong> HIGH — adoption friction compounds across every new team and project engagement</li>
+</ul>
+<p><strong>Validation Plan (<span class="law-cite" data-law-id="PRD-1.5" data-non-negotiable="true">PRD-1.5<span class="law-tooltip"><strong>Evidence-Based Decision Law</strong> · <em>NON-NEGOTIABLE</em></span></span> Weak Exception):</strong></p>
+<ul>
+<li>Stage B task: Conduct 3+ structured interviews with technical coaches who have onboarded teams to the constitution</li>
+<li>Stage B task: Collect quantitative proxy evidence from existing adoption logs, support channels, or ticket trackers</li>
+<li>Evidence artifact: <code>hangar-ai-specs/changes/build-adoption-guide-2026-001/stage-b-evidence.md</code></li>
+<li>Gate: Stage C WILL NOT begin until <code>stage-b-evidence.md</code> is filed AND jury-validated at Moderate or Strong</li>
+</ul>
+<hr />
+<h2>2. MVP Definition (<span class="law-cite" data-law-id="PRD-5.1" data-non-negotiable="true">PRD-5.1<span class="law-tooltip"><strong>MVP Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</h2>
+<blockquote>
+<p><em>&quot;MVPs SHALL be the smallest experiment to validate learning, not a crappy first version.&quot; — <span class="law-cite" data-law-id="PRD-5.1" data-non-negotiable="true">PRD-5.1<span class="law-tooltip"><strong>MVP Law</strong> · <em>NON-NEGOTIABLE</em></span></span></em></p>
+</blockquote>
+<p><strong>Riskiest Assumption:</strong> A unified landing page with persona-aware quick start paths (Technical Coach + Senior Architect) will meaningfully reduce time-to-first-successful-task compared to the current README-only entry point.</p>
+<p><strong>MVP Hypothesis:</strong> If we ship P1 (Landing Page) + P3 (Quick Start — Technical Coach and Senior Architect paths only), then first-successful-task time will decrease from the Stage B baseline (2–3 hours with README-only entry point) to &lt; 60 minutes, measured during 3+ facilitator-observed walkthroughs with real adopters. <em>(SD-OBL-4 amendment: original <code>&lt; 20 min</code> replaced by <code>&lt; 60 min</code> based on Stage B interview data — Jay Turpin: 2–3 hrs, Wyatt Sutherland: 1–3 hrs, Kenneth Robinson: 2 hrs. Evidence in stage-b-evidence.md §3.)</em></p>
+<p><strong>MVP Scope (NOW horizon only):</strong></p>
+<ul>
+<li>P1: Landing Page — navigation hub, 3-persona entry points</li>
+<li>P3: Quick Start Guide — Technical Coach and Senior Architect paths only</li>
+<li>P2: Registered (already built — connect landing navigation)</li>
+</ul>
+<p><strong>Out of MVP Scope (NEXT/LATER — pending MVP validation):</strong></p>
+<ul>
+<li>P4–P10 (deferred pending MVP validation signal)</li>
+<li>Engineer persona quick start path (deferred to NEXT)</li>
+<li>All analytics / behavioral telemetry (deferred behind <span class="law-cite" data-law-id="BUS-4.5" data-non-negotiable="false">BUS-4.5<span class="law-tooltip"><strong>Privacy Impact Assessment Law</strong></span></span> PIA — LATER only)</li>
+</ul>
+<p><strong>Minimum Validation Threshold:</strong> MVP is considered validated when ≥ 2 of 3 observed walkthroughs achieve first-successful-task in &lt; 60 minutes without facilitator prompting AND ≥ 2 of 3 adopters pass the guardrail metric (no misidentification of a non-negotiable law post-walkthrough). Both conditions must hold; task time alone is not sufficient. <em>(SD-OBL-4: <code>&lt; 20 min</code> → <code>&lt; 60 min</code> per Stage B evidence.)</em></p>
+<p><strong>Timeline (<span class="law-cite" data-law-id="PRD-5.1" data-non-negotiable="true">PRD-5.1<span class="law-tooltip"><strong>MVP Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ — sixth required field):</strong> The MVP experiment runs for 4 weeks after P1 + P3 ship. Walkthroughs are conducted within the first 2 weeks of ship. Retention signal is measured at Week 4 (2 weeks post-walkthrough). The go/no-go call is made at Week 4 — no later. The scheduling-failure kill trigger in the experiment table below is the sole governing rule for what happens if walkthroughs cannot be scheduled; see kill-if row.</p>
+<p><strong>Experiment Design (<span class="law-cite" data-law-id="PRD-5.3" data-non-negotiable="false">PRD-5.3<span class="law-tooltip"><strong>Experiment Design Law</strong></span></span>):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hypothesis</strong></td>
+<td>If we ship P1 + P3 (Technical Coach and Senior Architect paths), then first-successful-task time will decrease from the Stage B baseline (2–3 hrs) to &lt; 60 min, for ≥ 2 of 3 real adopters</td>
+</tr>
+<tr>
+<td><strong>Experiment type</strong></td>
+<td>Concierge — facilitator-observed walkthroughs with real Technical Coaches and Senior Architects using the live guide</td>
+</tr>
+<tr>
+<td><strong>Control condition</strong></td>
+<td>Current <code>README.md</code>-only entry point — baseline task time formally measured in Stage B as part of assumption mapping; used as the comparison denominator in Stage E</td>
+</tr>
+<tr>
+<td><strong>Primary metric</strong></td>
+<td>First-successful-task time (stopwatch: landing page load → adopter declares task complete, without facilitator prompt)</td>
+</tr>
+<tr>
+<td><strong>Secondary metric</strong></td>
+<td>Adopter retention signal: returns to guide ≥ 2 times within 2 weeks of walkthrough (self-reported)</td>
+</tr>
+<tr>
+<td><strong>Guardrail metric</strong></td>
+<td>Adopter does not misidentify a non-negotiable (⛔) law — verified by Technical Coach juror post-walkthrough verbal check. A walkthrough that passes on task time but produces NN law misconceptions is not counted as a success.</td>
+</tr>
+<tr>
+<td><strong>Sample</strong></td>
+<td>n ≥ 3 real adopters (Technical Coaches or Senior Architects); n=3 is below statistical significance threshold — this is explicitly acknowledged; the experiment tests for signal, not significance</td>
+</tr>
+<tr>
+<td><strong>Segments</strong></td>
+<td>Included: Technical Coaches and Senior Architects who have worked on at least one AA project under the constitution. Excluded: Engineers (path not in MVP scope), adopters with &lt; 1 week familiarity with the constitution</td>
+</tr>
+<tr>
+<td><strong>Ship if</strong></td>
+<td>≥ 2 of 3 walkthroughs achieve task time &lt; 60 min AND ≥ 2 of 3 adopters pass the guardrail metric</td>
+</tr>
+<tr>
+<td><strong>Iterate if</strong></td>
+<td>1 of 3 walkthroughs succeed on task time; or all pass task time but 1 fails guardrail — team narrows scope or revises P3 path structure, then re-runs 1 additional walkthrough</td>
+</tr>
+<tr>
+<td><strong>Kill if</strong></td>
+<td>(a) 0 of 3 walkthroughs achieve task time &lt; 60 min; or (b) 2 of 3 fail the guardrail metric; or (c) walkthroughs cannot be scheduled within 2 weeks of P1+P3 ship date — one-time 1-week extension is permitted if a scheduling blocker is documented in the risk register; if walkthroughs still cannot begin by week 3, kill fires. When any kill criterion fires, the team re-enters Stage D and re-validates IA design before any new build. No further extensions permitted.</td>
+</tr>
+<tr>
+<td><strong>Minimum detectable effect</strong></td>
+<td>Not statistically computable at n=3. Effect size must be directionally large (&gt; 50% reduction in task time) to be meaningful at this sample size. A reduction from 45 min to 44 min is not a signal.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Build-Measure-Learn Trigger (<span class="law-cite" data-law-id="PRD-5.2" data-non-negotiable="false">PRD-5.2<span class="law-tooltip"><strong>Build-Measure-Learn Law</strong></span></span>):</strong> If kill criteria are met, the team pivots scope (narrow persona paths or restructure information architecture) before proceeding to P4–P10. Pivot path: re-enter Stage D; file <code>stage-d-evidence.md</code> v2; jury deliberation before new build.</p>
+<p><strong>Pivot Criteria (<span class="law-cite" data-law-id="PRD-6.3" data-non-negotiable="false">PRD-6.3<span class="law-tooltip"><strong>Pivot Criteria Law</strong></span></span>):</strong> The experiment is killed and scope is pivoted if: (a) kill-if criteria are met per table above; or (b) Stage B interviews reveal the problem as stated in §1 is not validated — in this case the team returns to Stage B and re-files <code>stage-b-evidence.md</code> with updated problem framing before proceeding.</p>
+<hr />
+<h2>3. Full Solution Vision (Stage D — Aspirational, Pending MVP Validation)</h2>
+<p>Build a <strong>10-page self-contained HTML adoption guide</strong> that serves as the authoritative, navigable front-door to the Hangar AI Constitution for technical coaches and senior architects onboarding new teams.</p>
+<h3>Personas (<span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span> — Minimum 5 Interviews Required Before Stage C)</h3>
+<p>Three human personas are defined. All three require evidence-based validation (5+ interviews per persona per <span class="law-cite" data-law-id="PRD-3.1" data-non-negotiable="false">PRD-3.1<span class="law-tooltip"><strong>Persona Development Law</strong></span></span>) before information architecture is confirmed in Stage C.</p>
+<table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Primary Need</th>
+<th>Entry Point</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Technical Coach</strong></td>
+<td>Facilitate team onboarding; present a single URL; apply Socratic guidance (AGENT.md §1.2–1.3) to lead engineers to discovery; use Discovery and Planning operating modes (AGENT.md §4.1, §4.2) as primary onboarding modes</td>
+<td>P1 → P3 (Coach path) → P7, P8</td>
+</tr>
+<tr>
+<td><strong>Senior Architect</strong></td>
+<td>Evaluate architectural alignment; understand law precedence; map DDD patterns to constitution</td>
+<td>P1 → P3 (Architect path) → P2, P4, P10</td>
+</tr>
+<tr>
+<td><strong>Engineer</strong></td>
+<td>Implement constitutionally; quick start on TDD gates, skill triggers, SDD workflow</td>
+<td>P1 → P3 (Engineer path) → P5, P7, P8, P9</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>AI Agent is NOT a learning persona.</strong> An AI agent is an operating mode defined in AGENT.md §4 — it is a system component in the RAG model, not a human adopter navigating a guide. (Round 1 finding: Maya Chen OBJECT-3.)</p>
+<p><strong>New Project is NOT a persona.</strong> It is a context or trigger, not a person with goals and jobs-to-be-done. (Round 1 finding: Maya Chen OBJECT-4.)</p>
+</blockquote>
+<h3><span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span> Architecture Decision</h3>
+<p>All pages are self-contained HTML with no external stylesheet or script dependencies. Shared navigation, design tokens, and the AA gradient bar are inlined per <code>aa-artifact-render</code> production. No shared CSS files. This is a constitutional requirement, not an implementation preference.</p>
+<h3><span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span> Requirement — Citation Transparency on All Pages</h3>
+<p>Every law citation across all 10 pages SHALL use the <code>&lt;span class=&quot;law-cite&quot;&gt;</code> tooltip pattern, sourcing law title, NN status, and summary from <code>laws/index.yaml</code> YAML frontmatter. The <code>aa-artifact-render</code> tool handles this automatically when invoked with the <code>--laws-dir</code> flag.</p>
+<h3>JavaScript Test Infrastructure (<span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, Jordan OBJECT-16)</h3>
+<p>Pages P4 (search JS) and P6 (wizard JS) contain inline JavaScript that must be tested per <span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ Atomic TDD before ship.</p>
+<ul>
+<li><strong>Test framework:</strong> <a href="https://vitest.dev/">Vitest</a> — chosen for zero-config setup, ES module support, and compatibility with inline-script extraction from HTML files</li>
+<li><strong>Runner invocation:</strong> <code>npx vitest run</code> — runs once; exits with non-zero code on failure; suitable for CI</li>
+<li><strong>Test-to-inline-HTML pipeline:</strong> Test files live alongside source (<code>p4-search.test.js</code>, <code>p6-wizard.test.js</code>). The build step extracts the inline <code>&lt;script&gt;</code> content from each HTML file into a separate module-compatible <code>.js</code> file, runs tests against that module, then re-inlines the verified script into the final HTML. The extracted <code>.js</code> files are build artifacts — not committed to the repository.</li>
+<li><strong>Gate G4 enforcement:</strong> CI runs <code>npx vitest run</code> before the HTML is finalized. A failing test blocks the render. Setup task: added to Phase 3 in tasks.md (T3.3).</li>
+</ul>
+<h3>Generation Pipeline (<span class="law-cite" data-law-id="ENG-11.3" data-non-negotiable="false">ENG-11.3<span class="law-tooltip"><strong>Spec Freshness Law</strong></span></span> — Spec Freshness)</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Source</th>
+<th>Max Staleness</th>
+<th>Trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P4 Laws Reference</td>
+<td><code>laws/index.yaml</code> + all <code>laws/*/*.md</code> frontmatter</td>
+<td>30 days or on any law registry change</td>
+<td>GitHub Actions on push to <code>laws/</code></td>
+</tr>
+<tr>
+<td>P5 Skills Catalog</td>
+<td><code>agent-skills/*/index.yaml</code> + <code>AVATAR-RAG-INDEX.yaml</code></td>
+<td>30 days or on skill index change</td>
+<td>GitHub Actions on push to <code>agent-skills/</code></td>
+</tr>
+<tr>
+<td>P2 AI Model Viz</td>
+<td><code>laws/index.yaml</code>, <code>AGENT.md</code>, all skill <code>index.yaml</code>, <code>AVATAR-RAG-INDEX.yaml</code></td>
+<td>30 days or on any RAG source change</td>
+<td>GitHub Actions on push to any source</td>
+</tr>
+<tr>
+<td>P6 Avatar Wizard</td>
+<td><code>AVATAR-RAG-INDEX.yaml</code> + <code>avatars/</code></td>
+<td>30 days or on avatar index change</td>
+<td>GitHub Actions on push to <code>avatars/</code></td>
+</tr>
+<tr>
+<td>P1, P3, P7–P10</td>
+<td>Manual source — law IDs verified against registry</td>
+<td>30 days or on registry version bump</td>
+<td>Manual with freshness check gate</td>
+</tr>
+</tbody>
+</table>
+<p>CI/CD enforcement: A GitHub Actions workflow validates source freshness on every PR. PRs that would advance a page beyond its staleness threshold are blocked until re-generated.</p>
+<p><strong>CI/CD Freshness Workflow Specification (<span class="law-cite" data-law-id="ENG-11.3" data-non-negotiable="false">ENG-11.3<span class="law-tooltip"><strong>Spec Freshness Law</strong></span></span>, Jordan OBJECT-15):</strong></p>
+<ul>
+<li><strong>Workflow filename:</strong> <code>.github/workflows/freshness-check.yml</code></li>
+<li><strong>Trigger:</strong> Every PR and every push to <code>main</code></li>
+<li><strong>Staleness detection mechanism:</strong> Each generated page (P2, P4, P5, P6) embeds a <code>data-source-commit</code> HTML attribute containing the git SHA of the source file at generation time. The workflow reads this attribute and compares it to the current HEAD SHA of the source. <strong>The check fails if the source SHA has changed since last render OR if the page's embedded timestamp is &gt; 30 days old</strong> — these are independent failure conditions (OR-logic). A source change invalidates the page immediately, regardless of age; and a page not regenerated within 30 days is stale regardless of whether the source changed. This ensures <span class="law-cite" data-law-id="ENG-11.3" data-non-negotiable="false">ENG-11.3<span class="law-tooltip"><strong>Spec Freshness Law</strong></span></span> compliance: no stale auto-generated page can merge even within the first 30 days after a source update.</li>
+<li><strong>PR-blocking spec:</strong> The workflow exits with a non-zero status code on staleness failure. The repository's branch protection rule on <code>main</code> includes <code>freshness-check</code> as a required status check — PRs cannot be merged with a failing freshness check.</li>
+<li><strong>Manual page coverage (P1, P3, P7–P10):</strong> These pages have no auto-generated source. The workflow checks whether <code>laws/index.yaml</code> version has bumped since the page was last rendered (by reading a <code>data-registry-version</code> attribute). If the registry version changed, the workflow posts a PR comment flagging the page for manual review and fails the check until a re-render is committed.</li>
+<li><strong>CI/CD setup task:</strong> Added to Phase 3 in tasks.md (T3.0 — before SonarQube provisioning).</li>
+</ul>
+<h3>Learning Arc (<span class="law-cite" data-law-id="ENG-1.2" data-non-negotiable="false">ENG-1.2<span class="law-tooltip"><strong>AI-Engineer Pairing Law</strong></span></span> — Teaching Loop, AGENT.md §1.4)</h3>
+<p>The full guide follows the constitutional Teaching Feedback Loop as defined in AGENT.md §1.4. The six canonical stages are applied to the guide's page sequence:</p>
+<table>
+<thead>
+<tr>
+<th>Stage (AGENT.md §1.4)</th>
+<th>Pages</th>
+<th>Teaching Loop Application</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Observe</strong> — Identify what the adopter is trying to accomplish</td>
+<td>P1</td>
+<td>Adopter sees the full system at a glance; coach identifies adopter's entry goal</td>
+</tr>
+<tr>
+<td><strong>Guide</strong> — Ask questions to lead to discovery</td>
+<td>P3</td>
+<td>Adopter selects their persona path; Socratic coaching questions (per §1.3) replace prescriptive instructions</td>
+</tr>
+<tr>
+<td><strong>Explain</strong> — Provide constitutional context and rationale</td>
+<td>P2, P4, P5</td>
+<td>RAG model authority hierarchy, 168 laws with rationale, skills and their law bindings explained</td>
+</tr>
+<tr>
+<td><strong>Demonstrate</strong> — Show good vs. bad examples</td>
+<td>P6, P7</td>
+<td>Avatar wizard shows correct vs. incorrect selection; SDD workflow annotates compliant vs. non-compliant folder structures</td>
+</tr>
+<tr>
+<td><strong>Verify</strong> — Confirm understanding before proceeding</td>
+<td>P8, P9</td>
+<td>Adopter self-certifies compliance checklist; HARD_BLOCK conditions require adopter to articulate the correct response</td>
+</tr>
+<tr>
+<td><strong>Reinforce</strong> — Connect to broader principles for lasting learning</td>
+<td>P10</td>
+<td>Amendment process connects current law to constitutional evolution; adopter sees how their daily work feeds the governance system</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note on crosswalk:</strong> This application maps the Teaching Loop to a documentation guide context. The canonical loop is designed for agent–engineer pair interactions (AGENT.md §1.4). Pages P3, P8, and P10 are the most direct equivalents — the coach actively applies Guide, Verify, and Reinforce steps in facilitated walkthroughs.</p>
+</blockquote>
+<p><strong>Socratic Design Requirement:</strong> Every page SHALL include a &quot;Questions to Explore&quot; block with 3–5 open-ended coaching prompts. These prompts SHALL have no predefined answers within the page — they are discussion starters for a Technical Coach to use with their team.</p>
+<h3>Deliverables — 10-Page Guide</h3>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Title</th>
+<th>Purpose</th>
+<th>Teaching Loop Stage</th>
+<th>Primary Laws</th>
+<th>Per-Page Learning Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>Landing Page</td>
+<td>Navigation hub, constitution overview, 3-persona entry points</td>
+<td>Observe</td>
+<td><span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="PRD-1.1" data-non-negotiable="false">PRD-1.1<span class="law-tooltip"><strong>Customer-Centric Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span></td>
+<td>Adopter identifies their persona and navigates to their entry point</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>Constitutional AI Model Viz</td>
+<td>RAG model, authority hierarchy, skill system, feedback loop <em>(BUILT)</em></td>
+<td>Explain</td>
+<td><span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span></td>
+<td>Adopter describes all 5 RAG components and their authority relationships</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>Quick Start Guide</td>
+<td>Persona-based entry: Technical Coach / Senior Architect / Engineer</td>
+<td>Guide</td>
+<td><span class="law-cite" data-law-id="ENG-1.2" data-non-negotiable="false">ENG-1.2<span class="law-tooltip"><strong>AI-Engineer Pairing Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span></td>
+<td>Adopter identifies the first constitutional principle relevant to their context and can explain WHY it applies (not just WHAT it says)</td>
+</tr>
+<tr>
+<td>P4</td>
+<td>Laws Reference</td>
+<td>Searchable 168 laws, 3 domains, NN flags, article structure</td>
+<td>Explain</td>
+<td><span class="law-cite" data-law-id="ENG-10.1" data-non-negotiable="true">ENG-10.1<span class="law-tooltip"><strong>Constitution Metrics Collection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ (search JS), <span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span></td>
+<td>Adopter locates any law by ID, title, or keyword and interprets NN status</td>
+</tr>
+<tr>
+<td>P5</td>
+<td>Skills Catalog</td>
+<td>29+ skills, trigger phrases, law bindings, operating modes</td>
+<td>Explain</td>
+<td><span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span></td>
+<td>Adopter identifies 3+ skills relevant to their project context and finds their triggers</td>
+</tr>
+<tr>
+<td>P6</td>
+<td>Avatar Selection Wizard</td>
+<td>Interactive: tech stack → laws + skills</td>
+<td>Demonstrate</td>
+<td><span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ (wizard JS), <span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span></td>
+<td>Adopter selects appropriate avatar and justifies selection against RAG model</td>
+</tr>
+<tr>
+<td>P7</td>
+<td>SDD Workflow Guide</td>
+<td>PROPOSE→IMPLEMENT→ARCHIVE folder contract, <span class="law-cite" data-law-id="ENG-11.2" data-non-negotiable="false">ENG-11.2<span class="law-tooltip"><strong>Proposal Completeness Law</strong></span></span> checklist</td>
+<td>Demonstrate</td>
+<td><span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-11.2" data-non-negotiable="false">ENG-11.2<span class="law-tooltip"><strong>Proposal Completeness Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span></td>
+<td>Adopter scaffolds a compliant PROPOSE artifact with zero external help</td>
+</tr>
+<tr>
+<td>P8</td>
+<td>Compliance Checklist</td>
+<td>Phase gates, SonarQube protocol, <span class="law-cite" data-law-id="ENG-12.1" data-non-negotiable="true">ENG-12.1<span class="law-tooltip"><strong>Agentic Feedback Loop Law</strong> · <em>NON-NEGOTIABLE</em></span></span> feedback loop</td>
+<td>Verify</td>
+<td><span class="law-cite" data-law-id="ENG-12.1" data-non-negotiable="true">ENG-12.1<span class="law-tooltip"><strong>Agentic Feedback Loop Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-12.2" data-non-negotiable="false">ENG-12.2<span class="law-tooltip"><strong>Dashboard-First Development Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-12.3" data-non-negotiable="false">ENG-12.3<span class="law-tooltip"><strong>External Referee Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span></td>
+<td>Adopter completes a full phase gate without facilitator prompting</td>
+</tr>
+<tr>
+<td>P9</td>
+<td>Agentic Feedback Loop Guide</td>
+<td>Human-in-the-loop contract, HARD_BLOCK conditions, gate diagrams</td>
+<td>Verify</td>
+<td><span class="law-cite" data-law-id="ENG-12.1" data-non-negotiable="true">ENG-12.1<span class="law-tooltip"><strong>Agentic Feedback Loop Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span></td>
+<td>Adopter recognizes a HARD_BLOCK condition and executes the correct response</td>
+</tr>
+<tr>
+<td>P10</td>
+<td>Amendment Process</td>
+<td>ENG-10.x governance, law precedence, NN amendment path</td>
+<td>Reinforce</td>
+<td><span class="law-cite" data-law-id="ENG-10.1" data-non-negotiable="true">ENG-10.1<span class="law-tooltip"><strong>Constitution Metrics Collection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-10.2" data-non-negotiable="false">ENG-10.2<span class="law-tooltip"><strong>Enforcement Tracking Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-10.3" data-non-negotiable="false">ENG-10.3<span class="law-tooltip"><strong>Compliance Reporting Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-10.4" data-non-negotiable="false">ENG-10.4<span class="law-tooltip"><strong>Constitution Health Dashboard Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-10.5" data-non-negotiable="false">ENG-10.5<span class="law-tooltip"><strong>Law Effectiveness Measurement Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span></td>
+<td>Adopter describes the amendment process and which laws require executive approval</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>4. Success Criteria (<span class="law-cite" data-law-id="PRD-1.3" data-non-negotiable="false">PRD-1.3<span class="law-tooltip"><strong>Outcome-Driven Law</strong></span></span> — Outcome-Driven)</h2>
+<h3>Process Gates — All Required Before Phase Advances</h3>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Requirement</th>
+<th>Law Authority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>G1</strong></td>
+<td><code>PROPOSAL.md</code> and <code>tasks.md</code> rendered as HTML+PDF via <code>aa-artifact-render</code> before any jury deliberation</td>
+<td><span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-13.3" data-non-negotiable="false">ENG-13.3<span class="law-tooltip"><strong>PDF Reproducibility Law</strong></span></span></td>
+</tr>
+<tr>
+<td><strong>G2</strong></td>
+<td>SonarQube provisioned, <code>.sonar-token</code> in <code>.gitignore</code>, dashboard open before Phase 1 IMPLEMENT begins</td>
+<td><span class="law-cite" data-law-id="ENG-12.1" data-non-negotiable="true">ENG-12.1<span class="law-tooltip"><strong>Agentic Feedback Loop Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</td>
+</tr>
+<tr>
+<td><strong>G3</strong></td>
+<td><code>stage-b-evidence.md</code> filed and jury-validated at Moderate evidence before Stage C begins</td>
+<td><span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="PRD-1.5" data-non-negotiable="true">PRD-1.5<span class="law-tooltip"><strong>Evidence-Based Decision Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</td>
+</tr>
+<tr>
+<td><strong>G4</strong></td>
+<td>Atomic TDD cycles confirmed for all JavaScript in P4 (search) and P6 (wizard) before ship</td>
+<td><span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</td>
+</tr>
+<tr>
+<td><strong>G5</strong></td>
+<td>Threat model filed in <code>compliance/threat-model.md</code> before Stage C</td>
+<td><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</td>
+</tr>
+<tr>
+<td><strong>G6</strong></td>
+<td>Data classification table filed in <code>compliance/data-classification.md</code> before Stage C</td>
+<td><span class="law-cite" data-law-id="BUS-3.1" data-non-negotiable="true">BUS-3.1<span class="law-tooltip"><strong>Data Classification Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-6.4" data-non-negotiable="true">ENG-6.4<span class="law-tooltip"><strong>Data Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</td>
+</tr>
+<tr>
+<td><strong>G7</strong></td>
+<td>Risk assessment filed in <code>compliance/risk-register.md</code> before Stage C</td>
+<td><span class="law-cite" data-law-id="BUS-6.1" data-non-negotiable="true">BUS-6.1<span class="law-tooltip"><strong>Risk Assessment Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</td>
+</tr>
+<tr>
+<td><strong>G8</strong></td>
+<td>WCAG 2.1 AA accessibility audit + ADA / Section 508 / 14 CFR Part 382 determination obtained before final release</td>
+<td><span class="law-cite" data-law-id="BUS-1.1" data-non-negotiable="true">BUS-1.1<span class="law-tooltip"><strong>Priority Hierarchy Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="BUS-2.3" data-non-negotiable="true">BUS-2.3<span class="law-tooltip"><strong>DOT Consumer Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</td>
+</tr>
+<tr>
+<td><strong>G9</strong></td>
+<td>Privacy Impact Assessment (PIA) completed and filed before any analytics feature ships</td>
+<td><span class="law-cite" data-law-id="BUS-4.5" data-non-negotiable="false">BUS-4.5<span class="law-tooltip"><strong>Privacy Impact Assessment Law</strong></span></span>, <span class="law-cite" data-law-id="BUS-4.3" data-non-negotiable="true">BUS-4.3<span class="law-tooltip"><strong>Data Subject Rights Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</td>
+</tr>
+<tr>
+<td><strong>G10</strong></td>
+<td>SonarQube gate PASS + <code>hangar-ai-specs/evidence/sonarqube-delta.md</code> filed before archive</td>
+<td><span class="law-cite" data-law-id="ENG-12.1" data-non-negotiable="true">ENG-12.1<span class="law-tooltip"><strong>Agentic Feedback Loop Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</td>
+</tr>
+<tr>
+<td><strong>G11</strong></td>
+<td><code>sonarqube-delta.md</code> filed at end of every session in <code>hangar-ai-specs/evidence/</code></td>
+<td><span class="law-cite" data-law-id="ENG-12.1" data-non-negotiable="true">ENG-12.1<span class="law-tooltip"><strong>Agentic Feedback Loop Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</td>
+</tr>
+</tbody>
+</table>
+<h3>Evidence Strength Rubric (<span class="law-cite" data-law-id="PRD-1.5" data-non-negotiable="true">PRD-1.5<span class="law-tooltip"><strong>Evidence-Based Decision Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</h3>
+<p>The following rubric governs evidence classification at each stage gate. The G3 gate (Stage B exit) requires Moderate or Strong before Stage C begins. This rubric is non-negotiable — a juror may challenge any classification that does not meet the criteria.</p>
+<table>
+<thead>
+<tr>
+<th>Classification</th>
+<th>Criteria</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Weak</strong></td>
+<td>Repository / structural inspection only; no direct contact with real adopters; no interview on file; or: fewer than 3 interviews conducted; or: interviews conducted but findings not corroborated across participants</td>
+<td>Stage A: README gap analysis (current stage)</td>
+</tr>
+<tr>
+<td><strong>Moderate</strong></td>
+<td>3–5 structured interviews conducted with real adopters from the target persona group; findings documented and internally consistent across ≥ 3 participants; OR a compelling quantitative proxy corroborating the qualitative gap (e.g., ≥ 20 support tickets with identical pattern); jury-validated by Priya Kapoor at Stage B gate</td>
+<td>Stage B target: 3+ Technical Coach interviews with consistent &quot;no single URL&quot; finding</td>
+</tr>
+<tr>
+<td><strong>Strong</strong></td>
+<td>5+ structured interviews per persona; consistent themes confirmed across multiple data sources (qualitative + quantitative); no material contradictions across interview participants; quantitative evidence directionally agrees with qualitative findings</td>
+<td>Stage C target: 5+ interviews per persona + ticket/log proxy + consistent JTBD framing</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Evidence classification decisions are made by Priya Kapoor (Product Owner) and ratified by the full jury at each stage gate. The agent cannot self-classify above Weak without at least one real adopter interview on file.</p>
+</blockquote>
+<h3>SonarQube Delta Schema (<span class="law-cite" data-law-id="ENG-12.1" data-non-negotiable="true">ENG-12.1<span class="law-tooltip"><strong>Agentic Feedback Loop Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, Gates G10/G11)</h3>
+<p>The <code>hangar-ai-specs/evidence/sonarqube-delta.md</code> file MUST conform to the following schema at every session-end filing. The schema is defined in <code>compliance/sonarqube-delta-schema.md</code>. Required fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scan-id</code></td>
+<td>UUID</td>
+<td>Unique identifier for the SonarQube scan run</td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td>ISO 8601</td>
+<td>Date and time of scan execution</td>
+</tr>
+<tr>
+<td><code>gate-result</code></td>
+<td><code>PASS</code> or <code>FAIL</code></td>
+<td>SonarQube quality gate result</td>
+</tr>
+<tr>
+<td><code>delta-summary</code></td>
+<td>Dict</td>
+<td>Changed metrics vs. previous scan (coverage %, new issues, resolved issues, code smells added/removed)</td>
+</tr>
+<tr>
+<td><code>human-reviewer</code></td>
+<td>String</td>
+<td>Name of the person who opened the SonarQube dashboard and reviewed results</td>
+</tr>
+<tr>
+<td><code>sign-off</code></td>
+<td>Boolean + ISO 8601 timestamp</td>
+<td>Human reviewer confirmation that results were reviewed before proceeding</td>
+</tr>
+<tr>
+<td><code>session-context</code></td>
+<td>String</td>
+<td>Which phase/task was in progress at time of scan</td>
+</tr>
+</tbody>
+</table>
+<p>Filing a <code>sonarqube-delta.md</code> with missing required fields is equivalent to not filing it — Gate G11 is not satisfied until all fields are present.</p>
+<h3>Outcome Metrics</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Target</th>
+<th>Measurement Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First-successful-task time — adopter independently scaffolds a constitutionally valid task without facilitator prompt</td>
+<td>&lt; 60 min from landing page <em>(SD-OBL-4: <code>&lt; 20 min</code> → <code>&lt; 60 min</code> per Stage B)</em></td>
+<td>3+ facilitator-observed walkthroughs; stopwatch start = landing page load, stop = adopter declares task complete</td>
+</tr>
+<tr>
+<td>Per-page learning outcome met (adopter articulates outcome statement unprompted)</td>
+<td>≥ 8 of 10 pages pass</td>
+<td>Post-walkthrough verbal assessment by Technical Coach juror</td>
+</tr>
+<tr>
+<td><span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span> compliance — all 10 pages self-contained HTML (no external dependencies)</td>
+<td>10 / 10</td>
+<td>Alexandra Pierce code review before release</td>
+</tr>
+<tr>
+<td>Law citation accuracy — zero invented laws across all 10 pages</td>
+<td>100%</td>
+<td>Verified against <code>laws/index.yaml</code> v2.0.0 by Alexandra Pierce</td>
+</tr>
+<tr>
+<td><span class="law-cite" data-law-id="ENG-13.2" data-non-negotiable="false">ENG-13.2<span class="law-tooltip"><strong>Citation Transparency Law</strong></span></span> tooltip coverage — all citations have inline tooltips with correct law metadata</td>
+<td>100%</td>
+<td>Automated count: span.law-cite count ≥ citation ID count in source</td>
+</tr>
+<tr>
+<td>All 168 laws present in P4 Laws Reference</td>
+<td>100%</td>
+<td>Code-generated diff against <code>laws/index.yaml</code>; zero manual entries</td>
+</tr>
+<tr>
+<td>Adopter retention signal — adopter returns to guide for reference ≥ 2 times within 2 weeks of MVP walkthrough</td>
+<td>≥ 2 of 3 MVP participants</td>
+<td>Self-reported follow-up at Week 2 (no tracking pixels or analytics in MVP)</td>
+</tr>
+<tr>
+<td>Jury unanimous approval</td>
+<td>Required — ALL 6 jurors</td>
+<td>See §6</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>5. <span class="law-cite" data-law-id="ENG-10.1" data-non-negotiable="true">ENG-10.1<span class="law-tooltip"><strong>Constitution Metrics Collection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> Compliance Instrumentation (Constitution Metrics Collection)</h2>
+<p>The adoption guide is a governed system artifact. Metrics collection instrumented per <span class="law-cite" data-law-id="ENG-10.1" data-non-negotiable="true">ENG-10.1<span class="law-tooltip"><strong>Constitution Metrics Collection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ requirements:</p>
+<ol>
+<li><strong>Compliance rate per law / team / project</strong> — tracked via structured walkthrough observation forms (not behavioral analytics, avoiding PIA dependency in MVP)</li>
+<li><strong>Naming conventions</strong> — all metric event names SHALL use the <code>aa.adoption_guide.&lt;page&gt;.&lt;event&gt;</code> pattern, consistent with org-wide telemetry conventions</li>
+<li><strong>Real-time collection</strong> — metrics collected at the time of enforcement (walkthrough observation), not batched retroactively</li>
+<li><strong>PII exclusion</strong> — no PII in metric dimensions; session IDs are ephemeral and non-identifiable</li>
+<li><strong>Production analytics</strong> (LATER horizon only) — gated behind <span class="law-cite" data-law-id="BUS-4.5" data-non-negotiable="false">BUS-4.5<span class="law-tooltip"><strong>Privacy Impact Assessment Law</strong></span></span> PIA; page-level events (load, navigation) classified as Internal per <span class="law-cite" data-law-id="BUS-3.1" data-non-negotiable="true">BUS-3.1<span class="law-tooltip"><strong>Data Classification Law</strong> · <em>NON-NEGOTIABLE</em></span></span>; full analytics spec requires <span class="law-cite" data-law-id="BUS-4.5" data-non-negotiable="false">BUS-4.5<span class="law-tooltip"><strong>Privacy Impact Assessment Law</strong></span></span> PIA before instrumentation</li>
+</ol>
+<hr />
+<h2>6. Jury — Deliberation Panel</h2>
+<p>All tasks require <strong>UNANIMOUS approval</strong> across all 6 jury members before progressing.
+<strong>Alexandra Pierce holds BLOCKING VETO authority</strong> on any non-negotiable law violation.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Juror</th>
+<th>Role</th>
+<th>Constitution Focus</th>
+<th>Veto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Tomás Reyes</strong></td>
+<td>Senior Architect</td>
+<td>ENG-2.x: DDD, layered architecture, vertical slice integrity</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Maya Chen</strong></td>
+<td>Technical Coach</td>
+<td><span class="law-cite" data-law-id="ENG-1.2" data-non-negotiable="false">ENG-1.2<span class="law-tooltip"><strong>AI-Engineer Pairing Law</strong></span></span>: Teaching-first, skill alignment, pedagogical clarity</td>
+<td>—</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Jordan Ellis</strong></td>
+<td>Staff Engineer / DevX</td>
+<td>Developer experience, quick-start usability, adoption friction</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Priya Kapoor</strong></td>
+<td>Product Owner</td>
+<td><span class="law-cite" data-law-id="PRD-1.2" data-non-negotiable="true">PRD-1.2<span class="law-tooltip"><strong>Problem-First Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="PRD-1.5" data-non-negotiable="true">PRD-1.5<span class="law-tooltip"><strong>Evidence-Based Decision Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="PRD-1.3" data-non-negotiable="false">PRD-1.3<span class="law-tooltip"><strong>Outcome-Driven Law</strong></span></span>: Outcome-Driven</td>
+<td>—</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Carlos Mendez</strong></td>
+<td>Compliance Officer</td>
+<td><span class="law-cite" data-law-id="BUS-1.1" data-non-negotiable="true">BUS-1.1<span class="law-tooltip"><strong>Priority Hierarchy Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, aviation regulations, data governance</td>
+<td>—</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Alexandra Pierce</strong></td>
+<td>Constitutional Lawyer <em>(Sub-Agent)</em></td>
+<td>ALL domains — NON-NEGOTIABLE watchdog. Active session monitor.</td>
+<td><strong>⛔ VETO</strong></td>
+</tr>
+</tbody>
+</table>
+<h3>Deliberation Protocol</h3>
+<ol>
+<li>Agent presents completed deliverable to jury; artifacts pre-rendered per <span class="law-cite" data-law-id="ENG-13.1" data-non-negotiable="true">ENG-13.1<span class="law-tooltip"><strong>Artifact Rendering Standard</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ and <span class="law-cite" data-law-id="ENG-13.3" data-non-negotiable="false">ENG-13.3<span class="law-tooltip"><strong>PDF Reproducibility Law</strong></span></span> before jury sees them</li>
+<li>Each juror reviews cold against their constitutional domain — no prior context, no checklists pre-loaded</li>
+<li>Alexandra Pierce monitors ALL tasks continuously for NN violations; active at all times</li>
+<li><strong>APPROVE</strong> — Deliverable meets all relevant laws → unanimous across all 6 → proceed</li>
+<li><strong>OBJECT</strong> — Fixable deficiency found → agent remediates → re-deliberates</li>
+<li><strong>BLOCK (Alexandra Pierce only)</strong> — NON-NEGOTIABLE violation detected → agent MUST stop, cite violated law, remediate fully, re-present to full jury</li>
+<li>Minimum 2 deliberation rounds required — unanimous first-round APPROVE is constitutionally invalid</li>
+<li>Deliberation log maintained per <span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</li>
+</ol>
+<h3>Deliberation Log Specification (<span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</h3>
+<p>Each log entry MUST capture all 6 required fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Who</strong></td>
+<td>Juror name and role</td>
+</tr>
+<tr>
+<td><strong>What</strong></td>
+<td>Verdict (APPROVE / OBJECT / BLOCK) and action taken</td>
+</tr>
+<tr>
+<td><strong>When</strong></td>
+<td>ISO 8601 timestamp</td>
+</tr>
+<tr>
+<td><strong>Where</strong></td>
+<td>Proposal ID + stage/task identifier</td>
+</tr>
+<tr>
+<td><strong>Why</strong></td>
+<td>Law citation(s) and reasoning</td>
+</tr>
+<tr>
+<td><strong>Outcome</strong></td>
+<td>Net result (proceed / remediating / blocked)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Immutability mechanism (<span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ — corrected):</strong> Git branch protection policy MUST be configured with:</p>
+<ul>
+<li>Force-push disabled on <code>main</code> / <code>trunk</code></li>
+<li>Branch deletion disabled on protected branches</li>
+<li>Signed commits required or SHA-256 commit signing enforced via CI</li>
+<li>No self-merge (require 1+ reviewer per PR)</li>
+<li>7-year archival SLA: deliberation records in <code>hangar-ai-specs/archive/</code> are append-only under branch protection</li>
+</ul>
+<p><strong>Evidence integrity (<span class="law-cite" data-law-id="BUS-7.2" data-non-negotiable="false">BUS-7.2<span class="law-tooltip"><strong>Evidence Integrity Law</strong></span></span>):</strong> A SHA-256 hash manifest (<code>compliance/evidence-manifest.sha256</code>) SHALL be maintained for all stage evidence files. Updated at each stage gate transition.</p>
+<hr />
+<h2>7. Discovery Stage-Gate Status (<span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Name</th>
+<th>Status</th>
+<th>Exit Artifact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>Problem Framing</td>
+<td>✅ COMPLETE</td>
+<td><code>stage-a-evidence.md</code> + <code>stage-a-evidence.html</code> filed</td>
+</tr>
+<tr>
+<td>B</td>
+<td>Assumption Mapping</td>
+<td>🔴 BLOCKED — stage-b-evidence.md does not yet exist</td>
+<td><code>stage-b-evidence.md</code> (required)</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Jobs-To-Be-Done</td>
+<td>⏳ PENDING Stage B exit</td>
+<td><code>stage-c-evidence.md</code></td>
+</tr>
+<tr>
+<td>D</td>
+<td>Solution Exploration</td>
+<td>⏳ PENDING Stage C exit</td>
+<td><code>stage-d-evidence.md</code></td>
+</tr>
+<tr>
+<td>E</td>
+<td>Prototype / Validation</td>
+<td>⏳ PENDING Stage D exit</td>
+<td><code>stage-e-evidence.md</code></td>
+</tr>
+<tr>
+<td>F</td>
+<td>Go/No-Go Decision</td>
+<td>⏳ PENDING all prior stages</td>
+<td><code>stage-f-evidence.md</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Stage B deliberation CANNOT begin before <code>stage-b-evidence.md</code> is filed. The sequencing gate is a hard constitutional requirement per <span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ — jury deliberation on a stage is not a substitute for the evidence artifact.</p>
+</blockquote>
+<hr />
+<h2>8. Roadmap (<span class="law-cite" data-law-id="PRD-4.1" data-non-negotiable="false">PRD-4.1<span class="law-tooltip"><strong>Outcome-Based Roadmap Law</strong></span></span> / <span class="law-cite" data-law-id="PRD-4.2" data-non-negotiable="false">PRD-4.2<span class="law-tooltip"><strong>Now/Next/Later Framework Law</strong></span></span> — Outcome-Based, Now / Next / Later)</h2>
+<p><strong>NOW — MVP Validation</strong>
+<em>Problem hypothesis: fragmented entry points cause measurable adoption friction</em></p>
+<ul>
+<li>Outcome: ≥ 2 of 3 coached adopters complete first-successful-task in &lt; 60 minutes unprompted AND ≥ 2 of 3 pass the guardrail metric (no NN law misconceptions) — see §2 Minimum Validation Threshold for full dual-condition gate <em>(SD-OBL-4: updated from <code>&lt; 20 min</code> per Stage B evidence)</em></li>
+<li>Retention signal: ≥ 2 of 3 MVP participants return to guide for reference within 2 weeks</li>
+<li>Work: Stage B (assumption mapping + interviews) → Stage C (JTBD) → Stage D (IA design) → P1 + P3 (Tech Coach + Architect paths) built</li>
+<li>Compliance gates: G2, G3, G4, G5, G6, G7 must all pass before P1/P3 IMPLEMENT begins</li>
+</ul>
+<p><strong>NEXT — Full Guide</strong>
+<em>Condition: MVP validation threshold met (adoption friction confirmed, retention signal positive)</em></p>
+<ul>
+<li>Outcome: Technical Coach can deliver a complete team onboarding session using the guide as the sole resource, without any manual document lookups</li>
+<li>Work: P4 (Laws Reference), P5 (Skills Catalog), P6 (Avatar Wizard), P7 (SDD Workflow), P8 (Compliance Checklist), P9 (Agentic Feedback Loop), P10 (Amendment Process)</li>
+<li>Engineer persona quick start path added to P3</li>
+<li>Gate: MVP retention signal met; SonarQube gate PASS; G8 (accessibility) must pass before NEXT release</li>
+</ul>
+<p><strong>LATER — Continuous Evolution</strong>
+<em>Condition: Full guide in production; at least one full adoption cycle observed</em></p>
+<ul>
+<li>Outcome: Guide stays current with constitution amendments without manual intervention; zero adopter-observed staleness incidents per quarter</li>
+<li>Work: CI-driven source freshness (<span class="law-cite" data-law-id="ENG-11.3" data-non-negotiable="false">ENG-11.3<span class="law-tooltip"><strong>Spec Freshness Law</strong></span></span> auto-regeneration triggers); amendment process auto-update</li>
+<li>Analytics: page-level behavioral telemetry — ONLY after <span class="law-cite" data-law-id="BUS-4.5" data-non-negotiable="false">BUS-4.5<span class="law-tooltip"><strong>Privacy Impact Assessment Law</strong></span></span> PIA is completed and filed; NOT before</li>
+</ul>
+<hr />
+<h2>9. Regulatory Scope Declaration (BUS-2.x)</h2>
+<p>This declaration is required before Stage C per <span class="law-cite" data-law-id="BUS-2.1" data-non-negotiable="true">BUS-2.1<span class="law-tooltip"><strong>FAA Compliance Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="BUS-2.2" data-non-negotiable="true">BUS-2.2<span class="law-tooltip"><strong>Control Framework Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="BUS-2.3" data-non-negotiable="true">BUS-2.3<span class="law-tooltip"><strong>DOT Consumer Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔.</p>
+<table>
+<thead>
+<tr>
+<th>Law</th>
+<th>Scope Decision</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><span class="law-cite" data-law-id="BUS-2.1" data-non-negotiable="true">BUS-2.1<span class="law-tooltip"><strong>FAA Compliance Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</strong> FAA Compliance Law (FAR Part 25, FAR Part 117, DO-178C)</td>
+<td><strong>OUT OF SCOPE</strong> for guide content itself. The guide documents the Hangar AI Constitution governance system — it does not control avionics software or crew scheduling software directly. Projects using the guide that produce avionics-adjacent software remain bound by FAR Part 117 / DO-178C through their own SDD proposals.</td>
+<td>The adoption guide is a documentation artifact, not a flight-critical or crew-scheduling software system.</td>
+</tr>
+<tr>
+<td><strong><span class="law-cite" data-law-id="BUS-2.2" data-non-negotiable="true">BUS-2.2<span class="law-tooltip"><strong>Control Framework Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</strong> Control Framework Law</td>
+<td><strong>IN SCOPE</strong> — Controls governing the adoption guide's own change process (jury approval, branch protection, evidence filing) are documented and mapped in <code>compliance/raci.md</code> and <code>compliance/risk-register.md</code>.</td>
+<td>Every artifact produced under the constitution is subject to the control framework.</td>
+</tr>
+<tr>
+<td><strong><span class="law-cite" data-law-id="BUS-2.3" data-non-negotiable="true">BUS-2.3<span class="law-tooltip"><strong>DOT Consumer Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</strong> DOT Consumer Protection Law (refund obligations, accessibility, denied boarding)</td>
+<td><strong>ACCESSIBILITY IN SCOPE</strong> — 14 CFR Part 382 (nondiscrimination for air travelers with disabilities) applies to American Airlines customer-facing digital products. The adoption guide is an internal-only artifact; however, accessibility compliance (WCAG 2.1 AA) is required per <span class="law-cite" data-law-id="BUS-1.1" data-non-negotiable="true">BUS-1.1<span class="law-tooltip"><strong>Priority Hierarchy Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ Priority Hierarchy (Legal first). Gate G8 mandates an ADA / Section 508 / Part 382 determination before final release. Other DOT consumer protection provisions (refunds, fare transparency, denied boarding) are out of scope for a governance guide.</td>
+<td>Internal artifact; fare/refund/boarding provisions inapplicable. Accessibility provision applies to all digital surfaces at AA per legal guidance.</td>
+</tr>
+<tr>
+<td><strong><span class="law-cite" data-law-id="BUS-2.4" data-non-negotiable="false">BUS-2.4<span class="law-tooltip"><strong>Evidence Collection Law</strong></span></span></strong> Evidence Collection Law</td>
+<td><strong>IN SCOPE</strong> — Compliance evidence for this proposal (stage evidence files, deliberation log, SonarQube delta) is retained in <code>hangar-ai-specs/</code> per <span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ and archived per <span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔.</td>
+<td>Standard evidence retention applies.</td>
+</tr>
+</tbody>
+</table>
+<p>Full regulatory scope document: <code>compliance/regulatory-scope.md</code> (to be filed before Stage C, per G5/G6/G7)</p>
+<hr />
+<h2>10. Data Classification Plan (<span class="law-cite" data-law-id="BUS-3.1" data-non-negotiable="true">BUS-3.1<span class="law-tooltip"><strong>Data Classification Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</h2>
+<p>All data assets produced or processed by this project are classified below per <span class="law-cite" data-law-id="BUS-3.1" data-non-negotiable="true">BUS-3.1<span class="law-tooltip"><strong>Data Classification Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔.</p>
+<table>
+<thead>
+<tr>
+<th>Data Asset</th>
+<th>Classification</th>
+<th>Rationale</th>
+<th>Retention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PROPOSAL.md, tasks.md, PROGRESS.md</td>
+<td>Internal</td>
+<td>Internal governance documents; no PII; not for external publication</td>
+<td>Minimum 3 years post-archive per <span class="law-cite" data-law-id="BUS-2.4" data-non-negotiable="false">BUS-2.4<span class="law-tooltip"><strong>Evidence Collection Law</strong></span></span>; deleted no earlier than 3 years after <code>hangar-ai-specs/archive/</code> move</td>
+</tr>
+<tr>
+<td>Stage evidence files (stage-a through stage-f)</td>
+<td>Internal</td>
+<td>Interview notes may include attributed quotes (de-identified before filing)</td>
+<td>Minimum 3 years post-archive per <span class="law-cite" data-law-id="BUS-2.4" data-non-negotiable="false">BUS-2.4<span class="law-tooltip"><strong>Evidence Collection Law</strong></span></span></td>
+</tr>
+<tr>
+<td>Jury deliberation log (SQL session DB)</td>
+<td>Internal</td>
+<td>Contains juror names (personas) and verdict reasoning; no real PII</td>
+<td>Online: SDD lifecycle + 1 year; Archived: 7 years per <span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ minimum, append-only in <code>hangar-ai-specs/archive/</code> under branch protection</td>
+</tr>
+<tr>
+<td>SonarQube delta evidence</td>
+<td>Internal</td>
+<td>Code quality metrics; no PII</td>
+<td>7 years per <span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ evidence policy (governs all compliance evidence for this project)</td>
+</tr>
+<tr>
+<td>walkthrough observation forms (MVP measurement)</td>
+<td>Internal</td>
+<td>De-identified; no names recorded; adopter is identified only by role</td>
+<td>90 days post-MVP validation</td>
+</tr>
+<tr>
+<td>Production analytics events (LATER horizon)</td>
+<td><strong>Internal / Confidential</strong> (TBD — requires PIA)</td>
+<td>Behavioral page events; potential PII if user is logged in</td>
+<td>TBD pending PIA</td>
+</tr>
+<tr>
+<td>Compliance artifacts (threat model, risk register, RACI)</td>
+<td>Confidential</td>
+<td>Contains organizational risk posture information</td>
+<td>Minimum 3 years post-archive per <span class="law-cite" data-law-id="BUS-2.4" data-non-negotiable="false">BUS-2.4<span class="law-tooltip"><strong>Evidence Collection Law</strong></span></span>; threat model and risk register: 7 years per <span class="law-cite" data-law-id="BUS-7.3" data-non-negotiable="false">BUS-7.3<span class="law-tooltip"><strong>Audit Readiness Law</strong></span></span> audit readiness</td>
+</tr>
+</tbody>
+</table>
+<p>Full data inventory: <code>compliance/data-classification.md</code> (to be filed before Stage C per Gate G6)</p>
+<hr />
+<h2>11. Compliance Ownership &amp; RACI (<span class="law-cite" data-law-id="BUS-1.3" data-non-negotiable="false">BUS-1.3<span class="law-tooltip"><strong>Accountability Law</strong></span></span>)</h2>
+<p>Every compliance obligation under this proposal has a named accountable owner per <span class="law-cite" data-law-id="BUS-1.3" data-non-negotiable="false">BUS-1.3<span class="law-tooltip"><strong>Accountability Law</strong></span></span>.</p>
+<table>
+<thead>
+<tr>
+<th>Obligation</th>
+<th>Accountable Owner</th>
+<th>Responsible</th>
+<th>Consulted</th>
+<th>Informed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Constitutional compliance (all NN laws)</td>
+<td>Alexandra Pierce (sub-agent)</td>
+<td>Agent</td>
+<td>All 6 jurors</td>
+<td>Constitution maintainer</td>
+</tr>
+<tr>
+<td>Privacy / data subject rights (<span class="law-cite" data-law-id="BUS-4.3" data-non-negotiable="true">BUS-4.3<span class="law-tooltip"><strong>Data Subject Rights Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="BUS-4.5" data-non-negotiable="false">BUS-4.5<span class="law-tooltip"><strong>Privacy Impact Assessment Law</strong></span></span>)</td>
+<td>Carlos Mendez (Compliance Officer)</td>
+<td>Agent</td>
+<td>Alexandra Pierce</td>
+<td>DPO</td>
+</tr>
+<tr>
+<td>Accessibility gate (<span class="law-cite" data-law-id="BUS-2.3" data-non-negotiable="true">BUS-2.3<span class="law-tooltip"><strong>DOT Consumer Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, G8)</td>
+<td>Carlos Mendez</td>
+<td>Agent</td>
+<td><span class="law-cite" data-law-id="BUS-1.1" data-non-negotiable="true">BUS-1.1<span class="law-tooltip"><strong>Priority Hierarchy Law</strong> · <em>NON-NEGOTIABLE</em></span></span> authority</td>
+<td>AA Legal</td>
+</tr>
+<tr>
+<td>Audit trail integrity (<span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</td>
+<td>Carlos Mendez</td>
+<td>Agent</td>
+<td>Alexandra Pierce</td>
+<td>Repo admin</td>
+</tr>
+<tr>
+<td>MVP outcome measurement (<span class="law-cite" data-law-id="PRD-5.1" data-non-negotiable="true">PRD-5.1<span class="law-tooltip"><strong>MVP Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="PRD-6.2" data-non-negotiable="true">PRD-6.2<span class="law-tooltip"><strong>Retention Over Acquisition Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</td>
+<td>Priya Kapoor</td>
+<td>Agent</td>
+<td>Jordan Ellis</td>
+<td>Tech Coach stakeholders</td>
+</tr>
+<tr>
+<td>Evidence evidence quality (<span class="law-cite" data-law-id="PRD-1.5" data-non-negotiable="true">PRD-1.5<span class="law-tooltip"><strong>Evidence-Based Decision Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</td>
+<td>Priya Kapoor</td>
+<td>Agent</td>
+<td>Maya Chen</td>
+<td>Constitution maintainer</td>
+</tr>
+<tr>
+<td>Pedagogical quality (<span class="law-cite" data-law-id="ENG-1.2" data-non-negotiable="false">ENG-1.2<span class="law-tooltip"><strong>AI-Engineer Pairing Law</strong></span></span>)</td>
+<td>Maya Chen</td>
+<td>Agent</td>
+<td>Priya Kapoor</td>
+<td>Tech Coach community</td>
+</tr>
+<tr>
+<td>Architecture compliance (<span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔, <span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</td>
+<td>Tomás Reyes</td>
+<td>Agent</td>
+<td>Alexandra Pierce</td>
+<td>Platform team</td>
+</tr>
+<tr>
+<td>SonarQube gate (<span class="law-cite" data-law-id="ENG-12.1" data-non-negotiable="true">ENG-12.1<span class="law-tooltip"><strong>Agentic Feedback Loop Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</td>
+<td>Jordan Ellis</td>
+<td>Agent</td>
+<td>Tomás Reyes</td>
+<td>CI/CD owner</td>
+</tr>
+</tbody>
+</table>
+<p>Full RACI matrix: <code>compliance/raci.md</code> (to be filed before Stage C per Gate G7)</p>
+<hr />
+<h2>12. Risk Assessment Reference (<span class="law-cite" data-law-id="BUS-6.1" data-non-negotiable="true">BUS-6.1<span class="law-tooltip"><strong>Risk Assessment Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</h2>
+<p>Project-specific risks identified at PROPOSE stage. Full assessment in <code>compliance/risk-register.md</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Control</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weak evidence prevents Stage C advancement; MVP scope under-validated</td>
+<td>HIGH</td>
+<td>HIGH</td>
+<td>Stage B gate (G3) is hard-blocking; minimum 3 interviews before Stage C</td>
+</tr>
+<tr>
+<td>P4 search JS or P6 wizard JS contains untested code paths</td>
+<td>MEDIUM</td>
+<td>HIGH</td>
+<td><span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ TDD gate (G4); mutation testing before ship</td>
+</tr>
+<tr>
+<td>analytics feature shipped without PIA</td>
+<td>MEDIUM</td>
+<td>CRITICAL</td>
+<td>G9 hard-blocks analytics; all analytics in LATER horizon only</td>
+</tr>
+<tr>
+<td>Law registry staleness causes incorrect citations in guide</td>
+<td>MEDIUM</td>
+<td>HIGH</td>
+<td><span class="law-cite" data-law-id="ENG-11.3" data-non-negotiable="false">ENG-11.3<span class="law-tooltip"><strong>Spec Freshness Law</strong></span></span> generation pipeline; CI freshness check on every PR</td>
+</tr>
+<tr>
+<td>Jury deliberation log tampered or lost</td>
+<td>LOW</td>
+<td>HIGH</td>
+<td><span class="law-cite" data-law-id="BUS-7.2" data-non-negotiable="false">BUS-7.2<span class="law-tooltip"><strong>Evidence Integrity Law</strong></span></span> SHA-256 manifest + branch protection policy (<span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔)</td>
+</tr>
+<tr>
+<td>Accessibility defect discovered post-release</td>
+<td>LOW</td>
+<td>HIGH</td>
+<td>G8 mandatory before final release; not in LATER</td>
+</tr>
+<tr>
+<td>Constitution amendment during IMPLEMENT causes guide staleness</td>
+<td>MEDIUM</td>
+<td>MEDIUM</td>
+<td><span class="law-cite" data-law-id="ENG-11.3" data-non-negotiable="false">ENG-11.3<span class="law-tooltip"><strong>Spec Freshness Law</strong></span></span> freshness trigger; 30-day max staleness window</td>
+</tr>
+<tr>
+<td>Registry integrity anomaly (<span class="law-cite" data-law-id="BUS-2.2" data-non-negotiable="true">BUS-2.2<span class="law-tooltip"><strong>Control Framework Law</strong> · <em>NON-NEGOTIABLE</em></span></span> / <span class="law-cite" data-law-id="BUS-3.1" data-non-negotiable="true">BUS-3.1<span class="law-tooltip"><strong>Data Classification Law</strong> · <em>NON-NEGOTIABLE</em></span></span> / <span class="law-cite" data-law-id="BUS-6.1" data-non-negotiable="true">BUS-6.1<span class="law-tooltip"><strong>Risk Assessment Law</strong> · <em>NON-NEGOTIABLE</em></span></span> comment mismatch + <span class="law-cite" data-law-id="ENG-10.1" data-non-negotiable="true">ENG-10.1<span class="law-tooltip"><strong>Constitution Metrics Collection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> / <span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> comment mismatch in laws/index.yaml; <span class="law-cite" data-law-id="BUS-3.6" data-non-negotiable="true">BUS-3.6<span class="law-tooltip"><strong>Monetary Precision Law</strong> · <em>NON-NEGOTIABLE</em></span></span> absent from law_ids.business; ENG-12.x series absent from law_ids.engineering)</td>
+<td>CONFIRMED</td>
+<td>MEDIUM</td>
+<td>Escalated to constitution maintainer; tracked in risk register (R-08, 7 anomalies total)</td>
+</tr>
+</tbody>
+</table>
+<p>Full risk register: <code>compliance/risk-register.md</code> (to be filed before Stage C per Gate G7)</p>
+<hr />
+<h2>13. Law Citations (<span class="law-cite" data-law-id="ENG-11.2" data-non-negotiable="false">ENG-11.2<span class="law-tooltip"><strong>Proposal Completeness Law</strong></span></span> — Required)</h2>
+<p>All citations verified against <code>laws/index.yaml</code> v2.0.0. Zero fabricated titles. 74 laws cited.</p>
+<h3>Engineering Constitution</h3>
+<table>
+<thead>
+<tr>
+<th>Law ID</th>
+<th>Title</th>
+<th>Class</th>
+<th>Role in This Proposal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ENG-1.2</code></td>
+<td>AI-Engineer Pairing Law</td>
+<td>Standard</td>
+<td>Guide embodies teaching-first — every page coaches, not just informs; learning arc required</td>
+</tr>
+<tr>
+<td><code>ENG-1.4</code></td>
+<td>Incremental Improvement Law</td>
+<td>Standard</td>
+<td>The NOW/NEXT/LATER phased delivery directly implements the foundational slice mandate: MVP slice (P1+P3) must be independently validated before NEXT slice (P4–P7) begins; each slice delivers complete adopter value without requiring subsequent slices</td>
+</tr>
+<tr>
+<td><code>ENG-2.1</code></td>
+<td>Domain-Driven Design Law</td>
+<td>Standard</td>
+<td><strong>SCOPED OUT for P4/P6 JS components.</strong> P4 (search/filter utility) and P6 (persona wizard) are single-concern inline utility scripts embedded in static HTML pages — each is &lt; 200 lines, has no domain model, no aggregates, and no service layer. <span class="law-cite" data-law-id="ENG-2.1" data-non-negotiable="false">ENG-2.1<span class="law-tooltip"><strong>Domain-Driven Design Law</strong></span></span>'s DDD tactical patterns (aggregates, repositories, value objects, domain events) are architecturally disproportionate to this scope. Scope-out rationale: bounded-context isolation is achieved structurally (one HTML file per page, no shared state across pages) without requiring explicit DDD artifacts.</td>
+</tr>
+<tr>
+<td><code>ENG-2.2</code></td>
+<td>Layered Architecture Law</td>
+<td>Standard</td>
+<td><strong>SCOPED OUT for P4/P6 JS components</strong> (same rationale as <span class="law-cite" data-law-id="ENG-2.1" data-non-negotiable="false">ENG-2.1<span class="law-tooltip"><strong>Domain-Driven Design Law</strong></span></span>). Formal presentation/application/domain/infrastructure layer separation is disproportionate for single-concern inline scripts. The functional separation between data (law registry JSON), logic (filter/wizard functions), and rendering (DOM manipulation) provides the intent of layer separation within the inline-script constraint.</td>
+</tr>
+<tr>
+<td><code>ENG-2.3</code></td>
+<td>Vertical Slice Architecture Law</td>
+<td>Standard</td>
+<td>The phased MVP delivery (P1+P3 as a fully validated, independently shippable slice before P4–P10) is the vertical slice pattern applied to a documentation project. Each slice (MVP slice: P1+P3; NEXT slice: P4–P7; LATER: P8–P10) delivers end-to-end adopter value without requiring subsequent slices to be useful. The MVP slice is tested and jury-approved before the next slice begins — this is the constitutional vertical slice principle. (Removed in v2.0 — re-added per Tomás Reyes Round 2 OBJECT-13: deletion without scoping rationale is not permitted.)</td>
+</tr>
+<tr>
+<td><code>ENG-4.1</code></td>
+<td>Atomic TDD Law</td>
+<td>⛔ NN</td>
+<td>P4 (search JS) and P6 (wizard JS) are software — TDD atomic cycles required; Gate G4</td>
+</tr>
+<tr>
+<td><code>ENG-6.1</code></td>
+<td>Security by Design Law</td>
+<td>⛔ NN</td>
+<td>Threat model required before Stage C; guide exposes amendment paths, HARD_BLOCK conditions, SonarQube gate protocol; Gate G5</td>
+</tr>
+<tr>
+<td><code>ENG-6.4</code></td>
+<td>Data Protection Law</td>
+<td>⛔ NN</td>
+<td>Analytics forward commitment requires data classification; all data assets classified §10; Gate G6</td>
+</tr>
+<tr>
+<td><code>ENG-6.7</code></td>
+<td>Audit Trail Law</td>
+<td>⛔ NN</td>
+<td><strong>Audit architecture for this pipeline context:</strong> Logged operations: phase gate transitions (G1–G11), <code>aa-artifact-render</code> invocations, stage evidence file creation/update, jury deliberation entries, git commit signing events. Storage: git history (append-only under branch protection — force-push disabled, force-delete disabled per §6) + SQL session checkpoint archive (session store). Record structure per audit event: <code>{ timestamp: ISO 8601, operation: string, actor: juror-id or &quot;agent&quot; or &quot;ci&quot;, artifact-id: changeset + filename, outcome: &quot;PASS&quot;/&quot;FAIL&quot;/&quot;APPROVE&quot;/&quot;OBJECT&quot;/&quot;BLOCK&quot;, correlation-id: UUID linking related gate events }</code>. Immutability: branch protection prevents git history rewrite; SHA-256 manifest (<code>compliance/evidence-manifest.sha256</code>) verifies artifact integrity at each gate. <strong>SIEM scope-out (explicit):</strong> Centralized SIEM log aggregation is not warranted for this bounded internal governance documentation pipeline. Rationale: (1) no user-facing sensitive operations occur in the audit stream — all actors are enumerated (agent, CI, named juror personas); (2) no privileged authentication events are logged — access control is governed by GitHub repository permissions, not by this pipeline; (3) no regulated personal data appears in the audit stream — PII is excluded from all metric dimensions per §5 <span class="law-cite" data-law-id="ENG-10.1" data-non-negotiable="true">ENG-10.1<span class="law-tooltip"><strong>Constitution Metrics Collection Law</strong> · <em>NON-NEGOTIABLE</em></span></span>; (4) no real-time threat detection requirement exists — this is not a production application; (5) git's native DAG structure (each commit SHA cryptographically incorporates its parent's SHA) provides an append-only, tamper-evident hash chain that satisfies <span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span>'s log aggregation requirement within the bounded scope of a documentation pipeline; (6) the SHA-256 manifest adds a second independent integrity layer. This scoping decision is recorded in <code>compliance/risk-register.md</code> under the project risk register. Scope boundary: explicitly distinct from <span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span>'s deliberation log obligation (which governs jury records specifically).</td>
+</tr>
+<tr>
+<td><code>ENG-10.1</code></td>
+<td>Constitution Metrics Collection Law</td>
+<td>⛔ NN</td>
+<td>Adoption guide is a governed system artifact; compliance tracking instrumented per §5: naming conventions, real-time collection, no PII in dimensions</td>
+</tr>
+<tr>
+<td><code>ENG-10.2</code></td>
+<td>Enforcement Tracking Law</td>
+<td>Standard</td>
+<td>P10 Amendment Process sources enforcement tracking requirements from this law</td>
+</tr>
+<tr>
+<td><code>ENG-10.3</code></td>
+<td>Compliance Reporting Law</td>
+<td>Standard</td>
+<td>P10 Amendment Process sources compliance reporting cadence from this law</td>
+</tr>
+<tr>
+<td><code>ENG-10.4</code></td>
+<td>Constitution Health Dashboard Law</td>
+<td>Standard</td>
+<td>P10 references health dashboard requirements</td>
+</tr>
+<tr>
+<td><code>ENG-10.5</code></td>
+<td>Law Effectiveness Measurement Law</td>
+<td>Standard</td>
+<td>P10 references effectiveness measurement requirements</td>
+</tr>
+<tr>
+<td><code>ENG-11.1</code></td>
+<td>Hangar SDD Law</td>
+<td>⛔ NN</td>
+<td>This PROPOSAL.md IS the PROPOSE stage of <span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span>; <code>hangar-ai-specs/</code> folder contract defined §14</td>
+</tr>
+<tr>
+<td><code>ENG-11.2</code></td>
+<td>Proposal Completeness Law</td>
+<td>Standard</td>
+<td>This §13 satisfies the law citation requirement</td>
+</tr>
+<tr>
+<td><code>ENG-11.3</code></td>
+<td>Spec Freshness Law</td>
+<td>Standard</td>
+<td>Guide must reflect current constitution state; generation pipeline defined §3; max staleness 30 days</td>
+</tr>
+<tr>
+<td><code>ENG-12.1</code></td>
+<td>Agentic Feedback Loop Law</td>
+<td>⛔ NN</td>
+<td>SonarQube MUST be provisioned before Phase 1 IMPLEMENT begins; dashboard reviewed at every phase transition; session-end <code>sonarqube-delta.md</code> filed; Gate G2, G10, G11</td>
+</tr>
+<tr>
+<td><code>ENG-12.2</code></td>
+<td>Dashboard-First Development Law</td>
+<td>Standard</td>
+<td>SonarQube dashboard open throughout each session; not just at API call</td>
+</tr>
+<tr>
+<td><code>ENG-12.3</code></td>
+<td>External Referee Law</td>
+<td>Standard</td>
+<td>Agent cannot self-certify compliance; SonarQube provides objective verdict</td>
+</tr>
+<tr>
+<td><code>ENG-13.1</code></td>
+<td>Artifact Rendering Standard</td>
+<td>⛔ NN</td>
+<td>All 10 pages and this PROPOSAL.md rendered via <code>aa-artifact-render</code> before deliberation; <code>tasks.md</code> also rendered (active BLOCK resolved)</td>
+</tr>
+<tr>
+<td><code>ENG-13.2</code></td>
+<td>Citation Transparency Law</td>
+<td>Standard</td>
+<td>All law citations across all 10 pages use <code>&lt;span class=&quot;law-cite&quot;&gt;</code> tooltip pattern sourced from law YAML frontmatter</td>
+</tr>
+<tr>
+<td><code>ENG-13.3</code></td>
+<td>PDF Reproducibility Law</td>
+<td>Standard</td>
+<td>Gate reviews use <code>aa-artifact-render --pdf</code>; browser-print PDFs not acceptable; Gate G1</td>
+</tr>
+</tbody>
+</table>
+<h3>Product Constitution</h3>
+<table>
+<thead>
+<tr>
+<th>Law ID</th>
+<th>Title</th>
+<th>Class</th>
+<th>Role in This Proposal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PRD-1.1</code></td>
+<td>Customer-Centric Law</td>
+<td>Standard</td>
+<td>P1 Landing Page anchored in adopter needs, not internal preferences</td>
+</tr>
+<tr>
+<td><code>PRD-1.2</code></td>
+<td>Problem-First Law</td>
+<td>⛔ NN</td>
+<td>§1 validates problem before solution; solution architecture deferred to Stage D</td>
+</tr>
+<tr>
+<td><code>PRD-1.3</code></td>
+<td>Outcome-Driven Law</td>
+<td>Standard</td>
+<td>Success criteria in §4 defined as outcomes, not feature counts</td>
+</tr>
+<tr>
+<td><code>PRD-1.4</code></td>
+<td>Continuous Discovery Law</td>
+<td>Standard</td>
+<td>Discovery is never complete; Stage F Go/No-Go is not the end of learning</td>
+</tr>
+<tr>
+<td><code>PRD-1.5</code></td>
+<td>Evidence-Based Decision Law</td>
+<td>⛔ NN</td>
+<td>Weak evidence acknowledged in §1; validation plan filed; Stage C gated on Moderate evidence</td>
+</tr>
+<tr>
+<td><code>PRD-2.1</code></td>
+<td>Problem Validation Law</td>
+<td>Standard</td>
+<td>Problem must be jury-validated before IA design in Stage D</td>
+</tr>
+<tr>
+<td><code>PRD-2.2</code></td>
+<td>Assumption Mapping Law</td>
+<td>Standard</td>
+<td>Stage B maps all adopter assumptions; filed in <code>stage-b-evidence.md</code></td>
+</tr>
+<tr>
+<td><code>PRD-2.3</code></td>
+<td>Jobs-to-be-Done Law</td>
+<td>Standard</td>
+<td>Stage C frames adopter needs as jobs for 3 personas</td>
+</tr>
+<tr>
+<td><code>PRD-2.4</code></td>
+<td>Competitive Analysis Law</td>
+<td>Standard</td>
+<td>Stage B includes alternatives analysis (existing README, other constitution guides)</td>
+</tr>
+<tr>
+<td><code>PRD-2.5</code></td>
+<td>Discovery Stage-Gate Law</td>
+<td>⛔ NN</td>
+<td>Stages A→F tracked in §7; Stage B hard-blocking gate (G3)</td>
+</tr>
+<tr>
+<td><code>PRD-3.1</code></td>
+<td>Persona Development Law</td>
+<td>Standard</td>
+<td>3 human personas; evidence-based (5+ interviews each) required before Stage C</td>
+</tr>
+<tr>
+<td><code>PRD-3.2</code></td>
+<td>Journey Mapping Law</td>
+<td>Standard</td>
+<td>Journey maps required before IA design in Stage D</td>
+</tr>
+<tr>
+<td><code>PRD-3.3</code></td>
+<td>User Story Law</td>
+<td>Standard</td>
+<td>Stories with acceptance criteria required in Stage D</td>
+</tr>
+<tr>
+<td><code>PRD-3.4</code></td>
+<td>Experience Principles Law</td>
+<td>Standard</td>
+<td>Guiding experience principles defined in Stage D</td>
+</tr>
+<tr>
+<td><code>PRD-4.1</code></td>
+<td>Outcome-Based Roadmap Law</td>
+<td>Standard</td>
+<td>§8 roadmap communicates outcomes per horizon, not feature lists</td>
+</tr>
+<tr>
+<td><code>PRD-4.2</code></td>
+<td>Now/Next/Later Framework Law</td>
+<td>Standard</td>
+<td>§8 uses Now/Next/Later time horizons, not fixed dates</td>
+</tr>
+<tr>
+<td><code>PRD-4.3</code></td>
+<td>Dependency Management Law</td>
+<td>Standard</td>
+<td>Stage gate dependencies explicitly documented in §7 and tasks.md</td>
+</tr>
+<tr>
+<td><code>PRD-4.4</code></td>
+<td>Roadmap Communication Law</td>
+<td>Standard</td>
+<td>§8 roadmap is appropriate for technical coaches + architects audience</td>
+</tr>
+<tr>
+<td><code>PRD-5.1</code></td>
+<td>MVP Law</td>
+<td>⛔ NN</td>
+<td>§2 defines MVP: riskiest assumption, smallest experiment, validation threshold</td>
+</tr>
+<tr>
+<td><code>PRD-5.2</code></td>
+<td>Build-Measure-Learn Law</td>
+<td>Standard</td>
+<td>BML trigger defined in §2: if MVP threshold not met, pivot before P4–P10</td>
+</tr>
+<tr>
+<td><code>PRD-5.3</code></td>
+<td>Experiment Design Law</td>
+<td>Standard</td>
+<td>Full experiment design in §2: hypothesis, experiment type (Concierge), control condition (README baseline), primary/secondary/guardrail metrics, sample, segments, ship-if, iterate-if, kill-if, minimum detectable effect</td>
+</tr>
+<tr>
+<td><code>PRD-6.1</code></td>
+<td>PMF Definition Law</td>
+<td>Standard</td>
+<td>Adoption-market fit to be measured post-MVP, not assumed</td>
+</tr>
+<tr>
+<td><code>PRD-6.2</code></td>
+<td>Retention Over Acquisition Law</td>
+<td>⛔ NN</td>
+<td>Retention signal defined in §4: ≥ 2 of 3 MVP participants return within 2 weeks</td>
+</tr>
+<tr>
+<td><code>PRD-6.3</code></td>
+<td>Pivot Criteria Law</td>
+<td>Standard</td>
+<td>Pivot criteria defined in §2: kill-if conditions trigger Stage D re-entry; stage B contradiction triggers problem revalidation before any build proceeds</td>
+</tr>
+</tbody>
+</table>
+<h3>Business Constitution</h3>
+<table>
+<thead>
+<tr>
+<th>Law ID</th>
+<th>Title</th>
+<th>Class</th>
+<th>Role in This Proposal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BUS-1.1</code></td>
+<td>Priority Hierarchy Law</td>
+<td>⛔ NN</td>
+<td>Legal &gt; Safety &gt; Privacy &gt; Security &gt; Business Continuity &gt; Efficiency honored across all deliverables; accessibility pre-release (Gate G8), not deferred</td>
+</tr>
+<tr>
+<td><code>BUS-1.2</code></td>
+<td>Risk-Based Approach Law</td>
+<td>Standard</td>
+<td>Governance decisions proportionate to risk; risk-based triage in §12</td>
+</tr>
+<tr>
+<td><code>BUS-1.3</code></td>
+<td>Accountability Law</td>
+<td>Standard</td>
+<td>Named compliance owners defined in §11; RACI in <code>compliance/raci.md</code></td>
+</tr>
+<tr>
+<td><code>BUS-1.4</code></td>
+<td>Transparency Law</td>
+<td>Standard</td>
+<td>Compliance gaps documented in §12 and <code>compliance/risk-register.md</code></td>
+</tr>
+<tr>
+<td><code>BUS-2.1</code></td>
+<td>FAA Compliance Law</td>
+<td>⛔ NN</td>
+<td>Scoped OUT for guide content; scoped IN for projects built using the guide — see §9</td>
+</tr>
+<tr>
+<td><code>BUS-2.2</code></td>
+<td>Control Framework Law</td>
+<td>⛔ NN</td>
+<td>Controls documented in <code>compliance/raci.md</code>; jury approval is a control; branch protection is a control</td>
+</tr>
+<tr>
+<td><code>BUS-2.3</code></td>
+<td>DOT Consumer Protection Law</td>
+<td>⛔ NN</td>
+<td>Accessibility (14 CFR Part 382) in scope; Gate G8 mandatory; other provisions out of scope for internal guide</td>
+</tr>
+<tr>
+<td><code>BUS-2.4</code></td>
+<td>Evidence Collection Law</td>
+<td>Standard</td>
+<td>All stage evidence retained in <code>hangar-ai-specs/</code>; SHA-256 manifest in <code>compliance/evidence-manifest.sha256</code></td>
+</tr>
+<tr>
+<td><code>BUS-3.1</code></td>
+<td>Data Classification Law</td>
+<td>⛔ NN</td>
+<td>All data assets classified in §10; full table in <code>compliance/data-classification.md</code></td>
+</tr>
+<tr>
+<td><code>BUS-3.2</code></td>
+<td>Data Inventory Law</td>
+<td>Standard</td>
+<td>Data inventory in <code>compliance/data-classification.md</code> with owner, location, retention</td>
+</tr>
+<tr>
+<td><code>BUS-3.3</code></td>
+<td>Data Retention Law</td>
+<td>Standard</td>
+<td>Retention schedule with explicit calendar minimums per asset defined in §10 table; deliberation log: 7-year archive per <span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔; SDD artifacts: 3-year minimum per <span class="law-cite" data-law-id="BUS-2.4" data-non-negotiable="false">BUS-2.4<span class="law-tooltip"><strong>Evidence Collection Law</strong></span></span></td>
+</tr>
+<tr>
+<td><code>BUS-3.6</code></td>
+<td>Monetary Precision Law</td>
+<td>⛔ NN</td>
+<td><strong>SCOPED OUT — NOT APPLICABLE.</strong> The adoption guide is a 10-page static HTML governance documentation artifact. It contains no monetary computations, no loyalty-currency values (AAdvantage miles, EQDs, points), no fare arithmetic, no revenue figures, and no financial or loyalty quantities of any kind across P1–P10. <span class="law-cite" data-law-id="BUS-3.6" data-non-negotiable="true">BUS-3.6<span class="law-tooltip"><strong>Monetary Precision Law</strong> · <em>NON-NEGOTIABLE</em></span></span>'s decimal precision and rounding requirements do not apply. Explicitly scoped out per compliance record requirements.</td>
+</tr>
+<tr>
+<td><code>BUS-4.1</code></td>
+<td>Privacy by Design Law</td>
+<td>Standard</td>
+<td>Analytics uses Privacy by Design 7 principles if/when shipped (LATER horizon)</td>
+</tr>
+<tr>
+<td><code>BUS-4.2</code></td>
+<td>Consent Management Law</td>
+<td>Standard</td>
+<td>Analytics consent mechanism required before production analytics ship</td>
+</tr>
+<tr>
+<td><code>BUS-4.3</code></td>
+<td>Data Subject Rights Law</td>
+<td>⛔ NN</td>
+<td>Behavioral analytics data (LATER) subject to access, rectification, erasure, portability rights; Gate G9</td>
+</tr>
+<tr>
+<td><code>BUS-4.4</code></td>
+<td>Privacy Notice Law</td>
+<td>Standard</td>
+<td>Notice required before any analytics feature ships</td>
+</tr>
+<tr>
+<td><code>BUS-4.5</code></td>
+<td>Privacy Impact Assessment Law</td>
+<td>Standard</td>
+<td>PIA required before analytics ships; Gate G9; LATER horizon only</td>
+</tr>
+<tr>
+<td><code>BUS-6.1</code></td>
+<td>Risk Assessment Law</td>
+<td>⛔ NN</td>
+<td>Project-specific risk assessment in §12; full register in <code>compliance/risk-register.md</code>; Gate G7</td>
+</tr>
+<tr>
+<td><code>BUS-6.2</code></td>
+<td>Risk Register Law</td>
+<td>Standard</td>
+<td>Risk register maintained in <code>compliance/risk-register.md</code></td>
+</tr>
+<tr>
+<td><code>BUS-7.1</code></td>
+<td>Audit Trail Law</td>
+<td>⛔ NN</td>
+<td>Deliberation log maintained per §6; branch protection policy required for immutability claim</td>
+</tr>
+<tr>
+<td><code>BUS-7.2</code></td>
+<td>Evidence Integrity Law</td>
+<td>Standard</td>
+<td>SHA-256 hash manifest in <code>compliance/evidence-manifest.sha256</code></td>
+</tr>
+<tr>
+<td><code>BUS-7.3</code></td>
+<td>Audit Readiness Law</td>
+<td>Standard</td>
+<td>Documentation current; archive policy per <span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔</td>
+</tr>
+<tr>
+<td><code>BUS-7.4</code></td>
+<td>Internal Audit Law</td>
+<td>Standard</td>
+<td>Post-release audit scheduled; findings tracked in <code>PROGRESS.md</code></td>
+</tr>
+<tr>
+<td><code>BUS-9.1</code></td>
+<td>Incident Classification Law</td>
+<td>Standard</td>
+<td>Incidents classified P1–P4 per response plan in <code>compliance/incident-response.md</code></td>
+</tr>
+<tr>
+<td><code>BUS-9.2</code></td>
+<td>Incident Response Law</td>
+<td>Standard</td>
+<td>Defined response process in <code>compliance/incident-response.md</code></td>
+</tr>
+<tr>
+<td><code>BUS-9.3</code></td>
+<td>Breach Notification Law</td>
+<td>⛔ NN</td>
+<td>72-hour GDPR reporting window documented; DPO contact chain in <code>compliance/incident-response.md</code></td>
+</tr>
+<tr>
+<td><code>BUS-9.4</code></td>
+<td>Post-Incident Review Law</td>
+<td>Standard</td>
+<td>Post-mortems required for all significant incidents; findings feed risk register</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>14. SDD Folder Contract (<span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span>)</h2>
+<pre><code>hangar-ai-specs/changes/build-adoption-guide-2026-001/
+├── PROPOSAL.md                   ← This document (PROPOSE stage artifact)
+├── PROPOSAL.html                 ← Rendered per ENG-13.1 ⛔ (aa-artifact-render)
+├── PROPOSAL.pdf                  ← Rendered per ENG-13.3 (aa-artifact-render --pdf)
+├── tasks.md                      ← Atomic task breakdown with checkboxes
+├── tasks.html                    ← Rendered per ENG-13.1 ⛔
+├── tasks.pdf                     ← Rendered per ENG-13.3
+├── PROGRESS.md                   ← Phase tracking and gate evidence
+├── stage-a-evidence.md           ← ✅ Stage A exit artifact (PRD-2.5 ⛔)
+├── stage-a-evidence.html         ← ✅ Rendered
+├── stage-b-evidence.md           ← 🔴 NOT YET FILED — Stage B gate blocks Stage C
+└── compliance/                   ← BUS-1.3, BUS-2.x, BUS-3.1, BUS-6.1, ENG-6.1 artifacts
+    ├── regulatory-scope.md       ← BUS-2.x declaration (Gate G5 dependency)
+    ├── data-classification.md    ← BUS-3.1 ⛔ classification table (Gate G6)
+    ├── threat-model.md           ← ENG-6.1 ⛔ threat model (Gate G5)
+    ├── risk-register.md          ← BUS-6.1 ⛔ risk register (Gate G7)
+    ├── raci.md                   ← BUS-1.3 accountability matrix
+    ├── incident-response.md      ← BUS-9.3 ⛔ incident response + DPO contact chain
+    └── evidence-manifest.sha256  ← BUS-7.2 SHA-256 hash manifest
+
+hangar-ai-specs/evidence/
+└── sonarqube-delta.md            ← ENG-12.1 ⛔ session-end gate evidence (Gate G10, G11)
+</code></pre>
+<p>Upon completion: move to <code>hangar-ai-specs/archive/YYYY-MM-DD-build-adoption-guide-2026-001/</code></p>
+<hr />
+<p><em>Proposal v2.5 — APPROVED 2026-05-02 — unanimous 6/6 jury clearance across 7 rounds</em>
+<em>74 law citations — all verified against <code>laws/index.yaml</code> v2.0.0 — zero fabricated titles</em>
+<em>Cleared per <span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> ⛔ / <span class="law-cite" data-law-id="ENG-11.2" data-non-negotiable="false">ENG-11.2<span class="law-tooltip"><strong>Proposal Completeness Law</strong></span></span> · Alexandra Pierce constitutional sign-off recorded · ADVANCE TO IMPLEMENT</em></p>
+
+  <div class="footer">
+    <div>Governance Proposal</div>
+    <div class="pn">2</div>
+  </div>
+</div>
+
+<script>
+// Flip tooltip below the citation when it would overflow the top of the viewport
+document.querySelectorAll('.law-cite').forEach(function(el) {
+  el.addEventListener('mouseenter', function() {
+    var rect = el.getBoundingClientRect();
+    var tooltip = el.querySelector('.law-tooltip');
+    if (!tooltip) return;
+    var tipH = tooltip.offsetHeight || 80;
+    if (rect.top < tipH + 12) {
+      el.classList.add('flip-below');
+    } else {
+      el.classList.remove('flip-below');
+    }
+  });
+  // Keyboard accessibility
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  el.setAttribute('aria-describedby', 'tooltip-' + el.dataset.lawId);
+  var tip = el.querySelector('.law-tooltip');
+  if (tip) tip.id = 'tooltip-' + el.dataset.lawId;
+});
+</script>
+</body>
+</html>

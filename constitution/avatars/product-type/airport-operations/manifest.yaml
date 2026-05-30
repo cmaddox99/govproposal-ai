@@ -1,0 +1,93 @@
+avatar:
+  id: avatar-product-airport-operations
+  type: product
+  name: "Airport Operations"
+  version: "1.0.0"
+  created: "2026-03-31"
+  last_updated: "2026-03-31"
+
+domain:
+  category: "Airport Operations & Ground Handling"
+  description: |
+    Systems governing gate assignment, turn operations, irregular operations (IROP)
+    recovery, TSA coordination, and FAR Part 139 airport certification compliance.
+    DOT consumer protection rules apply during IROPs (delay notifications, hotel
+    accommodations, meal vouchers). Gate assignment constraint systems must
+    reflect airfield certification requirements.
+
+  personas:
+    - Operations Control Center Coordinator
+    - Gate Agent
+    - Ground Operations Supervisor
+    - Airport Station Manager
+
+core_journeys:
+  - "Gate Assignment & Turn Management"
+  - "IROP Recovery & Rebooking"
+  - "Delay Notification & Passenger Communication"
+  - "Ground Equipment Coordination"
+  - "TSA Coordination for Security Events"
+
+activates:
+  skills:
+    - skill-spec-governance
+    - skill-02-user-journey-mapping
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+    - skill-06-atomic-tdd
+    - skill-08-code-review
+    - skill-10-security-review
+    - skill-27-constitution-compliance
+
+  workflows:
+    - product-discovery-stage-a-f
+    - legacy-rescue-decision-track
+    - legacy-rescue-refactor
+
+specializes_laws:
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: "FAR Part 139 airport certification requirements; DOT 14 CFR Part 259 customer service plan (IROP tarmac delay: 3-hour domestic / 4-hour international limit); TSA coordination protocols for security events"
+  - id: BUS-2.2
+    title: "Control Framework"
+    description: "Tarmac delay controls: aircraft must return to gate before 3/4-hour limit; automatic alerts at 2h30m; passenger deplaning escalation procedure. Gate assignment must enforce airfield weight/aircraft-type constraints"
+  - id: BUS-2.4
+    title: "Evidence Collection"
+    description: "IROP event audit trail: delay cause, notification timestamp, passenger count, accommodation provided, tarmac clock. FAR Part 139 inspection compliance records"
+  - id: ENG-6.7
+    title: "Audit Trail"
+    description: "All gate assignments, IROP decisions, and tarmac clock events must be immutably logged for FAA/DOT audit. Consumer protection events (denied boarding, extended delay) require regulatory-citation logging"
+
+compliance_domains:
+  - standard: "FAR Part 139"
+    scope: "Airport certification and safety"
+    key_rules:
+      - "Aircraft rescue and firefighting (ARFF) requirements"
+      - "Airfield pavement and marking standards"
+      - "Wildlife hazard management"
+  - standard: "DOT 14 CFR Part 259"
+    scope: "Tarmac delay and customer service plan"
+    key_rules:
+      - "3-hour limit for domestic tarmac delays"
+      - "4-hour limit for international tarmac delays"
+      - "Mandatory passenger notification at 30-minute intervals"
+  - standard: "TSA 49 CFR Part 1542"
+    scope: "Airport security program"
+
+dependencies:
+  - "Operations Control Center (OCC) System"
+  - "Gate Management System"
+  - "TSA Communication Interface"
+  - "Weather Intelligence Platform"
+  - "Passenger Notification System"
+  - "Ground Equipment Management"
+
+tags:
+  - product
+  - airport-operations
+  - irop
+  - tarmac-delay
+  - far-part-139
+  - dot-consumer-protection
+  - tsa

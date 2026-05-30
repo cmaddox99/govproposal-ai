@@ -1,0 +1,103 @@
+# Product Domain Laws
+# Prefix: PRD
+# Source: constitution/base/PRODUCT-CONSTITUTION.md
+
+domain: product
+prefix: PRD
+version: "2.0.0"
+authority: American Airlines Product Leadership
+
+description: |
+  Product laws governing what we build and why. Ensures customer-centric 
+  development, evidence-based decisions, and alignment with American Airlines 
+  business objectives.
+
+core_principles:
+  - Customer problems drive product decisions
+  - Evidence over opinion
+  - Outcomes over outputs
+  - Iterative discovery and delivery
+  - Accessibility and inclusion
+
+articles:
+  I:
+    title: Foundational Principles
+    non_negotiable: [PRD-1.2, PRD-1.5]
+    laws:
+      - PRD-1.1  # Customer-Centric Law
+      - PRD-1.2  # Problem-First Law (NON-NEGOTIABLE)
+      - PRD-1.3  # Outcome-Driven Law
+      - PRD-1.4  # Continuous Discovery Law
+      - PRD-1.5  # Evidence-Based Decision Law (NON-NEGOTIABLE)
+
+  II:
+    title: Discovery Laws
+    non_negotiable: [PRD-2.5, PRD-2.6]
+    laws:
+      - PRD-2.1  # Problem Validation Law
+      - PRD-2.2  # Assumption Mapping Law
+      - PRD-2.3  # Jobs-to-be-Done Law
+      - PRD-2.4  # Competitive Analysis Law
+      - PRD-2.5  # Discovery Stage-Gate Law (NON-NEGOTIABLE)
+      - PRD-2.6  # Multi-Cognition Phase Gate Jury Law (NON-NEGOTIABLE)
+
+  III:
+    title: User Journey Laws
+    laws:
+      - PRD-3.1  # Persona Development Law
+      - PRD-3.2  # Journey Mapping Law
+      - PRD-3.3  # User Story Law
+      - PRD-3.4  # Experience Principles Law
+
+  IV:
+    title: Roadmap Laws
+    laws:
+      - PRD-4.1  # Outcome-Based Roadmap Law
+      - PRD-4.2  # Now/Next/Later Framework Law
+      - PRD-4.3  # Dependency Management Law
+      - PRD-4.4  # Roadmap Communication Law
+
+  V:
+    title: MVP & Experimentation Laws
+    non_negotiable: [PRD-5.1]
+    laws:
+      - PRD-5.1  # MVP Law (NON-NEGOTIABLE)
+      - PRD-5.2  # Build-Measure-Learn Law
+      - PRD-5.3  # Experiment Design Law
+      - PRD-5.4  # Feature Flag Law
+
+  VI:
+    title: Product-Market Fit Laws
+    non_negotiable: [PRD-6.2]
+    laws:
+      - PRD-6.1  # PMF Definition Law
+      - PRD-6.2  # Retention Over Acquisition Law (NON-NEGOTIABLE)
+      - PRD-6.3  # Pivot Criteria Law
+
+  VII:
+    title: Prioritization Laws
+    status: deferred
+    laws:
+      - PRD-7.1  # RICE/ICE Scoring Law
+      - PRD-7.2  # Technical Debt Allocation Law
+      - PRD-7.3  # Quick Wins Law
+      - PRD-7.4  # Strategic Initiatives Law
+
+  VIII:
+    title: Metrics & Analytics Laws
+    status: deferred
+    laws:
+      - PRD-8.1  # North Star Metric Law
+      - PRD-8.2  # Leading Indicators Law
+      - PRD-8.3  # Instrumentation Law
+      - PRD-8.4  # Data-Driven Iteration Law
+      - PRD-8.5  # Privacy-Compliant Analytics Law
+
+  IX:
+    title: Stakeholder & Communication Laws
+    status: deferred
+    laws:
+      - PRD-9.1  # Transparency Law
+      - PRD-9.2  # Alignment Check Law
+      - PRD-9.3  # Documentation Standard Law
+      - PRD-9.4  # Cross-Functional Collaboration Law

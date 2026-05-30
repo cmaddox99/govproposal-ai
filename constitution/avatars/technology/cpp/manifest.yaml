@@ -1,0 +1,364 @@
+# C++ (Modern) Avatar Manifest
+# Defines stack configuration and law specializations for C++ projects
+
+avatar:
+  id: avatar-technology-cpp
+  type: technology
+  name: "C++ (Modern)"
+  version: "2.3.0"
+
+governance_overrides:
+  # C++ cross-version examples must cover C++98/11/14/17/20 progressions.
+  # These are inherently larger than single-version examples and cannot be
+  # trimmed without losing the cross-era comparison utility.
+  # Formally approved by: hangar-ai-specs/changes/cpp-version-routing-foundation/PHASE2-PROPOSAL.md
+  example_token_budget: 1200
+  proposal_ref: "hangar-ai-specs/changes/cpp-version-routing-foundation/PHASE2-PROPOSAL.md"
+
+stack:
+  language: "C++20 / C++23"
+  framework: "N/A (library-level; CMake build system)"
+  compilers:
+    recommended:
+      - "GCC 14+ (C++23)"
+      - "Clang 17+ (C++23)"
+      - "MSVC 19.38+ (VS 2022 17.8+)"
+    required_greenfield:
+      - "GCC 12+ (C++20)"
+      - "Clang 15+ (C++20)"
+      - "MSVC 19.34+ (VS 2022 17.4+)"
+    active_brownfield:
+      - "GCC 7+ (C++14/17)"
+      - "Clang 5+ (C++14/17)"
+      - "MSVC 19.14+ (VS 2017 15.7+)"
+    legacy:
+      - "GCC 4.8.1+ (C++11)"
+      - "Clang 3.3+ (C++11)"
+      - "MSVC 19.0+ (VS 2015)"
+    frozen:
+      - "Any compiler that builds the existing C++98/03 codebase"
+  version_policy:
+    greenfield: "C++20 minimum (mandatory); C++23 recommended where toolchain supports it"
+    brownfield: "Older standards permitted with documented modernization plan toward C++20+"
+  cpp20_features:
+    - "Concepts and constraints (T.20-T.25)"
+    - "Ranges and views (std::ranges, std::views)"
+    - "Modules (import/export — incremental adoption)"
+    - "std::format (replacing printf/ostringstream)"
+    - "Spaceship operator (operator<=>)"
+    - "std::span (bounds-safe array view)"
+    - "std::bit_cast (safe type punning)"
+    - "std::source_location (structured logging)"
+    - "constinit (static init-order fiasco prevention)"
+    - "std::atomic_ref (atomic access to non-atomic objects)"
+    - "chrono calendar and timezone (FAR 117 duty period math)"
+    - "Coroutines (co_await, co_yield, co_return)"
+    - "Template lambdas ([]<typename T>(T x) {})"
+    - "Aggregate improvements (parenthesis-init, CTAD)"
+  reference_files:
+    advanced_concurrency:
+      - "refs/language/ref-concurrency-advanced-part1.md"
+      - "refs/language/ref-concurrency-advanced-part2.md"
+    cpp20_features:
+      - "refs/language/ref-cpp20-features-part1.md"
+      - "refs/language/ref-cpp20-features-part2.md"
+    advanced_templates:
+      - "refs/language/ref-templates-advanced.md"
+  testing:
+    - GoogleTest
+    - GoogleMock
+    - Mull (mutation)
+  build:
+    - CMake
+    - vcpkg (default)
+    - Conan
+  sanitizers:
+    mandatory:
+      - AddressSanitizer (ASan)
+      - UndefinedBehaviorSanitizer (UBSan)
+    recommended:
+      - ThreadSanitizer (TSan)
+
+dependencies:
+  build:
+    - CMake (≥3.21)
+    - Ninja or GNU Make
+  required:
+    - C++ standard library (libstdc++ / libc++)
+    - Abseil (absl) — recommended for production C++ utilities
+    - gRPC + Protobuf — for service-to-service communication
+    - OpenSSL / BoringSSL — TLS and cryptographic primitives
+  testing:
+    unit:
+      - "GoogleTest (GTest/GMock) ≥1.12"
+      - "Catch2 v3 (alternative)"
+    mutation:
+      - "Mull (LLVM/Clang-based mutation testing)"
+    coverage:
+      - "llvm-cov / gcov"
+  sanitizers:
+    - AddressSanitizer (ASan)
+    - UndefinedBehaviorSanitizer (UBSan)
+    - ThreadSanitizer (TSan)
+    - MemorySanitizer (MSan) — Clang only
+  brownfield_jni_stack:
+    solver: "FICO Xpress MP (libxprb, libxprs, libxprl) — integer programming optimizer"
+    http: "libcurl (bundled in libs/curl/)"
+    json: "jsoncpp (bundled in libs/jsoncpp/)"
+    xml: "TinyXML 2.6.1 (embedded in XMLInput/)"
+    rest: "restclient-cpp (vendored in .vendor/restclient-cpp/)"
+    java_bridge: "JNI — JDK 1.7+ (libSolver.so loaded via System.loadLibrary)"
+  brownfield_mfc_stack:
+    sabre: "AACCSAPI.lib — Sabre CSAPI/GDS integration (flight data, reservations)"
+    ui: "MFC (AFX) — Microsoft Foundation Classes, Windows-only desktop UI"
+    xml: "TinyXML2 (embedded in alpsource/) — lightweight XML parsing"
+    utility: "culib 1.1 MB — internal AA utility library (vendored)"
+    testing: "TestRunner.lib — internal AA unit test runner (ActiveTest.h pattern)"
+    smart_ptr: "RCPtr<T> / RCObject — custom reference-counted smart pointer (Scott Meyers pattern, pre-C++11)"
+
+commands:
+  build:
+    configure: "cmake -B build -DCMAKE_BUILD_TYPE=Release"
+    compile: "cmake --build build --parallel"
+    debug: "cmake -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build"
+  test:
+    all: "ctest --test-dir build --output-on-failure"
+    single: "./build/tests/unit/<test_binary> --gtest_filter='TestSuite.TestName'"
+    coverage: "cmake -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON && cmake --build build && ctest --test-dir build && llvm-cov report ./build/tests/unit/<test_binary>"
+    mutation: "mull-runner ./build/tests/unit/<test_binary>"
+  lint:
+    check: "clang-tidy src/**/*.cpp -- -std=c++20"
+    check_cpp17: "clang-tidy src/**/*.cpp -- -std=c++17"
+    check_cpp14: "clang-tidy src/**/*.cpp -- -std=c++14"
+    check_cpp11: "clang-tidy src/**/*.cpp -- -std=c++11"
+    static_analysis: "clang --analyze src/**/*.cpp"
+  format:
+    apply: "clang-format -i src/**/*.cpp src/**/*.h"
+    check: "clang-format --dry-run --Werror src/**/*.cpp src/**/*.h"
+  sanitizer:
+    asan_ubsan: "cmake -B build -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer' && cmake --build build && ctest --test-dir build"
+    tsan: "cmake -B build -DCMAKE_CXX_FLAGS='-fsanitize=thread' && cmake --build build && ctest --test-dir build"
+  brownfield_makefile:
+    build: "make -f nbproject/Makefile-CI-Release.mk ./CI-Release/libSolver.so"
+    build_debug: "make CONF=Debug"
+    build_all: "make all"
+    clean: "make clean"
+    run: "./runSolver/runSolver.sh <solver-request.xml>"
+  brownfield_msvc_build:
+    build: "msbuild ALPGUI.sln /p:Configuration=Release /p:Platform=x64"
+    build_debug: "msbuild ALPGUI.sln /p:Configuration=Debug /p:Platform=x64"
+    clean: "msbuild ALPGUI.sln /t:Clean /p:Configuration=Release"
+    run_tests: "msbuild ALPGUI.sln /t:ALPTests /p:Configuration=Release"
+    cmake_configure: "cmake -B build -G \"Visual Studio 17 2022\" -A x64"
+    cmake_build: "cmake --build build --config Release"
+
+conventions:
+  naming:
+    classes: PascalCase
+    functions: snake_case
+    variables: snake_case
+    constants: kPascalCase or SCREAMING_SNAKE
+    namespaces: lowercase
+    files: snake_case.cpp / snake_case.h
+    test_files: "*_test.cpp"
+    macros: SCREAMING_SNAKE_CASE
+  patterns:
+    entity: "class with private data, public behavior, factory create()"
+    value_object: "class with operator==() = default, immutable fields"
+    repository: "abstract interface (pure virtual class)"
+    service: "class with constructor-injected dependencies"
+    aggregate: "root entity owning child entities via std::vector<>"
+  testing_layout:
+    unit_dir: "tests/unit/"
+    integration_dir: "tests/integration/"
+    fixture_pattern: "class *Test : public ::testing::Test"
+    test_pattern: "TEST_F(*Test, *) or TEST(*, *)"
+  brownfield_cpp98:
+    standard: "C++98/C++03 — no lambda, no auto, no range-for, no std::thread"
+    data_containers: "Node suffix — plain structs holding mutable state (e.g. CrewNode, FlightNode)"
+    collections: "Inf suffix — manager/collection classes (e.g. CrewInf, FlightInf)"
+    typedef_prefix: "XL_ prefix — legacy typedef aliases for domain types (e.g. XL_CrewNode)"
+    memory: "raw malloc/free and manual new/delete; no smart pointers"
+    error_handling: "integer return codes and throw int literals (e.g. throw -1)"
+  brownfield_mfc_cpp98:
+    standard: "C++98/C++03 — no lambda, no auto, no range-for; Windows MSVC only"
+    class_prefix: "C prefix (MFC convention) — all domain classes prefixed with C (CFlight, CDataManager, CAlertManager, CALPTask)"
+    suffix_patterns: "Manager suffix for aggregation (CDataManager), Controller suffix for UI coordination, Task suffix for async ops (CALPTask)"
+    ownership: "RCPtr<T> / RCObject — custom reference-counted smart pointer (Scott Meyers 'More Effective C++' pattern); addReference/removeReference lifecycle"
+    observer: "CObserver / CObservable — custom observer pattern (no std::function); update(CObservable*, void*) virtual dispatch"
+    error_handling: "CALPException hierarchy — std::exception → CALPException → CHostException → 15+ domain-specific types"
+    command_quad: "Command/Parser/Record/Request quad — e.g. CargoActualsDataCommand + Parser + Record + Request for each data operation"
+  googletest_canonical_patterns:
+    description: "Folly-grounded GoogleTest usage patterns for AA C++ projects; source: facebook/folly/tree/main/folly/test"
+    standalone_test: "TEST(SuiteName, BehaviorUnderTest) — use for free functions and stateless cases; no fixture needed"
+    fixture_test: "TEST_F(ClassTest, BehaviorUnderTest) — use when multiple tests share SetUp/TearDown or data members"
+    expect_vs_assert: "EXPECT_* continues execution on failure (prefer); ASSERT_* aborts current test function immediately — use ASSERT only when continuing would crash or produce meaningless output"
+    exception_testing: "EXPECT_THROW(expr, ExcType), EXPECT_ANY_THROW(expr), EXPECT_NO_THROW(expr) — prefer over try/catch in tests; maps to CALPException hierarchy for IOC_ALP migration"
+    template_helpers: "template<class T> void testFoo() { ... }; TEST(Suite, FooInt) { testFoo<int>(); } — avoids code duplication across types; Folly pattern in ArenaSmartPtrTest, ConvTest"
+    add_failure: "ADD_FAILURE() — inject a non-fatal failure from inside catch blocks or helper functions without aborting the test"
+    main_entry_point: "int main(int argc, char** argv) { testing::InitGoogleTest(&argc, argv); return RUN_ALL_TESTS(); } — use explicit main when integrating GFlags (DEFINE_int32/DEFINE_double); otherwise link gtest_main"
+    gflags_integration: "DEFINE_int32(numThreads, 8, 'desc'); FLAGS_numThreads — GFlags constants in test files; call ParseCommandLineFlags in main() alongside InitGoogleTest"
+
+project_structure: |
+  project-root/
+  ├── CMakeLists.txt                   # Top-level CMake build
+  ├── cmake/                           # CMake modules and toolchain files
+  ├── include/
+  │   └── project/                     # Public headers
+  │       ├── domain/                  # Domain model headers
+  │       │   ├── model/               # Aggregates, entities, value objects
+  │       │   ├── repository/          # Repository interfaces (pure virtual)
+  │       │   └── service/             # Domain service interfaces
+  │       ├── application/             # Application layer (use cases)
+  │       └── infrastructure/          # Infrastructure interfaces
+  ├── src/
+  │   ├── domain/                      # Domain implementation
+  │   ├── application/                 # Use case implementations
+  │   └── infrastructure/              # Persistence, clients, adapters
+  ├── tests/
+  │   ├── unit/                        # Unit tests (GoogleTest)
+  │   │   ├── domain/
+  │   │   └── application/
+  │   └── integration/                 # Integration tests
+  ├── vcpkg.json                       # Package manifest (vcpkg)
+  └── .clang-tidy                      # Static analysis config
+
+activates:
+  skills:
+    - 06-atomic-tdd
+    - 07-vertical-slice-dev
+    - 08-code-review
+    - 04-business-domain-modeling
+    - skill-cpp-jni-bridge
+  workflows:
+    - greenfield-development
+    - product-discovery-stage-a-f
+    - adoption
+  brownfield_adoption:
+    description: "Steps executed when a brownfield C++ codebase adopts the constitution"
+    steps:
+      - "Run compliance rating (skill-cpp-compliance-rating) for baseline score"
+      - "Notify team about novice developer guidance (Mental Model Transitions, Code Smell Catalog, Triage Playbook, Survival Patterns)"
+      - "Create MODERNIZATION_PLAN.md from compliance rating breakdown"
+      - "Establish baseline metrics (warnings, sanitizer findings, test count, compliance score)"
+      - "Execute Phased Modernization Path (Phase 1 → 2 → 3)"
+  skill_parity:
+    baseline: "All 4 skills are mandatory for cross-avatar parity with Java/Python/Node avatars"
+    exception: "skill-04-business-domain-modeling may be waived only for low-domain-complexity infrastructure repositories with documented governance approval (Q9 decision)"
+  project_archetypes:
+    high_performance_service:
+      description: "Low-latency network service (e.g., pricing engine, real-time data feed)"
+      recommended_libs: [Boost.Asio, spdlog, yaml-cpp, nlohmann/json, GoogleTest]
+      ci_gates: [clang-tidy, ASan, UBSan, TSan, benchmark-regression]
+      patterns: [async I/O, PMR allocators, health check endpoints, graceful shutdown]
+    data_pipeline:
+      description: "Batch or streaming data processing (e.g., ETL, analytics)"
+      recommended_libs: [Apache Arrow, spdlog, toml++, GoogleTest]
+      ci_gates: [clang-tidy, ASan, UBSan, benchmark-regression]
+      patterns: [streaming iterators, PMR for throughput, structured logging for lineage]
+    cli_tool:
+      description: "Command-line utility or developer tool"
+      recommended_libs: [CLI11, fmt, spdlog, GoogleTest]
+      ci_gates: [clang-tidy, ASan, UBSan]
+      patterns: [argument parsing, exit codes, stdin/stdout conventions]
+    library:
+      description: "Reusable C++ library consumed by other projects"
+      recommended_libs: [GoogleTest, Google Benchmark]
+      ci_gates: [clang-tidy, ASan, UBSan, ABI compliance check, Doxygen]
+      patterns: [ABI stability, symbol visibility, semantic versioning, PIMPL]
+    brownfield_jni_solver:
+      description: "Legacy C++98 shared library (.so) loaded by Java via JNI — typified by CWR CrewRecoveryFAR117"
+      layout:
+        Solver/: "Core solver logic and domain model (CrewNode, FlightNode, Crew.cpp god class)"
+        PopulateSolver/: "Data hydration — reads XML/JSON payloads and populates solver objects"
+        XMLInput/: "TinyXML 2.6.1 embedded parser for input deserialization"
+        runSolver/: "Shell entry-point scripts and JNI wrapper (CrewWatchSolverJNI.cpp)"
+        libs/: "Vendored dependencies (libcurl, jsoncpp, Xpress MP headers)"
+        nbproject/: "NetBeans Makefile build system (Makefile-CI-Release.mk)"
+      output: "libSolver.so — loaded via System.loadLibrary in Java host (JDK 1.7+)"
+      jni_entry: "Java_com_aa_*_runSolverJNI(JNIEnv*, jobject, jstring) → jstring"
+      ci_gates: [make -f nbproject/Makefile-CI-Release.mk, g++ -Wall, clang++ (macOS)]
+      patterns: [JNI ABI stability, characterization tests, strangler-fig modernization]
+    brownfield_winforms_desktop:
+      description: "Legacy C++98/MFC Windows desktop application — typified by IOC_ALP PCLoadPlan (ALPGUI.sln)"
+      layout:
+        alpsource/: "All domain C++ source (474 headers, 427 .cpp) — CFlight, CDataManager, CAlertManager, CALPTask"
+        "Thread Classes/": "Custom Windows threading wrappers (no std::thread) using CRITICAL_SECTION"
+        "AlpWindows/": "MFC dialog and UI layer — CMainFrame, document/view architecture"
+        "Test Classes/": "TestRunner.lib-based tests (37 test headers, ActiveTest.h pattern)"
+        ALPGUI.sln: "Visual Studio 2019/2022 solution file (.vcxproj per project)"
+        CMakeLists.txt: "Secondary CMake build (used for cross-platform CI scanning only)"
+      output: "ALPGUI.exe — Windows MFC desktop application"
+      ci_gates: [msbuild /p:Configuration=Release, SonarQube, CodeQL, Coverity, BlackDuck]
+      patterns: [RCPtr<T> reference counting, Observer/Observable, Command/Parser/Record/Request quad, FlightPhase state machine]
+
+specializes_laws:
+  # ENG-13.1 (Artifact Rendering Law) is intentionally absent from this list.
+  # ENG-13.1 governs how AI agents render artefacts (markdown, structured output,
+  # citations). It is an agent-runtime behavioural law, not a C++ coding law.
+  # The rendering contract is owned by the agent runtime layer, not the C++ stack.
+  # Waiver documented per Amendment U (panel-review.md § P4, 2026-04-16).
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-6.1
+    title: Security by Design
+    example_file: examples/ENG-6.1-security-by-design.md
+  - id: ENG-6.4
+    title: Data Protection
+    example_file: examples/ENG-6.4-data-protection.md
+  - id: ENG-6.7
+    title: Audit Trail
+    example_file: examples/ENG-6.7-audit-trail.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-3.2
+    title: Immutability Law
+    example_file: examples/ENG-3.2-immutability.md
+  - id: ENG-2.1
+    title: DDD Aggregate Root
+    example_file: examples/ENG-2.1-aggregates.md
+  - id: ENG-2.2
+    title: Layered Architecture
+    example_file: examples/ENG-2.2-layers.md
+  - id: ENG-3.3
+    title: Law of Demeter
+    example_file: examples/ENG-3.3-demeter.md
+  - id: ENG-3.5
+    title: Naming Conventions
+    example_file: examples/ENG-3.5-naming.md
+  - id: ENG-3.7
+    title: Error Handling
+    example_file: examples/ENG-3.7-error-handling.md
+  - id: ENG-4.2
+    title: Test Pyramid Law
+    example_file: examples/ENG-4.2-test-pyramid.md
+  - id: ENG-4.4
+    title: Test Coverage Law
+    example_file: examples/ENG-4.4-test-structure.md
+  - id: ENG-5.2
+    title: CI/CD Pipeline Law
+    example_file: examples/ENG-5.2-cmake-governance.md
+  - id: ENG-5.5
+    title: Observability Law
+    example_file: examples/ENG-5.5-observability.md
+  - id: ENG-6.5
+    title: Input Validation
+    example_file: examples/ENG-6.5-input-validation.md
+  - id: ENG-7.1
+    title: Failure Handling Law
+    example_file: examples/ENG-7.1-failure-handling.md
+  - id: ENG-7.2
+    title: Circuit Breaker Law
+    example_file: examples/ENG-7.2-circuit-breaker.md
+  - id: ENG-7.3
+    title: Retry and Back-off Law
+    example_file: examples/ENG-7.3-retry-backoff.md
+  - id: ENG-7.4
+    title: Timeout Governance Law
+    example_file: examples/ENG-7.4-timeout-governance.md
+  - id: ENG-7.5
+    title: Bulkhead Isolation Law
+    example_file: examples/ENG-7.5-bulkhead-isolation.md
+

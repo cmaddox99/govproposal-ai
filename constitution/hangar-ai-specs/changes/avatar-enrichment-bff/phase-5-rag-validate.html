@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 5 — RAG Validate | BFF Avatar Clinic</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; color: #1a1a2e; margin: 0; padding: 24px; }
+  h1 { font-size: 1.6rem; font-weight: 700; }
+  h2 { font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; border-bottom: 2px solid #e0e0e0; padding-bottom: 6px; }
+  .header { background: linear-gradient(135deg, #1565c0, #0d47a1); color: white; border-radius: 10px; padding: 24px 28px; margin-bottom: 28px; }
+  .header .meta { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .header .meta span { background: rgba(255,255,255,0.18); border-radius: 6px; padding: 4px 12px; font-size: 0.82rem; }
+  .section { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+  th { background: #f0f4f8; font-weight: 600; text-align: left; padding: 8px 10px; border-bottom: 2px solid #dde; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .pass { background: #e8f5e9; color: #2e7d32; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; }
+  .verdict { padding: 14px 18px; border-radius: 8px; font-weight: 600; margin-top: 16px; }
+  .verdict.green { background: #e8f5e9; color: #1b5e20; border-left: 5px solid #43a047; }
+  code { font-size: 0.82rem; background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+  footer { text-align: center; color: #aaa; font-size: 0.78rem; margin-top: 32px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 14px 0; }
+  .stat { background: #f0f4f8; border-radius: 8px; padding: 12px; text-align: center; }
+  .stat .num { font-size: 1.8rem; font-weight: 700; color: #1565c0; }
+  .stat .lbl { font-size: 0.8rem; color: #555; }
+  .chip-pass { display: inline-block; background: #e8f5e9; color: #2e7d32; border-radius: 10px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; }
+  .chip-ok { display: inline-block; background: #fff8e1; color: #e65100; border-radius: 10px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🔍 Phase 5 — RAG Validate</h1>
+  <p>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF Session</p>
+  <div class="meta"><span>📅 2026-04-27</span><span>5 RAG queries</span><span>Phantom law scan</span><span>24 law IDs verified</span><span>Token budget confirmed</span></div>
+</div>
+
+<div class="section">
+  <div class="summary-grid">
+    <div class="stat"><div class="num">5</div><div class="lbl">RAG queries passed</div></div>
+    <div class="stat"><div class="num">24</div><div class="lbl">Law IDs verified clean</div></div>
+    <div class="stat"><div class="num">0</div><div class="lbl">Phantom law IDs found</div></div>
+    <div class="stat"><div class="num">13 / 13</div><div class="lbl">example_file: refs resolved</div></div>
+    <div class="stat"><div class="num">821</div><div class="lbl">Max tokens (budget: 850)</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Query 1 — Recall: java-spring use-cases</h2>
+  <p>Confirm all 3 new use case directories are present and readable.</p>
+  <table>
+    <thead><tr><th>Path</th><th>Words</th><th>Tokens (est)</th><th>Budget</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td><code>use-cases/service-locator-to-di/README.md</code></td><td>302w</td><td>402</td><td>1,500</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>use-cases/currency-precision/README.md</code></td><td>292w</td><td>388</td><td>1,500</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>use-cases/copy-paste-versioning/README.md</code></td><td>354w</td><td>471</td><td>1,500</td><td><span class="chip-pass">PASS</span></td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green">✅ All 3 java-spring use cases recalled within budget</div>
+</div>
+
+<div class="section">
+  <h2>Query 2 — Phantom Law Scan</h2>
+  <p>Grep all enriched files (guidance.md, examples/, use-cases/) for any law IDs that fall outside the known ENG-1–13 / PRD-1–6 / BUS-1–7 series.</p>
+  <table>
+    <thead><tr><th>Series checked</th><th>Non-existent ranges scanned</th><th>Phantom IDs found</th></tr></thead>
+    <tbody>
+      <tr><td>ENG-*</td><td>ENG-7.x, ENG-8.x, ENG-9.x, ENG-14.x+</td><td><span class="chip-pass">0</span></td></tr>
+      <tr><td>PRD-*</td><td>PRD-7.x+</td><td><span class="chip-pass">0</span></td></tr>
+      <tr><td>BUS-*</td><td>BUS-8.x+</td><td><span class="chip-pass">0</span></td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green">✅ Phantom law scan clean — no fabricated law IDs detected</div>
+</div>
+
+<div class="section">
+  <h2>Query 3 — example_file: References (java-spring)</h2>
+  <p>All 7 <code>example_file:</code> entries in <code>java-spring/manifest.yaml</code> verified to resolve to actual files on disk.</p>
+  <table>
+    <thead><tr><th>Reference</th><th>Exists?</th></tr></thead>
+    <tbody>
+      <tr><td><code>examples/ENG-4.1-atomic-tdd.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+      <tr><td><code>examples/ENG-3.1-complexity.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+      <tr><td><code>examples/ENG-2.1-aggregates.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+      <tr><td><code>examples/ENG-2.2-layers.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+      <tr><td><code>examples/ENG-3.2-immutability.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+      <tr><td><code>examples/ENG-3.3-demeter.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+      <tr><td><code>examples/ENG-3.5-naming.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green">✅ All 7 java-spring example_file references resolved</div>
+</div>
+
+<div class="section">
+  <h2>Query 4 — example_file: References (loyalty-aadvantage)</h2>
+  <p>All 6 <code>example_file:</code> entries in <code>loyalty-aadvantage/manifest.yaml</code> verified to resolve to actual files on disk.</p>
+  <table>
+    <thead><tr><th>Reference</th><th>Exists?</th></tr></thead>
+    <tbody>
+      <tr><td><code>examples/PRD-1.1-discovery.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+      <tr><td><code>examples/PRD-2.1-journey.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+      <tr><td><code>examples/PRD-3.1-roadmap.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+      <tr><td><code>examples/PRD-4.1-mvp.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+      <tr><td><code>examples/PRD-5.1-metrics.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+      <tr><td><code>examples/personas.md</code></td><td><span class="chip-pass">✅ Resolved</span></td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green">✅ All 6 loyalty-aadvantage example_file references resolved</div>
+</div>
+
+<div class="section">
+  <h2>Query 5 — Token Budget Compliance (all files)</h2>
+  <p>Budgets: guidance.md ≤ 450 tokens · examples/ ≤ 850 tokens · use-cases/ ≤ 1,500 tokens</p>
+  <table>
+    <thead><tr><th>File</th><th>Words</th><th>Est. Tokens</th><th>Budget</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td><code>java-spring/guidance.md</code></td><td>271w</td><td>360</td><td>450</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>java-spring/ENG-2.1-aggregates.md</code></td><td>278w</td><td>370</td><td>850</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>java-spring/ENG-2.2-layers.md</code></td><td>241w</td><td>321</td><td>850</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>java-spring/ENG-3.1-complexity.md</code></td><td>291w</td><td>387</td><td>850</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>java-spring/ENG-3.2-immutability.md</code></td><td>617w</td><td>821</td><td>850</td><td><span class="chip-pass">PASS (29 headroom)</span></td></tr>
+      <tr><td><code>java-spring/ENG-3.3-demeter.md</code></td><td>211w</td><td>281</td><td>850</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>java-spring/ENG-3.5-naming.md</code></td><td>234w</td><td>311</td><td>850</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>java-spring/ENG-4.1-atomic-tdd.md</code></td><td>224w</td><td>298</td><td>850</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>java-spring/use-cases/service-locator-to-di</code></td><td>302w</td><td>402</td><td>1,500</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>java-spring/use-cases/currency-precision</code></td><td>292w</td><td>388</td><td>1,500</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>java-spring/use-cases/copy-paste-versioning</code></td><td>354w</td><td>471</td><td>1,500</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>loyalty-aadvantage/guidance.md</code></td><td>222w</td><td>295</td><td>450</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>loyalty-aadvantage/PRD-1.1-discovery.md</code></td><td>233w</td><td>310</td><td>850</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>loyalty-aadvantage/PRD-2.1-journey.md</code></td><td>228w</td><td>303</td><td>850</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>loyalty-aadvantage/PRD-3.1-roadmap.md</code></td><td>209w</td><td>278</td><td>850</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>loyalty-aadvantage/PRD-4.1-mvp.md</code></td><td>218w</td><td>290</td><td>850</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>loyalty-aadvantage/PRD-5.1-metrics.md</code></td><td>218w</td><td>290</td><td>850</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>loyalty-aadvantage/personas.md</code></td><td>183w</td><td>243</td><td>850</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>loyalty-aadvantage/use-cases/retention-engagement</code></td><td>384w</td><td>511</td><td>1,500</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td><code>loyalty-aadvantage/use-cases/member-acquisition</code></td><td>372w</td><td>495</td><td>1,500</td><td><span class="chip-pass">PASS</span></td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green">✅ All 20 active files within token budget · Max: 821 tokens (ENG-3.2-immutability.md, budget 850) · Tightest margin: 29 tokens headroom</div>
+</div>
+
+<div class="section">
+  <h2>RAG Validate Summary</h2>
+  <table>
+    <thead><tr><th>Query</th><th>Check</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Q1</td><td>Recall: all 3 java-spring use cases accessible</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td>Q2</td><td>Phantom law scan: no fabricated IDs in enriched content</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td>Q3</td><td>java-spring example_file: references (7/7 resolved)</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td>Q4</td><td>loyalty-aadvantage example_file: references (6/6 resolved)</td><td><span class="chip-pass">PASS</span></td></tr>
+      <tr><td>Q5</td><td>Token budget compliance — all 20 active files (0 violations)</td><td><span class="chip-pass">PASS</span></td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green">✅ All 5 RAG queries PASS · Phase 6 commit gate CLEARED · Ready to stamp index.yaml and push</div>
+</div>
+
+<footer>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF Session · 2026-04-27</footer>
+</body>
+</html>

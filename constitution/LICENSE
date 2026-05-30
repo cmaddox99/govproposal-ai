@@ -1,0 +1,124 @@
+AA-Hangar-AI-Constitution — License Notice
+
+This governance framework is a derivative work based on the
+ClickChain-AI-CONSTITUTION, the intellectual property of Click Chain AI.
+
+Used under Royalty-Free License Grant GRANT-2026-001, issued by
+Click Chain AI to American Airlines, Inc. and its subsidiaries
+(including but not limited to regional airlines and affiliated entities).
+
+------------------------------------------------------------------------
+
+ATTRIBUTION
+
+  Based on the ClickChain-AI-CONSTITUTION
+  Copyright (c) 2026 Click Chain AI. All rights reserved.
+  Used under royalty-free license grant GRANT-2026-001.
+
+------------------------------------------------------------------------
+
+GRANT TERMS SUMMARY
+
+  Grantor:        Click Chain AI
+  Grantee:        American Airlines, Inc. and its subsidiaries
+  Licensed Work:  ClickChain-AI-CONSTITUTION v0.5
+  Grant Type:     Non-exclusive, perpetual, royalty-free, non-transferable
+
+  Permitted:
+    - Internal deployment across American Airlines and subsidiary engineering teams
+    - Internal modifications and derivative works
+    - Use by contractors working on American Airlines or subsidiary projects
+    - Internal tooling and integrations
+    - Deployment by wholly-owned subsidiaries (e.g., regional airlines, affiliated entities)
+
+  Not Permitted:
+    - Redistribution to third parties
+    - Commercialization of the framework or derivatives
+    - Removal of Click Chain AI attribution
+    - Transfer of this license to entities outside American Airlines and its subsidiaries
+
+------------------------------------------------------------------------
+
+DERIVATIVE WORK NOTICE
+
+  The AA-Hangar-AI-Constitution includes modifications and extensions
+  created by American Airlines, Inc. for internal use, including but
+  not limited to:
+
+    - Aviation-specific laws and compliance requirements (FAA, TSA, DOT)
+    - Industry avatar: aviation-faa
+    - Product-type avatars: AA Cargo, Booking, Loyalty, etc.
+    - Organization-specific agent skills and workflows
+
+  These derivative additions are owned by American Airlines, Inc.
+  The underlying ClickChain-AI-CONSTITUTION framework remains the intellectual
+  property of Click Chain AI.
+
+------------------------------------------------------------------------
+
+TOOLS
+
+  The constitution-lint CLI tool included in tools/constitution-lint/
+  is based on the open-source constitution-lint tool by Click Chain AI,
+  licensed under the MIT License.
+
+------------------------------------------------------------------------
+
+For licensing inquiries regarding the ClickChain-AI-CONSTITUTION, contact
+Click Chain AI.
+
+------------------------------------------------------------------------
+
+CANONICAL ORIGIN
+
+  The authoritative source of the underlying constitutional framework is
+  Click Chain AI. This repository is a derivative instance created by
+  American Airlines, Inc. under GRANT-2026-001. Click Chain AI retains
+  sole copyright over the base framework and all rights not expressly
+  granted herein, including the right to license the base framework to
+  other parties in other fields of use.
+
+------------------------------------------------------------------------
+
+NO-RENAME COVENANT
+
+  Licensee and its personnel, contractors, and affiliates shall not:
+
+    - Rebrand, rename, or represent the base constitutional framework
+      as the internal work product of American Airlines, Inc. or any
+      other organization.
+    - Register, attempt to register, or assert ownership over any
+      trademark, service mark, or copyright derived from the base
+      framework.
+    - Strip, obscure, or alter copyright notices, SPDX headers,
+      attribution strings, or this NOTICE file.
+    - Represent the authorship of the base framework as anything other
+      than Click Chain AI's.
+
+  This covenant survives termination of the license grant.
+
+------------------------------------------------------------------------
+
+TERMINATION ON CAPTURE
+
+  This license grant terminates automatically, without notice, upon any
+  of the following:
+
+    - Filing of a trademark application or copyright registration by
+      Licensee (or anyone acting on Licensee's behalf) covering the
+      base framework, its constituent laws, or derivatives presented
+      as original work of Licensee.
+    - Public or internal representation claiming authorship or origin
+      of the base framework by Licensee.
+    - Removal or alteration of attribution required by the CANONICAL
+      ORIGIN or NO-RENAME COVENANT clauses.
+    - Unauthorized redistribution, sublicensing, or transfer of the
+      base framework outside the scope permitted above.
+
+  Upon termination, Licensee must immediately cease all use of the
+  base framework and destroy all copies in its possession, except as
+  required to comply with applicable record-retention law. The
+  attribution and anti-capture obligations of this LICENSE survive
+  termination.
+
+------------------------------------------------------------------------

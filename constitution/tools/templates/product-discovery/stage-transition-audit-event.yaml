@@ -1,0 +1,104 @@
+# Stage Transition Audit Event Template
+# Governed by: BUS-7.1 (NON-NEGOTIABLE), PRD-2.5 (NON-NEGOTIABLE), ENG-11.1, ENG-13.1 (NON-NEGOTIABLE)
+# Schema version: 1.1
+#
+# Usage: Append one document per stage transition to audit.yaml alongside PROPOSAL.md,
+#        AND copy the key fields into the PROPOSAL.md §Audit Log table row.
+#
+# BUS-7.1 requires ALL six fields to be present: who / what / when / where / why / outcome
+# Partial audit records do not satisfy BUS-7.1 and are a compliance violation.
+#
+# OUTCOME values:
+#   APPROVED  — exit gate met; advancing to next stage
+#   REJECTED  — exit gate not met; blocker recorded; stage does not advance
+#   DEFERRED  — advancing deferred by stakeholder; reason documented
+#
+# from_stage: null for the Stage A initialisation event
+
+---
+audit_event:
+
+  # ── Identity ──────────────────────────────────────────────────────────────
+  discovery_id: disc-YYYY-NNN              # Required. Must match PROPOSAL.md id field.
+  schema_version: "1.1"                    # D15: schema version for forward compatibility
+  discovery_mode: exploratory              # D15: exploratory | accelerated
+  event_type: stage_transition             # stage_transition | stage_init | blocker_resolved
+  from_stage: A                            # null for initialisation; A | B | C | D | E | F
+  to_stage: B                              # A | B | C | D | E | F | COMPLETE
+
+  # ── When (BUS-7.1: timestamp) ──────────────────────────────────────────────
+  timestamp: "YYYY-MM-DDTHH:MM:SSZ"        # ISO-8601 UTC. Required.
+
+  # ── Who (BUS-7.1: authenticated actor) ────────────────────────────────────
+  actor:
+    name: "<Full Name>"                    # Required. Must match stakeholder approval record.
+    role: "<Job Title / Role>"             # e.g. "Product Owner", "Discovery Sponsor"
+    system: "<GitHub Copilot CLI | manual | CI/CD pipeline>"
+
+  # ── What (BUS-7.1: action performed) ──────────────────────────────────────
+  action: "Stage A exit gate validated; advancing to Stage B"  # Human-readable description.
+  avatars_active:
+    - product                              # List all avatars active at time of transition.
+    - business
+
+  # ── Where (BUS-7.1: system and location) ──────────────────────────────────
+  repository: "<org>/<repo>"              # e.g. "AAInternal/gate-mgmt"
+  branch: "<branch-name>"                 # e.g. "product-discovery"
+  evidence_artifact: "hangar-ai-specs/changes/disc-YYYY-NNN/PROPOSAL.md"
+
+  # ── Why (BUS-7.1: business context) ───────────────────────────────────────
+  # Document the exit gate conditions that were evaluated.
+  exit_gate_conditions:
+    - condition: "Discovery ID assigned in disc-YYYY-NNN format"
+      met: true                            # true | false
+      evidence: "PROPOSAL.md id field"
+
+    - condition: "Problem statement complete (all 4 PRD-2.1 dimensions)"
+      met: true
+      evidence: "PROPOSAL.md §Problem Statement"
+
+    - condition: "Scope defined"
+      met: true
+      evidence: "PROPOSAL.md §Scope"
+
+    - condition: "Avatar activation recorded"
+      met: true
+      evidence: "PROPOSAL.md §Participating Avatars"
+
+    - condition: "Stakeholder approval — named Product Owner or Discovery Sponsor (Director+)"
+      met: true
+      evidence: "PROPOSAL.md §Stakeholder Approval — <Approver Name>, <Role>, <Date>"
+
+    - condition: "No unresolved blockers"
+      met: true
+      evidence: "PROPOSAL.md §Initial Findings — Open Blockers table empty"
+
+  # ── Outcome (BUS-7.1: success/failure) ────────────────────────────────────
+  outcome: APPROVED                        # APPROVED | REJECTED | DEFERRED
+
+  # Required if outcome != APPROVED. Null otherwise.
+  blocker: null
+  # blocker: "Stakeholder approval not yet obtained — <approver name> unavailable until YYYY-MM-DD"
+
+  # ── Human Browser Review (D15 — ENG-13.1 NON-NEGOTIABLE) ────────────────
+  human_browser_review:
+    reviewer_name: "<Full Name>"           # Required. Person who reviewed HTML in browser.
+    reviewer_role: "<Role / Title>"        # Required. e.g. "Discovery Sponsor", "Product Owner"
+    review_timestamp: "YYYY-MM-DDTHH:MM:SSZ"  # ISO-8601 UTC. Required.
+    decision: APPROVE                      # APPROVE | REJECT | ENHANCE
+    enhancement_round: 0                   # 0 = first review (no prior ENHANCE); max 3 per stage
+
+  # ── Law citations ──────────────────────────────────────────────────────────
+  law_citations:
+    - PRD-2.5   # Discovery Stage-Gate Law (NON-NEGOTIABLE) — sequential stages enforced
+    - BUS-7.1   # Audit Trail Law (NON-NEGOTIABLE) — this record satisfies the requirement
+    - ENG-11.1  # Hangar SDD Law (NON-NEGOTIABLE) — evidence artifact filed
+    - ENG-13.1  # Artifact Rendering Standard (NON-NEGOTIABLE) — HTML render gate passed
+
+  # ── Next stage entry requirements ─────────────────────────────────────────
+  # Informational only — describes what Stage B will require.
+  next_stage_entry_note: >
+    Stage B entry gate: Market research, competitive analysis (PRD-2.4), user interviews
+    (PRD-3.1), and JTBD framing (PRD-2.3). Exit gate requires ≥3 validated user insights
+    and competitive landscape documented in hangar-ai-specs/. Stage B evidence MUST be
+    rendered as HTML and APPROVED in browser before advancing to Stage C (ENG-13.1).

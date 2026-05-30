@@ -1,0 +1,170 @@
+# Engineering Domain Laws
+# Prefix: ENG
+# Source: constitution/base/ENGINEERING-CONSTITUTION.md
+
+domain: engineering
+prefix: ENG
+version: "2.0.0"
+authority: American Airlines IT Engineering Leadership
+
+description: |
+  Universal engineering laws that apply to ALL American Airlines projects 
+  regardless of technology stack. Individual projects adopt this constitution 
+  and extend it with project-specific context (language, frameworks, tools, domain).
+
+priority_hierarchy:
+  1: Security - Protect data, systems, and users
+  2: Correctness - Code does what it's supposed to do
+  3: Reliability - System works consistently under load and failure
+  4: Maintainability - Code is readable, testable, and changeable
+  5: Performance - System responds within acceptable limits
+  6: Developer Experience - Engineers can work efficiently
+
+articles:
+  I:
+    title: Foundational Principles
+    laws:
+      - ENG-1.1  # Priority Hierarchy
+      - ENG-1.2  # AI-Engineer Pairing Law
+      - ENG-1.3  # Continuous Refactoring Law
+      - ENG-1.4  # Incremental Improvement Law
+      - ENG-1.5  # API-First Design Law
+
+  II:
+    title: Architecture & Design Laws
+    laws:
+      - ENG-2.1  # Domain-Driven Design Law
+      - ENG-2.2  # Layered Architecture Law
+      - ENG-2.3  # Vertical Slice Architecture Law
+      - ENG-2.4  # Bounded Context Law
+      - ENG-2.5  # Dependency Inversion Law
+
+  III:
+    title: Code Quality Laws
+    laws:
+      - ENG-3.1  # Complexity Limits
+      - ENG-3.2  # Immutability Law
+      - ENG-3.3  # Law of Demeter
+      - ENG-3.4  # Single Responsibility Principle
+      - ENG-3.5  # Naming Conventions Law
+      - ENG-3.6  # Documentation Law
+      - ENG-3.7  # Error Handling Law
+      - ENG-3.8  # Continuous Refactoring Patterns
+      - ENG-3.9  # Open/Closed Principle
+      - ENG-3.10  # Liskov Substitution Principle
+      - ENG-3.11  # Interface Segregation Principle
+
+  IV:
+    title: Testing Laws
+    non_negotiable: [ENG-4.1, ENG-4.12]
+    laws:
+      - ENG-4.1  # Atomic TDD Law (NON-NEGOTIABLE)
+      - ENG-4.2  # Test Pyramid Law
+      - ENG-4.3  # Test Quality Law
+      - ENG-4.4  # Test Structure Law
+      - ENG-4.5  # Test Naming Convention
+      - ENG-4.6  # Coverage Requirements
+      - ENG-4.7  # Test Isolation Law
+      - ENG-4.8  # Mock Boundaries Law
+      - ENG-4.9  # Contract Testing Law
+      - ENG-4.10  # Test Evolution Law
+      - ENG-4.11  # Mutation Testing Law
+      - ENG-4.12  # Legacy Rescue Mutation Hardening Law
+      # ENG-4.13 RESERVED (placeholder for future test strategy law)
+      - ENG-4.14  # Legacy Rescue Commit Rhythm Law
+
+  V:
+    title: DevOps Laws
+    laws:
+      - ENG-5.1  # Infrastructure as Code Law
+      - ENG-5.2  # CI/CD Pipeline Law
+      - ENG-5.3  # Environment Parity Law
+      - ENG-5.4  # Git Workflow Law
+      - ENG-5.5  # Observability Law
+      - ENG-5.6  # Configuration Management Law
+
+  VI:
+    title: Security & Privacy Laws
+    non_negotiable: [ENG-6.1, ENG-6.4, ENG-6.7]
+    laws:
+      - ENG-6.1  # Security by Design Law (NON-NEGOTIABLE)
+      - ENG-6.2  # Authentication Law
+      - ENG-6.3  # Authorization Law
+      - ENG-6.4  # Data Protection Law (NON-NEGOTIABLE)
+      - ENG-6.5  # Input Validation Law
+      - ENG-6.6  # Vulnerability Management Law
+      - ENG-6.7  # Audit Trail Law (NON-NEGOTIABLE)
+      - ENG-6.8  # Privacy Law
+
+  VII:
+    title: Resiliency Laws
+    laws:
+      - ENG-7.1  # Failure Handling Law
+      - ENG-7.2  # Circuit Breaker Law
+      - ENG-7.3  # Retry & Backoff Law
+      - ENG-7.4  # Timeout Law
+      - ENG-7.5  # Bulkhead Law
+      - ENG-7.6  # Idempotency Law
+      - ENG-7.7  # Health Check Law
+      - ENG-7.8  # Disaster Recovery Law
+
+  VIII:
+    title: Platform Integration Laws
+    status: deferred
+    laws:
+      - ENG-8.1  # API Gateway Law
+      - ENG-8.2  # Event-Driven Architecture Law
+      - ENG-8.3  # Data Integration Law
+      - ENG-8.4  # Legacy Integration Law
+      - ENG-8.5  # AA Platform Standards Law
+
+  IX:
+    title: AI-Engineer Collaboration Laws
+    status: deferred
+    laws:
+      - ENG-9.1  # AI Pair Programming Law
+      - ENG-9.2  # AI Code Review Law
+      - ENG-9.3  # AI-Generated Code Ownership Law
+      - ENG-9.4  # Human Override Law
+      - ENG-9.5  # AI Tool Standards Law (GitHub Copilot)
+
+  X:
+    title: Constitution Governance Laws
+    non_negotiable: [ENG-10.1]
+    laws:
+      - ENG-10.1  # Constitution Metrics Collection Law (NON-NEGOTIABLE)
+      - ENG-10.2  # Enforcement Tracking Law
+      - ENG-10.3  # Compliance Reporting Law
+      - ENG-10.4  # Constitution Health Dashboard Law
+      - ENG-10.5  # Law Effectiveness Measurement Law
+
+  XI:
+    title: Spec-Driven Development Laws
+    non_negotiable: [ENG-11.1]
+    laws:
+      - ENG-11.1  # Hangar SDD Law (NON-NEGOTIABLE)
+      - ENG-11.2  # Proposal Completeness Law
+      - ENG-11.3  # Spec Freshness Law
+
+  XII:
+    title: Agentic Compliance Feedback Loop Laws
+    non_negotiable: [ENG-12.1]
+    laws:
+      - ENG-12.1  # Agentic Phase Gate Law (NON-NEGOTIABLE)
+      - ENG-12.2  # Human-First Evidence Review Law
+      - ENG-12.3  # Multi-Cognition Jury Referee Law
+
+  XIII:
+    title: Artifact Rendering Laws
+    non_negotiable: [ENG-13.1]
+    laws:
+      - ENG-13.1  # Artifact Rendering Standard
+      - ENG-13.2  # Citation Transparency Law
+      - ENG-13.3  # PDF Reproducibility Law
+
+  XIV:
+    title: Citation Integrity Laws
+    non_negotiable: [ENG-14.1]
+    laws:
+      - ENG-14.1  # Law Citation Audit Gate Law (NON-NEGOTIABLE)
+      - ENG-14.2  # Jury Citation Auditor Law

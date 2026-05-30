@@ -1,0 +1,56 @@
+NOTICE
+======
+
+This repository contains the AA-Hangar-AI-Constitution, a derivative work
+based on the ClickChain-AI-CONSTITUTION.
+
+COPYRIGHT AND AUTHORSHIP
+------------------------
+
+The base constitutional framework — including the laws (laws/engineering/*,
+laws/product/*, laws/business/*), the governance model, the ensemble role
+definitions, the skills taxonomy, and the workflow structures — is the
+intellectual property of Click Chain AI.
+
+    Copyright (c) 2026 Click Chain AI. All rights reserved.
+
+The derivative additions created by American Airlines, Inc. (aviation-faa
+industry avatar, AA product-type avatars, organization-specific adoptions)
+are owned by American Airlines, Inc. and are used under the terms of
+GRANT-2026-001.
+
+ATTRIBUTION PRESERVATION
+------------------------
+
+All copies, forks, instances, and derivatives of this work must preserve:
+
+  1. The "Copyright (c) 2026 Click Chain AI" notice in the LICENSE file.
+  2. The SPDX copyright headers on base-layer files.
+  3. A reference back to Click Chain AI as the authoritative origin of the
+     underlying framework.
+
+Removing, obscuring, or rebranding these attributions is a material breach
+of the license grant and may result in automatic termination per the
+Termination on Capture clause of the LICENSE.
+
+ANTI-CAPTURE
+------------
+
+No party is authorized to:
+
+  - Claim authorship or ownership of the base constitutional framework.
+  - Register trademarks derived from Click Chain AI's work product without
+    written authorization from Click Chain AI.
+  - Rebrand the constitution or represent it as the internal work product
+    of any licensee organization.
+  - Strip attribution, SPDX headers, or this NOTICE from any distributed
+    or internal copy.
+
+Violations are grounds for immediate termination of the license grant and
+recovery of damages.
+
+INQUIRIES
+---------
+
+For licensing inquiries, attribution questions, or notice of any violation,
+contact Click Chain AI.

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 2 — Govern · AAdvantage Legacy Rescue</title>
+<style>
+/* ── AA Constitutional Design System ── */
+@page { size: 1088px 1408px; margin: 0; }
+
+:root {
+  --aa-blue: #003087;
+  --aa-red:  #C8102E;
+  --ink:     #17202a;
+  --muted:   #5f6d7a;
+  --line:    #d9e1ea;
+  --soft:    #f3f7fb;
+  --soft-2:  #eef3f8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* ── Page layout ── */
+.page {
+  width: 1088px;
+  min-height: 1408px;
+  padding: 94px 88px 100px;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  page-break-after: always;
+}
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 12px;
+  background: linear-gradient(90deg, var(--aa-blue), var(--aa-red));
+}
+.page::after {
+  content: "✈";
+  position: absolute;
+  right: 34px; bottom: -10px;
+  font-size: 240px;
+  color: var(--aa-blue);
+  opacity: .03;
+  transform: rotate(18deg);
+  pointer-events: none;
+}
+.page.cover {
+  background:
+    radial-gradient(circle at 85% 16%, rgba(0,48,135,.08), transparent 22%),
+    linear-gradient(180deg, #fbfcfe 0%, #f1f6fa 100%);
+}
+.footer {
+  position: absolute;
+  left: 88px; right: 88px; bottom: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5ebf1;
+  padding-top: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #7f8b97;
+}
+.footer .pn { color: var(--aa-blue); font-weight: 800; }
+
+/* ── Typography ── */
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--aa-red);
+}
+h1 {
+  margin-top: 22px;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--aa-blue);
+  font-weight: 850;
+  max-width: 820px;
+}
+h2 {
+  margin-top: 32px;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -.6px;
+  color: var(--aa-blue);
+  font-weight: 800;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+h3 { margin-top: 20px; font-size: 19px; color: var(--aa-blue); font-weight: 700; }
+h4 { margin-top: 16px; font-size: 16px; color: var(--ink); font-weight: 700; }
+p  { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #32404d; }
+ul, ol { margin-top: 10px; padding-left: 24px; }
+li { font-size: 15px; line-height: 1.55; color: #32404d; margin-top: 4px; }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  background: var(--soft-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+pre {
+  margin-top: 14px;
+  background: #1e2832;
+  color: #c9d1d9;
+  padding: 16px 18px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.4; }
+th { border-top: 0; background: var(--soft); color: var(--aa-blue); font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+blockquote { border-left: 4px solid var(--aa-blue); margin-top: 14px; padding: 10px 16px; background: var(--soft); color: var(--muted); font-size: 14px; }
+
+/* ── Meta / stat cards ── */
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; max-width: 820px; }
+.meta-card { border: 1px solid var(--line); background: #fff; padding: 16px 18px; }
+.meta-card .k { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: var(--aa-red); font-weight: 800; }
+.meta-card .v { margin-top: 7px; font-size: 17px; line-height: 1.4; color: #23303d; }
+.summary-band { margin-top: 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card { border: 1px solid var(--line); background: #fff; padding: 14px; }
+.stat-card .n { font-size: 34px; line-height: 1; color: var(--aa-blue); font-weight: 850; letter-spacing: -1px; }
+.stat-card .l { margin-top: 7px; font-size: 13px; line-height: 1.35; color: #52606d; }
+.stat-card.danger .n { color: var(--aa-red); }
+.stat-card.warn .n { color: #b36b00; }
+
+/* ── Status badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.status-badge.proposed  { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.implemented { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.archived  { background: var(--soft-2); color: var(--muted); border: 1px solid var(--line); }
+.status-badge.accepted  { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.deprecated { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.pass   { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.fail   { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.warn   { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.critical { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.high   { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+
+/* ── Chip row ── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--aa-blue);
+  letter-spacing: .3px;
+}
+
+/* ── Confidence band ── */
+.confidence-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-left: 6px solid var(--aa-blue);
+  background: var(--soft);
+  margin-top: 24px;
+}
+.confidence-band .cb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.confidence-band.high  { border-left-color: #1b7a2b; }
+.confidence-band.medium { border-left-color: #b36b00; }
+.confidence-band.low   { border-left-color: var(--aa-red); }
+
+/* ── Phase header ── */
+.phase-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+.phase-num {
+  background: var(--aa-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+
+/* ── Law citation tooltips ── */
+.law-cite {
+  position: relative;
+  display: inline;
+  color: var(--aa-blue);
+  font-weight: 700;
+  border-bottom: 1px dashed var(--aa-blue);
+  cursor: help;
+  white-space: nowrap;
+}
+.law-cite[data-non-negotiable="true"] {
+  color: var(--aa-red);
+  border-bottom-color: var(--aa-red);
+}
+.law-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 9999;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2832;
+  color: #e8edf2;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: normal;
+  min-width: 220px;
+  max-width: 340px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: opacity .15s ease, visibility .15s ease;
+  text-align: left;
+  font-weight: 400;
+}
+.law-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e2832;
+}
+.law-tooltip .law-summary { font-size: 12px; color: #9aaab8; margin-top: 4px; display: block; }
+.law-cite:hover .law-tooltip,
+.law-cite:focus .law-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+.law-cite.flip-below .law-tooltip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.law-cite.flip-below .law-tooltip::after {
+  top: auto; bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1e2832;
+}
+
+.gate-block {
+  margin-top: 24px;
+  border: 2px solid var(--aa-red);
+  padding: 18px 22px;
+  background: #fdf2f4;
+}
+.gate-block .gate-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--aa-red); font-weight: 800; margin-bottom: 8px; }
+.gate-block .gate-row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+.gate-block .gate-item { font-size: 14px; color: var(--ink); }
+.gate-block .gate-item strong { color: var(--aa-red); }
+
+td.critical { color: var(--aa-red); font-weight: 700; }
+td.high-sev { color: #b36b00; font-weight: 700; }
+
+@media print {
+  .law-tooltip { display: none; }
+  .law-cite { border-bottom: none; color: inherit; font-weight: inherit; }
+}
+
+.scope-in{color:#1b7a2b;font-weight:700;}
+.scope-ex{color:var(--muted);}
+.risk-critical{display:inline-block;padding:2px 8px;border-radius:2px;font-size:11px;font-weight:800;background:#fde8ec;color:var(--aa-red);border:1px solid #f8bbd0;}
+.risk-high{display:inline-block;padding:2px 8px;border-radius:2px;font-size:11px;font-weight:800;background:#fff8e1;color:#b36b00;border:1px solid #ffe082;}
+.phase-row-complete{background:#f0fdf4;}
+.phase-row-active{background:#fff8e1;}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#fef3c7;border-bottom:2px solid #f59e0b;padding:6px 16px;display:flex;align-items:center;gap:10px;font-family:sans-serif;font-size:0.8rem;color:#78350f;">
+  <span style="font-size:1rem;">&#9888;&#65039;</span>
+  <strong>AI-GENERATED DEMO REPO</strong> &mdash; This codebase (<code>aa-loyalty-legacy</code>) is entirely AI-generated for illustration purposes. It is <strong>not</strong> real AA production code.
+</div>
+<div style="height:38px;"></div>
+<!-- PAGE 1: COVER -->
+<div class="page cover">
+  <div class="eyebrow">Legacy Rescue · AAdvantage Loyalty Platform</div>
+  <h1>Phase 2 &mdash; Govern</h1>
+  <div class="meta" style="margin-top:48px;max-width:680px;">
+    <div class="meta-card"><div class="k">Proposal ID</div><div class="v"><code>loyalty-legacy-rescue-2026-004</code></div></div>
+    <div class="meta-card"><div class="k">Codebase</div><div class="v"><code>aa-loyalty-legacy &mdash; Java 21 Spring Boot</code></div></div>
+    <div class="meta-card"><div class="k">Phase</div><div class="v">2 of 7 &mdash; Constitutional Proposal &amp; Scope Declaration</div></div>
+    <div class="meta-card"><div class="k">Date</div><div class="v">2026-05-05</div></div>
+    <div class="meta-card"><div class="k">Status</div><div class="v" style="color:#b36b00;font-weight:700;">PROPOSED &mdash; Awaiting Human Sign-off</div></div>
+    <div class="meta-card"><div class="k">Workflow</div><div class="v"><code>legacy-rescue-refactor.md</code></div></div>
+  </div>
+  <div class="chip-row" style="margin-top:40px;">
+    <span class="chip">11 IN_SCOPE classes</span>
+    <span class="chip">6 EXCLUDED (config/DTOs)</span>
+    <span class="chip">PCI-DSS</span>
+    <span class="chip">GDPR/CCPA</span>
+    <span class="chip">DOT</span>
+    <span class="chip">7 Phases &middot; 7 Gates</span>
+  </div>
+  <div class="gate-block" style="margin-top:52px;max-width:680px;">
+    <div class="gate-label">Constitutional Gate &mdash; Phase 2 Result</div>
+    <div class="gate-row">
+      <div class="gate-item">Proposal: <strong>SUBMITTED</strong></div>
+      <div class="gate-item">Scope Declaration: <strong>COMPLETE</strong></div>
+      <div class="gate-item">Disposition: <strong>AWAITING HUMAN APPROVAL &rarr; PHASE 3</strong></div>
+    </div>
+  </div>
+  <div class="footer"><div>AAdvantage Legacy Rescue &middot; Phase 2 &mdash; Govern</div><div class="pn">1</div></div>
+</div>
+
+<!-- PAGE 2: PROBLEM + PHASE PLAN -->
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 2</span>
+    <span style="font-size:20px;font-weight:800;color:var(--aa-blue);">Problem Statement &amp; Phase Plan</span>
+  </div>
+  <h2>Problem Statement</h2>
+  <p>The <code>aa-loyalty-legacy</code> codebase serves the AAdvantage Loyalty Platform and was developed without constitutional governance. It presents <strong>P0 security violations</strong> (hardcoded production credentials committed to VCS, wildcard CORS, unauthenticated PII endpoints), a god class with cyclomatic complexity ~35, and <strong>0% test coverage</strong> across all 27 classes.</p>
+  <p>Per <span class="law-cite" data-law-id="ENG-4.10" data-non-negotiable="true">ENG-4.10 &#x26D4;<span class="law-tooltip"><strong>Test Evolution Law</strong><span class="law-summary">Characterization tests must be written before any legacy code is modified. No exceptions.</span></span></span>, no changes may be made until characterization tests lock existing behavior at &ge;95% coverage across the declared scope. Per <span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7 &#x26D4;<span class="law-tooltip"><strong>Credentials Law</strong><span class="law-summary">No credentials or secrets in source code or version control. Non-negotiable.</span></span></span>, hardcoded credentials are a P0 constitutional violation requiring remediation in Phase 4.</p>
+  <h2>Phase Plan</h2>
+  <table>
+    <thead><tr><th>Phase</th><th>Name</th><th>Key Action</th><th>Gate</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr class="phase-row-complete"><td><strong>1</strong></td><td>Assess</td><td>Constitution audit, SonarQube baseline</td><td>Violations inventoried</td><td style="color:#1b7a2b;font-weight:700;">&#10003; COMPLETE</td></tr>
+      <tr class="phase-row-active"><td><strong>2</strong></td><td>Govern</td><td>Proposal + scope declaration</td><td>Human sign-off</td><td style="color:#b36b00;font-weight:700;">&#9654; IN PROGRESS</td></tr>
+      <tr><td><strong>3</strong></td><td>Characterize</td><td>Write tests for all 11 IN_SCOPE classes</td><td style="color:var(--aa-red);font-weight:700;">HARD_BLOCK: coverage &ge;95% on scope</td><td style="color:var(--muted);">PENDING</td></tr>
+      <tr><td><strong>4</strong></td><td>Remediate</td><td>Fix P0 security violations, one per commit</td><td style="color:var(--aa-red);font-weight:700;">HARD_BLOCK: vulns=0, security=A</td><td style="color:var(--muted);">PENDING</td></tr>
+      <tr><td><strong>5</strong></td><td>Refactor</td><td>Dissolve god class, reduce CC to &le;10</td><td style="color:var(--aa-red);font-weight:700;">HARD_BLOCK: new_coverage &ge;95%</td><td style="color:var(--muted);">PENDING</td></tr>
+      <tr><td><strong>6</strong></td><td>Certify</td><td>Final compliance report, delta vs baseline</td><td style="color:var(--aa-red);font-weight:700;">Full gate: all thresholds</td><td style="color:var(--muted);">PENDING</td></tr>
+      <tr><td><strong>7</strong></td><td>Harden &mdash; Mutation</td><td>PIT mutation testing</td><td style="color:var(--aa-red);font-weight:700;">HARD_BLOCK: mutation &ge;90% (ENG-4.12)</td><td style="color:var(--muted);">PENDING</td></tr>
+    </tbody>
+  </table>
+  <div class="footer"><div>AAdvantage Legacy Rescue &middot; Phase 2 &mdash; Govern</div><div class="pn">2</div></div>
+</div>
+
+<!-- PAGE 3: SCOPE REGISTRY + REGULATORY -->
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 2</span>
+    <span style="font-size:20px;font-weight:800;color:var(--aa-blue);">Characterization Scope Registry</span>
+  </div>
+  <p>Per the Phase 3 Characterization Scope Protocol, every class must be classified <em>before</em> a single test is written. The Phase 3 SonarQube gate applies only to IN_SCOPE classes. Phase 4 cannot begin until SonarQube confirms &ge;95% coverage across all IN_SCOPE classes.</p>
+  <table>
+    <thead><tr><th>Class</th><th>Bounded Context</th><th>Status</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td><code>MileageService</code></td><td>Miles Accrual</td><td><span class="scope-in">IN_SCOPE</span></td><td>God class &mdash; 5 bounded contexts, highest risk</td></tr>
+      <tr><td><code>MileageCalculator</code></td><td>Miles Accrual</td><td><span class="scope-in">IN_SCOPE</span></td><td>CC ~35 &mdash; highest complexity in codebase</td></tr>
+      <tr><td><code>MileageAccount</code></td><td>Miles Accrual</td><td><span class="scope-in">IN_SCOPE</span></td><td>Core domain object &mdash; business rules</td></tr>
+      <tr><td><code>MemberService</code></td><td>Member Profile</td><td><span class="scope-in">IN_SCOPE</span></td><td>PII handling &mdash; GDPR/CCPA scope</td></tr>
+      <tr><td><code>RedemptionService</code></td><td>Award Redemption</td><td><span class="scope-in">IN_SCOPE</span></td><td>PCI scope &mdash; award payments</td></tr>
+      <tr><td><code>TierService</code></td><td>Tier Calculation</td><td><span class="scope-in">IN_SCOPE</span></td><td>Calculation logic &mdash; DOT audit trail</td></tr>
+      <tr><td><code>TierCalculator</code></td><td>Tier Calculation</td><td><span class="scope-in">IN_SCOPE</span></td><td>Elite bonus duplication with MileageCalculator</td></tr>
+      <tr><td><code>PartnerService</code></td><td>Partner Integration</td><td><span class="scope-in">IN_SCOPE</span></td><td>External integration boundary</td></tr>
+      <tr><td><code>NotificationService</code></td><td>Notifications</td><td><span class="scope-in">IN_SCOPE</span></td><td>Exception swallowing &mdash; silent failure risk</td></tr>
+      <tr><td><code>MemberController</code></td><td>Member Profile</td><td><span class="scope-in">IN_SCOPE</span></td><td>Unauthenticated PII endpoints</td></tr>
+      <tr><td><code>MileageController</code></td><td>Miles Accrual</td><td><span class="scope-in">IN_SCOPE</span></td><td>Admin endpoint without authentication</td></tr>
+      <tr><td><code>DatabaseConfig, AppConfig, Application</code></td><td>Infrastructure</td><td><span class="scope-ex">EXCLUDED</span></td><td>Config-only; P0 remediation in Phase 4, no behavioral logic</td></tr>
+      <tr><td>All DTOs, Entities, Repositories</td><td>Various</td><td><span class="scope-ex">EXCLUDED</span></td><td>Value objects / Spring Data interfaces &mdash; no logic to characterize</td></tr>
+    </tbody>
+  </table>
+  <h2 style="margin-top:24px;">Regulatory Compliance Scope (BUS-2.1)</h2>
+  <table>
+    <thead><tr><th>Regulation</th><th>Bounded Context</th><th>Risk</th><th>Phase 4 Action</th></tr></thead>
+    <tbody>
+      <tr><td><strong>PCI-DSS</strong></td><td>Redemption, Partner billing</td><td><span class="risk-critical">CRITICAL</span></td><td>Remove hardcoded credentials; restrict payment endpoints</td></tr>
+      <tr><td><strong>GDPR/CCPA</strong></td><td>Member Profile &mdash; PII (name, DOB, email, address)</td><td><span class="risk-critical">CRITICAL</span></td><td>Add @PreAuthorize; return DTO not full entity</td></tr>
+      <tr><td><strong>DOT</strong></td><td>Miles Accrual / Redemption</td><td><span class="risk-high">HIGH</span></td><td>Eliminate silent failures; make accrual auditable</td></tr>
+    </tbody>
+  </table>
+  <div class="gate-block" style="margin-top:28px;">
+    <div class="gate-label">Human Gate &mdash; Phase 2 Sign-off Required (ENG-12.1 &#x26D4;)</div>
+    <div class="gate-row">
+      <div class="gate-item">Scope: <strong>11 IN_SCOPE &middot; 6 EXCLUDED</strong></div>
+      <div class="gate-item">Regulatory: <strong>PCI-DSS &middot; GDPR/CCPA &middot; DOT confirmed</strong></div>
+      <div class="gate-item">Agent cannot begin Phase 3 without your approval</div>
+    </div>
+  </div>
+  <div class="footer"><div>AAdvantage Legacy Rescue &middot; Phase 2 &mdash; Govern</div><div class="pn">3</div></div>
+</div>
+<script>
+document.querySelectorAll('.law-cite').forEach(function(el) {
+  el.addEventListener('mouseenter', function() {
+    var rect = el.getBoundingClientRect();
+    var tooltip = el.querySelector('.law-tooltip');
+    if (!tooltip) return;
+    var tipH = tooltip.offsetHeight || 80;
+    if (rect.top < tipH + 12) {
+      el.classList.add('flip-below');
+    } else {
+      el.classList.remove('flip-below');
+    }
+  });
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  var tip = el.querySelector('.law-tooltip');
+  if (tip) tip.id = 'tooltip-' + el.dataset.lawId;
+});
+</script>
+</body>
+</html>
+</html>

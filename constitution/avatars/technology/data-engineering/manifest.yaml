@@ -1,0 +1,113 @@
+# Data Engineering Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-data-engineering
+  type: technology
+  name: Data Engineering
+  version: "2.0.0"
+
+stack:
+  language: Python 3.11+
+  frameworks:
+    - Apache Spark
+    - Apache Airflow
+    - dbt
+  testing:
+    - pytest
+    - pyspark.testing
+    - great_expectations
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - pyspark: ">=3.5.0"
+    - apache-airflow: ">=2.8.0"
+    - great-expectations: ">=0.18.0"
+  dev:
+    - pytest: ">=8.0.0"
+    - pytest-cov: ">=4.1.0"
+    - ruff: ">=0.1.0"
+    - mypy: ">=1.8.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-3.1
+    title: Complexity Limits
+    example_file: examples/ENG-3.1-complexity.md
+  - id: ENG-6.5
+    title: Input Validation
+    example_file: examples/ENG-6.5-validation.md
+
+conventions:
+  naming:
+    modules: snake_case
+    functions: snake_case
+    classes: PascalCase
+    tables: snake_case (dim_, fact_)
+    columns: snake_case
+    dags: snake_case
+
+  patterns:
+    transformation: "pure function DataFrame -> DataFrame"
+    etl_job: "ETL base class with extract/transform/load"
+    schema: "explicit StructType definition"
+    quality_check: "Great Expectations suite"
+
+commands:
+  test:
+    all: pytest
+    transformations: pytest tests/transformations/
+    fast: pytest -m "not spark"
+    coverage: pytest --cov=src --cov-report=html
+    parallel: pytest -n auto
+  dev:
+    spark_shell: pyspark --master local[4]
+    submit_job: spark-submit --master local[4] jobs/orders/transform.py
+    airflow: airflow standalone
+    trigger_dag: airflow dags trigger orders_daily_pipeline
+  quality:
+    init_ge: great_expectations init
+    checkpoint: great_expectations checkpoint run orders_checkpoint
+    docs: great_expectations docs build
+
+project_structure: |
+  data_project/
+  ├── dags/                       # Airflow DAGs
+  │   ├── orders_pipeline.py
+  │   └── customer_metrics_dag.py
+  ├── jobs/                       # Spark jobs
+  │   ├── orders/
+  │   │   ├── extract.py
+  │   │   ├── transform.py
+  │   │   └── load.py
+  │   └── metrics/
+  ├── src/
+  │   ├── transformations/        # Pure transformation logic
+  │   ├── schemas/                # Schema definitions
+  │   ├── quality/                # Data quality rules
+  │   └── utils/
+  ├── tests/
+  │   ├── transformations/
+  │   ├── jobs/
+  │   ├── quality/
+  │   └── conftest.py             # Spark fixtures
+  ├── configs/
+  │   ├── dev.yaml
+  │   ├── staging.yaml
+  │   └── prod.yaml
+  ├── sql/                        # SQL transformations
+  ├── great_expectations/         # GE configuration
+  └── requirements.txt

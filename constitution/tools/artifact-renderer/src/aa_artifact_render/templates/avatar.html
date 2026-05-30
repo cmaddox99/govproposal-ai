@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {%- set spec_id       = frontmatter.get('spec_id', frontmatter.get('id', '')) %}
+  {%- set title         = frontmatter.get('title', 'Avatar Workflow Artifact') %}
+  {%- set workflow      = frontmatter.get('workflow', 'avatar-workflow') %}
+  {%- set wf_version    = frontmatter.get('workflow_version', '') %}
+  {%- set avatar_mode   = frontmatter.get('mode', frontmatter.get('workflow_mode', '')) %}
+  {%- set confidence    = frontmatter.get('confidence', '') %}
+  {%- set laws_applied  = frontmatter.get('laws_applied', frontmatter.get('laws', [])) %}
+  {%- set phase_raw     = frontmatter.get('phase', '') %}
+  {%- set avatar_id     = frontmatter.get('avatar_id', '') %}
+  {%- set avatar_path   = frontmatter.get('avatar_path', '') %}
+  {%- set avatar_type   = frontmatter.get('avatar_type', '') %}
+  {%- set avatars       = frontmatter.get('avatars', []) %}
+  {%- set rag_summary   = frontmatter.get('rag_summary', {}) %}
+  {%- set ready_disc    = frontmatter.get('ready_for_discovery', '') %}
+  {%- set rag_val_date  = frontmatter.get('rag_validation_date', '') %}
+  {%- set rag_validated = frontmatter.get('rag_validated', '') %}
+  {%- set exit_chk      = frontmatter.get('exit_checklist', []) %}
+  {%- set audit_log     = frontmatter.get('audit_log', []) %}
+  {%- set render_gate   = frontmatter.get('render_gate', {}) %}
+  {%- set spec_files    = frontmatter.get('spec_artifacts', []) %}
+  {%- set stakeholder   = frontmatter.get('stakeholder', {}) %}
+  {%- set tmpl_version  = frontmatter.get('template_version', '') %}
+  {%- set tmpl_path     = frontmatter.get('template_path', '') %}
+  {%- set artifact_status = frontmatter.get('status', '') %}
+  {%- set triggered_by  = frontmatter.get('triggered_by', '') %}
+  {%- set affects       = frontmatter.get('affects', '') %}
+
+  {%- set PHASES = [
+    {'id': '0', 'label': 'Pre-flight',    'key': 'phase-0'},
+    {'id': '1', 'label': 'Identify',      'key': 'phase-1'},
+    {'id': '2', 'label': 'Scan',          'key': 'phase-2'},
+    {'id': '3', 'label': 'Discover',      'key': 'phase-3'},
+    {'id': '4', 'label': 'Build',         'key': 'phase-4'},
+    {'id': '5', 'label': 'RAG Validate',  'key': 'phase-5'},
+    {'id': '6', 'label': 'Commit',        'key': 'phase-6'},
+  ] %}
+
+  {%- set law_names = {
+    'ENG-11.1': 'Hangar SDD Law — governed spec-driven development workflow',
+    'ENG-11.2': 'Proposal Completeness Law — proposal must satisfy completeness checklist before review',
+    'ENG-13.1': 'Artifact Rendering Standard · NON-NEGOTIABLE — all governance artifacts rendered as HTML before stakeholder presentation',
+    'ENG-13.2': 'Citation Transparency Law — every law referenced must be cited by ID',
+    'ENG-3.2':  'Atomic TDD Law — coverage ≥90%, mutation ≥70%',
+    'ENG-4.1':  'Coverage Law — branch coverage ≥90% enforced via SonarQube gate',
+    'BUS-7.1':  'Audit Trail Law · NON-NEGOTIABLE — every stage transition logged with who/what/when/why/outcome',
+  } %}
+
+  {%- set conf_level = confidence | lower if confidence else '' %}
+
+  <title>{{ title }}{% if spec_id %} | {{ spec_id }}{% endif %}</title>
+  <style>
+    :root {
+      --aa-red:#c8102e; --aa-dark:#0a0d14; --aa-navy:#131825; --aa-blue:#0f3460;
+      --aa-accent:#e94560; --aa-gold:#f5a623; --aa-green:#22c55e; --aa-green-dk:#16a34a;
+      --aa-purple:#7c3aed; --aa-teal:#0d9488; --aa-surface:#f4f6fa; --aa-border:#dde3ee;
+      --aa-text:#1e293b; --aa-muted:#64748b; --r:9px; --sh:0 2px 10px rgba(0,0,0,.07);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--aa-surface);color:var(--aa-text);font-size:14px;line-height:1.6}
+    header{background:linear-gradient(140deg,#070a12 0%,#0f3460 65%,#0d9488 100%);color:#fff;padding:32px 44px 26px;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;right:-60px;bottom:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(13,148,136,.22) 0%,transparent 70%);border-radius:50%}
+    .h-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px}
+    .h-title{font-size:28px;font-weight:800;letter-spacing:-.5px}
+    .h-sub{font-size:14px;color:rgba(255,255,255,.6);margin-top:4px;margin-bottom:18px}
+    .h-badges{display:flex;flex-wrap:wrap;gap:7px}
+    .hb{padding:3px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+    .hb-phase{background:var(--aa-teal);color:#fff}
+    .hb-mode{background:#5b21b6;color:#fff;border:1px solid #7c3aed}
+    .hb-conf-high{background:rgba(34,197,94,.25);color:#86efac;border:1px solid rgba(34,197,94,.4)}
+    .hb-conf-medium{background:rgba(245,166,35,.25);color:var(--aa-gold);border:1px solid rgba(245,166,35,.4)}
+    .hb-conf-low{background:rgba(239,68,68,.25);color:#fca5a5;border:1px solid rgba(239,68,68,.4)}
+    .hb-law{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.18)}
+    .hb-ok{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+    .hb-fail{background:#c8102e;color:#fff}
+    /* Phase tracker */
+    nav.phases{background:var(--aa-navy);padding:0 44px;display:flex;overflow-x:auto}
+    .ph{padding:13px 18px;font-size:12px;font-weight:600;color:rgba(255,255,255,.3);border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:8px}
+    .ph.done{color:rgba(255,255,255,.55);border-bottom-color:var(--aa-green-dk)}
+    .ph.active{color:#fff;border-bottom-color:var(--aa-teal)}
+    .ph.locked{color:rgba(255,255,255,.18)}
+    .ph-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;background:rgba(255,255,255,.07);flex-shrink:0}
+    .ph.done .ph-n{background:var(--aa-green-dk);color:#fff}
+    .ph.active .ph-n{background:var(--aa-teal);color:#fff}
+    /* Layout */
+    .body{max-width:1200px;margin:0 auto;padding:26px 20px;display:grid;grid-template-columns:1fr 320px;gap:22px}
+    @media(max-width:900px){.body{grid-template-columns:1fr}}
+    .main{display:flex;flex-direction:column;gap:18px}
+    .side{display:flex;flex-direction:column;gap:18px}
+    .card{background:#fff;border:1px solid var(--aa-border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+    .ch{padding:13px 18px 11px;border-bottom:1px solid var(--aa-border);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+    .ci{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+    .ct{font-weight:700;font-size:13px;color:var(--aa-dark);flex:1}
+    .cb{padding:18px}
+    .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--aa-muted);margin-bottom:6px}
+    /* RAG stat cards */
+    .rag-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+    @media(max-width:700px){.rag-grid{grid-template-columns:1fr 1fr}}
+    .rag-card{border-radius:8px;padding:14px 16px;border:1px solid var(--aa-border);background:#f8fafc}
+    .rag-card.pass{background:#f0fdf4;border-color:#bbf7d0}
+    .rag-card.fail{background:#fef2f2;border-color:#fecaca}
+    .rag-card.warn{background:#fffbeb;border-color:#fde68a}
+    .rag-n{font-size:30px;font-weight:800;line-height:1;color:var(--aa-blue);letter-spacing:-1px}
+    .rag-card.pass .rag-n{color:var(--aa-green-dk)}
+    .rag-card.fail .rag-n{color:#991b1b}
+    .rag-card.warn .rag-n{color:#92400e}
+    .rag-l{font-size:11px;color:var(--aa-muted);margin-top:6px;line-height:1.35}
+    .rag-verdict{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-top:12px}
+    .rv-pass{background:#dcfce7;color:#166534;border:1px solid #86efac}
+    .rv-fail{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+    /* Handoff summary */
+    .hf-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:600px){.hf-grid{grid-template-columns:1fr}}
+    .hf-box{border-radius:8px;padding:12px 14px;border:1px solid var(--aa-border);background:#f8fafc}
+    .hf-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);margin-bottom:4px}
+    .hf-value{font-size:13px;font-weight:700;color:var(--aa-dark)}
+    .hf-box.ready{background:#f0fdf4;border-color:#bbf7d0}
+    .hf-box.pending{background:#fffbeb;border-color:#fde68a}
+    /* Law tooltips */
+    .law{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle}
+    .law:hover .tt{display:block}
+    .tt{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .tt::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .lp{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .lb{background:#fffbeb;color:#b45309;border-color:#fde68a}
+    .le{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .lt{background:#f0fdfa;color:#0f766e;border-color:#99f6e4}
+    /* Checklist */
+    .cl{list-style:none;display:flex;flex-direction:column;gap:8px}
+    .cli{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface)}
+    .cli.pass,.cli.done{background:#f0fdf4;border-color:#86efac}
+    .cli.fail{background:#fef2f2;border-color:#fecaca}
+    .cli.na{background:#f8fafc;border-color:var(--aa-border);opacity:.6}
+    .cbox{width:19px;height:19px;flex-shrink:0;border:2px solid var(--aa-border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:2px}
+    .cli.pass .cbox,.cli.done .cbox{background:var(--aa-green-dk);border-color:var(--aa-green-dk);color:#fff}
+    .cli.fail .cbox{background:#dc2626;border-color:#dc2626;color:#fff}
+    .cli.na .cbox{background:#e2e8f0;border-color:#e2e8f0;color:#64748b}
+    .ctitle{font-weight:600;font-size:13px}
+    .cdesc{font-size:12px;color:var(--aa-muted);margin-top:2px}
+    .clw{font-size:11px;font-weight:700;color:var(--aa-accent);margin-top:3px}
+    /* Audit table */
+    .at{width:100%;border-collapse:collapse;font-size:12px}
+    .at th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--aa-muted);border-bottom:1px solid var(--aa-border)}
+    .at td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .at tr:last-child td{border-bottom:none}
+    .ao{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+    .ao-ok{background:#dcfce7;color:#166534}
+    .ao-ip{background:#fef3c7;color:#92400e}
+    .ao-wait{background:#fef3c7;color:#92400e}
+    .ao-fail{background:#fee2e2;color:#991b1b}
+    /* Render gate */
+    .rg{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%);border-radius:9px;padding:16px 18px;color:#fff;margin-bottom:14px}
+    .rg-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c4b5fd;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+    .rg-desc{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:12px}
+    .rg-btns{display:flex;gap:8px;flex-wrap:wrap}
+    .rgb{padding:7px 16px;border-radius:7px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+    .rgb-approve{background:#22c55e;color:#fff}.rgb-approve:hover{background:#16a34a}
+    .rgb-enhance{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25)}.rgb-enhance:hover{background:rgba(255,255,255,.22)}
+    .rgb-reject{background:#ef4444;color:#fff}.rgb-reject:hover{background:#dc2626}
+    #rg-decision{font-size:12px;margin-top:10px;padding:8px 12px;border-radius:7px;display:none}
+    .rg-persist{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);color:#86efac;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    .rg-persist-pend{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);color:#fbbf24;padding:10px 13px;border-radius:7px;font-size:12px;margin-bottom:12px}
+    /* Spec files */
+    .sf{display:flex;align-items:center;gap:8px;padding:8px 11px;background:var(--aa-surface);border:1px dashed var(--aa-border);border-radius:7px;font-family:'Cascadia Code','Fira Code',monospace;font-size:11.5px;color:#1d4ed8;margin-bottom:7px}
+    .ss{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap}
+    .ss-ok{background:#dcfce7;color:#166534}
+    .ss-wait{background:#fef3c7;color:#92400e}
+    .ss-pend{background:#fee2e2;color:#991b1b}
+    /* Avatar chip */
+    .av{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;background:#f0fdfa;border:1px solid #99f6e4;font-size:12px;font-weight:600;color:#0f766e;margin-bottom:6px}
+    /* Prose */
+    code{font-family:'Cascadia Code','Fira Code',monospace;background:#f1f5f9;padding:1px 5px;border-radius:4px;font-size:11.5px;color:#0f3460}
+    hr{border:none;border-top:1px solid var(--aa-border);margin:13px 0}
+    .prose h1,.prose h2,.prose h3{margin:12px 0 8px;color:var(--aa-blue)}
+    .prose p{margin:8px 0}
+    .prose ul,.prose ol{margin:8px 0 8px 22px}
+    .prose table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+    .prose table th{background:var(--aa-surface);padding:7px 10px;text-align:left;font-size:11px;font-weight:700;border-bottom:1px solid var(--aa-border)}
+    .prose table td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    .prose table tr:last-child td{border-bottom:none}
+    /* Law citation spans */
+    .law-cite{display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700;cursor:help;border:1px solid;position:relative;white-space:nowrap;vertical-align:middle;background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .law-cite[data-non-negotiable="false"]{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .law-tooltip{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:#1e293b;color:#f1f5f9;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:400;z-index:999;line-height:1.55;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+    .law-tooltip::after{content:'';position:absolute;top:100%;left:10px;border:5px solid transparent;border-top-color:#1e293b}
+    .law-cite:hover .law-tooltip{display:block}
+    /* Markdown checkbox items */
+    .task-done,.task-pending{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border-radius:7px;border:1px solid var(--aa-border);background:var(--aa-surface);margin:4px 0}
+    .task-done{background:#f0fdf4;border-color:#86efac}
+    .task-done .cb{width:18px;height:18px;flex-shrink:0;border-radius:4px;background:var(--aa-green-dk);border:2px solid var(--aa-green-dk);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700;padding:0!important;margin-top:2px}
+    .task-done .cb::after{content:'✓'}
+    .task-pending .cb{width:18px;height:18px;flex-shrink:0;border-radius:4px;background:#fff;border:2px solid var(--aa-border);padding:0!important;margin-top:2px}
+    .task-text{font-size:12px;line-height:1.5;flex:1}
+    /* Footer */
+    footer{background:var(--aa-dark);color:rgba(255,255,255,.45);padding:11px 44px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;font-size:11px}
+    .ft-dot{width:7px;height:7px;border-radius:50%;background:var(--aa-teal);animation:pulse 2s infinite;flex-shrink:0}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="h-eye">{{ workflow }}{% if spec_id %} · {{ spec_id }}{% endif %}</div>
+  <div class="h-title">{{ title }}</div>
+  <div class="h-sub">Avatar Workflow{% if wf_version %} v{{ wf_version }}{% endif %}{% if phase_raw %} &nbsp;·&nbsp; {{ phase_raw }}{% endif %}</div>
+  <div class="h-badges">
+    {% if phase_raw %}<span class="hb hb-phase">📍 {{ phase_raw }}</span>{% endif %}
+    {% if avatar_mode %}<span class="hb hb-mode">⚙️ {{ avatar_mode }}</span>{% endif %}
+    {% if confidence %}
+      {%- set cl = confidence | lower %}
+      <span class="hb hb-conf-{{ cl }}">Confidence: {{ confidence }}</span>
+    {% endif %}
+    {% for law in laws_applied %}<span class="hb hb-law">{{ law }}</span>{% endfor %}
+  </div>
+</header>
+
+{# Phase tracker — determine active phase from phase_raw #}
+{%- set active_phase = -1 %}
+{%- if '0' in phase_raw or 'pre' in phase_raw | lower %}{%- set active_phase = 0 %}
+{%- elif 'phase-1' in phase_raw or 'identif' in phase_raw | lower %}{%- set active_phase = 1 %}
+{%- elif 'phase-2' in phase_raw or 'scan' in phase_raw | lower %}{%- set active_phase = 2 %}
+{%- elif 'phase-3' in phase_raw or 'discover' in phase_raw | lower %}{%- set active_phase = 3 %}
+{%- elif 'phase-4' in phase_raw or 'build' in phase_raw | lower %}{%- set active_phase = 4 %}
+{%- elif 'phase-5' in phase_raw or 'rag' in phase_raw | lower or 'validat' in phase_raw | lower %}{%- set active_phase = 5 %}
+{%- elif 'phase-6' in phase_raw or 'commit' in phase_raw | lower %}{%- set active_phase = 6 %}
+{%- endif %}
+
+<nav class="phases" aria-label="Avatar workflow phases">
+  {%- for p in PHASES %}
+    {%- set pidx = loop.index0 %}
+    {%- if pidx < active_phase %}{%- set pstatus = 'done' %}
+    {%- elif pidx == active_phase %}{%- set pstatus = 'active' %}
+    {%- else %}{%- set pstatus = 'locked' %}
+    {%- endif %}
+    <div class="ph {{ pstatus }}">
+      <div class="ph-n">{% if pstatus == 'done' %}✓{% else %}{{ p.id }}{% endif %}</div>
+      {{ p.label }}
+    </div>
+  {%- endfor %}
+</nav>
+
+<div class="body">
+  <div class="main">
+
+    {# RAG Summary stat cards (if rag_summary block present) #}
+    {% if rag_summary %}
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f0fdfa">🔬</div>
+        <div class="ct">RAG Validation Summary</div>
+        <span class="law lt">ENG-13.1 ⚠<span class="tt"><strong>Artifact Rendering Standard — NON-NEGOTIABLE</strong><br>Rendered and reviewed before advancing to Phase 6.</span></span>
+      </div>
+      <div class="cb">
+        <div class="rag-grid">
+          {%- set recall_str = rag_summary.get('recall', '') | string %}
+          {%- set recall_pass = rag_summary.get('recall_pct', 0) | int >= 95 %}
+          <div class="rag-card {{ 'pass' if recall_pass else 'fail' }}">
+            <div class="rag-n">{{ recall_str }}</div>
+            <div class="rag-l">Recall<br>Target ≥ 95% (5/5)</div>
+          </div>
+          {%- set tok = rag_summary.get('max_tokens', 0) | int %}
+          {%- set tok_pass = tok <= 3500 %}
+          <div class="rag-card {{ 'pass' if tok_pass else 'fail' }}">
+            <div class="rag-n">{{ tok if tok > 0 else '—' }}</div>
+            <div class="rag-l">Max tokens/query<br>Target ≤ 3,500</div>
+          </div>
+          {%- set prec = rag_summary.get('precision_pct', 0) | int %}
+          {%- set prec_pass = prec >= 90 %}
+          <div class="rag-card {{ 'pass' if prec_pass else 'fail' }}">
+            <div class="rag-n">{{ prec }}%</div>
+            <div class="rag-l">Precision<br>Target ≥ 90%</div>
+          </div>
+          {%- set conf_raw = rag_summary.get('confidence', confidence) | lower %}
+          {%- set conf_tone = 'pass' if conf_raw == 'high' else ('warn' if conf_raw == 'medium' else 'fail') %}
+          <div class="rag-card {{ conf_tone }}">
+            <div class="rag-n">{{ rag_summary.get('confidence', confidence) | upper if (rag_summary.get('confidence', confidence)) else '—' }}</div>
+            <div class="rag-l">Confidence<br>Evidence quality</div>
+          </div>
+        </div>
+        {%- set v = rag_summary.get('verdict', '') | upper %}
+        {% if v %}
+          <span class="rag-verdict {{ 'rv-pass' if v == 'PASS' else 'rv-fail' }}">{{ '✅' if v == 'PASS' else '❌' }} {{ v }}</span>
+          {% if v == 'PASS' %}<span style="font-size:12px;color:var(--aa-muted);margin-left:10px;">Proceed to Phase 6 render gate</span>
+          {% else %}<span style="font-size:12px;color:#991b1b;margin-left:10px;">Return to Phase 5 — resolve failures before re-running</span>{% endif %}
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    {# Discovery handoff summary #}
+    {% if ready_disc is not none and ready_disc != '' or rag_val_date or avatars %}
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f5f3ff">🤝</div>
+        <div class="ct">Discovery Handoff Summary</div>
+        <span class="law le">ENG-11.1<span class="tt"><strong>Hangar SDD Law</strong><br>Avatar must be RAG-validated before Discovery Stage A begins.</span></span>
+      </div>
+      <div class="cb">
+        <div class="hf-grid" style="margin-bottom:14px;">
+          {% if avatars %}
+          <div class="hf-box">
+            <div class="hf-label">Avatars</div>
+            <div class="hf-value">
+              {% for a in avatars %}<div class="av">🎯 {{ a }}</div>{% endfor %}
+            </div>
+          </div>
+          {% endif %}
+          {% if avatar_path %}
+          <div class="hf-box">
+            <div class="hf-label">Avatar path</div>
+            <div class="hf-value" style="font-family:monospace;font-size:11px;color:#0f766e;word-break:break-all;">{{ avatar_path }}</div>
+          </div>
+          {% endif %}
+          {% if rag_val_date %}
+          <div class="hf-box">
+            <div class="hf-label">RAG validation date</div>
+            <div class="hf-value">{{ rag_val_date }}</div>
+          </div>
+          {% endif %}
+          {% if rag_validated is not none and rag_validated != '' %}
+          <div class="hf-box {{ 'ready' if rag_validated else 'pending' }}">
+            <div class="hf-label">RAG validated</div>
+            <div class="hf-value">{{ '✅ Yes' if rag_validated else '⏳ No' }}</div>
+          </div>
+          {% endif %}
+          {%- set rd_str = ready_disc | string | lower %}
+          {% if rd_str in ('true','false','yes','no') %}
+          <div class="hf-box {{ 'ready' if rd_str in ('true','yes') else 'pending' }}">
+            <div class="hf-label">Ready for discovery</div>
+            <div class="hf-value">{{ '✅ Yes' if rd_str in ('true','yes') else '⏳ Awaiting confirmation' }}</div>
+          </div>
+          {% endif %}
+          {% if triggered_by %}
+          <div class="hf-box">
+            <div class="hf-label">Triggered by</div>
+            <div class="hf-value" style="font-size:11px;font-weight:400;">{{ triggered_by }}</div>
+          </div>
+          {% endif %}
+        </div>
+        {% if affects %}
+        <div style="font-size:12px;color:var(--aa-muted);padding:10px 12px;background:var(--aa-surface);border-radius:7px;border:1px dashed var(--aa-border);">
+          <strong>Affects:</strong> {{ affects }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    {# Prose body #}
+    {% if body %}
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#eff6ff">📄</div><div class="ct">{{ frontmatter.get('body_title', 'Detail') }}</div></div>
+      <div class="cb prose">{{ body | safe }}</div>
+    </div>
+    {% endif %}
+
+    {# Exit Gate Checklist #}
+    {% if exit_chk %}
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f0fdf4">✅</div>
+        <div class="ct">Exit Gate Checklist</div>
+        <span class="law lp">ENG-13.1 ⚠<span class="tt"><strong>NON-NEGOTIABLE</strong><br>ALL items must be checked before advancing to Phase 6.</span></span>
+      </div>
+      <div class="cb">
+        <ul class="cl">
+          {% for item in exit_chk %}
+            {%- set st = item.get('status', 'pend') | lower %}
+            <li class="cli {{ 'pass' if st == 'pass' else ('done' if st == 'done' else ('fail' if st == 'fail' else ('na' if st == 'na' else 'pend'))) }}">
+              <div class="cbox">{% if st in ('pass','done') %}✓{% elif st == 'fail' %}✗{% elif st == 'na' %}–{% endif %}</div>
+              <div>
+                <div class="ctitle">{{ item.get('item', item.get('title', '')) }}</div>
+                {% if item.get('description') %}<div class="cdesc">{{ item.description }}</div>{% endif %}
+                {% if item.get('laws') %}<div class="clw">{{ item.laws | join(' · ') }}</div>{% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+    {# Audit Log #}
+    {% if audit_log %}
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#f1f5f9">📋</div>
+        <div class="ct">Audit Log</div>
+        <span class="law lb">ENG-11.1<span class="tt"><strong>Hangar SDD Law</strong><br>Every phase transition logged.</span></span>
+      </div>
+      <div class="cb">
+        <table class="at">
+          <thead><tr><th>Date</th><th>Actor</th><th>Action</th><th>Outcome</th></tr></thead>
+          <tbody>
+            {% for row in audit_log %}
+            <tr>
+              <td>{{ row.get('date', '') }}</td>
+              <td>{{ row.get('actor', '') }}</td>
+              <td>{{ row.get('action', '') }}</td>
+              <td><span class="ao {% if row.get('outcome','').upper() in ['OK','APPROVED','DONE','RENDERED','DRAFTED','PASS','READY'] %}ao-ok{% elif row.get('outcome','').upper() in ['IN_PROGRESS','IP','AWAITING','WAIT','PENDING'] %}ao-wait{% elif row.get('outcome','').upper() in ['FAIL','BLOCKED','REJECTED'] %}ao-fail{% else %}ao-ip{% endif %}">{{ row.get('outcome', '') }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+  </div><!-- end main -->
+
+  <div class="side">
+
+    <!-- ENG-13.1 Render Gate -->
+    <div class="card">
+      <div class="ch">
+        <div class="ci" style="background:#1e1b4b;font-size:16px;">🖥️</div>
+        <div class="ct" style="color:#4f46e5;">ENG-13.1 Render Gate</div>
+        <span class="hb hb-fail" style="font-size:9px;">NON-NEG</span>
+      </div>
+      <div class="cb">
+        {% if render_gate.get('status') == 'approved' %}
+          <div class="rg-persist">✅ <strong>APPROVED</strong>{% if render_gate.get('reviewer') %} — {{ render_gate.reviewer }}{% endif %}{% if render_gate.get('timestamp') %} · {{ render_gate.timestamp }}{% endif %}</div>
+        {% elif render_gate.get('status') == 'rejected' %}
+          <div class="rg-persist" style="background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.35);color:#fca5a5;">❌ <strong>REJECTED</strong>{% if render_gate.get('reviewer') %} — {{ render_gate.reviewer }}{% endif %}</div>
+        {% else %}
+          <div class="rg-persist-pend">⏳ <strong>PENDING</strong> — awaiting reviewer decision in the source artifact</div>
+        {% endif %}
+        <div class="rg">
+          <div class="rg-title">🖥️ Human Browser Review</div>
+          <div class="rg-desc">Review this artifact in your browser. Record your decision in the source <code>.md</code> file. Button clicks are reminders only.</div>
+          <div class="rg-btns">
+            <button class="rgb rgb-approve" onclick="rgDecision('APPROVE')">✅ APPROVE</button>
+            <button class="rgb rgb-enhance" onclick="rgDecision('ENHANCE')">🔄 ENHANCE</button>
+            <button class="rgb rgb-reject" onclick="rgDecision('REJECT')">❌ REJECT</button>
+          </div>
+          <div id="rg-decision"></div>
+        </div>
+        <p style="font-size:12px;color:var(--aa-muted);">Phase 6 does not begin until this render gate is ticked APPROVE in the source artifact. (ENG-13.1 NON-NEGOTIABLE)</p>
+      </div>
+    </div>
+
+    {# Stakeholder Approval #}
+    {% if stakeholder %}
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0fdf4">✅</div><div class="ct">Stakeholder Approval</div></div>
+      <div class="cb">
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;">
+          {% if stakeholder.get('name') or stakeholder.get('approver') %}
+          <div><span class="lbl">Reviewer</span><div style="font-weight:700;">{{ stakeholder.get('name', stakeholder.get('approver','')) }}</div></div>{% endif %}
+          {% if stakeholder.get('role') or stakeholder.get('title') %}
+          <div><span class="lbl">Role</span><div>{{ stakeholder.get('role', stakeholder.get('title','')) }}</div></div>{% endif %}
+          {% if stakeholder.get('affirm') is defined %}
+          <div><span class="lbl">Affirmed</span>
+            <div style="font-weight:700;color:{% if stakeholder.affirm %}var(--aa-green-dk){% else %}#92400e{% endif %};">
+              {{ '✅ Yes — confirmed' if stakeholder.affirm else '⏳ Not yet — set affirm: true to confirm' }}
+            </div>
+          </div>{% endif %}
+          {% if stakeholder.get('note') %}<div style="font-size:11px;color:var(--aa-muted);padding:8px 10px;background:var(--aa-surface);border-radius:6px;border:1px dashed var(--aa-border);">{{ stakeholder.note }}</div>{% endif %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {# Spec Artifacts #}
+    {% if spec_files %}
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📂</div><div class="ct">Spec Artifacts</div></div>
+      <div class="cb">
+        {% for f in spec_files %}
+        <div class="sf">📄 {{ f.get('path', f.get('filename', '')) }}<span class="ss {% if f.get('status','').upper() in ['OK','RENDERED','APPROVED','FILED','DRAFTED','DONE'] %}ss-ok{% elif f.get('status','').upper() in ['WAIT','PENDING'] %}ss-wait{% else %}ss-pend{% endif %}">{{ f.get('status', '') }}</span></div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {# Active Laws #}
+    {% if laws_applied %}
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#fff1f2">⚖️</div><div class="ct">Active Laws</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:7px;">
+        {% for law in laws_applied %}
+          {%- set nn = law in ('ENG-13.1','BUS-7.1') %}
+          <span class="law {% if nn %}lp{% elif loop.index % 2 == 0 %}lb{% else %}lt{% endif %}" style="width:fit-content">
+            {{ law }}{% if nn %} ⚠{% endif %}<span class="tt"><strong>{{ law_names.get(law, law) }}</strong></span>
+          </span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {# Artifact Info #}
+    {% if tmpl_version or tmpl_path or avatar_path or artifact_status %}
+    <div class="card">
+      <div class="ch"><div class="ci" style="background:#f0f4ff">📎</div><div class="ct">Artifact Info</div></div>
+      <div class="cb" style="display:flex;flex-direction:column;gap:9px;font-size:12px;">
+        {% if artifact_status %}<div><div class="lbl">Status</div><span class="ao {% if artifact_status.upper() in ['DONE','APPROVED','RENDERED','READY'] %}ao-ok{% elif artifact_status.upper() in ['IN_PROGRESS','IP'] %}ao-ip{% else %}ao-wait{% endif %}">{{ artifact_status }}</span></div>{% endif %}
+        {% if tmpl_version %}<div><div class="lbl">Template Version</div><div style="font-weight:600;">v{{ tmpl_version }}</div></div>{% endif %}
+        {% if tmpl_path %}<div><div class="lbl">Template</div><div style="font-family:monospace;font-size:11px;color:#1d4ed8;word-break:break-all;">{{ tmpl_path }}</div></div>{% endif %}
+        {% if avatar_path and not avatars %}<div><div class="lbl">Avatar Path</div><div style="font-family:monospace;font-size:11px;color:#0f766e;word-break:break-all;">{{ avatar_path }}</div></div>{% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div><!-- end side -->
+</div><!-- end body -->
+
+<footer>
+  <div style="display:flex;align-items:center;gap:8px;"><div class="ft-dot"></div>{{ workflow }}{% if spec_id %} · {{ spec_id }}{% endif %}{% if phase_raw %} · {{ phase_raw }}{% endif %}</div>
+  <div style="font-family:monospace;font-size:10px;opacity:.6;">{{ title }}</div>
+</footer>
+
+<script>
+function rgDecision(d) {
+  var el = document.getElementById('rg-decision');
+  el.style.display = 'block';
+  if (d === 'APPROVE') {
+    el.style.cssText = 'background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x2705; <strong>APPROVE</strong> — Reminder only. To record: set <code>render_gate.status: approved</code> in the source artifact.';
+  } else if (d === 'ENHANCE') {
+    el.style.cssText = 'background:rgba(124,58,237,.15);color:#c4b5fd;border:1px solid rgba(124,58,237,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x1F504; <strong>ENHANCE</strong> — Describe the enhancement needed in the source artifact, then re-render.';
+  } else {
+    el.style.cssText = 'background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);padding:8px 12px;border-radius:7px;font-size:12px;display:block';
+    el.innerHTML = '&#x274C; <strong>REJECT</strong> — Document the blocker in the source artifact. Phase 6 does NOT begin.';
+  }
+}
+</script>
+
+</body>
+</html>

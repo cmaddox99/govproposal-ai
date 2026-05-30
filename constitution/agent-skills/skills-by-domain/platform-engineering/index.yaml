@@ -1,0 +1,182 @@
+domain: platform-engineering
+title: Platform Engineering
+description: Infrastructure, security, API design, observability
+version: 2.0.0
+laws:
+- ENG-5.1
+- ENG-6.1
+- ENG-6.7
+- BUS-6.1
+keywords:
+- platform
+- security
+- api
+- observability
+- ops
+skills:
+  - file: 10-security-review.md
+    name: Security Review
+    triggers: [security review, vulnerabilities, OWASP, security audit, encrypt data, encryption at rest, encrypt in transit, data protection, input validation, PII handling, secure coding, data classification policy]
+    laws: [ENG-6.1, ENG-6.2, ENG-6.3, ENG-6.4, ENG-6.5]
+    examples: 10-security-review-examples.md
+  - file: 11-incident-response.md
+    name: Incident Response
+    triggers: [production incident, system down, postmortem, root cause analysis, breach notification, security incident, breach response, data breach occurs, passenger PII obligation]
+    laws: [BUS-9.1, BUS-9.2, BUS-9.3, BUS-9.4]
+  - file: 12-api-design.md
+    name: API Design
+    triggers: [design API, API contract, REST endpoint, API versioning]
+    laws: [ENG-1.5, ENG-2.2, ENG-4.9]
+    examples: 12-api-design-examples.md
+  - file: 13-observability.md
+    name: Observability
+    triggers: [logging, metrics, distributed tracing, monitor service, observability, audit log, audit trail, audit record, immutable log, tamper-evident, log fields, audit evidence, compliance logging, what to log, audit retention]
+    laws: [ENG-5.5, ENG-6.7, BUS-7.1]
+  - file: 14-technical-debt.md
+    name: Technical Debt Management
+    triggers: [technical debt, debt inventory, pay down debt, code quality declining]
+    laws: [ENG-1.3]
+    examples: 14-technical-debt-examples.md
+  - file: 15-data-modeling.md
+    name: Data Modeling
+    triggers: [schema design, database modeling, data migration, entity relationships]
+    laws: [BUS-3.1, BUS-3.2, BUS-3.4]
+  - file: 27-constitution-compliance.md
+    name: Constitution Compliance
+    triggers: [constitution compliance, validate against laws, compliance check]
+    laws: [ENG-10.2, ENG-10.1, BUS-7.1]
+  # C++ (Modern) Avatar Skills
+  - file: skill-cpp-layering-and-boundaries.md
+    name: "C++ Layering and Boundaries"
+    triggers: [C++ layer separation, C++ header organization, C++ include boundaries]
+    laws: [ENG-2.2, ENG-2.1]
+    avatar: cpp
+  - file: skill-cpp-api-compatibility-governance.md
+    name: "C++ API Compatibility Governance"
+    triggers: [C++ API compatibility, C++ ABI stability, C++ header versioning]
+    laws: [ENG-2.3, ENG-3.1]
+    avatar: cpp
+  - file: skill-cpp-ownership-lifetime-safety.md
+    name: "C++ Ownership and Lifetime Safety"
+    triggers: [C++ memory safety, C++ ownership model, C++ smart pointers, C++ RAII]
+    laws: [ENG-6.1, ENG-6.4]
+    avatar: cpp
+  - file: skill-cpp-presubmit-and-code-ownership.md
+    name: "C++ Presubmit and Code Ownership"
+    triggers: [C++ presubmit checks, C++ CI pipeline, C++ CODEOWNERS]
+    laws: [ENG-4.1, ENG-4.2]
+    avatar: cpp
+  - file: skill-cpp-sanitizer-hardening.md
+    name: "C++ Sanitizer Hardening"
+    triggers: [C++ sanitizer, C++ ASan UBSan, C++ memory error detection]
+    laws: [ENG-6.1, ENG-4.2]
+    avatar: cpp
+  - file: skill-cpp-performance-benchmark-discipline.md
+    name: "C++ Performance Benchmark Discipline"
+    triggers: [C++ performance benchmark, C++ micro-benchmark, C++ latency budget]
+    laws: [ENG-3.1, ENG-4.1]
+    avatar: cpp
+  - file: skill-cpp-template-complexity-management.md
+    name: "C++ Template Complexity Management"
+    triggers: [C++ template complexity, C++ concepts constraints, C++ metaprogramming]
+    laws: [ENG-3.1, ENG-3.5]
+    avatar: cpp
+  - file: skill-cpp-portable-build-governance.md
+    name: "C++ Portable Build Governance"
+    triggers: [C++ CMake governance, C++ cross-platform build, C++ vcpkg Conan]
+    laws: [ENG-5.1, ENG-6.1]
+    avatar: cpp
+  - file: skill-cpp-exception-safety-governance.md
+    name: "C++ Exception Safety Governance"
+    triggers: [C++ exception safety, C++ noexcept contract, C++ error handling, C++ strong guarantee]
+    laws: [ENG-6.1, ENG-3.1]
+    avatar: cpp
+  - file: skill-cpp-coroutines-governance.md
+    name: "C++ Coroutines Governance"
+    triggers: [C++ coroutines, C++ co_await, C++ async pattern, C++ structured concurrency]
+    laws: [ENG-3.1, ENG-6.1]
+    avatar: cpp
+  - file: skill-cpp-logging-diagnostics-standards.md
+    name: "C++ Logging and Diagnostics Standards"
+    triggers: [C++ logging framework, C++ spdlog, C++ structured logging, C++ PII in logs]
+    laws: [ENG-6.7, ENG-6.4]
+    avatar: cpp
+  - file: skill-cpp-concurrency-thread-safety-governance.md
+    name: "C++ Concurrency & Thread Safety Governance"
+    triggers: [C++ thread safety, C++ concurrency, C++ data race, C++ mutex, C++ atomic]
+    laws: [ENG-6.1, ENG-7.1]
+    avatar: cpp
+  - file: skill-cpp-resiliency-failure-modes.md
+    name: "C++ Resiliency & Failure Mode Governance"
+    triggers: [C++ circuit breaker, C++ retry, C++ timeout, C++ resiliency, C++ failure handling]
+    laws: [ENG-7.1, ENG-7.4]
+    avatar: cpp
+  - file: skill-cpp-deployment-hardening.md
+    name: "C++ Deployment & Operational Hardening"
+    triggers: [C++ deployment, C++ linking policy, C++ binary hardening, C++ feature flags]
+    laws: [ENG-5.2, ENG-6.1]
+    avatar: cpp
+  - file: skill-cpp-debugging-diagnostics-playbook.md
+    name: "C++ Debugging & Diagnostics Playbook"
+    triggers: [C++ debugging, C++ core dump, C++ GDB, C++ segfault, C++ profiling]
+    laws: [ENG-5.5, ENG-6.7]
+    avatar: cpp
+  - file: skill-cpp-dependency-governance.md
+    name: "C++ Dependency & License Governance"
+    triggers: [C++ dependency management, C++ license compliance, C++ Boost policy, C++ SBOM]
+    laws: [ENG-6.6, ENG-6.1]
+    avatar: cpp
+  - file: skill-cpp-legacy-code-navigation.md
+    name: "C++ Legacy Code Navigation"
+    triggers: [C++ legacy code, C++ understand codebase, C++ onboarding, C++ characterization test]
+    laws: [ENG-4.1, ENG-1.3]
+    avatar: cpp
+  - file: skill-cpp-standard-migration.md
+    name: "C++ Standard Migration Governance"
+    triggers: [migrate C++ standard, upgrade C++ version, C++11 to C++17, C++14 to C++20, standard migration checklist]
+    laws: [ENG-5.2, ENG-6.1, ENG-4.1]
+    avatar: cpp
+  - file: skill-cpp-legacy-modernization.md
+    name: "C++ Legacy Code Modernization"
+    triggers: [modernize legacy C++, modernize old C++ code, incremental C++ modernization, refactor legacy C++, C++ modernization priority]
+    laws: [ENG-6.1, ENG-4.1, ENG-3.1]
+    avatar: cpp
+  - file: skill-cpp-compatibility-headers.md
+    name: "C++ Cross-Standard Compatibility Headers"
+    triggers: [backward compatible C++ headers, cross-standard headers, C++ header portability, multi-standard C++ header]
+    laws: [ENG-3.1, ENG-6.1, ENG-2.2]
+    avatar: cpp
+  - file: skill-cpp-feature-detection.md
+    name: "C++ Feature Detection Governance"
+    triggers: [C++ feature detection, __cplusplus macro, __has_include, C++ feature test macro, SD-6 macros]
+    laws: [ENG-3.1, ENG-5.2]
+    avatar: cpp
+  - file: skill-cpp-legacy-survival-patterns.md
+    name: "C++ Legacy Survival Patterns"
+    triggers: [C++ legacy survival, C++ safe modification, C++ sprout method, C++ novice legacy code, C++ first PR legacy, characterization test to pin legacy, golden-master]
+    laws: [ENG-4.1, ENG-3.1]
+    avatar: cpp
+  - file: skill-cpp-compliance-rating.md
+    name: "C++ Constitution Compliance Rating"
+    triggers: [C++ compliance rating, C++ compliance score, rate C++ codebase, C++ deployment readiness]
+    laws: [ENG-4.1, ENG-6.1, ENG-6.7]
+    avatar: cpp
+  - file: skill-cpp-code-simplification.md
+    name: "C++ Code Simplification Advisor"
+    triggers: [simplify C++ code, C++ code too complex, simpler C++ alternative, reduce C++ complexity]
+    laws: [ENG-3.1, ENG-1.3, ENG-3.8]
+    avatar: cpp
+  - file: skill-sonarqube-compliance-gate.md
+    name: SonarQube Compliance Gate
+    triggers: [sonarqube, code quality gate, coverage gate, mutation score, sonar]
+    laws: [ENG-4.1, ENG-6.1, ENG-10.1]
+  - file: skill-avatar-workflow.md
+    name: Avatar Workflow
+    triggers: [Create a new avatar, Generate a technology avatar, Generate a product avatar, Scaffold an avatar for, New avatar for, Assess this avatar, Check this avatar, Correct this avatar, Fix this avatar, Review this avatar, Validate this avatar, Run RAG validation on, Enrich this avatar, Enrich avatar from codebase]
+    laws: [ENG-11.1, ENG-11.2, ENG-1.2, ENG-6.7, ENG-10.3]
+  - file: skill-cpp-jni-bridge.md
+    name: "C++ JNI Bridge Governance"
+    triggers: [JNI bridge, C++ JNI, Java Native Interface, jni.h, CWR JNI, C++ Java interop, JNI memory ownership, JNI exception propagation]
+    laws: [ENG-6.1, ENG-6.7]
+    avatar: cpp
+count: 34

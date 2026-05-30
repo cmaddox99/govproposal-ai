@@ -1,0 +1,197 @@
+{
+  "gate": {
+    "name": "Hangar AI Constitution Gate",
+    "description": "Canonical quality gate for all projects governed by the Hangar AI Constitution. Implements all 10 conditions across 4 classifications. See laws/engineering/agentic-feedback.md (ENG-12.x) and agent-skills/skills-by-domain/platform-engineering/skill-sonarqube-compliance-gate.md.",
+    "version": "1.2.0",
+    "authority": "Hangar AI Constitution v2.0",
+    "demo_gate_narrative": {
+      "description": "The gate is designed to tell a clear story across the Legacy Rescue workflow phases.",
+      "phase_1_expected": "RED — legacy code has bugs and no test coverage. This is correct and expected. Captures the baseline failure state.",
+      "phases_2_to_5_expected": "RED transitioning to YELLOW — coverage climbs through Phase 3, security/reliability fixes land in Phase 4, complexity drops in Phase 5. Gate may still show partial failures.",
+      "phase_6_expected": "GREEN — ALL conditions met. This is the certification moment: the legacy codebase now meets the Hangar AI Constitution standard.",
+      "phase_7_expected": "GREEN — Mutation hardening only; does not change gate state. Score evidenced via PIT HTML report."
+    },
+    "changelog": [
+      {
+        "version": "1.2.0",
+        "date": "2026-05-15",
+        "changes": [
+          "ADD HB-5: reliability_rating GT 1 as HARD_BLOCK (all code). Fixes demo gate narrative: coverage is N/A on first scan (no tests), so PG-1 coverage condition is skipped by SonarQube. reliability_rating is computed from static analysis alone — no tests needed. Legacy code with bugs fails this gate at Phase 1, passes GREEN after Phase 4 remediation.",
+          "ADD AA-B5: new_reliability_rating GT 1 as AA_BASELINE (new code). Ensures no new bugs are introduced in any code change — aligns with 'new code must not introduce more issues' intent of AA_BASELINE classification.",
+          "FIX Prerequisites: removed non-existent --token-path flag from provision.sh usage example. Auth is via SONAR_TOKEN or SONAR_USER/SONAR_PASSWORD env vars only."
+        ]
+      },
+      {
+        "version": "1.1.0",
+        "date": "2026-05-02",
+        "changes": [
+          "FIX AA-B2: new_coverage threshold raised 80 → 90 to match ENG-4.6 (new code must be ≥90%, not 80%). Prior value was a direct constitutional violation.",
+          "ADD HB-4: critical_violations GT 0 as HARD_BLOCK per ENG-6.1 (NON-NEGOTIABLE). Critical-severity issues must block phase advance alongside blockers and vulnerabilities.",
+          "DOC GAP-1: ENG-4.11 mutation score not enforceable in SonarQube CE — requires Pitest + sonar-pitest plugin. Flagged as toolchain gap.",
+          "DOC GAP-2: ENG-6.6 dependency CVE scanning not enforceable in SonarQube CE — requires OWASP Dependency Check or Snyk integration. Flagged as toolchain gap."
+        ]
+      },
+      {
+        "version": "1.0.0",
+        "date": "2026-04-30",
+        "changes": ["Initial gate definition — 9 conditions across 4 classifications."]
+      }
+    ],
+    "known_gaps": [
+      {
+        "id": "GAP-1",
+        "law": "ENG-4.11",
+        "title": "Mutation Testing",
+        "description": "Mutation score (≥70% general, ≥85% critical paths) cannot be enforced via SonarQube CE gate conditions. Toolchain by platform: Java/Kotlin → Pitest + sonar-pitest plugin; Swift/iOS → Muter (https://github.com/muter-mutation-testing/muter, v16+). SonarQube CE does not support Swift analysis — iOS mutation score must be tracked via Muter JSON/HTML reports in CI pipeline.",
+        "remediation": "Java/Kotlin: install sonar-pitest plugin on SonarQube server; add pitest goal to CI pipeline; add gate conditions: mutation_coverage LT 70 (PHASE_GATE), mutation_coverage LT 85 (HARD_BLOCK for critical modules). Swift/iOS: install Muter via Homebrew (brew install muter) or SPM; run 'muter run --format json --output mutation-report.json' in CI; publish score to PR comment or dashboard; enforce ≥70% gate in CI config."
+      },
+      {
+        "id": "GAP-2",
+        "law": "ENG-6.6",
+        "title": "Dependency CVE Scanning",
+        "description": "Critical CVE 24h SLA cannot be enforced by SonarQube CE alone. OWASP Dependency Check or Snyk integration required.",
+        "remediation": "Integrate OWASP Dependency Check into CI pipeline; publish results to SonarQube via sonar.dependencyCheck.reportPath; add gate condition on dependency vulnerabilities."
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "classification": "AA_BASELINE",
+      "description": "Matches the official sonarqube.aa.com 'Sonar way' gate — verified April 2026. All 4 conditions apply to new code only.",
+      "items": [
+        {
+          "id": "AA-B1",
+          "metric": "new_violations",
+          "operator": "GT",
+          "error_threshold": "0",
+          "scope": "new_code",
+          "description": "New code: zero new issues introduced"
+        },
+        {
+          "id": "AA-B2",
+          "metric": "new_coverage",
+          "operator": "LT",
+          "error_threshold": "90",
+          "scope": "new_code",
+          "law": "ENG-4.6",
+          "description": "New code: test coverage must be ≥ 90% (ENG-4.6: new code threshold is 90%, not 80%)"
+        },
+        {
+          "id": "AA-B3",
+          "metric": "new_duplicated_lines_density",
+          "operator": "GT",
+          "error_threshold": "3",
+          "scope": "new_code",
+          "description": "New code: duplication must be ≤ 3%"
+        },
+        {
+          "id": "AA-B4",
+          "metric": "new_security_hotspots_reviewed",
+          "operator": "LT",
+          "error_threshold": "100",
+          "scope": "new_code",
+          "description": "New code: 100% of security hotspots must be reviewed"
+        },
+        {
+          "id": "AA-B5",
+          "metric": "new_reliability_rating",
+          "operator": "GT",
+          "error_threshold": "1",
+          "scope": "new_code",
+          "law": "ENG-4.6",
+          "description": "New code: must not introduce any bugs — new_reliability_rating must be A. Enforces the principle that each phase may not make the codebase worse. Complements HB-5 (all-code reliability) by blocking regressions introduced by new changes."
+        }
+      ]
+    },
+    {
+      "classification": "HARD_BLOCK",
+      "description": "NON-NEGOTIABLE. Applies to ALL code (new + existing). A single violation in any HARD_BLOCK condition means the phase CANNOT advance. No exceptions. Citations: ENG-6.1, ENG-6.4, ENG-6.7.",
+      "non_negotiable": true,
+      "items": [
+        {
+          "id": "HB-1",
+          "metric": "vulnerabilities",
+          "operator": "GT",
+          "error_threshold": "0",
+          "scope": "all_code",
+          "law": "ENG-6.1",
+          "description": "ALL code: zero open vulnerabilities"
+        },
+        {
+          "id": "HB-2",
+          "metric": "security_rating",
+          "operator": "GT",
+          "error_threshold": "1",
+          "scope": "all_code",
+          "law": "ENG-6.4",
+          "description": "ALL code: security rating must be A (1 = A)"
+        },
+        {
+          "id": "HB-3",
+          "metric": "blocker_violations",
+          "operator": "GT",
+          "error_threshold": "0",
+          "scope": "all_code",
+          "law": "ENG-6.7",
+          "description": "ALL code: zero blocker violations"
+        },
+        {
+          "id": "HB-4",
+          "metric": "critical_violations",
+          "operator": "GT",
+          "error_threshold": "0",
+          "scope": "all_code",
+          "law": "ENG-6.1",
+          "non_negotiable": true,
+          "description": "ALL code: zero critical-severity violations (ENG-6.1 NON-NEGOTIABLE — security built in, not bolted on)"
+        },
+        {
+          "id": "HB-5",
+          "metric": "reliability_rating",
+          "operator": "GT",
+          "error_threshold": "1",
+          "scope": "all_code",
+          "law": "ENG-6.7",
+          "non_negotiable": true,
+          "description": "ALL code: reliability rating must be A (zero bugs). Computed from static analysis — no tests needed. Ensures Phase 1 gate is RED on legacy code with bugs, turns GREEN only after Phase 4 remediation. Rating scale: A=0 bugs, B=1 minor, C=1 major, D=1 critical, E=1 blocker."
+        }
+      ]
+    },
+    {
+      "classification": "PHASE_GATE",
+      "description": "Module-scoped coverage gate. Use --module-path flag or per-module scan to scope correctly. Citation: ENG-4.6.",
+      "items": [
+        {
+          "id": "PG-1",
+          "metric": "coverage",
+          "operator": "LT",
+          "error_threshold": "80",
+          "scope": "all_code",
+          "law": "ENG-4.6",
+          "description": "ALL code: overall coverage must be ≥ 80% (scoped to module under scan)"
+        }
+      ]
+    },
+    {
+      "classification": "WARNING",
+      "description": "Visible fail. Not a hard block, but MUST trend downward each session. Citation: ENG-3.1.",
+      "items": [
+        {
+          "id": "W-1",
+          "metric": "duplicated_lines_density",
+          "operator": "GT",
+          "error_threshold": "3",
+          "scope": "all_code",
+          "law": "ENG-3.1",
+          "description": "ALL code: duplication must be ≤ 3% (WARNING — trend downward)"
+        }
+      ]
+    }
+  ],
+  "sonarqube_api": {
+    "create_gate": "POST /api/qualitygates/create?name=Hangar+AI+Constitution+Gate",
+    "add_condition": "POST /api/qualitygates/create_condition?gateName=Hangar+AI+Constitution+Gate&metric={metric}&op={operator}&error={error_threshold}",
+    "set_default": "POST /api/qualitygates/set_as_default?name=Hangar+AI+Constitution+Gate",
+    "assign_to_project": "POST /api/qualitygates/select?gateName=Hangar+AI+Constitution+Gate&projectKey={project_key}"
+  }
+}

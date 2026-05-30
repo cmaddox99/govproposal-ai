@@ -1,0 +1,2305 @@
+version: 2.0.0
+name: Avatar RAG Index
+created: '2026-02-20'
+updated: '2026-02-20'
+rag_config:
+  embedding_model: text-embedding-3-large
+  chunk_strategy: Selective document loading (guidance + specific example + use-case)
+  max_tokens_per_query: 2000-3500 (context window optimized)
+  recall_target: 95%+ for product domain queries
+  precision_target: 90%+ (minimal false positives)
+  search_tiers:
+    tier_1_exact: Direct law reference (e.g., "PRD-3.1") → Load specific law example
+    tier_2_semantic: Topic query (e.g., "How do we discover customer needs?") → Load PRD-1.1 + guidance
+    tier_3_use_case: Scenario query (e.g., "First-time booking workflow") → Load use-case + manifest
+    tier_4_fallback: Ambiguous query → Load guidance.md + offer clarification
+token_optimization:
+  guidance_file: guidance.md (index) 200-450 tokens; ref-*.md (split reference files, on-demand) no limit
+  example_file: 750-800 tokens per PRD law (1.1-5.1)
+  use_case_file: 1200-1500 tokens per full workflow
+  manifest_file: 100 tokens per manifest.yaml
+  total_selective: 3000-4000 tokens per query (vs. 8000-12000 for full avatar)
+  efficiency_gain: 60-67% token reduction
+product_type_avatars:
+  account-identity:
+    id: account-identity
+    name: Account Identity & Profile Management
+    category: Product (Authentication & Account)
+    registry_path: product-type/index.yaml
+    version: "1.0.0"
+    rag_validated: false
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      problem_first: examples/PRD-1.2-problem-first.md
+      evidence: examples/PRD-1.5-evidence-based.md
+      stage_gate: examples/PRD-2.5-stage-gate.md
+      mvp: examples/PRD-5.1-mvp.md
+      retention: examples/PRD-6.2-retention.md
+    specializes_laws:
+    - PRD-1.2: Problem-First (sign-in friction, guest-to-auth conversion)
+    - PRD-1.5: Evidence-Based (biometric adoption rates, session abandonment)
+    - PRD-2.5: Stage Gate (identity flows require security review gating)
+    - PRD-5.1: MVP (credential login before biometric, profile before device trust)
+    - PRD-6.2: Retention (guest-to-auth conversion, device trust re-engagement)
+    - BUS-1.1: Priority Hierarchy (TSA vetting, PCI DSS for payment credentials)
+    - BUS-4.3: Data Subject Rights (profile access, correction, deletion — PII)
+    - BUS-7.1: Audit Trail (all authentication events and profile mutations logged)
+    - BUS-9.3: Breach Notification (PII exposure triggers mandatory notification)
+    - ENG-6.4: Data Protection (credential encryption, biometric data handling)
+    search_queries:
+    - How do we handle AA app sign-in and authentication flows? → guidance.md + PRD-1.2 (~900 tokens)
+    - What laws govern account profile and identity management? → manifest specializes_laws (~480 tokens)
+    - How do we measure success for account identity features? → PRD-5.1-mvp.md (~750 tokens)
+    - What are the stage gate requirements for identity feature launches? → PRD-2.5-stage-gate.md (~750 tokens)
+    - How do we handle PII and data subject rights for account features? → BUS-4.3 + BUS-9.3 guidance (~600 tokens)
+  ancillary-upsell:
+    id: ancillary-upsell
+    name: Ancillary Upsell & Post-Booking Purchases
+    category: Product (Ancillary Revenue)
+    registry_path: product-type/index.yaml
+    version: "1.0.0"
+    rag_validated: false
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      problem_first: examples/PRD-1.2-problem-first.md
+      evidence: examples/PRD-1.5-evidence-based.md
+      stage_gate: examples/PRD-2.5-stage-gate.md
+      mvp: examples/PRD-5.1-mvp.md
+      retention: examples/PRD-6.2-retention.md
+    specializes_laws:
+    - PRD-1.2: Problem-First (upgrade friction, bid confusion, bag add-on abandonment)
+    - PRD-1.5: Evidence-Based (upsell conversion rates, bid acceptance benchmarks)
+    - PRD-2.5: Stage Gate (revenue product changes require revenue management approval)
+    - PRD-5.1: MVP (instant upsell before bid auction; bag purchase before fare upsell)
+    - PRD-6.2: Retention (miles redemption, post-purchase satisfaction)
+    - BUS-1.1: Priority Hierarchy (DOT fare transparency, refund rules)
+    - BUS-2.3: Revenue Integrity (upsell pricing consistency, audit trail)
+    - BUS-3.6: Fare Rules Display (terms & conditions at point of purchase)
+    - BUS-4.3: Data Subject Rights (payment data handling — PCI DSS scope)
+    - BUS-7.1: Audit Trail (all purchase events logged — ancillary revenue audit)
+    - BUS-9.3: Breach Notification (payment data exposure triggers notification)
+    search_queries:
+    - How do we build post-booking upsell features (cabin upgrades, bags)? → guidance.md + PRD-1.2 (~900 tokens)
+    - What laws govern ancillary revenue product development at AA? → manifest specializes_laws (~480 tokens)
+    - How does the upgrade bid auction work? → guidance.md (~600 tokens)
+    - What metrics define success for ancillary upsell? → PRD-5.1-mvp.md (~750 tokens)
+    - What are fare rules display requirements for ancillary purchases? → BUS-3.6 guidance (~500 tokens)
+  flight-status-flifo:
+    id: flight-status-flifo
+    name: Flight Status & FLIFO Information
+    category: Product (Real-Time Flight Information)
+    registry_path: product-type/index.yaml
+    version: "1.0.0"
+    rag_validated: false
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      problem_first: examples/PRD-1.2-problem-first.md
+      evidence: examples/PRD-1.5-evidence-based.md
+      stage_gate: examples/PRD-2.5-stage-gate.md
+      mvp: examples/PRD-5.1-mvp.md
+      retention: examples/PRD-6.2-retention.md
+    specializes_laws:
+    - PRD-1.2: Problem-First (status check friction, notification opt-in abandonment)
+    - PRD-1.5: Evidence-Based (status check frequency, notification engagement rates)
+    - PRD-2.5: Stage Gate (FAA data feed changes require compliance review gating)
+    - PRD-5.1: MVP (flight search before notifications; number lookup before city-pair)
+    - PRD-6.2: Retention (push notification re-engagement for flight status updates)
+    - BUS-1.1: Priority Hierarchy (FAA regulatory data — advisory-only, no mutations)
+    - BUS-4.3: Data Subject Rights (push notification preferences — user consent)
+    - BUS-7.1: Audit Trail (flight status query and notification delivery events)
+    - BUS-9.3: Breach Notification (notification token exposure triggers notification)
+    - BUS-2.1: FAA Compliance (FLIFO data feed — FAA sourced, advisory only)
+    search_queries:
+    - How do we build flight status features using the FAA FLIFO feed? → guidance.md + BUS-2.1 (~900 tokens)
+    - What laws govern flight status and FLIFO product development? → manifest specializes_laws (~480 tokens)
+    - How do push notifications work for flight status alerts? → guidance.md (~600 tokens)
+    - What are the FAA compliance requirements for FLIFO data? → BUS-2.1 guidance (~500 tokens)
+    - What metrics define success for flight status features? → PRD-5.1-mvp.md (~750 tokens)
+  manage-trip:
+    id: manage-trip
+    name: Trip Management & Post-Booking Modifications
+    category: Product (Post-Booking Reservation Management)
+    registry_path: product-type/index.yaml
+    version: "1.0.0"
+    rag_validated: false
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      problem_first: examples/PRD-1.2-problem-first.md
+      evidence: examples/PRD-1.5-evidence-based.md
+      stage_gate: examples/PRD-2.5-stage-gate.md
+      mvp: examples/PRD-5.1-mvp.md
+      retention: examples/PRD-6.2-retention.md
+    specializes_laws:
+    - PRD-1.2: Problem-First (cancellation friction, lap infant add complexity, SSR abandonment)
+    - PRD-1.5: Evidence-Based (cancellation completion rates, refund time expectations)
+    - PRD-2.5: Stage Gate (reservation mutations require revenue/ops approval gating)
+    - PRD-5.1: MVP (cancellation/refund before lap infant; contact update before SSR)
+    - PRD-6.2: Retention (post-trip satisfaction, rebooking intent after cancellation)
+    - BUS-1.1: Priority Hierarchy (DOT refund rules — 24-hr cancellation mandatory)
+    - BUS-2.3: Revenue Integrity (cancellation eligibility, refund adjudication audit)
+    - BUS-3.1: Consumer Protection (DOT 14 CFR Part 259 — refund timeliness)
+    - BUS-4.3: Data Subject Rights (PNR data, SSR contains sensitive traveler info)
+    - BUS-7.1: Audit Trail (all PNR mutations logged — reservation change audit)
+    - BUS-9.3: Breach Notification (PNR/PII exposure triggers mandatory notification)
+    search_queries:
+    - How do we build trip cancellation and refund features? → guidance.md + PRD-1.2 (~900 tokens)
+    - What laws govern trip management and post-booking modifications? → manifest specializes_laws (~480 tokens)
+    - What are the DOT refund requirements for trip cancellation? → BUS-3.1 + BUS-2.3 guidance (~600 tokens)
+    - How do we handle lap infant and special service requests? → guidance.md (~600 tokens)
+    - What metrics define success for manage-trip features? → PRD-5.1-mvp.md (~750 tokens)
+  cargo_freight:
+    id: cargo-freight
+    name: Cargo & Freight
+    category: Product (Operations)
+    registry_path: product-type/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      personas: 'examples/personas.md (3 personas: Alice, Carlos, Roberto)'
+      discovery: examples/PRD-1.1-discovery.md (750 tokens)
+      journey: examples/PRD-2.1-journey.md (750 tokens)
+      roadmap: examples/PRD-3.1-roadmap.md (750 tokens)
+      mvp: examples/PRD-4.1-mvp.md (750 tokens)
+      metrics: examples/PRD-5.1-metrics.md (750 tokens)
+      use_cases:
+      - booking_workflow: use-cases/booking-workflow/README.md (1300 tokens)
+      - claims_processing: use-cases/claims-processing/README.md (1350 tokens)
+      - rate_optimization: use-cases/rate-optimization/README.md (1400 tokens)
+    specializes_laws:
+    - PRD-1.1: Continuous Discovery (forwarder pain points, market trends)
+    - PRD-2.1: User Journey (Quote → Booking → Pickup → Delivery → Exception)
+    - PRD-3.1: Roadmap Planning (Speed first, then API, then tracking)
+    - PRD-4.1: MVP & PMF (3-forwarder pilot, decision gates)
+    - PRD-5.1: Metrics & Success (Speed, completion, NPS, delivery, ROI)
+    search_queries:
+    - How do we discover cargo shipper needs? → PRD-1.1 (750 tokens)
+    - What's the booking workflow? → PRD-2.1 + use-case (2100 tokens)
+    - What features to build? → PRD-3.1 (750 tokens)
+    - How to validate MVP? → PRD-4.1 (750 tokens)
+    - Success metrics? → PRD-5.1 (750 tokens)
+    key_metrics:
+      quote_speed: 13.8s (95th %ile)
+      booking_completion: 83%
+      nps: 42
+      annual_revenue: $7.5M+
+  loyalty-aadvantage:
+    id: loyalty-aadvantage
+    name: Loyalty (AADvantage)
+    category: Product (Customer Engagement)
+    registry_path: product-type/index.yaml
+    version: "1.4.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      personas: 'examples/personas.md (4 personas: Sarah, Marcus, Jennifer, Diana)'
+      discovery: examples/PRD-1.1-discovery.md (750 tokens)
+      journey: examples/PRD-2.1-journey.md (750 tokens)
+      roadmap: examples/PRD-3.1-roadmap.md (750 tokens)
+      mvp: examples/PRD-4.1-mvp.md (750 tokens)
+      metrics: examples/PRD-5.1-metrics.md (750 tokens)
+      use_cases:
+      - member_acquisition: use-cases/member-acquisition/README.md (1400 tokens)
+      - retention_engagement: use-cases/retention-engagement/README.md (1350 tokens)
+    specializes_laws:
+    - BUS-2.1: Regulatory Mapping (CCPA/GDPR for 180M+ members, IRS award redemption reporting)
+    - BUS-2.2: Control Framework (PCI-DSS for points redemption, GDPR Article 6)
+    - BUS-4.1: Privacy by Design (PII minimization, retention limits, consent)
+    - BUS-4.3: Data Retention (points ledger 7yr, inactive member PII review)
+    - PRD-1.1: Continuous Discovery (member cohort research, churn analysis, BFF instrumentation)
+    - PRD-2.1: User Journey (enrollment funnel through elite progression and redemption)
+    - PRD-3.1: Roadmap Planning (mobile redesign, awards, elite tracking)
+    - PRD-4.1: MVP & PMF (progress tracker MVP validates hypothesis)
+    - PRD-5.1: Metrics & Success (NPS, redemption rate, member LTV)
+    - ENG-6.4: PII & GDPR (EU member data Article 6 basis, right to erasure) — ENG-6.x justified
+    search_queries:
+    - What laws govern AAdvantage loyalty development at AA? → PRD-1.1, PRD-2.1, PRD-5.1, BUS-2.1, BUS-2.2, BUS-4.1, BUS-4.3, ENG-6.4 (410 tokens)
+    - Show me a loyalty-aadvantage example for PRD-1.1 continuous discovery → examples/PRD-1.1-discovery.md (720 tokens)
+    - How do I set up a loyalty-aadvantage project at AA? → guidance.md (370 tokens)
+    - What is the use case for loyalty in member retention? → use-cases/retention-engagement/README.md (1100 tokens)
+    - What skills are activated by the loyalty-aadvantage avatar? → activates.skills (190 tokens)
+    key_metrics:
+      satisfaction_nps: 6.2 → 7.5
+      redemption_rate: 45% → 65%
+      elite_achievement: 25% → 35%
+      incremental_revenue: $260M+
+    rag_validation:
+      recall: "5/5"
+      max_tokens_per_query: 1100
+      validation_evidence: hangar-ai-specs/evidence/avatar-rag-loyalty-aadvantage.md
+  check-in-travel:
+    id: check-in-travel
+    name: Check-In & Boarding
+    category: Product (Operations)
+    registry_path: product-type/index.yaml
+    version: "1.6.1"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      personas: 'examples/personas.md (4 personas: Alex, Maria, Kevin, Patricia)'
+      discovery: examples/PRD-1.1-discovery.md (~720 tokens)
+      journey: examples/PRD-2.1-journey.md (~800 tokens)
+      roadmap: examples/PRD-3.1-roadmap.md (750 tokens)
+      metrics: examples/PRD-5.1-metrics.md (750 tokens)
+      mobile_check_in_journey: journeys/mobile-check-in.md (~1100 tokens)
+      project_structure: manifest.yaml
+      use_cases:
+      - digital_check_in: use-cases/digital-check-in/README.md (~1050 tokens)
+      - mobile_check_in: use-cases/mobile-check-in/README.md (1350 tokens)
+      - gate_operations: use-cases/gate-operations/README.md (1400 tokens)
+    specializes_laws:
+    - PRD-1.1: Continuous Discovery (passenger barriers, mobile reliability, AAFeatureTSATouchlessID discovery)
+    - PRD-2.1: User Journey (Digital vs counter vs gate; IFCI passport scan flow)
+    - PRD-3.1: Roadmap Planning (Reliability 99.9%, then efficiency, then biometric)
+    - PRD-4.1: MVP & PMF (Offline barcode MVP proves reliability)
+    - PRD-5.1: Metrics & Success (Mobile adoption, boarding time, on-time %)
+    - BUS-2.1: Regulatory Mapping (TSA 49 CFR Part 1544, DOT ADA 14 CFR Part 382)
+    - BUS-2.2: Control Framework (identity verification, biometric, ADA SLA)
+    - BUS-2.4: Evidence Collection (oversold audit, ADA accommodation audit)
+    - BUS-4.3: Data Subject Rights (biometric/passport scan erasure, GDPR Art.17)
+    - BUS-7.1: Audit Trail (boarding pass issuance, APIS/CBP, deny-boarding, ADA)
+    - ENG-6.4: PII & TSA Secure Flight (SFPD minimization, 7-day post-flight retention)
+    - ENG-6.7: Audit Trail (boarding pass issuance, APIS, ADA events)
+    search_queries:
+    - What laws govern check-in and boarding development at AA? → 18 laws from manifest specializes_laws (450 tokens)
+    - Show me a check-in example for PRD-1.1 continuous discovery → examples/PRD-1.1-discovery.md (720 tokens)
+    - How do I set up a check-in project at AA? → guidance.md (380 tokens)
+    - What is the use case for check-in in digital self-service? → use-cases/digital-check-in/README.md (1050 tokens)
+    - What skills are activated by the check-in-travel avatar? → activates.skills (200 tokens)
+    key_metrics:
+      mobile_adoption: 52% → 72%
+      boarding_time: 40 → 35.2 minutes
+      on_time_performance: 78% → 82.1%
+      labor_savings: $13M+
+    rag_validation:
+      recall: "5/5"
+      max_tokens_per_query: 1050
+      validation_evidence: hangar-ai-specs/evidence/avatar-rag-check-in-travel.md
+  travel-docs-compliance:
+    id: travel-docs-compliance
+    name: TravelDocs Compliance
+    category: Product (Compliance)
+    registry_path: product-type/index.yaml
+    version: "1.2.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      personas: 'examples/personas.md (4 personas: Passenger, Agent, Compliance, Ops)'
+      discovery: examples/PRD-1.1-discovery.md (~820 tokens)
+      journey: examples/PRD-2.1-journey.md (~1200 tokens)
+      use_cases:
+      - pre_departure_document_readiness: use-cases/pre-departure-document-readiness/README.md (~1200 tokens)
+      - apis_submission: use-cases/apis-submission/README.md
+    specializes_laws:
+    - BUS-2.1: Regulatory Mapping (IATA TIMATIC, CBP APIS mandatory, EU EES emerging)
+    - BUS-4.3: Data Subject Rights (GDPR Art.9 health data, CCPA biometric, 72h erasure)
+    - PRD-1.1: Continuous Discovery (TIMATIC false-positive analysis, MRZ scan failure)
+    - PRD-2.1: User Journey (passport verification, touchless eligibility, agent exception)
+    - PRD-5.1: Metrics & Success (latency, false blocks, APIS 100%, manual intervention)
+    - ENG-6.1: Security by Design (MRZ/biometric PII encryption, no raw PII in logs) — ENG-6.x justified
+    - ENG-6.7: Audit Trail (readiness decisions, APIS submissions, override events) — ENG-6.x justified
+    search_queries:
+    - What laws govern travel documents compliance product development at AA? → manifest specializes_laws (460 tokens)
+    - How do we handle passport verification and MRZ scanning? → PRD-1.1-discovery.md + ScanPassportViewController flow (820 tokens)
+    - Show me the pre-departure document readiness flow for international passengers → core-journeys.md + PRD-2.1-journey.md (1200 tokens)
+    - What metrics define success for the travel documents compliance product? → PRD-5.1 guidance (740 tokens)
+    - What skills are activated by the travel docs compliance avatar? → activates.skills (260 tokens)
+    key_metrics:
+      readiness_latency_p95: 2500 ms (experimental baseline)
+      false_block_rate: 1.8% (experimental baseline)
+      passenger_ready_rate_d1: 78% (experimental baseline)
+      manual_intervention_per_1k: 45 (experimental baseline)
+  schedule-change-self-serve:
+    id: schedule-change-self-serve
+    name: Schedule Change Self-Serve
+    category: Product (Service Recovery)
+    registry_path: product-type/index.yaml
+    version: "1.1.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      personas: 'examples/personas.md (5 personas: Sam, Jordan, Morgan, Alex, Taylor)'
+      discovery: examples/PRD-1.1-discovery.md (~750 tokens)
+      journey: examples/PRD-2.1-journey.md (~800 tokens)
+      roadmap: examples/PRD-3.1-roadmap.md (~850 tokens)
+      mvp: examples/PRD-4.1-mvp.md (~750 tokens)
+      metrics: examples/PRD-5.1-metrics.md (~800 tokens)
+      involuntary_change_journey: journeys/involuntary-schedule-change.md (~1100 tokens)
+      project_structure: manifest.yaml
+      use_cases:
+      - eligibility_reason_codes: use-cases/eligibility-check-reason-codes/README.md (~1200 tokens)
+      - self_serve_rebooking: use-cases/self-serve-rebooking/README.md (~1250 tokens)
+      - conversational_agent: use-cases/conversational-eligibility-agent/README.md (~1300 tokens)
+    specializes_laws:
+    - BUS-2.1: Regulatory Mapping (DOT 14 CFR Part 250 involuntary change rights)
+    - PRD-1.1: Continuous Discovery (ineligibility abandonment, agent override patterns)
+    - PRD-2.1: User Journey (self-serve, agent console, proactive disruption offer)
+    - PRD-3.1: Roadmap Planning (eligibility transparency → rebooking → conversational agent)
+    - PRD-4.1: MVP & PMF (reason code enrichment as read-only low-risk first pilot)
+    - PRD-5.1: Metrics & Success (success rate, escalation, latency, audit completeness)
+    - ENG-6.1: Security by Design (PII in change payloads, JWT-scoped authorization) — ENG-6.x justified
+    - ENG-6.4: Compliance and Audit Trail (immutable eligibility and rebooking record) — ENG-6.x justified
+    search_queries:
+    - What laws govern schedule change self-serve product development at AA? → manifest specializes_laws (480 tokens)
+    - How do we handle eligibility checking for flight changes? → EligibilityEndpoint + BUS-2.1 (760 tokens)
+    - Show me the self-serve rebooking journey from eligibility to confirmation → journey file (1100 tokens)
+    - What metrics define success for the schedule change self-serve product? → PRD-5.1-metrics.md (800 tokens)
+    - What skills are activated by the schedule change self-serve avatar? → activates.skills (240 tokens)
+    key_metrics:
+      self_serve_success_rate: 78% (experimental baseline)
+      agent_escalation_rate: 20% (experimental baseline)
+      bff_p95_latency: 3200ms (experimental baseline)
+      audit_trail_completeness: 82% (experimental baseline)
+  network_planning_optimization:
+    id: network-planning-optimization
+    name: Network Planning & Optimization
+    category: Product (Operations)
+    registry_path: product-type/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      personas: 'examples/personas.md (4 personas: Lisa, Marcus, Rachel, David)'
+      use_cases:
+      - route_profitability_analysis: use-cases/route-profitability-analysis.md (1500 tokens)
+    specializes_laws:
+    - PRD-1.1: Continuous Discovery (analyst pain points, strategic bottlenecks)
+    - PRD-2.1: User Journey (data collection → modeling → scenario → recommendation)
+    - PRD-3.1: Roadmap Planning (data pipeline first, then forecasting, then optimization)
+    - PRD-4.1: MVP & PMF (pilot with 2-3 analysts, validate time-to-insight)
+    - PRD-5.1: Metrics & Success (time-to-insight, forecast accuracy, scenario throughput)
+    - ENG-4.1: Atomic TDD (regression tests for legacy models, tests for new features)
+    - ENG-10.1: Brownfield Preservation (preserve R/PySpark, containerize, no rewrite)
+    search_queries:
+    - How do we optimize airline network? → PRD-3.1 + use-case (1800 tokens)
+    - Network planning analyst workflow → PRD-2.1 + personas (1500 tokens)
+    - How to preserve legacy R models? → ENG-10.1 + ADOPTION.md (1800 tokens)
+    - Brownfield adoption for PySpark? → ADOPTION.md + manifest (1200 tokens)
+    - Route profitability forecasting? → use-case + guidance (2000 tokens)
+    key_metrics:
+      time_to_insight: 4 days → <2 hours (80% reduction)
+      forecast_accuracy: 9% MAPE → 6% MAPE (or maintain with preserved models)
+      scenario_throughput: 1/week → 5/week (5x increase)
+      analyst_nps: 30 → 50+
+      revenue_optimization: +$10M/year
+    brownfield_notes: "Created for ORAA brownfield codebases with legacy R scripts, PySpark pipelines, \nand Jupyter notebooks.\
+      \ Default: preserve with containerization, NOT rewrite.\nRelated tech avatars: python-streamlit, legacy-ml-interop\n"
+  ground_ops_staffing_analytics:
+    id: ground-ops-staffing-analytics
+    name: Ground Ops Staffing Analytics
+    category: Product (Operations Analytics)
+    registry_path: product-type/index.yaml
+    contributed_by: ABR-Staffing constitutional adoption (2026-03-26)
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      personas: 'examples/personas.md (4 personas: Jordan, Marcus, Priya, Alex)'
+    specializes_laws:
+    - PRD-1.1: Continuous Discovery (ramp supervisor pain points, IROP post-mortems)
+    - PRD-2.1: User Journey (config → extract → train → review → publish)
+    - PRD-3.1: Roadmap Planning (safety net first, then extraction, enrichment, dashboard)
+    - PRD-4.1: MVP & PMF (single-station accuracy validation before expansion)
+    - PRD-5.1: Metrics & Success (staffing accuracy, pull-time SLA, labor cost variance)
+    - ENG-4.1: Atomic TDD (characterization tests for utils/ before notebook extraction)
+    - ENG-4.4: Test-First Brownfield (baseline specs for notebooks; no cell edits in Phase 1)
+    - ENG-6.4: Data Protection (no PII in outputs; DB credentials in .env files)
+    - ENG-6.7: Audit Trail (run_id traceability across all pipeline stages)
+    - BUS-2.1: FAA Compliance (FAA Part 121 ramp/ground ops record requirements)
+    search_queries:
+    - How to optimize ABR staffing? → PRD-3.1 + guidance.md (1800 tokens)
+    - Ramp ops analyst workflow → PRD-2.1 + personas (1500 tokens)
+    - Brownfield adoption for Jupyter notebooks? → ADOPTION.md + ENG-4.4 (1800 tokens)
+    - Quantile staffing selection? → guidance.md + manifest (1200 tokens)
+    - Ground ops station expansion? → manifest + ADOPTION.md (1400 tokens)
+    key_metrics:
+      staffing_accuracy: ±15% within threshold on 80%+ of shifts
+      pull_time_sla: ≥85% within station first_pulltime
+      over_staffing_reduction: 20% labor waste reduction
+      station_coverage: CLT, DFW, PHX, MIA (expanding)
+    brownfield_notes: "Created for ABR-Staffing — Python/Jupyter ML pipeline with Databricks SQL + Teradata.\nPhase 1: characterization\
+      \ tests for utils/; DO NOT touch notebook cells.\nPhase 2: extract logic from notebooks into testable Python modules.\n\
+      Related tech avatars: ml-analytics (PRIMARY), databricks-pyspark (SECONDARY),\n  legacy-ml-interop, aviation-faa (industry).\n"
+  customer_relations_ops:
+    id: customer-relations-ops
+    name: Customer Relations Operations
+    category: Product (Internal Operations)
+    registry_path: product-type/index.yaml
+    version: "1.1.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      personas: 'examples/personas.md (3 personas: Alex Rivera, Diana Okafor, Marcus Webb)'
+      discovery: examples/PRD-1.1-discovery.md (720 tokens)
+      journey: examples/PRD-2.1-journey.md (730 tokens)
+      metrics: examples/PRD-5.1-metrics.md (700 tokens)
+      use_cases:
+      - complaint_draft_generation: use-cases/complaint-draft-generation/README.md (1350 tokens)
+      - compensation_decision: use-cases/compensation-decision/README.md (1200 tokens)
+      - service_recovery_draft: use-cases/service-recovery-draft/README.md (1200 tokens)
+    specializes_laws:
+    - PRD-1.1: Continuous Discovery (CR Rep research, draft acceptance telemetry)
+    - PRD-2.1: User Journey (complaint intake → PII redact → 3-stage pipeline → CR Rep review → case close)
+    - PRD-5.1: Metrics (draft acceptance rate, compliance violation rate, PII-in-LLM rate)
+    - BUS-2.1: Regulatory Mapping (DOT 14 CFR Part 250/260, ADA 14 CFR Part 382, CCPA)
+    - BUS-2.4: Evidence Collection (DOT 30-day clock, compensation tier citations, supervisor approval)
+    - ENG-6.4: PII & Complaint Data (CCPA/medical/disability RESTRICTED classification)
+    - ENG-6.7: Audit Trail (append-only LLM call trace, DOT audit response)
+    search_queries:
+    - What laws govern complaint response drafting at AA? → guidance.md BUS-2.1 section (780 tokens)
+    - How do I understand CR Rep discovery needs? → PRD-1.1-discovery.md (720 tokens)
+    - CR Rep complaint resolution journey? → PRD-2.1-journey.md (730 tokens)
+    - PII safety in LLM complaint workflows? → guidance.md PII Safety Pattern (1000 tokens)
+    - Service recovery draft acceptance metrics? → PRD-5.1-metrics.md (700 tokens)
+    use_cases:
+    - AI-assisted complaint draft generation with PII safety and compliance pre-validation
+    - Compensation validation against category-specific policy rules
+    - Silent 3-stage agent orchestration (Analysis → Compliance → Drafting)
+    - Immutable LLM call audit trace with PII hash chain
+    key_metrics:
+      draft_acceptance_rate: '>80% target'
+      compliance_violation_rate: 0% in delivered drafts
+      pii_in_llm_payload_rate: 0% (audited)
+      audit_trace_completeness: 100%
+    rag_validation:
+      recall: "5/5"
+      max_tokens_per_query: 1350
+      validation_evidence: hangar-ai-specs/evidence/avatar-rag-customer-relations-ops.md
+  airport_operations:
+    id: airport-operations
+    name: Airport Operations
+    category: Product (Operations)
+    registry_path: product-type/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      problem_first: examples/PRD-1.2-problem-first.md
+      evidence_based: examples/PRD-1.5-evidence-based.md
+      stage_gate: examples/PRD-2.5-stage-gate.md
+      mvp: examples/PRD-5.1-mvp.md
+      retention: examples/PRD-6.2-retention.md
+    specializes_laws:
+    - BUS-2.1: FAA gate constraints and FAR Part 121 compliance
+    - BUS-2.2: TSA security protocols
+    - BUS-2.3: DOT tarmac delay limits
+    - PRD-1.2: Problem-First (IROP root cause before solution)
+    - PRD-5.1: MVP (minimum viable IROP automation)
+    search_queries:
+    - How to handle IROP response? → guidance.md + use-case
+    - Gate management best practices? → guidance.md BUS-2.1 section
+    - DOT tarmac delay rules? → BUS-2.3 guidance section
+    - Crew coordination during irregular ops? → guidance.md + PRD-1.2
+    use_cases:
+    - IROP recovery automation
+    - Gate assignment optimization
+    - Crew coordination during irregular operations
+    - Tarmac delay compliance tracking
+  crew_training_scheduling:
+    id: crew-training-scheduling
+    name: Crew Training Scheduling
+    category: Product (Operations)
+    registry_path: product-type/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      problem_first: examples/PRD-1.2-problem-first.md
+      mvp: examples/PRD-5.1-mvp-law.md
+      audit_trail: examples/BUS-7.1-audit-trail.md
+      regulatory_mapping: examples/BUS-2.1-regulatory-mapping.md
+    specializes_laws:
+    - PRD-1.2: Problem-First (training spoilage is the validated problem)
+    - PRD-5.1: MVP (MIP solver with freeze enforcement as first deliverable)
+    - ENG-6.7: Audit Trail (solver run and recommendation are auditable)
+    - BUS-2.1: FAR Part 117 (crew scheduling regulatory constraints)
+    search_queries:
+    - FAR Part 117 scheduling constraints? → BUS-2.1 regulatory mapping
+    - Open blocked sequence recovery? → guidance.md + PRD-1.2
+    - MIP solver for crew training? → PRD-5.1 mvp-law example
+    - Training spoilage metrics? → guidance.md metrics section
+    use_cases:
+    - Open blocked sequence recovery
+    - FAR Part 117 compliance validation
+    - Scheduler recommendation generation
+    - Solution audit trail for regulatory review
+  customer-service:
+    id: customer-service
+    name: Customer Service
+    category: Product (Customer Experience)
+    registry_path: product-type/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      problem_first: examples/PRD-1.2-problem-first.md
+      evidence_based: examples/PRD-1.5-evidence-based.md
+      stage_gate: examples/PRD-2.5-stage-gate.md
+      mvp: examples/PRD-5.1-mvp.md
+      retention: examples/PRD-6.2-retention.md
+    specializes_laws:
+    - BUS-2.3: DOT refund timelines and involuntary denied boarding compensation
+    - PRD-1.2: Problem-First (customer pain before solution design)
+    - PRD-1.5: Evidence-Based Decision (evidence required before committing to builds)
+    - PRD-2.5: Discovery Stage-Gate (stage gate criteria before advancing to design)
+    - PRD-6.2: Retention Over Acquisition (service recovery drives loyalty)
+    - BUS-7.1: Audit Trail (complaint resolution records)
+    search_queries:
+    - DOT refund timeline requirements? → BUS-2.3 guidance section
+    - IROP self-serve rebooking? → guidance.md + PRD-1.2
+    - Involuntary denied boarding compensation? → BUS-2.3 + use-case
+    - Customer complaint handling? → guidance.md + PRD-6.2
+    - What are the DOT refund requirements when a flight is cancelled?
+    - We are making this decision based on gut feel — is that okay?
+    - How do I validate an assumption before we commit to building?
+    - What are the stage gate criteria to move from discovery to design?
+    - Can we skip the discovery stage and go straight to development?
+    - What evidence must I file before moving to the next discovery stage?
+    use_cases:
+    - IROP self-service rebooking
+    - DOT-compliant refund processing
+    - Involuntary denied boarding compensation workflows
+    - Complaint resolution workflows
+  internal_productivity:
+    id: internal-productivity
+    name: Internal Productivity Tools
+    category: Product (Internal Operations)
+    registry_path: product-type/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      problem_first: examples/PRD-1.2-problem-first.md
+      evidence_based: examples/PRD-1.5-evidence-based.md
+      stage_gate: examples/PRD-2.5-stage-gate.md
+      mvp: examples/PRD-5.1-mvp.md
+      retention: examples/PRD-6.2-retention.md
+    specializes_laws:
+    - PRD-1.2: Problem-First (analyst workflow pain before automation)
+    - ENG-6.4: Data Protection (employee data in internal tools)
+    - BUS-4.3: Employee data privacy requirements
+    search_queries:
+    - Internal workflow automation? → guidance.md + PRD-1.2
+    - Employee data privacy requirements? → BUS-4.3 + ENG-6.4
+    - Content transformation tools? → guidance.md content tools section
+    - Internal productivity MVP? → PRD-5.1 example
+    use_cases:
+    - Workflow automation for analysts
+    - Content transformation tools
+    - Self-service portals for non-technical users
+    - Brand compliance tools
+  passenger_booking:
+    id: passenger-booking
+    name: Passenger Booking
+    category: Product (Commercial)
+    registry_path: product-type/index.yaml
+    version: "1.7.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      discovery: examples/PRD-1.1-discovery.md (~680 tokens)
+      journey: examples/PRD-2.1-journey.md (~820 tokens)
+      problem_first: examples/PRD-1.2-problem-first.md
+      evidence_based: examples/PRD-1.5-evidence-based.md
+      stage_gate: examples/PRD-2.5-stage-gate.md
+      metrics: examples/PRD-5.1-metrics.md (~760 tokens)
+      retention: examples/PRD-6.2-retention.md
+      priority_hierarchy: examples/BUS-1.1-priority-hierarchy.md
+      data_subject_rights: examples/BUS-4.3-data-subject-rights.md
+      audit_trail: examples/BUS-7.1-audit-trail.md
+      breach_notification: examples/BUS-9.3-breach-notification.md
+      use_cases:
+      - search_and_book: use-cases/search-and-book/README.md (~1100 tokens)
+      - award_booking: use-cases/award-booking/README.md
+      - bff_booking_layer: use-cases/bff-booking-layer/README.md
+    specializes_laws:
+    - BUS-2.1: Regulatory Mapping (PCI-DSS, DOT 14 CFR Part 250/260, GDPR)
+    - BUS-2.2: Control Framework (PCI-DSS 12-requirement, tokenization, no PAN in logs)
+    - BUS-2.4: Evidence Collection (DOT refund SLA 7 days, denied boarding compensation)
+    - BUS-4.3: Data Subject Rights (GDPR Art.17 erasure, PNR portability)
+    - BUS-7.1: Audit Trail (PNR state transitions, payment events, 7-year retention)
+    - BUS-9.3: Breach Notification (PCI DSS 72h, GDPR 72h, CCPA)
+    - ENG-6.1: Security by Design (CDE zone isolation, vault credentials)
+    - ENG-6.4: PII & GDPR (EU passenger lawful basis, right to erasure)
+    - ENG-6.7: Audit Trail (immutable booking state log)
+    - PRD-1.1: Continuous Discovery (funnel abandonment, passenger interviews)
+    - PRD-2.1: User Journey (search to PNR, DOT fare transparency gate)
+    - PRD-5.1: Metrics & Success (conversion 34%→38%, payment 89%→93%)
+    search_queries:
+    - What laws govern passenger booking product development at AA? → manifest specializes_laws (420 tokens)
+    - How do we handle PCI-DSS and DOT fare transparency in the booking flow? → BUS-2.1 + BUS-2.2 + ENG-6.1 examples (780 tokens)
+    - Show me the booking journey from search to PNR confirmation → PRD-2.1 example + core_journeys (820 tokens)
+    - What metrics define success for the passenger booking funnel? → PRD-5.1-metrics.md (760 tokens)
+    - What skills are activated by the passenger booking avatar? → activates.skills (220 tokens)
+  marketing_personalization:
+    id: marketing-personalization
+    name: Marketing & Personalization
+    category: Product (Marketing)
+    registry_path: product-type/index.yaml
+    version: "1.2.0"
+    rag_validated: true
+    last_validated: "2026-04-30"
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      discovery: examples/PRD-1.1-discovery.md (750 tokens)
+      journey: examples/PRD-2.1-journey.md (750 tokens)
+      roadmap: examples/PRD-3.1-roadmap.md (750 tokens)
+      metrics: examples/PRD-5.1-mvp.md (750 tokens)
+      stage_gate: examples/PRD-2.5-stage-gate.md (750 tokens)
+      retention: examples/PRD-6.2-retention.md (750 tokens)
+      use_cases:
+      - customer_segmentation: use-cases/customer-segmentation/README.md (1380 tokens)
+      - campaign_attribution: use-cases/campaign-attribution/README.md (1200 tokens)
+      - offer_experiment_design: use-cases/offer-experiment-design/README.md (1200 tokens)
+    specializes_laws:
+    - PRD-1.1: Continuous Discovery (campaign manager interviews, CTR analysis, propensity drift)
+    - PRD-1.2: Problem-First (campaign hypothesis before ML investment)
+    - PRD-1.5: Evidence-Based (A/B test results drive all algorithm changes)
+    - PRD-2.1: User Journey (Trigger → Segment → Score → Rank → Deliver → Attribute)
+    - PRD-3.1: Roadmap Planning (retention-first quarterly roadmap with metric gates)
+    - PRD-5.1: Launch Criteria (offer activation metrics, CTR, opt-out, incremental revenue)
+    - PRD-6.2: Retention Over Acquisition (90-day re-engagement as north star)
+    - BUS-4.3: Data Subject Rights (opt-out, erasure, CCPA/GDPR consent)
+    - BUS-7.1: Audit Trail (append-only offer decision log, 7-year retention)
+    search_queries:
+    - What laws govern marketing personalization at AA? → manifest specializes_laws (840 tokens)
+    - How do I understand offer campaign discovery? → PRD-1.1-discovery.md (750 tokens)
+    - Customer offer journey map? → PRD-2.1-journey.md (750 tokens)
+    - Campaign stage gate review? → PRD-2.5 example (750 tokens)
+    - Customer consent and opt-out management? → BUS-4.3 guidance section (700 tokens)
+    use_cases:
+    - Personalised offer targeting (segmentation + propensity scoring)
+    - Campaign A/B experiment design and result analysis
+    - AAdvantage re-engagement 90-day win-back campaigns
+    - Consent management and preference centre (CCPA/GDPR)
+    key_metrics:
+      offer_ctr_improvement: 23% lift in relevant CTR
+      opt_out_reduction: 18% reduction in offer opt-outs
+      incremental_revenue_per_offer: $4.20 avg
+      ninety_day_reengagement: 34% improvement
+    rag_validation:
+      recall: "5/5"
+      max_tokens_per_query: 1380
+      validation_evidence: hangar-ai-specs/evidence/avatar-rag-marketing-personalization.md
+  gate-management:
+    id: avatar-product-gate-management
+    name: Gate Management Platform
+    category: Product (Gate Operations)
+    registry_path: product-type/gate-management/manifest.yaml
+    specializes_laws:
+    - BUS-2.1: FAA Compliance (FAR Part 139, DO-178C gate operations software)
+    - BUS-2.2: Control Framework (TSA 49 CFR Part 1542 gate access security)
+    - BUS-2.4: Evidence Collection (CBP biometric exit regulatory evidence)
+    - ENG-6.1: Security by Design (biometric data protection, gate access controls)
+    - ENG-6.7: Audit Trail (boarding audit chain, FAA/TSA/CBP regulatory evidence)
+    - PRD-1.2: Problem-First (gate agent workflow friction before building)
+    - PRD-1.5: Evidence-Based (telemetry-driven decisions — display latency, match rates)
+    - PRD-5.1: MVP Law (pilot gate validation before station-wide rollout)
+    - PRD-6.2: Retention Over Acquisition (gate agent workflow adoption over new touchpoints)
+    search_queries:
+    - Gate management digital signage DSS event-driven?
+    - Biometric boarding gate management compliance?
+    - Carry-on baggage compliance gate operations?
+    - Gate agent workflow retention adoption metrics?
+    - FAA TSA CBP gate operations regulatory requirements?
+  network-automation:
+    manifest: avatars/product-type/network-automation/manifest.yaml
+    guidance: avatars/product-type/network-automation/guidance.md
+    examples:
+      - avatars/product-type/network-automation/examples/PRD-1.1-discovery.md
+      - avatars/product-type/network-automation/examples/PRD-1.2-problem-first.md
+      - avatars/product-type/network-automation/examples/PRD-1.5-evidence-based.md
+      - avatars/product-type/network-automation/examples/PRD-2.1-journey.md
+      - avatars/product-type/network-automation/examples/PRD-2.5-stage-gate.md
+      - avatars/product-type/network-automation/examples/PRD-5.1-metrics.md
+      - avatars/product-type/network-automation/examples/PRD-6.2-retention.md
+      - avatars/product-type/network-automation/examples/BUS-2.1-change-compliance.md
+      - avatars/product-type/network-automation/examples/BUS-7.1-audit-trail.md
+      - avatars/product-type/network-automation/use-cases/network-change-automation/README.md
+    search_queries:
+      - "network automation change management"
+      - "Nautobot device push workflow"
+      - "firewall rule lifecycle automation"
+      - "DNS record automation API"
+      - "network change audit trail compliance"
+    law_specializations:
+      - PRD-1.1
+      - PRD-1.2
+      - PRD-1.5
+      - PRD-2.1
+      - PRD-2.5
+      - PRD-5.1
+      - PRD-6.2
+      - BUS-2.1
+      - BUS-7.1
+    rag_validation:
+      recall: "5/5"
+      max_tokens_per_query: 1345
+      validation_evidence: hangar-ai-specs/evidence/avatar-rag-network-automation.md
+  crew-recovery-solver:
+    manifest: avatars/product-type/crew-recovery-solver/manifest.yaml
+    guidance: avatars/product-type/crew-recovery-solver/guidance.md
+    examples:
+      - avatars/product-type/crew-recovery-solver/examples/PRD-1.1-discovery.md
+      - avatars/product-type/crew-recovery-solver/examples/PRD-1.2-problem-first.md
+      - avatars/product-type/crew-recovery-solver/examples/PRD-1.5-evidence-based.md
+      - avatars/product-type/crew-recovery-solver/examples/PRD-2.1-journey.md
+      - avatars/product-type/crew-recovery-solver/examples/PRD-2.5-stage-gate.md
+      - avatars/product-type/crew-recovery-solver/examples/PRD-5.1-metrics.md
+      - avatars/product-type/crew-recovery-solver/examples/PRD-6.2-retention.md
+      - avatars/product-type/crew-recovery-solver/examples/BUS-2.1-far-117.md
+      - avatars/product-type/crew-recovery-solver/examples/BUS-7.1-audit-trail.md
+      - avatars/product-type/crew-recovery-solver/examples/ENG-6.7-correlation-id.md
+      - avatars/product-type/crew-recovery-solver/use-cases/irop-single-flight-cancellation/README.md
+    search_queries:
+      - "crew recovery IROP reassignment"
+      - "FAR Part 117 crew rest compliance"
+      - "crew assignment audit trail"
+      - "irregular operations crew scheduling"
+      - "IROP crew reassignment workflow"
+    law_specializations:
+      - PRD-1.1
+      - PRD-1.2
+      - PRD-1.5
+      - PRD-2.1
+      - PRD-2.5
+      - PRD-5.1
+      - PRD-6.2
+      - BUS-2.1
+      - BUS-7.1
+      - ENG-6.7
+  ballot_trading:
+    id: avatar-product-ballot-trading
+    name: "Pilot Ballot & Trip Trading"
+    category: Crew Self-Service & Trip Trading
+    registry_path: product-type/ballot-trading/manifest.yaml
+    files:
+      manifest: manifest.yaml (~140 tokens)
+      guidance: guidance.md (~480 tokens)
+      discovery: examples/PRD-1.1-discovery.md (~447 tokens)
+      problem_first: examples/PRD-1.2-problem-first.md (~520 tokens)
+      evidence_based: examples/PRD-1.5-evidence-based.md (~520 tokens)
+      journey: examples/PRD-2.1-journey.md (~581 tokens)
+      stage_gate: examples/PRD-2.5-stage-gate.md (~560 tokens)
+      metrics: examples/PRD-5.1-metrics.md (~516 tokens)
+      retention: examples/PRD-6.2-retention.md (~500 tokens)
+      audit_trail: examples/BUS-7.1-audit-trail.md (~426 tokens)
+      control_framework: examples/BUS-2.2-control-framework.md (~511 tokens)
+      data_classification: examples/BUS-3.1-data-classification.md (~552 tokens)
+      use_cases:
+        - pilot_trip_trade: use-cases/pilot-trip-trade/README.md (~610 tokens)
+    specializes_laws:
+      - PRD-1.1: Continuous Discovery (pilot trade friction, ballot-period observation, ineligibility signals)
+      - PRD-1.2: Problem-First (validate specific pilot friction with evidence before solution work)
+      - PRD-1.5: Evidence-Based (CBA-evidence-ranked awards; deviation requires logged justification)
+      - PRD-2.1: User Journey (real-time trade, batch ballot, reserve check, dispute paths)
+      - PRD-2.5: Stage-Gate (sequential discovery gates; CBA domain review before spec work)
+      - PRD-5.1: MVP & Metrics (real-time eligible-trade slice first; Tier 1-3 KPIs)
+      - PRD-6.2: Retention (pilot trust over new trade scenarios; opaque rejections block acquisition)
+      - BUS-7.1: Audit Trail (immutable trade decisions; CBA dispute defensibility)
+      - BUS-2.2: Control Framework (CBA as documented control; bidirectional traceability)
+      - BUS-3.1: Data Classification (pilot/schedule data Confidential; retention + access controls)
+    search_queries:
+      - How do we discover pilot trip trading pain points?
+      - What is the core journey for a pilot submitting a ballot trade?
+      - What are the success metrics for ballot trading?
+      - What are the non-negotiable rules for ballot trading?
+      - Walk me through a real-time pilot trip trade workflow
+    taxonomy_extension_status: "PENDING — awaiting Director+ approval per hangar-ai-specs/changes/taxonomy-extension-ballot-trading/PROPOSAL.md"
+query_routing:
+  exact_match:
+    pattern: '"PRD-N.N" or "cargo-freight" or "loyalty-aadvantage" or "check-in-travel" or "travel-docs-compliance" or "network-planning-optimization"
+      or "ground-ops-staffing-analytics" or "network-automation"'
+    action: Load specific law example or avatar manifest + guidance
+    tokens: 750-1200
+  semantic_discovery:
+    pattern: '"How do we discover..." or "What customer needs..." or "Market research..."'
+    action: Load PRD-1.1 discovery example + guidance
+    tokens: 900-1100
+  user_journey:
+    pattern: '"What is... journey..." or "User workflow..." or "Step by step..."'
+    action: Load PRD-2.1 journey example + use-case
+    tokens: 1800-2400
+  prioritization:
+    pattern: '"What features..." or "Prioritize..." or "Roadmap..."'
+    action: Load PRD-3.1 roadmap example + guidance
+    tokens: 800-1000
+  validation:
+    pattern: '"How do we test..." or "Validate..." or "MVP..."'
+    action: Load PRD-4.1 MVP example + guidance
+    tokens: 800-1000
+  success_metrics:
+    pattern: '"Success metrics..." or "KPIs..." or "Measure..."'
+    action: Load PRD-5.1 metrics example + manifest
+    tokens: 900-1200
+  business_impact:
+    pattern: '"ROI..." or "Business case..." or "Revenue..."'
+    action: Load manifest.yaml + PRD-5.1 metrics + PRD-3.1 roadmap
+    tokens: 1000-1500
+  fallback:
+    pattern: Ambiguous or cross-product query
+    action: Load guidance.md + offer clarification
+    tokens: 200-450
+citation_format: "Format: [Avatar/Law: Title](path/to/file.md) — context snippet\n\nExamples:\n- [Cargo/PRD-2.1: Booking Journey](avatars/product-type/cargo-freight/examples/PRD-2.1-journey.md)\
+  \ — \n  Quote takes 13.8s, booking form <5 min, 30% auto-fill reduction\n\n- [Loyalty/PRD-5.1: Success Metrics](avatars/product-type/loyalty-aadvantage/examples/PRD-5.1-metrics.md)\
+  \ — \n  NPS 42→50+, redemption 45%→65%, elite 25%→35%\n\n- [Check-In/PRD-4.1: MVP Validation](avatars/product-type/check-in-travel/examples/PRD-4.1-mvp.md)\
+  \ — \n  Offline barcode MVP proved 99.9% reliability before mobile scaling\n"
+ai_guidance:
+  getting_started:
+    step_1: Load guidance.md (200-450 tokens) for product overview
+    step_2: Load examples/personas.md (100 tokens) for user context
+    step_3: Load PRD-N.N.md (750 tokens) for specific law guidance
+    step_4: Load use-case/ (1200-1500 tokens) for workflow details
+  selective_loading_strategy:
+    query_has_clear_intent: Route to specific document type (PRD-N.N or use-case)
+    query_is_ambiguous: Load guidance.md first, then ask clarifying question
+    query_crosses_products: Load product-type/index.yaml registry for context
+    query_needs_business_context: Load manifest.yaml + PRD-5.1 + PRD-3.1
+performance:
+  average_query_response: <1 second
+  token_per_query: 2500 (vs 8000-12000 full avatar)
+  token_efficiency: 60-67% reduction
+  semantic_search_recall: 95%+
+  semantic_search_precision: 90%+
+maintenance:
+  index_last_updated: '2026-02-20'
+  index_rebuild_schedule: Weekly (incremental), monthly (full)
+  guidance_review_frequency: Quarterly
+  examples_review_frequency: As laws are refined
+  use_cases_review_frequency: Monthly as products evolve
+
+technology_avatars:
+  playwright_e2e_testing:
+    id: playwright-e2e-testing
+    name: Playwright E2E/UI Testing
+    category: Technology (Testing)
+    registry_path: technology/index.yaml (subset in avatars/index.yaml)
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      tdd_example: examples/ENG-4.1-atomic-tdd.md
+      pyramid_example: examples/ENG-4.2-test-pyramid.md
+      complexity_example: examples/ENG-3.1-complexity.md
+      security_example: examples/ENG-6.1-security.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (one E2E scenario per test, setup project for auth)
+    - ENG-4.2: Test Pyramid (E2E at top — only critical user journeys)
+    - ENG-3.1: Complexity Limits (test files ≤300 LOC, page objects ≤200 LOC)
+    - ENG-6.1: Security by Design (credentials in env vars, auth state in .gitignore)
+    - ENG-6.4: Data Protection (no production PII in test fixtures, artifacts .gitignored)
+    - ENG-6.7: Audit Trail (HTML+JSON+JUnit reporters, trace on failure, CI artifact upload)
+    search_queries:
+    - How to write E2E test with Playwright? → ENG-4.1 example (600 tokens)
+    - When E2E vs unit vs UI-mocked? → ENG-4.2 example (500 tokens)
+    - Non-negotiable rules for Playwright? → guidance.md (570 tokens)
+    - Playwright project structure? → manifest.yaml (510 tokens)
+    - AA SSO auth in Playwright? → guidance + ENG-6.1 (1250 tokens)
+    use_cases:
+    - E2E testing of AA web apps with real API and database
+    - UI testing with mocked API (route interception)
+    - Automated SSO authentication against PingFederate (pfloginapp-stage.cloud.aa.com)
+    - Cross-browser testing (Chromium, Edge, Firefox, WebKit)
+    - AI-assisted E2E testing with playwright-cli agent tooling
+    anti_patterns:
+    - DO NOT re-authenticate in every test (use setup project + storageState)
+    - DO NOT hardcode credentials (use environment variables)
+    - DO NOT ignore sessionStorage gap (use page.addInitScript() injection)
+    - DO NOT write E2E tests for logic that can be unit tested
+    languages:
+    - TypeScript (@playwright/test)
+    - Java (Playwright Java + TestNG/Cucumber)
+    - Python (pytest-playwright)
+  python_streamlit:
+    id: python-streamlit
+    name: Python/Streamlit
+    category: Technology (Dashboard/UI)
+    registry_path: technology/index.yaml (subset in avatars/index.yaml)
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (test business logic and API clients, keep UI thin)
+    - ENG-3.1: Complexity Limits (extract complex logic to tested modules, not app.py)
+    - ENG-2.2: Layered Architecture (presentation/business/data layers)
+    - ENG-6.5: Input Validation (validate widget inputs before processing)
+    - ENG-10.1: Brownfield Integration (UI for legacy R/PySpark models via API)
+    search_queries:
+    - How to build Streamlit dashboard? → guidance.md + ENG-2.2 (1200 tokens)
+    - Streamlit with legacy R models? → ENG-10 1 + guidance brownfield section (1400 tokens)
+    - How to test Streamlit apps? → ENG-4.1 guidance (900 tokens)
+    - Streamlit for brownfield codebases? → guidance + manifest (1100 tokens)
+    use_cases:
+    - MVP dashboards for internal analysts and planners
+    - Brownfield integration with legacy R/PySpark via API
+    - Interactive scenario modeling and what-if analysis
+    - Proof-of-concept before building production web apps
+    anti_patterns:
+    - DO NOT put business logic in app.py (extract to tested modules)
+    - DO NOT call R/PySpark directly from Streamlit (use API layer)
+    - DO NOT skip tests for data transformations and API clients
+  legacy_ml_interop:
+    id: legacy-ml-interop
+    name: Legacy ML Interoperability
+    category: Technology (Brownfield Preservation)
+    registry_path: technology/index.yaml (subset in avatars/index.yaml)
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-10.1: 'Brownfield Preservation (default: containerize, not rewrite)'
+    - ENG-4.1: Atomic TDD for Regression (validate output parity with legacy code)
+    - ENG-2.2: Layered Architecture (presentation → API → legacy execution)
+    - ENG-6.5: Input Validation (validate at API boundary before subprocess calls)
+    search_queries:
+    - How to preserve legacy R models? → ENG-10.1 + guidance (1800 tokens)
+    - Containerize PySpark pipelines? → guidance PySpark section (1200 tokens)
+    - Migrate Jupyter notebooks? → guidance extraction section (1000 tokens)
+    - When to rewrite vs preserve? → guidance decision framework (900 tokens)
+    - Side-by-side validation testing? → ENG-4.1 regression tests (1100 tokens)
+    use_cases:
+    - Containerize legacy R statistical models for API consumption
+    - Wrap PySpark optimization pipelines with FastAPI
+    - Extract reusable logic from Jupyter notebooks to tested modules
+    - Build Streamlit dashboards calling containerized legacy models
+    preservation_policy:
+      default_strategy: Preserve with containerization—no rewrite without validation
+      preserve_when:
+      - Legacy model has validated accuracy and stakeholder trust
+      - Domain logic is complex and poorly documented (rewrite risk high)
+      - Time-to-market critical (containerization 1-2 weeks vs rewrite 8-12 weeks)
+      migrate_when:
+      - New model demonstrates 10%+ accuracy improvement (validated)
+      - New model demonstrates 50%+ performance improvement (validated)
+      - Legacy maintainability cost > migration cost + stakeholder approval
+      never_migrate_without:
+      - Stakeholder signoff from model owners and users
+      - Side-by-side validation tests (output parity within 1% tolerance)
+      - Regression test suite covering critical use cases
+      - Rollback plan (keep containerized legacy model deployable)
+  azure_openai:
+    id: azure-openai
+    name: Azure OpenAI Service
+    category: Technology (LLM Integration)
+    registry_path: technology/index.yaml (subset in avatars/index.yaml)
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      tdd_example: examples/ENG-4.1-wrapper-tdd.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (LLM wrapper testable with mocked HTTP — no live Azure in unit tests)
+    - ENG-6.5: Input Validation (validate payload before API call)
+    - ENG-6.1: Security (key never logged; Managed Identity for prod; env var only)
+    - BUS-7.1: Audit Trail (TID propagates through every LLM call)
+    search_queries:
+    - How to call Azure OpenAI from Python? → guidance.md endpoint + wrapper pattern (1100 tokens)
+    - Azure OpenAI vs OpenAI SDK differences? → guidance.md overview table (600 tokens)
+    - How to test LLM wrapper? → examples/ENG-4.1-wrapper-tdd.md (1200 tokens)
+    - TID propagation in LLM calls? → guidance.md custom wrapper + BUS-7.1 (900 tokens)
+    - Azure OpenAI retry pattern? → guidance.md retry section (700 tokens)
+    - Content filter handling? → guidance.md content filter section (600 tokens)
+    use_cases:
+    - Custom AzureLLMWrapper with TID propagation and audit trail
+    - Deployment-name-based routing (not model-name routing)
+    - API version pinning and changelog governance
+    - Tenacity retry for 429 and transient 5xx errors
+    anti_patterns:
+    - DO NOT use full URL env var for endpoint — construct from service name in code
+    - DO NOT log the api-key header value at any log level
+    - DO NOT use model name in AZURE_OPENAI_MODEL — use deployment name
+    - DO NOT call Azure OpenAI without TID parameter (breaks BUS-7.1)
+  postgresql_sqlalchemy:
+    id: postgresql-sqlalchemy
+    name: PostgreSQL / SQLAlchemy (Async)
+    category: Technology (Database)
+    registry_path: technology/index.yaml (subset in avatars/index.yaml)
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      tdd_example: examples/ENG-4.1-db-tdd.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (session injected as dependency; unit tests mock session)
+    - ENG-4.2: Test Pyramid (unit mock sessions; integration real Docker Compose PostgreSQL)
+    - BUS-7.1: Audit Trail (append-only trace tables; no UPDATE/DELETE on audit rows)
+    - ENG-6.5: Input Validation (PII fields typed and validated before DB write)
+    - ENG-6.1: Security (credentials from env vars; password never logged)
+    search_queries:
+    - How to set up async PostgreSQL with SQLAlchemy? → guidance.md async session section (1100 tokens)
+    - PII encrypted columns in PostgreSQL? → guidance.md PII-Encrypted Column section (1000 tokens)
+    - Append-only audit table pattern? → guidance.md Audit Immutability section (900 tokens)
+    - How to test DB connector? → examples/ENG-4.1-db-tdd.md (1200 tokens)
+    - Raw SQL migration governance? → guidance.md migrations section (700 tokens)
+    - DB connector security? → guidance.md DBConnector + ENG-6.1 (800 tokens)
+    use_cases:
+    - DBConnector pattern with health check and environment-driven config
+    - Async session scoped to FastAPI request boundary
+    - PII-encrypted columns with key rotation via env var
+    - Append-only trace table with PostgreSQL-level UPDATE/DELETE rules
+    - Raw SQL migration scripts with idempotency and versioning requirements
+    anti_patterns:
+    - DO NOT create new engine per call — use shared pool
+    - DO NOT log connection string or password
+    - DO NOT UPDATE or DELETE rows in the traces table
+    - DO NOT hardcode PII_ENCRYPTION_KEY in source code
+  opentelemetry_python:
+    id: opentelemetry-python
+    name: OpenTelemetry Python (OTEL)
+    category: Technology (Observability)
+    registry_path: technology/index.yaml (subset in avatars/index.yaml)
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (spans testable with InMemorySpanExporter — no live collector)
+    - BUS-7.1: Audit Trail (LLM and compliance decision spans required for Dynatrace observability)
+    - ENG-1.2: AI-Engineer Pairing (instrumentation decisions must be explainable; never remove silently)
+    search_queries:
+    - How to set up OTEL in Python FastAPI? → guidance.md bootstrapping section (1100 tokens)
+    - How to emit spans for LLM calls? → guidance.md manual spans section (900 tokens)
+    - structlog + OTEL trace correlation? → guidance.md structlog section (800 tokens)
+    - Dynatrace OTLP configuration? → guidance.md Dynatrace section (700 tokens)
+    - How to test OTEL spans without a collector? → guidance.md testing section (900 tokens)
+    - OTEL span attributes — what not to include? → manifest.yaml conventions + guidance anti-patterns (600 tokens)
+    use_cases:
+    - Auto-instrumentation of FastAPI routes via opentelemetry-instrument wrapper
+    - Manual named spans for PII redaction, LLM generate, compliance validate, audit write
+    - structlog + OTEL trace ID injection for Dynatrace log correlation
+    - InMemorySpanExporter-based unit tests (no live OTLP collector required)
+    anti_patterns:
+    - DO NOT remove opentelemetry-instrument from start command (breaks Dynatrace correlation)
+    - DO NOT set customer PII (names, PNR) as span attributes
+    - DO NOT hardcode OTLP endpoint — load from OTEL_EXPORTER_OTLP_ENDPOINT
+    - DO NOT skip LLM call spans (required by BUS-7.1)
+  angular:
+    id: angular
+    name: Angular
+    category: Technology (Frontend)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      eng_2_2: examples/ENG-2.2-layered-architecture.md
+      eng_3_1: examples/ENG-3.1-complexity.md
+      eng_3_2: examples/ENG-3.2-immutability.md
+      eng_4_1: examples/ENG-4.1-tdd.md
+      prd_3_4: examples/PRD-3.4-accessibility.md
+      security: examples/ENG-6-security.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (test Angular components and services in isolation)
+    - PRD-3.4: Accessibility (WCAG 2.1 AA compliance for Angular components)
+    - ENG-6.1: Security by Design (HttpInterceptor for auth, CSRF protection)
+    search_queries:
+    - Angular HttpInterceptor auth? → guidance.md security section + ENG-6.1
+    - Testing Angular components? → ENG-4.1 example + guidance.md
+    - Angular security best practices? → ENG-6-security example + guidance.md
+    use_cases:
+    - Enterprise Angular 17+ applications with TypeScript
+    - Angular with HttpInterceptor for JWT/OAuth2 authentication
+    - Angular component testing with Jasmine/Karma
+    - Accessibility-first Angular UI development
+  azure_data_factory:
+    id: azure-data-factory
+    name: Azure Data Factory
+    category: Technology (Data Platform)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-5.1: CI/CD (ARM template GitHub Actions deploy; no manual Studio publish)
+    - BUS-3.1: Data Governance (pipeline lineage and data audit trails)
+    search_queries:
+    - ADF pipeline patterns? → guidance.md pipeline section
+    - Data factory testing? → guidance.md testing section + ENG-5.1
+    use_cases:
+    - ADF pipelines deployed via ARM templates with GitHub Actions
+    - Managed Identity linked services with Key Vault references
+    - Diagnostic Settings to Log Analytics for audit trail
+    - Single-activity debug pipeline before orchestration
+  azure_ml:
+    id: azure-ml
+    name: Azure ML
+    category: Technology (MLOps)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (ML model testing with reproducible fixtures)
+    - BUS-3.1: Data Governance (experiment lineage and data provenance)
+    search_queries:
+    - Azure ML model training? → guidance.md training section
+    - ML experiment tracking in Azure? → guidance.md experiment section + BUS-3.1
+    use_cases:
+    - Azure ML workspace with managed compute clusters
+    - Experiment tracking with Azure ML runs
+    - Model registry with staging and production environments
+    - Automated ML pipelines with GitHub Actions integration
+  data_engineering:
+    id: data-engineering
+    name: Data Engineering
+    category: Technology (Data Platform)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (test pipeline transformations with fixture datasets)
+    - BUS-3.1: Data Governance (data lineage, retention, quality gates)
+    - ENG-6.4: Data Protection (PII masking in pipelines)
+    search_queries:
+    - Data pipeline testing? → guidance.md testing section + ENG-4.1
+    - dbt best practices? → guidance.md dbt section + BUS-3.1
+    use_cases:
+    - Python/Spark/dbt data pipeline development
+    - Data quality gates with Great Expectations
+    - PII masking and data protection in ETL pipelines
+    - Airflow/Dagster orchestrated pipeline testing
+  databricks_pyspark:
+    id: databricks-pyspark
+    name: Databricks / PySpark
+    category: Technology (Data Platform)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (SparkSession fixture; Delta table fixtures for unit tests)
+    - BUS-3.1: Data Governance (Delta DESCRIBE HISTORY; Unity Catalog RBAC)
+    search_queries:
+    - PySpark testing? → guidance.md testing section + ENG-4.1
+    - Databricks pipeline patterns? → guidance.md pipeline section
+    use_cases:
+    - PySpark transformations with Delta Lake on Databricks
+    - Unity Catalog RBAC with least-privilege service principals
+    - Databricks Asset Bundles CI/CD with GitHub Actions
+    - MLflow run provenance in Databricks notebooks
+  dotnet_core:
+    id: dotnet-core
+    name: .NET Core / C#
+    category: Technology (Backend)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      eng_2_1: examples/ENG-2.1-ddd.md
+      eng_2_2: examples/ENG-2.2-layered-architecture.md
+      eng_3_1: examples/ENG-3.1-complexity.md
+      eng_3_2: examples/ENG-3.2-immutability.md
+      eng_3_3: examples/ENG-3.3-function-length.md
+      eng_3_5: examples/ENG-3.5-naming.md
+      eng_4_1: examples/ENG-4.1-tdd.md
+      security: examples/ENG-6-security.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (xUnit tests, Moq for mocking)
+    - ENG-3.1: Complexity Limits (cyclomatic complexity ≤10 per method)
+    - ENG-2.1: DDD Aggregate Root (bounded contexts in .NET)
+    - ENG-6.1: Security by Design (.NET security middleware, secrets management)
+    search_queries:
+    - C# testing patterns? → ENG-4.1 example + guidance.md
+    - .NET security best practices? → ENG-6-security example
+    - Entity Framework patterns? → guidance.md EF section + ENG-2.1
+    use_cases:
+    - .NET 8 Web API with Clean Architecture
+    - Entity Framework Core with async/await patterns
+    - xUnit + Moq test suite with code coverage gates
+    - Azure Key Vault secrets management in .NET
+  java_spring:
+    id: java-spring
+    name: Java / Spring Boot
+    category: Technology (Backend)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      eng_2_1: examples/ENG-2.1-ddd.md
+      eng_2_2: examples/ENG-2.2-layered-architecture.md
+      eng_3_1: examples/ENG-3.1-complexity.md
+      eng_3_2: examples/ENG-3.2-immutability.md
+      eng_3_3: examples/ENG-3.3-function-length.md
+      eng_3_5: examples/ENG-3.5-naming.md
+      eng_4_1: examples/ENG-4.1-tdd.md
+      security: examples/ENG-6-security.md
+      legacy_rescue: legacy-rescue-java.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (JUnit 5 + Mockito; @SpringBootTest for integration)
+    - ENG-3.1: Complexity Limits (single-responsibility Spring beans)
+    - ENG-2.1: DDD Aggregate Root (JPA entities as aggregates)
+    - ENG-6.1: Security by Design (Spring Security OAuth2/OIDC)
+    - ENG-6.7: Audit Trail (Spring Data JPA auditing with @CreatedDate/@ModifiedDate)
+    - ENG-4.10: Test Evolution Law (characterization tests, test level migration, over-mocking anti-patterns)
+    - ENG-4.11: Mutation Testing Law (Pitest/PIT on Spring Boot projects)
+    - ENG-4.12: Legacy Rescue Mutation Hardening (≥90% mutation score, surviving-mutant register)
+    search_queries:
+    - Spring Boot testing? → ENG-4.1 example + guidance.md
+    - Spring Security patterns? → ENG-6-security example + guidance.md
+    - JPA repository patterns? → guidance.md JPA section + ENG-2.1
+    - Legacy rescue Java Spring Boot god class? → legacy-rescue-java.md + ENG-4.1
+    - JaCoCo coverage SonarQube Java maven? → legacy-rescue-java.md + ENG-4.11
+    - Characterization tests JUnit 5 Mockito legacy? → legacy-rescue-java.md + ENG-4.10
+    - AccrualService extracted MileageService test level migration? → legacy-rescue-java.md + ENG-4.10
+    - PIT mutation testing pitest-maven Java? → legacy-rescue-java.md + ENG-4.12
+    - Hardcoded credentials Spring Boot remediation? → legacy-rescue-java.md + ENG-6.7
+    - CORS wildcard Spring Boot fix? → legacy-rescue-java.md + ENG-6.1
+    - PreAuthorize Spring Security endpoints? → legacy-rescue-java.md + ENG-6.1
+    - sonar.java.binaries workaround legacy project? → legacy-rescue-java.md
+    - Spring Boot characterization scope declaration? → legacy-rescue-java.md + ENG-4.10
+    use_cases:
+    - Spring Boot 3.x REST API with Spring Security
+    - JPA repositories with audit fields
+    - JUnit 5 + Mockito test suite
+    - Spring Boot Actuator with health checks and metrics
+    - Legacy Java Spring Boot rescue and refactor with characterization tests + PIT mutation hardening
+  langchain:
+    id: langchain
+    name: LangChain
+    category: Technology (AI/LLM)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (LLM chains testable with mocked LLM responses)
+    - ENG-9.1: AI Agent Law (human override gate before autonomous actions)
+    - BUS-1.1: Priority Hierarchy (legal constraints before LLM instructions)
+    search_queries:
+    - LangChain agent patterns? → guidance.md agent section + ENG-9.1
+    - LLM chain testing? → guidance.md testing section + ENG-4.1
+    use_cases:
+    - LangChain LCEL chains with structured output
+    - ReAct agents with tool use and human-in-the-loop gates
+    - RAG pipelines with LangChain retrievers
+    - LLM chain unit testing with MockLLM fixtures
+  llm_applications:
+    id: llm-applications
+    name: LLM Applications
+    category: Technology (AI/LLM)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-9.1: AI Agent Law (human oversight for autonomous LLM actions)
+    - ENG-6.1: Security by Design (prompt injection prevention)
+    - BUS-1.1: Priority Hierarchy (legal/regulatory constraints first)
+    search_queries:
+    - LLM application patterns? → guidance.md patterns section
+    - Prompt engineering? → guidance.md prompt section + ENG-9.1
+    use_cases:
+    - Generic LLM application with prompt governance
+    - Multi-provider LLM routing (OpenAI, Azure, Anthropic)
+    - Structured output extraction with Pydantic validation
+    - Prompt injection prevention and input sanitization
+  ml_analytics:
+    id: ml-analytics
+    name: ML / Analytics
+    category: Technology (ML/Data Science)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      bus_3_1: examples/BUS-3.1-data-governance.md
+      eng_4_1: examples/ENG-4.1-tdd.md
+      security: examples/ENG-6-security.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (test model pipelines with fixture datasets)
+    - BUS-3.1: Data Governance (model lineage, data provenance)
+    - ENG-6.4: Data Protection (PII in training data)
+    - ENG-6.7: Audit Trail (model run traceability)
+    search_queries:
+    - ML model testing? → ENG-4.1 example + guidance.md
+    - ML security practices? → ENG-6-security example
+    - Analytics data governance? → BUS-3.1 example + guidance.md
+    use_cases:
+    - scikit-learn model pipeline with pytest fixtures
+    - MLflow experiment tracking with data lineage
+    - PII detection and masking in training datasets
+    - Model performance monitoring with drift detection
+  mlflow_kubeflow:
+    id: mlflow-kubeflow
+    name: MLflow + Kubeflow
+    category: Technology (MLOps)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      bus_3_1: examples/BUS-3.1-data-governance.md
+      eng_4_1: examples/ENG-4.1-tdd.md
+      eng_5_1: examples/ENG-5.1-cicd.md
+      security: examples/ENG-6-security.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (pipeline component testing in isolation)
+    - ENG-5.1: CI/CD (Kubeflow pipeline deployment via GitHub Actions)
+    - BUS-3.1: Data Governance (MLflow run lineage and model registry)
+    - ENG-6.7: Audit Trail (MLflow run metadata and artifact provenance)
+    search_queries:
+    - MLflow experiment tracking? → guidance.md MLflow section + BUS-3.1
+    - Kubeflow pipeline security? → ENG-6-security example
+    - MLOps audit trail? → ENG-6.7 + guidance.md audit section
+    use_cases:
+    - MLflow model registry with staging and production promotion
+    - Kubeflow pipeline components with unit tests
+    - CI/CD for ML models with GitHub Actions
+    - Model audit trail with MLflow run metadata
+  android-kotlin:
+    id: android-kotlin
+    name: Android / Kotlin
+    category: Technology (Mobile — Android)
+    registry_path: technology/index.yaml (subset in avatars/index.yaml)
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      eng_4_1: examples/ENG-4.1-atomic-tdd.md
+      eng_6_1: examples/ENG-6.1-security.md
+      eng_6_4: examples/ENG-6.4-data-protection.md
+      eng_6_7: examples/ENG-6.7-audit-trail.md
+      eng_3_1: examples/ENG-3.1-complexity.md
+      eng_3_2: examples/ENG-3.2-immutability.md
+      eng_2_2: examples/ENG-2.2-layers.md
+      eng_10_1: examples/ENG-10.1-constitution-governance.md
+      eng_11_1: examples/ENG-11.1-spec-driven-development.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (JUnit 4.13.2 + MockK + Turbine; Jeroen Mols TDD manifesto; underscore/backtick test naming)
+    - ENG-6.1: Security by Design (ProGuard/R8 minifyEnabled; Network Security Config; Play Integrity API)
+    - ENG-6.4: Data Protection (Android Keystore AES-256-GCM; EncryptedSharedPreferences; OkHttp CertificatePinner)
+    - ENG-6.7: Audit Trail (Gradle -PbuildNumber CI versioning; versionCode traceability; AuditEvent data class)
+    - ENG-4.2: Test Pyramid (JUnit 4 JVM unit → Robolectric integration → Compose UI/Espresso instrumented)
+    - ENG-3.1: Complexity Limits (cyclomatic complexity ≤10; Android Lint config; split by context)
+    - ENG-3.2: Immutability (val + data class + .copy(); @Immutable/@Stable Compose; private MutableStateFlow)
+    - ENG-2.2: Layered Architecture (Domain / Data / Presentation; zero android.* in domain)
+    - ENG-10.1: Constitution Governance (ktlint 12.1.0 + Android Lint custom rules; SonarQube gate; no Detekt)
+    - ENG-11.1: Hangar SDD Law (hangar-ai-specs/ required; PROPOSE→IMPLEMENT→ARCHIVE; PR gate on spec reference)
+    search_queries:
+    - How to write Android Kotlin unit tests with MockK? → examples/ENG-4.1-atomic-tdd.md + guidance.md
+    - Android Kotlin TDD cycle with JUnit 4? → examples/ENG-4.1-atomic-tdd.md (Jeroen Mols idioms)
+    - Jeroen Mols Android testing patterns? → guidance.md Mols section + ENG-4.1 example
+    - Android Keystore secure storage? → examples/ENG-6.4-data-protection.md (AES-256-GCM)
+    - Android certificate pinning OkHttp? → examples/ENG-6.4-data-protection.md (CertificatePinner)
+    - ProGuard R8 Android release build? → examples/ENG-6.1-security.md (minifyEnabled)
+    - How to structure Android Kotlin project? → guidance.md + examples/ENG-2.2-layers.md
+    - Android Gradle Jenkins CI/CD? → guidance.md CI pipeline + examples/ENG-6.7-audit-trail.md
+    - Android Turbine Flow testing? → examples/ENG-4.1-atomic-tdd.md (Turbine uiState test)
+    - Android vs iOS → use android-kotlin avatar for Android-specific patterns
+    - What are the security requirements for a passenger-facing Android Kotlin application?
+    - How to set up hangar-ai-specs in an Android project? → examples/ENG-11.1-spec-driven-development.md
+    - Android constitution governance metrics ktlint SonarQube? → examples/ENG-10.1-constitution-governance.md
+    use_cases:
+    - Kotlin 1.9+ Android app with JUnit 4 + MockK + Turbine suite (Jeroen Mols TDD manifesto)
+    - MVVM + StateFlow + Jetpack Compose with domain use cases and Hilt injection
+    - Gradle + Jenkins CI/CD pipeline for Android AAB builds and Play Store deployment
+    - Android Keystore AES-256-GCM for auth tokens and Restricted PII
+    - OkHttp CertificatePinner for sensitive API endpoints (in-transit protection)
+    - EncryptedSharedPreferences for Confidential key-value data (Jetpack Security)
+    - Play Integrity API attestation before displaying restricted passenger data
+    - Structured AuditEvent + remote sink tied to Play Store versionCode traceability
+    anti_patterns:
+    - DO NOT store auth tokens or PNR in plain SharedPreferences — use EncryptedSharedPreferences or Keystore
+    - DO NOT set minifyEnabled = false in release builds — enables reverse engineering
+    - DO NOT put PII in Logcat — use PassengerName/SensitiveString wrapper types
+    - DO NOT use @ExtendWith(MockKExtension) — not applicable; codebase uses JUnit 4 with MockK annotations
+    - DO NOT put android.* imports in :core:domain module — domain must be pure Kotlin
+    - DO NOT reference Detekt — it is not configured in the live androidapps codebase
+
+# C++ (Modern) Avatar Enrichment (April 2026)
+# Systems-level avatar for modern C++ (C++20/C++23) with ownership-first safety model
+
+  cpp:
+    id: cpp
+    name: "C++ (Modern)"
+    category: Technology (Systems)
+    registry_path: technology/cpp/ (registered in avatars/index.yaml)
+    version: "2.3.0"
+    rag_validated: true
+    last_validated: "2026-04-13"
+
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md (index, ~310 tokens — always loaded)
+      reference_index:
+        path: reference-index.md
+        loaded: always (co-loaded with guidance.md as routing layer)
+        tokens: ~418
+        note: "Semantic router to 31 topic-aligned ref-*.md files (★=version-annotated); not counted against per-query 3,500t budget"
+      reference_files:
+        # Getting Started
+        - refs/language/ref-getting-started.md (~1530t) — glossary, quick-start, version policy
+        # Core Language (6 files)
+        - refs/language/ref-core-type-safety.md (~2479t) — const, casts, null safety, interface design rules (I.1/I.3/I.11/I.12/I.23)
+        - refs/language/ref-core-modern-idioms.md (~2055t) — designated initializers, variant, any, optional ★ C++17+; parameter passing F.16–F.20, Rule of Zero/Five, regular types, container/algorithm guide
+        - refs/language/ref-domain-patterns.md (~1790t) — DDD, DI, ownership patterns
+        - refs/language/ref-domain-quality.md (~1210t) — SRP refactoring, design anti-patterns
+        - refs/language/ref-object-design-rehabilitation.md (~2020t) — object rehabilitation anti-patterns 1–5
+        - refs/language/ref-object-design-patterns.md (~1520t) — move semantics, decision trees, design patterns
+        # Testing & Build (7 files)
+        - refs/testing/ref-testing-ci-policy.md (~2000t) — CI toolchain policy, VS 2022, clang-tidy gates
+        - refs/testing/ref-testing-gtest-core.md (~1660t) — TEST/TEST_F/EXPECT/ASSERT macros, exception testing
+        - refs/testing/ref-testing-gtest-advanced.md (~830t) — template test helpers, fixture deep dive, concurrency testing
+        - refs/testing/ref-build-packages.md (~1368t) — CMake, vcpkg, C++20 modules, reproducible builds, source file organization SF.xx, profiling Per.xx ★ C++20+
+        - refs/testing/ref-build-ubsan-msvc.md (~2180t) — UBSan/MSVC toolchain gap, sanitizer alternatives
+        - refs/language/ref-templates-metaprogramming.md (~2230t) — templates, ADL, lambdas, forwarding
+        - refs/language/ref-templates-advanced.md (~948t) — type traits, tag dispatch, advanced concepts, NTTPs, expression templates, C++20 lambdas
+        - refs/language/ref-advanced-patterns.md (~1280t) — preprocessor, allocators, ABI
+        # Safety & Runtime (7 files)
+        - refs/safety/ref-safety-misra-do178.md (~1610t) — MISRA C++, DO-178C, JSF AV rules
+        - refs/safety/ref-safety-memory-lifetime.md (~1702t) — advanced memory lifetime, FFI
+        - refs/safety/ref-safety-jni-abi.md (~690t) — JNI safety, ABI stability
+        - refs/safety/ref-safety-far117-cwr.md (~2180t) — FAR 117 compliance, CWR anti-pattern catalog (DO-278A)
+        - refs/safety/ref-concurrency-threading.md (~1360t) — threads, RAII locks, exception safety, termination ★ C++11+
+        - refs/safety/ref-concurrency-async.md (~1500t) — resiliency patterns, circuit breakers, bulkhead ★ C++17+
+        - refs/language/ref-concurrency-coroutines.md (~700t) — co_await, co_yield, cancellation, lifetime traps ★ C++20+
+        - refs/language/ref-io-formatting.md (~940t) — printf safety, iostream, fmtlib/spdlog (C++11+), std::format (C++20), std::print (C++23) ★ C++98+
+        - refs/testing/ref-infrastructure.md (~1980t) — logging, config, health checks, license compliance
+        # Brownfield & Legacy (10 files)
+        - refs/legacy/ref-brownfield-adoption.md (~2110t) — per-tier clang-tidy, testing, code review, ABI
+        - refs/legacy/ref-brownfield-project-config.md (~2060t) — compiler flags, sanitizers, IOC_ALP load planning, MFC
+        - refs/legacy/ref-migration-pre-cpp17.md (~2320t) — C++98→11→14→17 step-by-step, dual-toolchain ★ C++98-C++17
+        - refs/legacy/ref-migration-cpp17-plus.md (~1580t) — C++17→20 survival patterns, ActiveTest→GoogleTest ★ C++17+
+        - refs/legacy/ref-legacy-navigation.md (~1621t) — codebase navigation, survival patterns, priority matrix
+        - refs/legacy/ref-legacy-triage-playbook.md (~1860t) — triage playbook, ActiveTest migration strategies
+        - refs/legacy/ref-mental-models-memory.md (~1730t) — value semantics, RAII, UB (mental model gaps 1–6)
+        - refs/legacy/ref-mental-models-lang.md (~1800t) — linking, templates, ODR, runtime (gaps 7–13)
+        - refs/legacy/ref-legacy-smells-structural.md (~1790t) — smell catalog smells 1–7, summary table
+        - refs/legacy/ref-legacy-smells-patterns.md (~1640t) — smell catalog smells 8–14, remediation patterns
+        - refs/legacy/ref-concurrency-brownfield.md (~1250t) — POSIX/Win32 threading, volatile pitfall, C++98 RAII wrappers
+      examples: examples/ (51 files — 21 law-mapped + 30 supplemental)
+
+    specializes_laws:
+      - ENG-2.1: DDD Aggregate Root (encapsulated children via unique_ptr/vector)
+      - ENG-2.2: Layered Architecture (include/domain, include/application, include/infrastructure)
+      - ENG-3.1: Complexity Limits (cyclomatic ≤ 7 per function, enforced by clang-tidy)
+      - ENG-3.2: Immutability Law (const-correct value objects, operator== = default)
+      - ENG-3.3: Law of Demeter (tell-don't-ask, single-level traversal)
+      - ENG-3.5: Naming Conventions (PascalCase classes, snake_case functions/variables)
+      - ENG-3.7: Error Handling (std::expected, value-based errors, exception boundaries)
+      - ENG-4.1: Atomic TDD (GoogleTest RED-GREEN-REFACTOR with sanitizer-enabled builds)
+      - ENG-4.2: Test Pyramid (unit/component/integration with GoogleTest/GMock)
+      - ENG-4.4: Test Coverage (coverage gates via llvm-cov/gcov)
+      - ENG-5.2: CI/CD Pipeline (compiler warnings as errors, ASan/UBSan, clang-tidy)
+      - ENG-5.5: Observability (spdlog, Prometheus, OpenTelemetry C++ SDK)
+      - ENG-6.1: Security by Design (ownership-first API, unsafe boundary governance)
+      - ENG-6.4: Data Protection (RAII-based encryption, PII scoped to lifetime)
+      - ENG-6.5: Input Validation (boundary validation, sanitization patterns)
+      - ENG-6.7: Audit Trail (structured logging via spdlog/OpenTelemetry)
+      - ENG-7.1: Failure Handling (degraded state, graceful shutdown, exception boundary)
+      - ENG-7.2: Circuit Breaker (state machine pattern for dependency isolation)
+      - ENG-7.3: Retry and Back-off (exponential backoff with jitter)
+      - ENG-7.4: Timeout Governance (deadline propagation via std::chrono)
+      - ENG-7.5: Bulkhead Isolation (thread pool partitioning)
+
+    search_queries:
+      # Primary trigger — substring-matches any query containing the literal "c++"
+      - c++ → guidance.md
+      # Core language queries
+      - C++ testing with GoogleTest? → refs/testing/ref-testing-gtest-core.md (~1660t)
+      - C++ memory safety ownership? → refs/language/ref-domain-patterns.md (~1790t)
+      - C++ CI pipeline clang-tidy? → refs/testing/ref-testing-ci-policy.md (~2000t)
+      - C++ concurrency thread safety? → refs/safety/ref-concurrency-threading.md (~1360t)
+      - C++ mutation testing Mull? → refs/testing/ref-testing-ci-policy.md (~2000t)
+      - C++ package management vcpkg Conan? → refs/testing/ref-build-packages.md (~1368t)
+      - C++ coroutine exception safety noexcept barrier? → refs/language/ref-concurrency-coroutines.md (~700t)
+      - C++ coroutines co_await async? → refs/language/ref-concurrency-coroutines.md (~700t)
+      - C++ logging spdlog structured? → refs/testing/ref-infrastructure.md (~1980t)
+      - C++ printf format string security? → refs/language/ref-io-formatting.md (~940t)
+      - C++ iostream cout cerr formatting? → refs/language/ref-io-formatting.md (~940t)
+      - C++ std::format fmtlib string format C++20? → refs/language/ref-io-formatting.md (~940t)
+      - C++ spdlog logging best practice? → refs/language/ref-io-formatting.md (~940t)
+      - C++ std::print C++23 output? → refs/language/ref-io-formatting.md (~940t)
+      - C++ modules import export? → refs/testing/ref-build-packages.md (~1368t)
+      - C++ allocator PMR arena? → refs/language/ref-advanced-patterns.md (~1280t)
+      - C++ ABI stability binary compatibility? → refs/language/ref-advanced-patterns.md (~1280t)
+      - C++ template concepts metaprogramming? → refs/language/ref-templates-metaprogramming.md (~2230t)
+      - C++ type traits tag dispatch NTTP expression templates? → refs/language/ref-templates-advanced.md (~948t)
+      - C++ lambda template C++20 improvements? → refs/language/ref-templates-advanced.md (~948t)
+      - C++ concepts subsumption overload? → refs/language/ref-templates-advanced.md (~948t)
+      - C++ ranges views filter transform C++20? → refs/language/ref-cpp20-features-part1.md
+      - C++ modules import export C++20? → refs/language/ref-cpp20-features-part1.md
+      - C++ spaceship operator C++20? → refs/language/ref-cpp20-features-part1.md
+      - C++ std::format C++20 modern? → refs/language/ref-cpp20-features-part3.md
+      - C++ span bit_cast source_location constinit atomic_ref C++20? → refs/language/ref-cpp20-features-part3.md
+      - C++ format_to_n buffer write C++20? → refs/language/ref-cpp20-features-part3.md
+      - C++ bit_cast type punning C++20? → refs/language/ref-cpp20-features-part3.md
+      - C++ coroutine generator co_yield? → refs/language/ref-cpp20-features-part2.md
+      - C++ aggregate parenthesis init CTAD C++20? → refs/language/ref-cpp20-features-part2.md
+      - C++ calendar timezone zoned_time FAR 117? → refs/language/ref-cpp20-features-part2.md
+      - C++ year_month_day chrono duty period? → refs/language/ref-cpp20-features-part2.md
+      - C++ memory ordering happens-before acquire-release? → refs/language/ref-concurrency-advanced-part1.md
+      - C++ lock-free data structures atomic? → refs/language/ref-concurrency-advanced-part1.md
+      - C++ condition variable wait spurious wakeup? → refs/language/ref-concurrency-advanced-part1.md
+      - C++ false sharing cache line padding? → refs/language/ref-concurrency-advanced-part1.md
+      - C++ thread pool work stealing? → refs/language/ref-concurrency-advanced-part1.md
+      - C++ Amdahl Gustafson scalability law? → refs/language/ref-concurrency-advanced-part1.md
+      - C++ jthread stop_token cooperative cancellation? → refs/language/ref-concurrency-advanced-part2.md
+      - C++ coroutine concurrency safety CP.51 CP.52 CP.53? → refs/language/ref-concurrency-advanced-part2.md
+      - C++ termination policy abort? → refs/safety/ref-concurrency-threading.md (~1360t)
+      - C++ FFI C interop error handling? → refs/safety/ref-safety-memory-lifetime.md (~1702t)
+      - C++ pthread POSIX threading C++98? → refs/legacy/ref-concurrency-brownfield.md (~1250t)
+      - C++ volatile thread safety C++98? → refs/legacy/ref-concurrency-brownfield.md (~1250t)
+      - C++ reproducible deterministic builds? → refs/testing/ref-build-packages.md (~1368t)
+      - C++ license dependency compliance? → refs/testing/ref-infrastructure.md (~1980t)
+      - C++ sanitizers ASan UBSan? → refs/testing/ref-build-ubsan-msvc.md (~2180t)
+      # Brownfield / migration queries
+      - C++ modernization brownfield? → refs/legacy/ref-brownfield-adoption.md (~2110t)
+      - C++ migrate standard version? → refs/legacy/ref-migration-pre-cpp17.md (~2320t)
+      - C++ upgrade C++11 to C++17? → refs/legacy/ref-migration-pre-cpp17.md (~2320t)
+      - C++ legacy pattern to modern equivalent? → refs/legacy/ref-legacy-smells-structural.md (~1790t)
+      - C++ characterization test legacy code? → refs/legacy/ref-legacy-navigation.md (~1621t) + skill-cpp-legacy-code-navigation.md
+      - C++ compiler migration GCC Clang? → refs/legacy/ref-migration-pre-cpp17.md (~2320t)
+      - C++ multi-standard project governance? → refs/legacy/ref-brownfield-project-config.md (~2060t)
+      - C++ auto_ptr nullptr migration? → refs/legacy/ref-migration-pre-cpp17.md (~2320t)
+      - C++ writing new code for legacy standard? → refs/legacy/ref-brownfield-project-config.md (~2060t)
+      # Novice / mental model queries
+      - C++ mental model transitions for Java developer? → refs/legacy/ref-mental-models-memory.md (~1730t)
+      - C++ code smell recognition legacy? → refs/legacy/ref-legacy-smells-structural.md (~1790t)
+      - C++ legacy codebase triage? → refs/legacy/ref-legacy-triage-playbook.md (~1860t)
+      - C++ novice survival patterns legacy code? → refs/legacy/ref-legacy-navigation.md (~1621t)
+      - C++ object design rehabilitation? → refs/language/ref-object-design-rehabilitation.md (~2020t)
+      - C++ SFINAE to concepts migration? → refs/language/ref-templates-metaprogramming.md (~2230t)
+      # Safety / compliance queries
+      - C++ MISRA safety-critical DO-178C aviation? → refs/safety/ref-safety-misra-do178.md (~1610t)
+      - C++ FAR 117 test traceability audit? → examples/ENG-4.1-far117-traceability.md (~430t)
+      - C++ input validation boundary sanitize? → examples/ENG-6.5-input-validation.md (~335t)
+      # Routing queries
+      - C++ brownfield entry path where to start? → reference-index.md → refs/legacy/ref-brownfield-adoption.md
+      - C++ which skill should I use? → reference-index.md → refs/language/ref-getting-started.md
+      # Skill queries — routed skills (full coverage, Amendment Q+)
+      - C++ debugging core dump GDB? → skill-cpp-debugging-diagnostics-playbook.md (~600t)
+      - C++ deployment linking hardening? → skill-cpp-deployment-hardening.md (~600t)
+      - C++ resiliency circuit breaker? → skill-cpp-resiliency-failure-modes.md (~600t)
+      - C++ async resiliency circuit breaker bulkhead? → refs/safety/ref-concurrency-async.md (~1500t)
+      - C++ future promise async resiliency? → refs/safety/ref-concurrency-async.md (~1500t)
+      - C++ compliance rating score? → skill-cpp-compliance-rating.md (~800t)
+      - simplify complex C++ code? → skill-cpp-code-simplification.md (~800t)
+      - C++ JNI bridge Java native method? → skill-cpp-jni-bridge.md (~450t)
+      # Skill queries — previously unrouted skills (SG5-B fix, Amendment Q+)
+      - C++ memory safety ownership model smart pointers RAII? → skill-cpp-ownership-lifetime-safety.md (~600t)
+      - C++ sanitizer configuration ASan UBSan ThreadSanitizer memory error? → skill-cpp-sanitizer-hardening.md (~600t)
+      - modernize legacy C++ code incremental refactor priority? → skill-cpp-legacy-modernization.md (~600t)
+      - migrate C++ standard version upgrade C++11 C++17 C++20? → skill-cpp-standard-migration.md (~600t)
+      - C++ exception safety noexcept contract std::expected strong guarantee? → skill-cpp-exception-safety-governance.md (~600t)
+      - C++ coroutines co_await async structured concurrency generator? → skill-cpp-coroutines-governance.md (~600t)
+      - C++ template complexity metaprogramming concepts constraints compile time errors? → skill-cpp-template-complexity-management.md (~600t)
+      - C++ CMake cross-platform build vcpkg Conan portable build? → skill-cpp-portable-build-governance.md (~600t)
+      - C++ logging spdlog structured PII audit log format? → skill-cpp-logging-diagnostics-standards.md (~600t)
+      - C++ API compatibility ABI stability header versioning breaking change? → skill-cpp-api-compatibility-governance.md (~600t)
+      - C++ dependency management license compliance Boost vendoring SBOM? → skill-cpp-dependency-governance.md (~600t)
+      - C++ feature detection __cplusplus SD-6 feature test macro __has_include? → skill-cpp-feature-detection.md (~600t)
+      - C++ layer separation header organization include boundaries domain structure? → skill-cpp-layering-and-boundaries.md (~600t)
+      - C++ legacy survival safe modification sprout wrap method onboarding? → skill-cpp-legacy-survival-patterns.md (~600t)
+      - C++ performance benchmark micro-benchmark latency budget optimization? → skill-cpp-performance-benchmark-discipline.md (~600t)
+      - C++ presubmit checks code review gate CI pipeline CODEOWNERS? → skill-cpp-presubmit-and-code-ownership.md (~600t)
+      # Direct example queries
+      - C++ error handling std::expected? → examples/ENG-3.7-error-handling.md (~450t)
+      - C++ CRTP static polymorphism mixin zero-overhead C++11? → examples/ENG-3.1-crtp.md (~800t)
+      - C++ observability logging OpenTelemetry? → examples/ENG-5.5-observability.md (~435t)
+      - C++ failure handling circuit breaker? → examples/ENG-7.1-failure-handling.md (~490t)
+      # CWR enrichment queries (brownfield JNI / FAR 117 / aviation safety)
+      - C++ JNI memory safety boundary? → refs/safety/ref-safety-jni-abi.md (~690t)
+      - C++ JNI ABI stability naming? → refs/safety/ref-safety-jni-abi.md (~690t) + examples/ENG-2.3-jni-abi-stability.md
+      - C++ JNI exception safety propagation? → refs/safety/ref-safety-jni-abi.md (~690t) + examples/ENG-6.1-safety-critical-jni.md
+      - FAR 117 aviation compliance context? → refs/safety/ref-safety-far117-cwr.md (~2180t)
+      - C++ FAR 117 timezone arithmetic C++14 HowardHinnant? → examples/ENG-6.1-timezone-cpp14.md (~1017t)
+      - C++ JNI thread safety pthread_key_t C++98? → examples/ENG-6.1-jni-thread-cpp98.md (~1071t)
+      - C++ JNI thread_local RAII AttachCurrentThread C++11? → examples/ENG-6.1-jni-thread-cpp11.md (~1096t)
+      - C++ safe string format fmtlib fmt::format C++14? → examples/ENG-6.1-fmtlib-format.md (~1028t)
+      - C++ ranges pipeline filter transform range-v3 C++14? → examples/ENG-3.1-ranges-range-v3.md (~954t)
+      - C++ bounds-safe array view gsl::span C++14? → examples/ENG-6.1-gsl-span-cpp14.md (~953t)
+      - C++ cooperative thread cancellation stop flag atomic C++11? → examples/ENG-6.1-thread-stop-flag.md (~1023t)
+      - C++ lock-free ABA SPSC ring buffer boost C++11? → examples/ENG-6.1-lock-free-cpp14.md (~1136t)
+      - C++ const char* dangling pointer lifetime brownfield? → examples/ENG-6.1-const-char-lifetime.md (~957t)
+      - C++ characterization test legacy brownfield? → refs/safety/ref-safety-far117-cwr.md (~2180t) + examples/ENG-4.1-characterization-test-pattern.md
+      - C++ god class decomposition brownfield? → refs/safety/ref-safety-far117-cwr.md (~2180t)
+      - C++ anti-pattern catalog brownfield? → refs/safety/ref-safety-far117-cwr.md (~2180t)
+      - C++ make brownfield build commands? → manifest.yaml brownfield_makefile commands
+      # IOC_ALP / MFC Windows brownfield queries
+      - C++ MSVC MFC Windows brownfield? → refs/legacy/ref-brownfield-project-config.md (~2060t)
+      - C++ RCPtr reference counted smart pointer? → refs/legacy/ref-brownfield-project-config.md (~2060t)
+      - C++ CRITICAL_SECTION RAII Windows threading? → refs/legacy/ref-brownfield-project-config.md (~2060t)
+      - C++ load planning ZFW CG MEL domain? → refs/legacy/ref-brownfield-project-config.md (~2060t)
+      - C++ AACCSAPI Sabre CSAPI integration? → refs/legacy/ref-brownfield-project-config.md (~2060t)
+      - C++ MSVC build msbuild Visual Studio solution? → manifest.yaml brownfield_msvc_build
+      # GoogleTest / Folly-grounded queries
+      - C++ GoogleTest TEST vs TEST_F? → refs/testing/ref-testing-gtest-core.md (~1660t)
+      - C++ EXPECT_EQ ASSERT_EQ when to use? → refs/testing/ref-testing-gtest-core.md (~1660t)
+      - C++ EXPECT_THROW exception testing? → refs/testing/ref-testing-gtest-core.md (~1660t)
+      - C++ test exception hierarchy CALPException? → refs/testing/ref-testing-gtest-core.md (~1660t)
+      - C++ test template types multiple instantiations? → refs/testing/ref-testing-gtest-advanced.md (~830t)
+      - C++ GTest fixture SetUp TearDown? → refs/testing/ref-testing-gtest-advanced.md (~830t)
+      - C++ test std::thread concurrency atomic? → refs/testing/ref-testing-gtest-advanced.md (~830t)
+      - C++ ActiveTest migration GoogleTest? → refs/legacy/ref-migration-cpp17-plus.md (~1580t)
+      - C++ replace ActiveTest TEST_F vcpkg? → refs/legacy/ref-migration-cpp17-plus.md (~1580t)
+      - C++ ADD_FAILURE static_assert test? → refs/testing/ref-testing-gtest-core.md (~1660t)
+      # RAG evaluation queries (tc-av-024/025/027/031/036/037/038 avatar_selection; tc-av-040/057/059 law_retrieval)
+      - I am building a C++ service — what constitution laws apply?
+      - What are the C++ coding standards at American Airlines?
+      - What is the C++ test pyramid structure using GoogleTest and GoogleMock?
+      - What are the RAII patterns for resource management in C++?
+      - How do I implement exponential backoff with jitter for retry logic in C++?
+      - How do I propagate deadlines via std::chrono in a C++ service?
+      - How do I model a DDD aggregate root in C++ with encapsulated children?
+      - C++ MISRA safety-critical DO-178C aviation — what requirements apply to avionics C++ code?
+      - C++ coverage gate lcov gcov — how do I enforce a minimum code coverage threshold in CMake CI?
+      - C++ test traceability FAR-117 — how do I link C++ unit tests to FAR Part 117 requirements?
+
+    version_routing_policy:
+      # Activated when .copilot/project.yaml, CMakeLists.txt, .vcxproj, Makefile, or .dsp signals a C++ standard tier.
+      # Agent MUST prefer the refs listed below INSTEAD of default ref selection when tier is known.
+      # Conservative default: if example cpp_version_min > declared cpp.standard (or tier), warn; do not silently serve.
+      # Unknown/no-signal fallback: apply legacy-safe routing and prompt user for confirmation.
+      detection_order:
+        - signal: ".copilot/project.yaml"
+          field: "cpp.standard"
+        - signal: "CMakeLists.txt"
+          field: "CMAKE_CXX_STANDARD"
+        - signal: "*.vcxproj / *.props"
+          field: "<LanguageStandard>"
+        - signal: "Makefile"
+          pattern: "-std=c++XX"
+        - signal: "*.dsp / *.dsw"
+          result: "legacy"
+      by_standard:
+        legacy:
+          standards: ["pre98"]
+          prefer:
+            - refs/legacy/ref-brownfield-survival.md
+            - refs/legacy/ref-brownfield-coplien.md
+            - refs/legacy/ref-legacy-navigation.md
+            - refs/legacy/ref-mental-models-lang.md
+            - refs/legacy/ref-legacy-smells-structural.md
+            - refs/legacy/ref-concurrency-brownfield.md
+          avoid:
+            - examples/ENG-6.7-audit-trail.md
+            - examples/ENG-3.7-error-handling.md
+            - examples/ENG-2.1-aggregates.md
+        brownfield:
+          standards: ["98", "03"]
+          prefer:
+            - refs/legacy/ref-brownfield-survival.md
+            - refs/legacy/ref-legacy-navigation.md
+            - refs/legacy/ref-brownfield-adoption.md
+            - refs/legacy/ref-brownfield-project-config.md
+            - refs/legacy/ref-mental-models-memory.md
+            - refs/legacy/ref-concurrency-brownfield.md
+          avoid:
+            - examples/ENG-6.7-audit-trail.md
+            - examples/ENG-3.7-error-handling.md
+            - refs/language/ref-cpp20-features-part1.md
+            - refs/language/ref-cpp20-features-part2.md
+            - refs/language/ref-cpp20-features-part3.md
+            - refs/language/ref-concurrency-advanced-part1.md
+            - refs/language/ref-concurrency-advanced-part2.md
+            - examples/ENG-3.1-ranges-views.md
+            - examples/ENG-6.1-std-format.md
+            - examples/ENG-6.1-jthread-stop-token.md
+            - examples/ENG-6.1-lock-free-cpp23.md
+            - examples/ENG-6.1-timezone-cpp20.md
+            - examples/ENG-6.1-span-bounds-safety.md
+            - examples/ENG-6.1-string-view-lifetime.md
+            - examples/ENG-3.2-spaceship-operator.md
+            - examples/ENG-3.1-modules.md
+            - examples/ENG-6.1-gsl-span-cpp14.md
+            - examples/ENG-3.1-ranges-range-v3.md
+        transitional:
+          standards: ["11", "14"]
+          prefer:
+            - refs/legacy/ref-brownfield-survival.md
+            - refs/language/ref-core-type-safety.md
+            - refs/safety/ref-safety-memory-lifetime.md
+            - refs/safety/ref-concurrency-threading.md
+            - refs/language/ref-concurrency-advanced-part1.md
+          avoid:
+            - examples/ENG-3.7-error-handling.md
+            - refs/language/ref-cpp20-features-part1.md
+            - refs/language/ref-cpp20-features-part2.md
+            - refs/language/ref-cpp20-features-part3.md
+            - refs/language/ref-concurrency-advanced-part2.md
+            - examples/ENG-3.1-ranges-views.md
+            - examples/ENG-6.1-std-format.md
+            - examples/ENG-6.1-jthread-stop-token.md
+            - examples/ENG-6.1-lock-free-cpp23.md
+            - examples/ENG-6.1-timezone-cpp20.md
+            - examples/ENG-6.1-span-bounds-safety.md
+            - examples/ENG-6.1-string-view-lifetime.md
+            - examples/ENG-3.2-spaceship-operator.md
+            - examples/ENG-3.1-modules.md
+        modern:
+          standards: ["17"]
+          prefer:
+            - refs/language/ref-core-type-safety.md
+            - refs/safety/ref-safety-memory-lifetime.md
+            - refs/language/ref-advanced-patterns.md
+            - refs/language/ref-concurrency-advanced-part1.md
+          avoid:
+            - examples/ENG-3.7-error-handling.md
+        greenfield:
+          standards: ["20", "23"]
+          prefer:
+            - refs/language/ref-core-modern-idioms.md
+            - refs/language/ref-advanced-patterns.md
+            - refs/language/ref-concurrency-coroutines.md
+            - refs/testing/ref-build-packages.md
+            - refs/language/ref-cpp20-features-part1.md
+            - refs/language/ref-cpp20-features-part2.md
+            - refs/language/ref-cpp20-features-part3.md
+            - refs/language/ref-concurrency-advanced-part2.md
+          avoid: []
+      unknown_fallback: legacy-safe
+
+    use_cases:
+      - Brownfield C++ modernization with non-rewrite safeguards
+      - Safety-critical systems with sanitizer-gated CI pipeline
+      - High-performance services with ownership-first memory safety
+      - Cross-language alignment with Java/Python/Node governance parity
+      - Async service with coroutine-based I/O and cancellation support
+      - Performance-critical allocator-tuned data processing
+      - Shared library API with ABI stability governance
+      - Legacy C++ codebase onboarding for new engineers
+      - C++ service with resiliency patterns (circuit breakers, retries)
+
+    anti_patterns:
+      - DO NOT use raw new/delete — use std::unique_ptr or std::shared_ptr with RAII
+      - DO NOT access buffers without bounds — use std::span for non-owning views
+      - DO NOT put logic in free functions with public structs — encapsulate in DDD aggregates
+      - DO NOT call mutex.lock()/unlock() directly — use std::lock_guard or std::scoped_lock
+      - DO NOT use C-style casts — use static_cast/dynamic_cast, localize reinterpret_cast behind unsafe boundaries
+      - DO NOT skip sanitizer builds in CI — ASan + UBSan are mandatory gate checks
+      - DO NOT declare throwing move constructors — move operations must be noexcept
+      - DO NOT launch fire-and-forget coroutines — require cancellation and error propagation
+      - DO NOT log PII in plaintext — use masking functions at the logging boundary
+      - DO NOT store string_view/span across scope boundaries — views can dangle
+      - DO NOT use signed integer arithmetic without overflow protection — UB risk
+      - DO NOT access objects after std::move — moved-from state is unspecified
+      - DO NOT allow exceptions to escape destructors — std::terminate will crash the process
+      - DO NOT block inside coroutines or thread pools — use async I/O primitives
+      - DO NOT use GPL libraries without architecture review — copyleft risk
+      - DO NOT use std::auto_ptr — replace with std::unique_ptr (deprecated C++11, removed C++17)
+      - DO NOT use SFINAE (enable_if) in new code when concepts are available — migrate incrementally
+      - DO NOT rewrite legacy modules wholesale — use phased modernization per brownfield governance
+      - DO NOT mix C++ standard versions without documented CMAKE_CXX_STANDARD per target
+      - DO NOT skip characterization tests before modifying legacy code
+      # Novice guidance anti-patterns (Amendment I)
+      - DO NOT modify legacy code without characterization tests capturing existing behavior first
+      - DO NOT clean up code in modules you are not actively modifying — Boy Scout Rule scoped to touched lines only
+      - DO NOT allow god classes (>2000 LOC) — extract by responsibility
+      - DO NOT tolerate implicit conversions from single-argument constructors — mark explicit
+
+  ios-build-infrastructure:
+    id: ios-build-infrastructure
+    name: iOS Build Infrastructure
+    category: Technology (Mobile — iOS Build Toolchain)
+    registry_path: technology/index.yaml (subset in avatars/index.yaml)
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      eng_6_7: examples/ENG-6.7-audit-trail.md
+      eng_6_1: examples/ENG-6.1-security.md
+      eng_6_4: examples/ENG-6.4-data-protection.md
+      ki_001: examples/KI-001-carthage-profraw.md
+      ki_002: examples/KI-002-xccov-regression.md
+      ki_004: examples/KI-004-deriveddata.md
+      ki_005: examples/KI-005-wiremock-crash.md
+      ki_006: examples/KI-006-watchos-platform.md
+      ki_007: examples/KI-007-vendored-sdk-bootstrap.md
+    specializes_laws:
+    - ENG-6.7: Audit Trail (verify xcresult + profraw pipeline integrity before attesting coverage)
+    - ENG-4.1: Atomic TDD (force-unwrap kills test host — all tests report "did not run")
+    - ENG-4.2: Test Pyramid (profraw v8/v10 mismatch + watchOS slices silently exclude tests)
+    search_queries:
+    - iOS build toolchain compliance? → guidance.md + ENG-6.7 audit-trail example
+    - profraw version mismatch xccov? → examples/KI-001-profraw-version-mismatch.md
+    - xccov Xcode 16.3 regression? → examples/KI-002-xccov-regression.md
+    - DerivedData stale coverage? → examples/KI-004-derived-data-accumulation.md
+    - iOS test host crash all tests did not run? → examples/KI-005-test-host-crash.md
+    - watchOS WatchKit Carthage bootstrap? → examples/KI-006-watchos-slice.md
+    - vendored SDK test bootstrap? → examples/KI-007-vendored-sdk-bootstrap.md
+    - iOS signing credential secrets? → examples/ENG-6.1-security.md
+    use_cases:
+    - Xcodebuild + xcresult evidence pipeline validation (CI compliance attestation)
+    - Carthage bootstrap for multi-platform targets (iOS + watchOS slices)
+    - Vendored SDK test target configuration
+    - DerivedData isolation for reproducible coverage measurement
+    - Fastlane match / signing credential management
+    anti_patterns:
+    - DO NOT attest coverage without verifying profraw file count > 0
+    - DO NOT use --platform iOS only for Carthage when WatchKit Extension present
+    - DO NOT leave DerivedData shared across scheme runs (use -derivedDataPath per scheme)
+    - DO NOT commit xcresult bundles or P12 signing certificates to git
+    - DO NOT use force-unwrap in test code — kills entire test host process
+
+  ios-swift:
+    id: ios-swift
+    name: iOS / Swift
+    category: Technology (Mobile — iOS)
+    registry_path: technology/index.yaml (subset in avatars/index.yaml)
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      eng_4_1: examples/ENG-4.1-atomic-tdd.md
+      eng_6_1: examples/ENG-6.1-security.md
+      eng_6_4: examples/ENG-6.4-data-protection.md
+      eng_6_7: examples/ENG-6.7-audit-trail.md
+      eng_3_1: examples/ENG-3.1-complexity.md
+      eng_3_2: examples/ENG-3.2-immutability.md
+      eng_2_2: examples/ENG-2.2-layers.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (XCTest + Swift Testing; Jon Reid Test Zero; spy-based DI)
+    - ENG-6.1: Security by Design (threat model at design; Swift 6 @MainActor data-race safety; ATS enforced)
+    - ENG-6.4: Data Protection (Keychain at-rest; certificate pinning in-transit; no PII in logs)
+    - ENG-6.7: Audit Trail (fastlane increment_build_number traceability; structured operation logging)
+    - ENG-4.2: Test Pyramid (XCTest unit → UI test pyramid; no over-reliance on XCUITest)
+    - ENG-3.1: Complexity Limits (cyclomatic complexity ≤10; extract to tested use-case types)
+    - ENG-3.2: Immutability (struct + let preferred; mutating func for controlled mutation)
+    - ENG-2.2: Layered Architecture (Domain / Application / Infrastructure / Presentation)
+    search_queries:
+    - How to write iOS unit tests with XCTest? → examples/ENG-4.1-atomic-tdd.md + guidance.md
+    - iOS Swift TDD cycle? → examples/ENG-4.1-atomic-tdd.md (Test Zero pattern + DI mocks)
+    - Jon Reid Quality Coding patterns for iOS? → guidance.md Jon Reid section + ENG-4.1 example
+    - iOS Keychain secure storage? → examples/ENG-6.4-data-protection.md (Keychain at-rest)
+    - iOS certificate pinning? → examples/ENG-6.4-data-protection.md (URLSession pinning delegate)
+    - Swift 6 data race safety? → examples/ENG-6.1-security.md (@MainActor + Sendable)
+    - How to structure iOS Swift project? → guidance.md + examples/ENG-2.2-layers.md
+    - fastlane iOS CI/CD? → guidance.md fastlane pipeline + examples/ENG-6.7-audit-trail.md
+    - How to build iOS app for TestFlight? → examples/ENG-6.7-audit-trail.md fastlane lane
+    - iOS vs Android → use ios-swift avatar for iOS-specific patterns
+    - What are the security requirements for a passenger-facing iOS Swift application?
+    use_cases:
+    - Swift 5.9+ iOS app with XCTest and/or Swift Testing suite (Jon Reid Quality Coding)
+    - MVVM + @MainActor ViewModel with protocol-based DI and hand-written spies
+    - fastlane scan/gym/match/pilot pipeline for CI/CD and TestFlight deployment
+    - Keychain wrapper for auth tokens and Restricted PII (no UserDefaults for secrets)
+    - Certificate pinning via URLSession custom delegate for sensitive API endpoints
+    - Structured audit event logging tied to TestFlight build number traceability
+    - ViewControllerPresentationSpy for alert/sheet/VC presentation testing
+    - ExpectToEventuallyEqual for async polling assertions without busy-wait
+    anti_patterns:
+    - DO NOT store auth tokens or PNR in UserDefaults — use Keychain
+    - DO NOT call XCUITest for business logic — unit test via DI mocks instead
+    - DO NOT use bare `fastlane` — always `bundle exec fastlane`
+    - DO NOT use struct for Swift Testing suites — use `final class @unchecked Sendable`
+    - DO NOT mutate @Published state off-main-actor — use @MainActor on ViewModel
+    - DO NOT log PII or barcode values to console — use CustomDebugStringConvertible redaction
+    - DO NOT hardcode API keys or secrets — use xcconfig + environment variables
+
+  mobile_react_native:
+    id: mobile-react-native
+    name: React Native
+    category: Technology (Mobile)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      eng_2_2: examples/ENG-2.2-layered-architecture.md
+      eng_3_1: examples/ENG-3.1-complexity.md
+      eng_3_2: examples/ENG-3.2-immutability.md
+      eng_4_1: examples/ENG-4.1-tdd.md
+      prd_3_4: examples/PRD-3.4-accessibility.md
+      security: examples/ENG-6-security.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (Jest + React Testing Library; Detox for E2E)
+    - PRD-3.4: Accessibility (React Native Accessibility API)
+    - ENG-6.1: Security by Design (react-native-keychain for secure storage)
+    - ENG-6.4: Data Protection (PII in AsyncStorage protection)
+    search_queries:
+    - React Native security? → ENG-6-security example + guidance.md
+    - Mobile PII protection? → ENG-6.4 + guidance.md PII section
+    - RN testing patterns? → ENG-4.1 example + guidance.md
+    use_cases:
+    - React Native / Expo app with TypeScript
+    - Jest + Detox test suite for RN applications
+    - react-native-keychain secure credential storage
+    - Accessibility-compliant React Native components
+  nodejs_typescript:
+    id: nodejs-typescript
+    name: Node.js / TypeScript
+    category: Technology (Backend)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (Jest/Vitest; dependency injection for testability)
+    - ENG-3.1: Complexity Limits (single-responsibility modules)
+    - ENG-6.1: Security by Design (helmet, CORS, input sanitization)
+    search_queries:
+    - Node.js testing? → guidance.md testing section + ENG-4.1
+    - TypeScript patterns? → guidance.md TypeScript section
+    - Express security? → guidance.md security section + ENG-6.1
+    use_cases:
+    - Express/Fastify/NestJS REST API with TypeScript
+    - Jest unit tests with dependency injection
+    - Node.js security hardening with helmet/CORS
+    - TypeScript strict mode with Zod input validation
+  operations_research_optimizer:
+    id: operations-research-optimizer
+    name: Operations Research / MIP Optimizer
+    category: Technology (Optimization)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (test constraints and scoring, not the solver library)
+    - ENG-3.1: Complexity Limits (one constraint per method)
+    - ENG-6.7: Audit Trail (log solver status, objective, solve time every run)
+    - BUS-2.1: FAA Compliance (FAR constraints must cite the specific regulation)
+    search_queries:
+    - MIP optimizer testing? → guidance.md testing section + ENG-4.1
+    - FAA scheduling constraints? → BUS-2.1 + guidance.md FAR section
+    - OR solver patterns? → guidance.md solver architecture section
+    use_cases:
+    - FICO Xpress / OR-Tools MIP model for scheduling
+    - Constraint function unit tests with JUnit 5
+    - Solver audit log with objective value and solve time
+    - FAR Part 117 constraint implementation with regulatory citations
+  python-fastapi:
+    id: python-fastapi
+    name: Python / FastAPI
+    category: Technology (Backend)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      eng_3_3: examples/ENG-3.3-function-length.md
+      eng_4_1: examples/ENG-4.1-tdd.md
+      eng_6_5: examples/ENG-6.5-input-validation.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (pytest + pytest-asyncio; dependency injection)
+    - ENG-3.1: Complexity Limits (single-responsibility route handlers)
+    - ENG-6.5: Input Validation (Pydantic models at API boundary)
+    - ENG-2.1: DDD Aggregate Root (domain models separate from API schemas)
+    search_queries:
+    - FastAPI testing patterns? → ENG-4.1 example + guidance.md
+    - Python async SQLAlchemy? → guidance.md async section
+    - FastAPI security? → guidance.md security section + ENG-6.5
+    - How do I write pytest tests for a FastAPI endpoint?
+    use_cases:
+    - FastAPI REST API with async SQLAlchemy
+    - Pydantic input validation with custom validators
+    - pytest dependency injection for testable route handlers
+    - FastAPI with OAuth2/JWT authentication
+  pytorch:
+    id: pytorch
+    name: PyTorch
+    category: Technology (Deep Learning)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      bus_3_1: examples/BUS-3.1-data-governance.md
+      eng_4_1: examples/ENG-4.1-tdd.md
+      security: examples/ENG-6-security.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (test PyTorch model components with fixture tensors)
+    - BUS-3.1: Data Governance (training data lineage and provenance)
+    - ENG-6.4: Data Protection (PII in training data)
+    - ENG-6.7: Audit Trail (training run metadata and checkpoint provenance)
+    search_queries:
+    - PyTorch testing? → ENG-4.1 example + guidance.md
+    - Deep learning data privacy? → ENG-6.4 + BUS-3.1 + guidance.md
+    - Model training audit trail? → ENG-6.7 + guidance.md
+    use_cases:
+    - PyTorch 2.0+ model training with MLflow tracking
+    - DataLoader with PII masking for training data
+    - Model checkpoint management with audit trail
+    - TorchScript model export for production serving
+  r_shiny:
+    id: r-shiny
+    name: R / Shiny
+    category: Technology (Analytics/Dashboard)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (testthat for pure R functions extracted from server.R)
+    - ENG-10.1: Brownfield Preservation (preserve R statistical models via API)
+    - ENG-6.4: Data Protection (no PII in Shiny session state)
+    search_queries:
+    - R Shiny best practices? → guidance.md Shiny section + ENG-4.1
+    - R model testing? → guidance.md testthat section
+    - Shiny security? → guidance.md security section + ENG-6.4
+    use_cases:
+    - R/Shiny dashboards for internal analytics
+    - testthat unit tests for R business logic
+    - Azure AD authentication in Shiny applications
+    - Brownfield R model preservation with containerization
+  react_typescript:
+    id: react-typescript
+    name: React / TypeScript
+    category: Technology (Frontend)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      eng_3_1: examples/ENG-3.1-complexity.md
+      eng_3_2: examples/ENG-3.2-immutability.md
+      eng_4_1: examples/ENG-4.1-tdd.md
+      prd_3_4: examples/PRD-3.4-accessibility.md
+      security: examples/ENG-6-security.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (Jest + React Testing Library; no snapshot tests)
+    - ENG-3.1: Complexity Limits (component single-responsibility)
+    - PRD-3.4: Accessibility (WCAG 2.1 AA; aria-label compliance)
+    - ENG-6.1: Security by Design (XSS prevention; CSP headers)
+    search_queries:
+    - React security? → ENG-6-security example + guidance.md
+    - TypeScript React testing? → ENG-4.1 example + guidance.md
+    - Redux PII protection? → guidance.md Redux section + ENG-6.4
+    use_cases:
+    - React 18+ with TypeScript strict mode
+    - Jest + React Testing Library unit test suite
+    - Redux Toolkit with PII-safe state management
+    - Accessibility-first React components with WCAG 2.1 AA
+  sagemaker:
+    id: sagemaker
+    name: AWS SageMaker
+    category: Technology (MLOps)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      eng_4_1: examples/ENG-4.1-tdd.md
+      security: examples/ENG-6-security.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (test SageMaker processing scripts with fixture data)
+    - ENG-6.1: Security by Design (IAM least-privilege roles for SageMaker)
+    - ENG-6.4: Data Protection (S3 encryption, VPC endpoints)
+    - ENG-6.7: Audit Trail (SageMaker experiment tracking, model card provenance)
+    search_queries:
+    - SageMaker security? → ENG-6-security example + guidance.md
+    - SageMaker IAM least privilege? → ENG-6.1 + guidance.md IAM section
+    - ML model audit trail in AWS? → ENG-6.7 + guidance.md
+    use_cases:
+    - SageMaker training jobs with custom containers
+    - IAM least-privilege roles for SageMaker execution
+    - SageMaker Model Registry with approval workflow
+    - S3 VPC endpoint and encryption-at-rest configuration
+  streaming_ml:
+    id: streaming-ml
+    name: Streaming ML
+    category: Technology (Data Platform)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (test Kafka consumer logic with embedded Kafka)
+    - ENG-7.1: Resiliency (dead-letter queues; circuit breakers for inference)
+    - BUS-3.1: Data Governance (stream data lineage and retention)
+    search_queries:
+    - Streaming ML patterns? → guidance.md streaming section
+    - Kafka consumer testing? → guidance.md testing section + ENG-4.1
+    - Real-time ML pipelines? → guidance.md pipeline section + ENG-7.1
+    use_cases:
+    - Kafka consumer with real-time ML inference
+    - Spark Streaming pipeline with Delta Lake sink
+    - Dead-letter queue handling for failed inference
+    - Online feature store integration with Feast
+  tensorflow:
+    id: tensorflow
+    name: TensorFlow / Keras
+    category: Technology (Deep Learning)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      bus_3_1: examples/BUS-3.1-data-governance.md
+      eng_4_1: examples/ENG-4.1-tdd.md
+      security: examples/ENG-6-security.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (tf.test for model component validation)
+    - BUS-3.1: Data Governance (TFX pipeline data validation and lineage)
+    - ENG-6.4: Data Protection (PII masking in TF datasets)
+    - ENG-6.7: Audit Trail (TFX metadata store for pipeline provenance)
+    search_queries:
+    - TensorFlow testing? → ENG-4.1 example + guidance.md
+    - Keras security practices? → ENG-6-security example
+    - TFX audit trail? → ENG-6.7 + guidance.md TFX section
+    use_cases:
+    - TensorFlow 2.x / Keras model training with TFX
+    - tf.data pipeline with PII masking transforms
+    - TFX metadata store for pipeline audit trail
+    - SavedModel export with version governance
+  vector_databases:
+    id: vector-databases
+    name: Vector Databases
+    category: Technology (AI/Data)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      eng_4_1: examples/ENG-4.1-tdd.md
+      security: examples/ENG-6-security.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (test embedding and retrieval logic with fixture vectors)
+    - ENG-6.1: Security by Design (API key rotation; namespace isolation)
+    - ENG-6.4: Data Protection (PII risks in embedded content)
+    - ENG-6.7: Audit Trail (index mutation log; embedding provenance)
+    search_queries:
+    - Vector DB security? → ENG-6-security example + guidance.md
+    - Embedding PII risks? → ENG-6.4 + guidance.md PII section
+    - RAG index security? → ENG-6.1 + guidance.md namespace section
+    use_cases:
+    - Pinecone/Chroma/pgvector RAG index with PII-safe embeddings
+    - Vector DB namespace isolation for multi-tenant applications
+    - Embedding pipeline with PII detection before indexing
+    - Hybrid search (vector + keyword) with pgvector
+  vertex_ai:
+    id: vertex-ai
+    name: Google Vertex AI
+    category: Technology (MLOps)
+    registry_path: technology/index.yaml
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+    specializes_laws:
+    - ENG-4.1: Atomic TDD (test Vertex AI pipeline components in isolation)
+    - ENG-6.1: Security by Design (Workload Identity; VPC Service Controls)
+    - ENG-6.4: Data Protection (CMEK encryption; DLP API for PII)
+    - BUS-3.1: Data Governance (Vertex ML Metadata for lineage)
+    search_queries:
+    - Vertex AI security? → ENG-6.1 + guidance.md security section
+    - Google Cloud ML patterns? → guidance.md GCP section
+    - Vertex AI IAM? → guidance.md IAM section + ENG-6.1
+    use_cases:
+    - Vertex AI Pipelines with Kubeflow components
+    - Workload Identity Federation for GCP service access
+    - Vertex AI Model Registry with approval gates
+    - DLP API integration for PII detection in training data
+  apigee_azure:
+    id: avatar-tech-apigee-azure
+    name: Apigee + Azure Cloud
+    category: Technology (API Gateway + Cloud Infrastructure)
+    type: technology
+    registry_path: technology/apigee-azure/
+    codebase_source: "AAInternal/apigeeDocs"
+    version: "1.1.0"
+    rag_validated: true
+    last_validated: "2026-04-24"
+    wave: 4
+    aa_specific:
+      runway_portal: "https://developer.aa.com/apigee/create"
+      docker_image: "docker.aa.com/prod/datamovement/apigee/edgemicro:3.3.8.0"
+      orgs: "aa-dev / aa-test / aa-stage / aa-prod"
+      vault: "HashiCorp Vault (dev app credentials) + Azure Key Vault (runtime secrets)"
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      atomic_tdd: examples/ENG-4.1-atomic-tdd.md
+      complexity: examples/ENG-3.1-complexity.md
+      security_by_design: examples/ENG-6.1-security-by-design.md
+      data_protection: examples/ENG-6.4-data-protection.md
+      audit_trail: examples/ENG-6.7-audit-trail.md
+      cicd_pipeline: examples/ENG-5.2-cicd-pipeline.md
+      failure_handling: examples/ENG-7.1-failure-handling.md
+    specializes_laws:
+      - ENG-4.1: Atomic TDD Law (Mocha proxy tests / checkov Terraform / Jest Azure Functions)
+      - ENG-3.1: Complexity Limits (max 3 FlowConditions; dispatch registry for Functions)
+      - ENG-6.1: Security by Design Law (OAuthV2 on every PreFlow; Managed Identity for all Azure services)
+      - ENG-6.4: Data Protection Law (Key Vault references; no plaintext in app settings or VCS)
+      - ENG-6.7: Audit Trail Law (correlation ID generated at Apigee edge; propagated to all downstream)
+      - ENG-5.2: CI/CD Pipeline Law (no manual Apigee UI uploads; terraform apply requires human approval gate)
+      - ENG-7.1: Failure Handling Law (FaultRules normalized envelope; DLQ alert <5min; idempotent Functions)
+    search_queries:
+      - What laws govern Apigee + Azure development at AA? → manifest + guidance (574 tokens)
+      - How do I secure an Apigee proxy with OAuth and Managed Identity? → ENG-6.1-security-by-design.md (650 tokens)
+      - How do I set up CI/CD for Apigee and Terraform at AA? → manifest + ENG-5.2-cicd-pipeline.md (930 tokens)
+      - Show me atomic TDD for an Apigee proxy and Azure Function → ENG-4.1-atomic-tdd.md (700 tokens)
+      - How do I propagate correlation IDs across Apigee and Azure? → ENG-6.7-audit-trail.md (600 tokens)
+      - How do I create an Apigee proxy at AA?
+      - What OAuth grant type does AA Apigee support?
+      - How do I store Apigee developer app credentials securely?
+      - How do I deploy Apigee to production at AA?
+      - How do I deploy Apigee Microgateway on Azure App Service or AKS?
+    key_metrics:
+      max_tokens_per_query: 930
+      recall: "5/5"
+      precision: "100%"
+      validation_evidence: hangar-ai-specs/evidence/avatar-rag-apigee-azure.md
+    cardinal_rule: "Every gate device request hits Apigee first — OAuth at the edge, Managed Identity for every Azure service call downstream"
+    anti_patterns:
+      - DO NOT create an Apigee proxy without OAuthV2 VerifyAccessToken in PreFlow
+      - DO NOT use plaintext credentials in Function app settings (use Key Vault reference syntax)
+      - DO NOT run terraform apply to prod manually (CI + human approval gate only)
+      - DO NOT expose stack traces through FaultRules (normalized error envelope + correlation ID only)
+
+  dss-event-driven:
+    id: avatar-tech-dss-event-driven
+    name: DSS Event-Driven Microservices
+    category: Technology (Event-Driven Microservices / DisplayHub)
+    type: technology
+    registry_path: technology/dss-event-driven/
+    rag_validated: true
+    last_validated: "2026-04-22"
+    wave: 4
+    files:
+      manifest: manifest.yaml
+      guidance: guidance.md
+      atomic_tdd: examples/ENG-4.1-atomic-tdd.md
+      ddd: examples/ENG-2.1-ddd.md
+      complexity: examples/ENG-3.1-complexity.md
+      observability: examples/ENG-5.5-observability.md
+      data_protection: examples/ENG-6.4-data-protection.md
+      failure_handling: examples/ENG-7.1-failure-handling.md
+    specializes_laws:
+      - ENG-4.1: Atomic TDD Law (per-layer TDD — Node.js / Java / React)
+      - ENG-2.1: Domain-Driven Design Law (bounded contexts — DisplayHub write / Display APIs read)
+      - ENG-3.1: Complexity Limits (max CC 8; registry/dispatch pattern; 30-line route handlers)
+      - ENG-5.5: Observability Law (event_to_display_latency_ms; PagerDuty P1 >10s staleness)
+      - ENG-6.4: Data Protection Law (AKS Key Vault CSI; no .env commits; Managed Identity)
+      - ENG-7.1: Failure Handling Law (fail-open; idempotent processors; DLQ alert <5min)
+    search_queries:
+      - What laws govern DSS event-driven microservices at AA? → manifest + guidance (574 tokens)
+      - Show me an atomic TDD example for a DSS event processor → ENG-4.1-atomic-tdd.md (700 tokens)
+      - How do I set up a DSS event-driven project at AA? → manifest + guidance (574 tokens)
+      - How do I handle display staleness and failures in DisplayHub? → ENG-7.1 + guidance (894 tokens)
+      - How do I instrument event_to_display_latency_ms observability? → ENG-5.5-observability.md (700 tokens)
+    key_metrics:
+      max_tokens_per_query: 894
+      recall: "5/5"
+      precision: "100%"
+      validation_evidence: hangar-ai-specs/evidence/avatar-rag-dss-event-driven.md
+    cardinal_rule: "Processors write, APIs read, UIs render — fail open with stale data, never blank screen"
+    anti_patterns:
+      - DO NOT query a DisplayHub table directly from a Display API (cross-context DB call)
+      - DO NOT use switch-chains for event routing (use registry/dispatch pattern)
+      - DO NOT commit .env files or raw K8s Secret YAML (use SecretProviderClass + Key Vault)
+      - DO NOT go dark — always serve stale data with indicator rather than blank screen
+
+version_history:
+  2.0.0:
+    date: '2026-02-20'
+    notes:
+    - Lowercase naming (avatar-rag-index.yaml, not AVATAR-RAG-INDEX.yaml)
+    - Aligned with laws repository token optimization (60-67% reduction)
+    - Added PRD-LAWS-REFERENCE.md canonical reference
+    - Guidance deduplication complete (3/3 avatars)
+    - Query routing with 4 search tiers
+    - AI selective loading strategy documented
+
+industry_avatars:
+  aviation_faa:
+    id: avatar-industry-aviation-faa
+    name: "American Airlines Aviation / FAA Compliance"
+    category: Industry (Aviation Regulatory)
+    registry_path: industry/aviation-faa/manifest.yaml
+    specializes_laws:
+    - BUS-2.1: FAA Compliance (FAR Part 117/121, DO-178C software assurance, regulatory mapping)
+    - BUS-2.3: DOT Consumer Protection (tarmac delay limits, denied boarding, refund requirements)
+    - ENG-4.1: Atomic TDD (safety-critical test traceability to FAR requirements)
+    - ENG-6.7: Audit Trail (regulatory evidence chain for FAA/DOT audit readiness)
+    search_queries:
+    - How do I map all applicable FAA and aviation regulatory requirements?
+    - FAA regulatory compliance mapping aviation?
+    - FAR Part 117 crew rest requirements?
+    - DO-178C software assurance level requirements?
+    - What are the aviation regulatory obligations for American Airlines software?
+    - FAA compliance aviation safety-critical systems?

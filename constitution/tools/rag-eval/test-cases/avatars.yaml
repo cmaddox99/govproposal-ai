@@ -1,0 +1,513 @@
+test_cases:
+
+  # --- Java/Spring Boot avatar ---
+
+  - id: tc-av-001
+    question: "I am building a Spring Boot microservice — what patterns should I follow?"
+    expected_laws: [ENG-4.1]
+    expected_skills: []
+    expected_avatars: [java-spring]
+    category: avatars
+
+  - id: tc-av-002
+    question: "Show me a Java Spring Boot TDD example with JUnit 5 and Mockito"
+    expected_laws: [ENG-4.1]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: [java-spring]
+    category: avatars
+
+  # --- Python/FastAPI avatar ---
+
+  - id: tc-av-003
+    question: "I am building a Python FastAPI service — what constitution laws apply?"
+    expected_laws: [ENG-4.1]
+    expected_skills: []
+    expected_avatars: [python-fastapi]
+    category: avatars
+
+  - id: tc-av-004
+    question: "How do I write pytest tests for a FastAPI endpoint?"
+    expected_laws: [ENG-4.1]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: [python-fastapi]
+    category: avatars
+
+  # --- React/TypeScript avatar ---
+
+  - id: tc-av-005
+    question: "I am working on a React TypeScript frontend component"
+    expected_laws: [ENG-4.1]
+    expected_skills: []
+    expected_avatars: [react-typescript]
+    category: avatars
+
+  # --- Cargo & Freight avatar ---
+
+  - id: tc-av-006
+    question: "What product laws apply when building the cargo freight booking system?"
+    expected_laws: [PRD-1.2]
+    expected_skills: []
+    expected_avatars: [cargo-freight]
+    category: avatars
+
+  - id: tc-av-007
+    question: "How do I handle dangerous goods in the cargo freight workflow?"
+    expected_laws: [BUS-2.1]
+    expected_skills: []
+    expected_avatars: [cargo-freight]
+    category: avatars
+
+  # --- Loyalty / AAdvantage avatar ---
+
+  - id: tc-av-008
+    question: "I am building a feature for the AAdvantage loyalty program"
+    expected_laws: [PRD-1.2]
+    expected_skills: []
+    expected_avatars: [loyalty-aadvantage]
+    category: avatars
+
+  # --- Check-In & Travel avatar ---
+
+  - id: tc-av-009
+    question: "What patterns apply for the passenger check-in flow?"
+    expected_laws: [PRD-1.2]
+    expected_skills: []
+    expected_avatars: [check-in-travel]
+    category: avatars
+
+  # --- Passenger Booking avatar ---
+
+  - id: tc-av-010
+    question: "What DOT compliance requirements govern the passenger booking experience?"
+    expected_laws: [BUS-2.3]
+    expected_skills: []
+    expected_avatars: [passenger-booking]
+    category: avatars
+
+  # --- Airport Operations avatar ---
+
+  - id: tc-av-011
+    question: "I am building a gate management tool for airport operations"
+    expected_laws: [BUS-2.1]
+    expected_skills: []
+    expected_avatars: [airport-operations]
+    category: avatars
+
+  # --- Azure OpenAI avatar ---
+
+  - id: tc-av-012
+    question: "How do I integrate Azure OpenAI responsibly in our products?"
+    expected_laws: [ENG-6.1]
+    expected_skills: [21-prompt-engineering.md]
+    expected_avatars: [azure-openai]
+    category: avatars
+
+  # --- LangChain avatar ---
+
+  - id: tc-av-013
+    question: "I am building an AI agent with LangChain — what constitution laws apply?"
+    expected_laws: [ENG-9.1]
+    expected_skills: [23-ai-agents.md]
+    expected_avatars: [langchain]
+    category: avatars
+
+  # --- Network Planning avatar ---
+
+  - id: tc-av-014
+    question: "What product laws apply to the network planning optimization system?"
+    expected_laws: [PRD-4.1]
+    expected_skills: []
+    expected_avatars: [network-planning-optimization]
+    category: avatars
+
+  # --- Schedule Change Self-Serve avatar ---
+
+  - id: tc-av-015
+    question: "How do I apply the schedule change self-serve domain patterns?"
+    expected_laws: [PRD-1.2]
+    expected_skills: []
+    expected_avatars: [schedule-change-self-serve]
+    category: avatars
+
+  # --- iOS Swift avatar ---
+
+  - id: tc-av-016
+    question: "How do I write unit tests for an iOS Swift app using XCTest?"
+    expected_laws: [ENG-4.1]
+    expected_skills: [06-atomic-tdd.md]
+    expected_avatars: [ios-swift]
+    category: avatars
+
+  - id: tc-av-017
+    question: "How do I store auth tokens securely in an iOS Swift app?"
+    expected_laws: [ENG-6.4]
+    expected_skills: []
+    expected_avatars: [ios-swift]
+    category: avatars
+
+  - id: tc-av-018
+    question: "What CI/CD pipeline should I use for TestFlight deployment of an iOS Swift app?"
+    expected_laws: [ENG-6.7]
+    expected_skills: []
+    expected_avatars: [ios-swift]
+    category: avatars
+
+  - id: tc-av-019
+    question: "What are the security requirements for a passenger-facing iOS Swift application?"
+    expected_laws: [ENG-6.1]
+    expected_skills: []
+    expected_avatars: [ios-swift]
+    category: avatars
+
+  - id: tc-av-020
+    question: "How do I write unit tests for an Android Kotlin app using JUnit 5 and MockK?"
+    expected_laws: [ENG-4.1]
+    expected_skills: [skill-06-atomic-tdd]
+    expected_avatars: [android-kotlin]
+    category: avatars
+
+  - id: tc-av-021
+    question: "How do I protect sensitive data at rest in an Android Kotlin application?"
+    expected_laws: [ENG-6.4]
+    expected_skills: []
+    expected_avatars: [android-kotlin]
+    category: avatars
+
+  - id: tc-av-022
+    question: "What are the security requirements for a passenger-facing Android Kotlin application?"
+    expected_laws: [ENG-6.1]
+    expected_skills: []
+    expected_avatars: [android-kotlin]
+    category: avatars
+
+  - id: tc-av-023
+    question: "How do I set up a fastlane pipeline for Android Kotlin CI/CD with Play Store deployment?"
+    expected_laws: [ENG-6.7]
+    expected_skills: []
+    expected_avatars: [android-kotlin]
+    category: avatars
+
+  # --- C++ (Modern) Technology Avatar ---
+  # Avatar selection
+
+  - id: tc-av-024
+    question: "I am building a C++ service — what constitution laws apply?"
+    expected_laws: [ENG-4.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  - id: tc-av-025
+    question: "What are the C++ coding standards at American Airlines?"
+    expected_laws: [ENG-3.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Law retrieval — TDD / test pyramid
+
+  - id: tc-av-026
+    question: "How do I write a TDD test in C++ using GoogleTest RED-GREEN-REFACTOR?"
+    expected_laws: [ENG-4.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  - id: tc-av-027
+    question: "What is the C++ test pyramid structure using GoogleTest and GoogleMock?"
+    expected_laws: [ENG-4.2]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Law retrieval — CI/CD and build
+
+  - id: tc-av-028
+    question: "How do I configure a C++ CMake build with clang-tidy and compiler warnings as errors?"
+    expected_laws: [ENG-5.2]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  - id: tc-av-029
+    question: "C++ sanitizers ASan UBSan — how do I configure AddressSanitizer and UndefinedBehaviorSanitizer in CI?"
+    expected_laws: [ENG-5.2, ENG-6.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Law retrieval — security / memory safety
+
+  - id: tc-av-030
+    question: "How do I migrate from raw pointers to unique_ptr in C++?"
+    expected_laws: [ENG-6.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  - id: tc-av-031
+    question: "What are the RAII patterns for resource management in C++?"
+    expected_laws: [ENG-6.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  - id: tc-av-032
+    question: "C++ data protection — how do I scope PII to a lifetime using RAII-based encryption in C++?"
+    expected_laws: [ENG-6.4, ENG-6.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  - id: tc-av-033
+    question: "C++ input validation boundary sanitize — how do I validate user input at C++ system boundaries?"
+    expected_laws: [ENG-6.5, ENG-6.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Law retrieval — observability / audit
+
+  - id: tc-av-034
+    question: "How do I implement structured logging with spdlog and OpenTelemetry in C++?"
+    expected_laws: [ENG-6.7]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Law retrieval — resilience
+
+  - id: tc-av-035
+    question: "C++ resiliency circuit breaker — how do I implement a circuit breaker state machine in C++?"
+    expected_laws: [ENG-7.2, ENG-7.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  - id: tc-av-036
+    question: "How do I implement exponential backoff with jitter for retry logic in C++?"
+    expected_laws: [ENG-7.3]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  - id: tc-av-037
+    question: "How do I propagate deadlines via std::chrono in a C++ service?"
+    expected_laws: [ENG-7.4]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Law retrieval — architecture / domain modeling
+
+  - id: tc-av-038
+    question: "How do I model a DDD aggregate root in C++ with encapsulated children?"
+    expected_laws: [ENG-2.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  - id: tc-av-039
+    question: "C++ error handling std::expected — how do I handle errors without exceptions in C++?"
+    expected_laws: [ENG-3.7, ENG-3.1, ENG-6.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Safety-critical / compliance
+
+  - id: tc-av-040
+    question: "C++ MISRA safety-critical DO-178C aviation — what requirements apply to avionics C++ code?"
+    expected_laws: [ENG-6.1, ENG-4.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — memory safety
+
+  - id: tc-av-041
+    question: "C++ memory safety ownership model — how do I use smart pointers and RAII correctly?"
+    expected_laws: [ENG-6.1]
+    expected_skills: [skill-cpp-ownership-lifetime-safety]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — sanitizer hardening
+
+  - id: tc-av-042
+    question: "C++ sanitizer configuration — how do I enable ASan UBSan in my build?"
+    expected_laws: [ENG-5.2]
+    expected_skills: [skill-cpp-sanitizer-hardening]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — legacy modernization
+
+  - id: tc-av-043
+    question: "How do I modernize legacy C++ code incrementally?"
+    expected_laws: [ENG-6.1]
+    expected_skills: [skill-cpp-legacy-modernization]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — standard migration
+
+  - id: tc-av-044
+    question: "How do I migrate from C++11 to C++17 and upgrade C++ standard version?"
+    expected_laws: [ENG-5.2]
+    expected_skills: [skill-cpp-standard-migration]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — exception safety
+
+  - id: tc-av-045
+    question: "C++ exception safety noexcept contract std::expected strong guarantee — what is the error handling strategy?"
+    expected_laws: [ENG-3.7, ENG-3.1]
+    expected_skills: [skill-cpp-exception-safety-governance]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — coroutines
+
+  - id: tc-av-046
+    question: "C++ coroutines co_await async pattern — how do I implement structured concurrency?"
+    expected_laws: [ENG-6.1]
+    expected_skills: [skill-cpp-coroutines-governance]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — template complexity
+
+  - id: tc-av-047
+    question: "C++ template complexity and concepts constraints — how do I manage compile time errors?"
+    expected_laws: [ENG-3.1]
+    expected_skills: [skill-cpp-template-complexity-management]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — portable build
+
+  - id: tc-av-048
+    question: "C++ CMake governance and vcpkg Conan setup for a portable cross-platform build?"
+    expected_laws: [ENG-5.2]
+    expected_skills: [skill-cpp-portable-build-governance]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — logging / diagnostics
+
+  - id: tc-av-049
+    question: "C++ spdlog setup and structured logging — how do I prevent PII in logs?"
+    expected_laws: [ENG-6.7]
+    expected_skills: [skill-cpp-logging-diagnostics-standards]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — API compatibility
+
+  - id: tc-av-050
+    question: "C++ API compatibility ABI stability and breaking change policy for headers?"
+    expected_laws: [ENG-3.1]
+    expected_skills: [skill-cpp-api-compatibility-governance]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — dependency governance
+
+  - id: tc-av-051
+    question: "C++ dependency management Boost policy and third-party license compliance SBOM?"
+    expected_laws: [ENG-5.2]
+    expected_skills: [skill-cpp-dependency-governance]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — feature detection
+
+  - id: tc-av-052
+    question: "C++ feature detection using __cplusplus macro and SD-6 feature test macros?"
+    expected_laws: [ENG-5.2]
+    expected_skills: [skill-cpp-feature-detection]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — layering and boundaries
+
+  - id: tc-av-053
+    question: "C++ layer separation and include boundaries for domain model structure?"
+    expected_laws: [ENG-2.2]
+    expected_skills: [skill-cpp-layering-and-boundaries]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — legacy survival patterns
+
+  - id: tc-av-054
+    question: "C++ legacy survival — how do I safely modify legacy C++ code as a new developer?"
+    expected_laws: [ENG-4.1]
+    expected_skills: [skill-cpp-legacy-survival-patterns]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — performance benchmarking
+
+  - id: tc-av-055
+    question: "C++ performance benchmark micro-benchmark and latency budget measurement?"
+    expected_laws: [ENG-3.1]
+    expected_skills: [skill-cpp-performance-benchmark-discipline]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # Skill routing — presubmit / code ownership
+
+  - id: tc-av-056
+    question: "C++ presubmit checks code review gate CODEOWNERS CI pipeline setup?"
+    expected_laws: [ENG-5.2, ENG-4.1, ENG-4.2]
+    expected_skills: [skill-cpp-presubmit-and-code-ownership]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # ENG-4.4 — coverage gate verification
+
+  - id: tc-av-057
+    question: "C++ coverage gate lcov gcov — how do I enforce a minimum code coverage threshold in CMake CI?"
+    expected_laws: [ENG-4.4]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  # ENG-4.11 — mutation testing
+
+  - id: tc-av-058
+    question: "C++ mutation testing Mull — how do I configure mutation testing to validate test quality in C++?"
+    expected_laws: [ENG-4.11, ENG-4.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  # ENG-4.1 — FAR-117 traceability
+
+  - id: tc-av-059
+    question: "C++ test traceability FAR-117 — how do I link C++ unit tests to FAR Part 117 requirements?"
+    expected_laws: [ENG-4.1, ENG-6.7]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars
+
+  # ENG-4.1 — characterization test pattern
+
+  - id: tc-av-060
+    question: "C++ characterization test golden-master — how do I write a characterization test to pin legacy C++ behavior?"
+    expected_laws: [ENG-4.1]
+    expected_skills: [skill-cpp-legacy-survival-patterns]
+    expected_avatars: [cpp]
+    category: avatars
+
+  # ENG-4.2 — inverted test pyramid detection
+
+  - id: tc-av-061
+    question: "C++ test pyramid inverted — how do I detect and fix an inverted test pyramid where integration tests outnumber unit tests?"
+    expected_laws: [ENG-4.2, ENG-4.1]
+    expected_skills: []
+    expected_avatars: [cpp]
+    category: avatars

@@ -1,0 +1,52 @@
+domain: ml-ai
+title: ML/AI
+description: ML pipelines, prompt engineering, RAG, agents, safety
+version: 2.0.0
+laws:
+- BUS-6.1
+- ENG-2.4
+keywords:
+- ml
+- ai
+- prompt
+- rag
+- agent
+- safety
+skills:
+  - file: 17-ml-pipeline.md
+    name: ML Pipeline
+    triggers: [ML pipeline, automate training, MLOps, data pipeline]
+    laws: [ENG-5.2, BUS-3.3]
+  - file: 18-experiment-tracking.md
+    name: Experiment Tracking
+    triggers: [track experiments, compare models, MLflow, experiment reproducibility]
+    laws: [PRD-5.3, BUS-7.1]
+  - file: 19-model-serving.md
+    name: Model Serving
+    triggers: [deploy model, model serving, inference API, model versioning]
+    laws: [ENG-7.1, ENG-7.5]
+  - file: 20-ml-monitoring.md
+    name: ML Monitoring
+    triggers: [monitor model, detect drift, model performance, retraining]
+    laws: [ENG-5.5, BUS-6.3]
+  - file: 21-prompt-engineering.md
+    name: Prompt Engineering
+    triggers: [design prompts, improve LLM, prompt template, reduce hallucinations, Azure OpenAI, LangChain, LLM integration, AI responsibly, responsible LLM, integrate OpenAI, prompt governance, system prompt, LLM prompt, ChatGPT, GPT-4]
+    laws: [PRD-5.2]
+  - file: 22-rag-architecture.md
+    name: RAG Architecture
+    triggers: [build RAG, knowledge retrieval, vector database, ground LLM]
+    laws: [ENG-2.1, BUS-3.1]
+  - file: 23-ai-agents.md
+    name: AI Agents
+    triggers: [build AI agent, autonomous workflow, agent with tools, multi-step reasoning, building an AI agent with LangChain, AI agent with LangChain]
+    laws: [BUS-1.1]
+  - file: 24-ai-safety.md
+    name: AI Safety
+    triggers: [AI safety, responsible AI, guardrails, bias detection]
+    laws: [BUS-1.1, BUS-6.1]
+  - file: 28-content-transformation.md
+    name: Content Transformation
+    triggers: [transform presentation, convert slides, apply brand, document transformation]
+    laws: [PRD-3.4, ENG-2.3]
+count: 9

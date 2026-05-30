@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 5 — Refactor · AAdvantage Legacy Rescue</title>
+<style>
+@page { size: 1088px 1408px; margin: 0; }
+:root { --aa-blue:#003087; --aa-red:#C8102E; --ink:#17202a; --muted:#5f6d7a; --line:#d9e1ea; --soft:#f3f7fb; --soft-2:#eef3f8; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:#fff;}
+.page{width:1088px;min-height:1408px;padding:94px 88px 100px;position:relative;overflow:hidden;background:#fff;page-break-after:always;}
+.page::before{content:"";position:absolute;top:0;left:0;width:100%;height:12px;background:linear-gradient(90deg,var(--aa-blue),var(--aa-red));}
+.page::after{content:"✈";position:absolute;right:34px;bottom:-10px;font-size:240px;color:var(--aa-blue);opacity:.03;transform:rotate(18deg);pointer-events:none;}
+.page.cover{background:radial-gradient(circle at 85% 16%,rgba(0,48,135,.08),transparent 22%),linear-gradient(180deg,#fbfcfe 0%,#f1f6fa 100%);}
+.footer{position:absolute;left:88px;right:88px;bottom:42px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e5ebf1;padding-top:14px;font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:#7f8b97;}
+.footer .pn{color:var(--aa-blue);font-weight:800;}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;font-weight:800;color:var(--aa-red);}
+h1{margin-top:22px;font-size:52px;line-height:1.05;letter-spacing:-1.5px;color:var(--aa-blue);font-weight:850;max-width:820px;}
+h2{margin-top:32px;font-size:28px;line-height:1.1;letter-spacing:-.6px;color:var(--aa-blue);font-weight:800;padding-bottom:8px;border-bottom:2px solid var(--line);}
+h3{margin-top:20px;font-size:19px;color:var(--aa-blue);font-weight:700;}
+h4{margin-top:16px;font-size:16px;color:var(--ink);font-weight:700;}
+p{margin-top:12px;font-size:15px;line-height:1.6;color:#32404d;}
+ul,ol{margin-top:10px;padding-left:24px;}
+li{font-size:15px;line-height:1.55;color:#32404d;margin-top:4px;}
+code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;font-size:13px;background:var(--soft-2);border:1px solid var(--line);border-radius:3px;padding:1px 5px;}
+pre{margin-top:14px;background:#1e2832;color:#c9d1d9;padding:16px 18px;border-radius:4px;overflow-x:auto;font-size:13px;line-height:1.5;}
+pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
+table{width:100%;border-collapse:collapse;margin-top:14px;}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-top:1px solid var(--line);font-size:13.5px;line-height:1.4;}
+th{border-top:0;background:var(--soft);color:var(--aa-blue);font-size:11px;text-transform:uppercase;letter-spacing:.8px;}
+blockquote{border-left:4px solid var(--aa-blue);margin-top:14px;padding:10px 16px;background:var(--soft);color:var(--muted);font-size:14px;}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:32px;max-width:820px;}
+.meta-card{border:1px solid var(--line);background:#fff;padding:16px 18px;}
+.meta-card .k{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--aa-red);font-weight:800;}
+.meta-card .v{margin-top:7px;font-size:17px;line-height:1.4;color:#23303d;}
+.summary-band{margin-top:28px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.summary-band-3{margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.stat-card{border:1px solid var(--line);background:#fff;padding:14px;}
+.stat-card .n{font-size:34px;line-height:1;color:var(--aa-blue);font-weight:850;letter-spacing:-1px;}
+.stat-card .l{margin-top:7px;font-size:13px;line-height:1.35;color:#52606d;}
+.stat-card.danger .n{color:var(--aa-red);}
+.stat-card.warn .n{color:#b36b00;}
+.stat-card.ok .n{color:#1b7a2b;}
+.status-badge{display:inline-block;padding:4px 12px;border-radius:3px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;}
+.status-badge.fail{background:#fde8ec;color:var(--aa-red);border:1px solid #f8bbd0;}
+.status-badge.pass{background:#e8f5e9;color:#1b7a2b;border:1px solid #a5d6a7;}
+.status-badge.warn{background:#fff8e1;color:#b36b00;border:1px solid #ffe082;}
+.status-badge.info{background:var(--soft);color:var(--aa-blue);border:1px solid var(--line);}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.chip{display:inline-block;padding:3px 10px;background:var(--soft);border:1px solid var(--line);border-radius:3px;font-size:12px;font-weight:700;color:var(--aa-blue);letter-spacing:.3px;}
+.phase-hdr{display:flex;align-items:center;gap:12px;margin-top:28px;margin-bottom:8px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+.phase-num{background:var(--aa-blue);color:#fff;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:3px 10px;border-radius:2px;}
+.law-cite{position:relative;display:inline;color:var(--aa-blue);font-weight:700;border-bottom:1px dashed var(--aa-blue);cursor:help;white-space:nowrap;}
+.law-cite[data-non-negotiable="true"]{color:var(--aa-red);border-bottom-color:var(--aa-red);}
+.law-tooltip{visibility:hidden;opacity:0;pointer-events:none;position:absolute;z-index:9999;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e2832;color:#e8edf2;padding:10px 14px;border-radius:4px;font-size:13px;line-height:1.5;white-space:normal;min-width:220px;max-width:340px;box-shadow:0 4px 16px rgba(0,0,0,.25);transition:opacity .15s ease,visibility .15s ease;text-align:left;font-weight:400;}
+.law-tooltip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#1e2832;}
+.law-tooltip .law-summary{font-size:12px;color:#9aaab8;margin-top:4px;display:block;}
+.law-cite:hover .law-tooltip,.law-cite:focus .law-tooltip{visibility:visible;opacity:1;}
+.law-cite.flip-below .law-tooltip{bottom:auto;top:calc(100% + 6px);}
+.law-cite.flip-below .law-tooltip::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:#1e2832;}
+.gate-block{margin-top:24px;border:2px solid var(--aa-red);padding:18px 22px;background:#fdf2f4;}
+.gate-block.ok{border-color:#1b7a2b;background:#e8f5e9;}
+.gate-block .gate-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--aa-red);font-weight:800;margin-bottom:8px;}
+.gate-block.ok .gate-label{color:#1b7a2b;}
+.gate-block .gate-row{display:flex;gap:24px;align-items:center;flex-wrap:wrap;margin-top:6px;}
+.gate-block .gate-item{font-size:14px;color:var(--ink);}
+.gate-block .gate-item strong{color:var(--aa-red);}
+.gate-block.ok .gate-item strong{color:#1b7a2b;}
+td.critical{color:var(--aa-red);font-weight:700;}
+td.high-sev{color:#b36b00;font-weight:700;}
+.sev-p0{display:inline-block;padding:2px 8px;border-radius:2px;font-size:11px;font-weight:800;background:#fde8ec;color:var(--aa-red);border:1px solid #f8bbd0;}
+.sev-p1{display:inline-block;padding:2px 8px;border-radius:2px;font-size:11px;font-weight:800;background:#fff8e1;color:#b36b00;border:1px solid #ffe082;}
+.sev-p2{display:inline-block;padding:2px 8px;border-radius:2px;font-size:11px;font-weight:800;background:#f3f7fb;color:#003087;border:1px solid #d9e1ea;}
+/* Additional utility classes for phases 3-7 */
+.note{border-left:4px solid var(--aa-blue);background:var(--soft);padding:12px 16px;margin:14px 0;font-size:14px;color:#32404d;line-height:1.6;}
+.note.warn{border-left-color:#b36b00;background:#fff8e1;}
+.note.danger{border-left-color:var(--aa-red);background:#fdf2f4;}
+.note.ok{border-left-color:#1b7a2b;background:#e8f5e9;}
+.note.info{border-left-color:var(--aa-blue);}
+.commit{background:var(--soft);border:1px solid var(--line);padding:14px 18px;margin:10px 0;}
+.commit-title{color:var(--aa-blue);font-weight:700;font-size:14px;font-family:"SFMono-Regular",Consolas,monospace;}
+.commit-body{color:#52606d;margin-top:6px;font-size:13.5px;line-height:1.55;}
+.cov-bar{background:#e5ebf1;border-radius:4px;height:8px;display:inline-block;width:80px;vertical-align:middle;margin-right:6px;}
+.cov-fill{height:8px;border-radius:4px;display:inline-block;}
+.strategy-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+.strategy-card{border:1px solid var(--line);background:#fff;padding:16px 18px;}
+.strategy-card h3{font-size:15px;color:var(--aa-blue);font-weight:700;margin-top:0;margin-bottom:8px;}
+.strategy-card ul{margin-top:6px;padding-left:20px;}
+.strategy-card li{font-size:14px;line-height:1.5;color:#32404d;}
+.delta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px;}
+.delta-card{border:1px solid var(--line);background:#fff;padding:14px;text-align:center;}
+.delta-card.improved{border-color:#1b7a2b;}
+.delta-card .before{font-size:13px;color:var(--aa-red);text-decoration:line-through;margin-bottom:4px;}
+.delta-card .after{font-size:32px;font-weight:850;color:#1b7a2b;line-height:1;}
+.delta-card .label{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:#52606d;margin-top:6px;}
+.delta-card .delta{font-size:12px;color:#1b7a2b;margin-top:4px;font-weight:700;}
+.cert-banner{border:2px solid #1b7a2b;background:#e8f5e9;padding:28px 32px;text-align:center;margin-bottom:24px;}
+.cert-banner .title{font-size:28px;font-weight:800;color:#1b7a2b;}
+.cert-banner .subtitle{font-size:14px;color:#52606d;margin-top:8px;}
+.cert-banner .project{font-size:18px;color:var(--aa-blue);margin-top:10px;font-weight:700;}
+.final-gate{border:2px solid var(--aa-blue);background:var(--soft);padding:20px 28px;margin-top:24px;}
+.final-gate .title{font-size:20px;font-weight:800;color:var(--aa-blue);}
+.final-gate .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;}
+.final-gate .item{text-align:center;}
+.final-gate .item .val{font-size:22px;font-weight:800;color:#1b7a2b;}
+.final-gate .item .lbl{font-size:11px;color:#52606d;text-transform:uppercase;letter-spacing:.5px;margin-top:4px;}
+.eng-ref,.law-chip{font-family:"SFMono-Regular",Consolas,monospace;font-size:12px;background:var(--soft-2);border:1px solid var(--line);border-radius:3px;padding:1px 5px;color:var(--aa-blue);}
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px;}
+.score-card{border:1px solid var(--line);background:#fff;padding:20px;text-align:center;}
+.score-card.ok{border-color:#1b7a2b;}
+.score-card .val{font-size:36px;font-weight:850;color:#1b7a2b;line-height:1;}
+.score-card .label{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:#52606d;margin-top:6px;}
+.score-card .threshold{font-size:12px;color:var(--aa-blue);margin-top:4px;}
+td.pass-cell{color:#1b7a2b;font-weight:700;}
+td.fail-cell{color:var(--aa-red);font-weight:700;}
+td.warn-cell{color:#b36b00;font-weight:700;}
+.row-green td:first-child{border-left:3px solid #1b7a2b;padding-left:9px;}
+.row-equiv{background:var(--soft);}
+</style>
+</head>
+<body>
+
+<div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#fef3c7;border-bottom:2px solid #f59e0b;padding:6px 16px;display:flex;align-items:center;gap:10px;font-family:sans-serif;font-size:0.8rem;color:#78350f;">
+  <span style="font-size:1rem;">&#9888;&#65039;</span>
+  <strong>AI-GENERATED DEMO REPO</strong> &mdash; This codebase (<code>aa-loyalty-legacy</code>) is entirely AI-generated for illustration purposes. It is <strong>not</strong> real AA production code and does not represent any AA system.
+</div>
+<div style="height:38px;"></div>
+
+
+<div class="page cover">
+  <div class="eyebrow">AA Loyalty Legacy Rescue · Change 2026-004</div>
+  <h1>Phase 5 — Refactor</h1>
+  <div class="meta" style="margin-top:40px;max-width:700px;">
+    <div class="meta-card"><div class="k">Coverage</div><div class="v">84.9% — Gate PASSING</div></div>
+    <div class="meta-card"><div class="k">Vulnerabilities</div><div class="v">0 — Security Rating A</div></div>
+    <div class="meta-card"><div class="k">Tests</div><div class="v">176/176 GREEN</div></div>
+    <div class="meta-card"><div class="k">Code Smells</div><div class="v">42 (&#x2193; from 45)</div></div>
+  </div>
+  <div class="chip-row" style="margin-top:32px;">
+    <span class="chip">&#x2705; HARD_BLOCK MET</span>
+    <span class="chip">&#x2705; GATE PASSING</span>
+    <span class="chip">blocker_violations = 0</span>
+    <span class="chip">Boy Scout Applied</span>
+  </div>
+  <div style="margin-top:28px;font-size:13px;color:var(--muted);">Hangar AI Constitution · Legacy Rescue Workflow · Phase 5</div>
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 5 — Refactor</div><div class="pn">1</div></div>
+</div>
+
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 5</span>
+    <span style="font-size:20px;font-weight:800;color:var(--aa-blue);">Phase 5 Gate — Hangar AI Constitution</span>
+  </div>
+
+  <div class="summary-band">
+    <div class="stat-card ok"><div class="n">84.9%</div><div class="l">Coverage<br><span style="font-size:11px;color:#1b7a2b;font-weight:700;">&#x2265; 80% &#x2705;</span></div></div>
+    <div class="stat-card ok"><div class="n">0</div><div class="l">Vulnerabilities<br><span style="font-size:11px;color:#1b7a2b;font-weight:700;">= 0 &#x2705;</span></div></div>
+    <div class="stat-card ok"><div class="n">A</div><div class="l">Security Rating<br><span style="font-size:11px;color:#1b7a2b;font-weight:700;">&#x2264; A &#x2705;</span></div></div>
+    <div class="stat-card ok"><div class="n">42</div><div class="l">Code Smells<br><span style="font-size:11px;color:#1b7a2b;font-weight:700;">&#x2193; from 45 &#x2705;</span></div></div>
+  </div>
+
+  <div class="gate-block ok" style="margin-top:20px;">
+    <div class="gate-label">HARD_BLOCK Gate Result</div>
+    <div class="gate-row">
+      <div class="gate-item">&#x2705; HARD_BLOCK MET — Phase 5 Gate PASSING</div>
+      <div class="gate-item">176/176 tests GREEN</div>
+      <div class="gate-item">blocker_violations = 0</div>
+      <div class="gate-item">code_smells reduced</div>
+      <div class="gate-item">Boy Scout applied</div>
+    </div>
+  </div>
+
+  <h2>God Class Extraction — MileageService</h2>
+  <table>
+    <thead><tr><th>Extracted Class</th><th>Responsibility</th><th>Methods Moved</th><th>Coverage</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>AccrualService</code> <span class="status-badge info">NEW</span></td>
+        <td>Flight mileage accrual, account management, eligibility</td>
+        <td>getOrCreateAccount, accrueFlightMiles, getAccountByMemberNumber, getTotalMiles, isEligibleForUpgrade, isEligibleForGoldStatus, getAllActiveAccounts</td>
+        <td class="pass-cell">100%</td>
+        <td><span class="status-badge pass">IN_SCOPE &#x2713;</span></td>
+      </tr>
+      <tr>
+        <td><code>MileageAdminService</code> <span class="status-badge info">NEW</span></td>
+        <td>Admin operations, JDBC reporting, miles expiry</td>
+        <td>adminAdjustMiles, expireMiles, getMileageSummaryReport (try-with-resources fix)</td>
+        <td class="pass-cell">100%</td>
+        <td><span class="status-badge pass">IN_SCOPE &#x2713;</span></td>
+      </tr>
+      <tr>
+        <td><code>MileageService</code> <span class="status-badge info">SLIMMED</span></td>
+        <td>Thin coordinator; delegates to extracted classes</td>
+        <td>Retained: redeemMiles (avoids circular dep with RedemptionService)</td>
+        <td class="pass-cell">100%</td>
+        <td><span class="status-badge pass">PASSING &#x2713;</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <span class="eng-ref">ENG-2.1</span> / <span class="eng-ref">ENG-3.1</span> — MileageServiceTest relabeled <code>// INTEGRATION-CHARACTERIZATION</code>. New unit tests at AccrualServiceTest (15) and MileageAdminServiceTest (8). Both extracted classes are IN_SCOPE immediately per Phase 5 Scope Extension Rule.
+  </div>
+
+  <h2>Bug Fixes Applied</h2>
+  <table>
+    <thead><tr><th>Bug</th><th>Location</th><th>Fix Applied</th><th>Test Updated</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Partner accrual misused flight accrual API</td>
+        <td><code>PartnerService.processPartnerAccrual</code></td>
+        <td>Now calls <code>mileageCalculator.calculatePartnerMiles()</code> for correct calculation</td>
+        <td><span class="status-badge pass">PartnerServiceTest &#x2713;</span></td>
+      </tr>
+      <tr>
+        <td>Miles not refunded on reservation cancellation</td>
+        <td><code>RedemptionService.cancelRedemption</code></td>
+        <td>Added <code>mileageService.redeemMiles(memberNumber, -milesCost, "CANCELLATION_REFUND", ...)</code> on cancel</td>
+        <td><span class="status-badge pass">RedemptionServiceTest &#x2713;</span></td>
+      </tr>
+      <tr>
+        <td>JDBC resource leak in getMileageSummaryReport</td>
+        <td><code>MileageAdminService</code></td>
+        <td>Refactored to try-with-resources (Connection, PreparedStatement, ResultSet)</td>
+        <td><span class="status-badge pass">MileageAdminServiceTest &#x2713;</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 5 — Refactor</div><div class="pn">2</div></div>
+</div>
+
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 5</span>
+    <span style="font-size:20px;font-weight:800;color:var(--aa-blue);">IN_SCOPE Class Coverage &amp; Test Summary</span>
+  </div>
+
+  <h2>IN_SCOPE Class Coverage</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Line Coverage</th><th>Status</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>AccrualService <span class="status-badge info">NEW</span></td><td class="pass-cell">100%</td><td><span class="status-badge pass">&#x2713;</span></td><td>Phase 5 extraction — immediately IN_SCOPE</td></tr>
+      <tr><td>MileageAdminService <span class="status-badge info">NEW</span></td><td class="pass-cell">100%</td><td><span class="status-badge pass">&#x2713;</span></td><td>Phase 5 extraction — immediately IN_SCOPE</td></tr>
+      <tr><td>MileageService</td><td class="pass-cell">100%</td><td><span class="status-badge pass">&#x2713;</span></td><td>Now thin coordinator; delegation verified</td></tr>
+      <tr><td>MileageCalculator</td><td class="pass-cell">97.3%</td><td><span class="status-badge pass">&#x2713;</span></td><td>Partner bonus paths (BA/IB, QF/CX) + 100K cap added</td></tr>
+      <tr><td>MileageAccount</td><td class="pass-cell">97.2%</td><td><span class="status-badge pass">&#x2713;</span></td><td></td></tr>
+      <tr><td>TierCalculator</td><td class="pass-cell">96.3%</td><td><span class="status-badge pass">&#x2713;</span></td><td></td></tr>
+      <tr><td>TierService</td><td class="pass-cell">100%</td><td><span class="status-badge pass">&#x2713;</span></td><td></td></tr>
+      <tr><td>MemberService</td><td class="pass-cell">100%</td><td><span class="status-badge pass">&#x2713;</span></td><td></td></tr>
+      <tr><td>PartnerService</td><td class="pass-cell">100%</td><td><span class="status-badge pass">&#x2713;</span></td><td>Bug fix test verified</td></tr>
+      <tr><td>NotificationService</td><td class="pass-cell">100%</td><td><span class="status-badge pass">&#x2713;</span></td><td></td></tr>
+      <tr><td>MemberController</td><td class="pass-cell">100%</td><td><span class="status-badge pass">&#x2713;</span></td><td></td></tr>
+      <tr><td>MileageController</td><td class="pass-cell">100%</td><td><span class="status-badge pass">&#x2713;</span></td><td></td></tr>
+      <tr><td>RedemptionService</td><td class="warn-cell">92.3%</td><td><span class="status-badge warn">KNOWN &#x26F1;</span></td><td>Lines 70-72, 77: hardcoded <code>/var/log/loyalty/</code> path — unreachable in unit test without PowerMock (legacy structural violation — characterization locked in Phase 3)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Test Summary</h2>
+  <table>
+    <thead><tr><th>Test Class</th><th>Tests</th><th>Type</th><th>Phase</th></tr></thead>
+    <tbody>
+      <tr><td>MileageCalculatorTest</td><td>42</td><td>Unit characterization</td><td>3 + 5 additions</td></tr>
+      <tr><td>MileageAccountTest</td><td>11</td><td>Unit characterization</td><td>3</td></tr>
+      <tr><td>TierCalculatorTest</td><td>26</td><td>Unit characterization</td><td>3</td></tr>
+      <tr><td>MileageServiceTest</td><td>14</td><td><span class="status-badge info">Integration-Characterization</span></td><td>5 (relabeled)</td></tr>
+      <tr><td>AccrualServiceTest</td><td>15</td><td>Unit characterization</td><td><span class="status-badge info">5 NEW</span></td></tr>
+      <tr><td>MileageAdminServiceTest</td><td>8</td><td>Unit characterization</td><td><span class="status-badge info">5 NEW</span></td></tr>
+      <tr><td>MemberServiceTest</td><td>11</td><td>Unit characterization</td><td>3</td></tr>
+      <tr><td>TierServiceTest</td><td>10</td><td>Unit characterization</td><td>3</td></tr>
+      <tr><td>RedemptionServiceTest</td><td>12</td><td>Unit characterization</td><td>3 + 5 update</td></tr>
+      <tr><td>PartnerServiceTest</td><td>5</td><td>Unit characterization</td><td>3 + 5 update</td></tr>
+      <tr><td>NotificationServiceTest</td><td>8</td><td>Unit characterization</td><td>3</td></tr>
+      <tr><td>MemberControllerTest</td><td>6</td><td>Unit (standalone MockMvc)</td><td>3</td></tr>
+      <tr><td>MileageControllerTest</td><td>8</td><td>Unit (standalone MockMvc)</td><td>3</td></tr>
+      <tr><td colspan="2"><strong>TOTAL: 176/176 GREEN &#x2705;</strong></td><td colspan="2"></td></tr>
+    </tbody>
+  </table>
+
+  <h2>ENG-12.1 — Human Gate Review Required</h2>
+  <p>Phase 5 (Refactor) gate artifacts are complete. The following must be reviewed and approved before Phase 6 (Certify) begins.</p>
+  <table style="margin-top:16px;">
+    <thead><tr><th>Criterion</th><th>Threshold</th><th>Actual</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Coverage</td><td>&#x2265; 80%</td><td>84.9%</td><td><span class="status-badge pass">PASS &#x2713;</span></td></tr>
+      <tr><td>Vulnerabilities</td><td>= 0</td><td>0</td><td><span class="status-badge pass">PASS &#x2713;</span></td></tr>
+      <tr><td>Security Rating</td><td>&#x2264; A</td><td>A (1.0)</td><td><span class="status-badge pass">PASS &#x2713;</span></td></tr>
+      <tr><td>Blocker Violations</td><td>= 0</td><td>0</td><td><span class="status-badge pass">PASS &#x2713;</span></td></tr>
+      <tr><td>Code Smells</td><td>Must not increase</td><td>42 (was 45)</td><td><span class="status-badge pass">IMPROVED &#x2713;</span></td></tr>
+      <tr><td>Test Count</td><td>&#x2265; Phase 3 baseline (162)</td><td>176</td><td><span class="status-badge pass">PASS &#x2713;</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    &#x2139;&#xFE0F; Awaiting human approval to proceed to <strong>Phase 6 — Certify</strong>. SonarQube dashboard: <a href="http://localhost:9000/dashboard?id=aa-loyalty-legacy" style="color:var(--aa-blue)">http://localhost:9000/dashboard?id=aa-loyalty-legacy</a>
+  </div>
+
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 5 — Refactor</div><div class="pn">3</div></div>
+</div>
+
+</body>
+</html>

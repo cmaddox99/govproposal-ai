@@ -1,0 +1,97 @@
+avatar:
+  id: avatar-product-customer-service
+  type: product
+  name: "Customer Service & Resolution"
+  version: "1.0.0"
+  created: "2026-03-31"
+  last_updated: "2026-03-31"
+
+domain:
+  category: "Customer Service & Complaint Resolution"
+  description: |
+    Systems handling passenger complaints, DOT-mandated refunds, denied boarding
+    compensation, IROP customer care, and customer service plan obligations.
+    14 CFR 259 customer service plan requires documented commitments to passengers.
+    CCPA governs complaint data for California residents. DOT Part 250 and 260
+    define non-negotiable timelines and compensation tiers.
+
+  personas:
+    - Customer Service Agent
+    - Customer Relations Manager
+    - DOT Compliance Officer
+    - Digital Self-Service User
+
+core_journeys:
+  - "Refund Request Processing"
+  - "Denied Boarding Compensation"
+  - "IROP Customer Care (rebooking, hotel, meals)"
+  - "Complaint Filing & Resolution"
+  - "Self-Service Rebooking"
+
+activates:
+  skills:
+    - skill-spec-governance
+    - skill-02-user-journey-mapping
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+    - skill-06-atomic-tdd
+    - skill-08-code-review
+    - skill-27-constitution-compliance
+
+  workflows:
+    - product-discovery-stage-a-f
+    - legacy-rescue-refactor
+
+specializes_laws:
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: "DOT 14 CFR Part 250 (denied boarding), Part 260 (refund rules), Part 259 (customer service plan obligations); CCPA complaint data for California residents; ADA compliance for disability services"
+  - id: BUS-2.2
+    title: "Control Framework"
+    description: "Refund SLA controls: 7 business days (credit card), 20 calendar days (cash/check/other). IDB compensation tiers: short delay ($775 max 200% fare), long delay ($1,550 max 400% fare). Automated trigger when thresholds exceed"
+  - id: BUS-2.4
+    title: "Evidence Collection"
+    description: "DOT complaint audit trail: ticket number, complaint category, resolution date, compensation amount, regulatory basis. Response within 30 days for written complaints (DOT requirement)"
+  - id: ENG-6.4
+    title: "PII & CCPA"
+    description: "California resident complaint data: right to know, right to delete, opt-out of sale. CCPA compliance required for all complaint management systems handling CA resident data"
+  - id: ENG-6.7
+    title: "Audit Trail"
+    description: "All compensation decisions, refund issuances, and DOT-regulated communications must be logged with: regulation cited, decision timestamp, agent ID, passenger confirmation"
+
+compliance_domains:
+  - standard: "DOT 14 CFR Part 250"
+    scope: "Denied boarding compensation"
+    key_rules:
+      - "IDB: 200% of one-way fare (up to $775) for delays <4h"
+      - "IDB: 400% of one-way fare (up to $1,550) for delays ≥4h"
+      - "VDB: voucher or cash at airline discretion"
+  - standard: "DOT 14 CFR Part 260"
+    scope: "Prompt refund obligations"
+    key_rules:
+      - "7 business days credit card refunds"
+      - "20 calendar days for other payment methods"
+  - standard: "DOT 14 CFR Part 259"
+    scope: "Customer service plan"
+    key_rules:
+      - "Notify passengers of delays >30 minutes within 30 minutes of airline awareness"
+      - "Provide status updates every 30 minutes during delay"
+  - standard: "CCPA"
+    scope: "California resident complaint and contact data"
+
+dependencies:
+  - "CRM Platform"
+  - "Refund Processing System"
+  - "DOT Complaint Management System"
+  - "Notification Service (SMS/Email)"
+  - "ADA Accommodation Management"
+
+tags:
+  - product
+  - customer-service
+  - dot-consumer-protection
+  - refunds
+  - denied-boarding
+  - ccpa
+  - ada

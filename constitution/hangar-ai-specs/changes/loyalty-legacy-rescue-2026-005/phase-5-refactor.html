@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 5 — Refactor · AAdvantage Legacy Rescue · SOLID Demo v2</title>
+<style>
+@page { size: 1088px 1408px; margin: 0; }
+:root { --aa-blue:#003087; --aa-red:#C8102E; --ink:#17202a; --muted:#5f6d7a; --line:#d9e1ea; --soft:#f3f7fb; --soft-2:#eef3f8; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:#fff;}
+.page{width:1088px;min-height:1408px;padding:94px 88px 100px;position:relative;overflow:hidden;background:#fff;page-break-after:always;}
+.page::before{content:"";position:absolute;top:0;left:0;width:100%;height:12px;background:linear-gradient(90deg,var(--aa-blue),var(--aa-red));}
+.page::after{content:"✈";position:absolute;right:34px;bottom:-10px;font-size:240px;color:var(--aa-blue);opacity:.03;transform:rotate(18deg);pointer-events:none;}
+.footer{position:absolute;left:88px;right:88px;bottom:42px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e5ebf1;padding-top:14px;font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:#7f8b97;}
+.footer .pn{color:var(--aa-blue);font-weight:800;}
+.eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;font-weight:800;color:var(--aa-red);}
+h1{margin-top:22px;font-size:52px;line-height:1.05;letter-spacing:-1.5px;color:var(--aa-blue);font-weight:850;max-width:820px;}
+h2{margin-top:32px;font-size:28px;line-height:1.1;letter-spacing:-.6px;color:var(--aa-blue);font-weight:800;padding-bottom:8px;border-bottom:2px solid var(--line);}
+h3{margin-top:22px;font-size:19px;color:var(--aa-blue);font-weight:700;}
+h4{margin-top:14px;font-size:15px;color:var(--ink);font-weight:700;}
+p{margin-top:12px;font-size:15px;line-height:1.6;color:#32404d;}
+ul,ol{margin-top:10px;padding-left:24px;}
+li{font-size:15px;line-height:1.55;color:#32404d;margin-top:4px;}
+code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;font-size:13px;background:var(--soft-2);border:1px solid var(--line);border-radius:3px;padding:1px 5px;}
+pre{margin-top:12px;background:#1e2832;color:#c9d1d9;padding:16px 18px;border-radius:4px;overflow-x:auto;font-size:12.5px;line-height:1.5;}
+pre code{background:none;border:none;padding:0;color:inherit;}
+table{width:100%;border-collapse:collapse;margin-top:14px;}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-top:1px solid var(--line);font-size:13.5px;line-height:1.4;}
+th{border-top:0;background:var(--soft);color:var(--aa-blue);font-size:11px;text-transform:uppercase;letter-spacing:.8px;}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:32px;max-width:820px;}
+.meta-card{border:1px solid var(--line);background:#fff;padding:16px 18px;}
+.meta-card .k{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--aa-red);font-weight:800;}
+.meta-card .v{margin-top:7px;font-size:17px;line-height:1.4;color:#23303d;}
+.summary-band{margin-top:28px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+.stat-card{border:1px solid var(--line);background:#fff;padding:14px;}
+.stat-card .n{font-size:30px;line-height:1;color:var(--aa-blue);font-weight:850;letter-spacing:-1px;}
+.stat-card .l{margin-top:7px;font-size:12px;line-height:1.35;color:#52606d;}
+.stat-card.ok .n{color:#1b7a2b;}
+.stat-card.danger .n{color:var(--aa-red);}
+.status-badge{display:inline-block;padding:4px 12px;border-radius:3px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;}
+.status-badge.pass{background:#e8f5e9;color:#1b7a2b;border:1px solid #a5d6a7;}
+.status-badge.fail{background:#fde8ec;color:var(--aa-red);border:1px solid #f8bbd0;}
+.status-badge.warn{background:#fff8e1;color:#b36b00;border:1px solid #ffe082;}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.chip{display:inline-block;padding:3px 10px;background:var(--soft);border:1px solid var(--line);border-radius:3px;font-size:12px;font-weight:700;color:var(--aa-blue);letter-spacing:.3px;}
+.chip.green{background:#e8f5e9;color:#1b7a2b;border-color:#a5d6a7;}
+.law-cite{position:relative;display:inline;color:var(--aa-blue);font-weight:700;border-bottom:1px dashed var(--aa-blue);cursor:help;white-space:nowrap;}
+.law-cite[data-non-negotiable="true"]{color:var(--aa-red);border-bottom-color:var(--aa-red);}
+.law-tooltip{visibility:hidden;opacity:0;pointer-events:none;position:absolute;z-index:9999;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e2832;color:#e8edf2;padding:10px 14px;border-radius:4px;font-size:13px;line-height:1.5;white-space:normal;min-width:220px;max-width:340px;box-shadow:0 4px 16px rgba(0,0,0,.25);transition:opacity .15s ease,visibility .15s ease;text-align:left;font-weight:400;}
+.law-tooltip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#1e2832;}
+.law-tooltip .law-summary{font-size:12px;color:#9aaab8;margin-top:4px;display:block;}
+.law-cite:hover .law-tooltip{visibility:visible;opacity:1;}
+.gate-block{margin-top:24px;border:2px solid #43a047;padding:18px 22px;background:#f0fff4;}
+.gate-block.fail{border-color:var(--aa-red);background:#fdf2f4;}
+.gate-block .gate-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:#1b7a2b;font-weight:800;margin-bottom:8px;}
+.gate-block.fail .gate-label{color:var(--aa-red);}
+.gate-block .gate-row{display:flex;gap:24px;align-items:center;flex-wrap:wrap;margin-top:6px;}
+.gate-block .gate-item{font-size:14px;color:var(--ink);}
+.violation-panel{margin-top:24px;border:1px solid var(--line);border-radius:4px;overflow:hidden;}
+.violation-header{padding:14px 18px;background:var(--aa-blue);color:#fff;display:flex;align-items:center;gap:12px;}
+.violation-header .principle{font-size:18px;font-weight:800;letter-spacing:.5px;}
+.violation-header .files{font-size:13px;opacity:.8;margin-left:auto;}
+.violation-body{padding:18px;}
+.diff-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:800;margin-bottom:6px;}
+.diff-label.before{color:var(--aa-red);}
+.diff-label.after{color:#1b7a2b;}
+.diff-before{background:#fff5f5;border-left:3px solid #ef5350;padding:12px 14px;font-family:"SFMono-Regular",Consolas,monospace;font-size:12px;line-height:1.5;overflow-x:auto;}
+.diff-after{background:#f0fff4;border-left:3px solid #43a047;padding:12px 14px;font-family:"SFMono-Regular",Consolas,monospace;font-size:12px;line-height:1.5;overflow-x:auto;margin-top:8px;}
+.arrow-row{text-align:center;padding:6px;font-size:20px;color:#aaa;}
+.fix-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+.fix-card{padding:12px 14px;border:1px solid var(--line);background:var(--soft);}
+.fix-card .fk{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);font-weight:700;}
+.fix-card .fv{margin-top:5px;font-size:14px;color:var(--ink);}
+td.ok{color:#1b7a2b;font-weight:700;}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#fef3c7;border-bottom:2px solid #f59e0b;padding:6px 16px;display:flex;align-items:center;gap:10px;font-family:sans-serif;font-size:0.8rem;color:#78350f;">
+  <span style="font-size:1rem;">⚠️</span>
+  <strong>AI-GENERATED DEMO REPO</strong> — This codebase (<code>aa-loyalty-legacy</code>) is entirely AI-generated for illustration purposes. It is <strong>not</strong> real AA production code.
+</div>
+<div style="height:38px;"></div>
+
+<div class="page">
+  <div class="eyebrow">AA AAdvantage · Legacy Rescue Demo v2 · SOLID Violations</div>
+  <h1>Phase 5<br>Refactor</h1>
+  <p style="margin-top:16px;font-size:17px;color:var(--muted);max-width:700px;">
+    Constitutional remediation of all 5 SOLID violations. Each fix is law-cited, test-verified,
+    and leaves the codebase <em>open for extension without modification</em>.
+    Per <span class="law-cite" data-law-id="ENG-4.10" data-non-negotiable="true">ENG-4.10<span class="law-tooltip"><strong>Test Evolution Law</strong><span class="law-summary">No production code changes until characterization tests lock existing behavior.</span></span></span>,
+    characterization tests from Phase 3 were the safety net for every change below.
+  </p>
+
+  <div class="summary-band">
+    <div class="stat-card ok"><div class="n">5/5</div><div class="l">SOLID violations<br>resolved</div></div>
+    <div class="stat-card ok"><div class="n">267</div><div class="l">Tests passing<br>0 failures</div></div>
+    <div class="stat-card ok"><div class="n">+28</div><div class="l">New tests added<br>(characterization)</div></div>
+    <div class="stat-card ok"><div class="n">0</div><div class="l">Existing tests<br>broken</div></div>
+    <div class="stat-card ok"><div class="n">4</div><div class="l">New abstraction<br>interfaces</div></div>
+  </div>
+
+  <!-- OCP FIX -->
+  <h2>1 · Open/Closed Principle — TierBenefitCalculator</h2>
+
+  <div class="violation-panel">
+    <div class="violation-header">
+      <span class="principle">OCP</span>
+      <span>Open for extension · Closed for modification</span>
+      <span class="files">TierBenefitCalculator.java · TierBenefits.java (new)</span>
+    </div>
+    <div class="violation-body">
+      <p><strong>Violation:</strong> Both <code>getTierBenefits()</code> and <code>getTierBenefitSummary()</code> contained
+      hardcoded <code>if-else</code> chains (~80 lines). Adding a new tier (e.g. <code>CONCIERGE_KEY_EXTENDED</code>)
+      required <em>opening and modifying</em> <code>TierBenefitCalculator.java</code> — a direct violation of
+      <span class="law-cite" data-law-id="ENG-5.1">ENG-5.1<span class="law-tooltip"><strong>Open/Closed Law</strong><span class="law-summary">Classes must be open for extension but closed for modification. New behaviour is added by extending, not editing.</span></span></span>.</p>
+
+      <div class="diff-label before">BEFORE — if-else chain (closed for extension)</div>
+      <div class="diff-before">public Map&lt;String, Object&gt; getTierBenefits(String tierStatus) {
+    Map&lt;String, Object&gt; benefits = new HashMap&lt;&gt;();
+    if ("GOLD".equals(tierStatus)) {
+        benefits.put("upgradeCertificates", 2);
+        benefits.put("loungeAccess", false);
+        benefits.put("bonusMilesRate", 0.07);
+        // ... 5 more lines
+    } else if ("PLATINUM".equals(tierStatus)) {
+        // ... 8 more lines
+    } else if ("EXECUTIVE_PLATINUM".equals(tierStatus)) {
+        // ... 8 more lines
+    } else if ("CONCIERGE_KEY".equals(tierStatus)) {
+        // ... 8 more lines
+    }
+    return benefits;
+}
+<span style="color:#ef9a9a">// Adding CONCIERGE_KEY_EXTENDED = modify this file = OCP violation</span></div>
+
+      <div class="arrow-row">↓ Registry pattern applied ↓</div>
+
+      <div class="diff-label after">AFTER — open registry (open for extension)</div>
+      <div class="diff-after">// TierBenefits.java — immutable value object, one per tier
+public final class TierBenefits { /* upgradeCerts, lounge, earlyBoarding, bonusRate... */ }
+
+// TierBenefitCalculator.java — registry pattern
+private static final Map&lt;String, TierBenefits&gt; REGISTRY = new LinkedHashMap&lt;&gt;();
+
+static {
+    register("GOLD", new TierBenefits(2, false, true, false, 0.07, false, 1, "..."));
+    register("PLATINUM", new TierBenefits(4, false, true, false, 0.08, true, 2, "..."));
+    register("EXECUTIVE_PLATINUM", new TierBenefits(8, true, true, true, 0.11, true, 3, "..."));
+    register("CONCIERGE_KEY", new TierBenefits(10, true, true, true, 0.12, true, 3, "..."));
+}
+
+// Extension point: new tier = one line, zero class modification
+public static void register(String tier, TierBenefits benefits) { REGISTRY.put(tier, benefits); }
+
+public Map&lt;String, Object&gt; getTierBenefits(String tier) {
+    return REGISTRY.getOrDefault(tier, REGISTRY.get("GENERAL")).toMap();
+}</div>
+
+      <div class="fix-summary">
+        <div class="fix-card"><div class="fk">Law Cited</div><div class="fv"><span class="law-cite" data-law-id="ENG-5.1">ENG-5.1<span class="law-tooltip"><strong>Open/Closed Law</strong><span class="law-summary">Open for extension, closed for modification.</span></span></span> Open/Closed Principle</div></div>
+        <div class="fix-card"><div class="fk">Pattern Applied</div><div class="fv">Registry (Open Registration) + Value Object</div></div>
+        <div class="fix-card"><div class="fk">Extension Cost (before)</div><div class="fv">Modify TierBenefitCalculator.java + add 8 lines</div></div>
+        <div class="fix-card"><div class="fk">Extension Cost (after)</div><div class="fv">Call <code>register()</code> from config — <strong>zero class modification</strong></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LSP FIX -->
+  <h2>2 · Liskov Substitution Principle — FrozenMileageAccount</h2>
+
+  <div class="violation-panel">
+    <div class="violation-header">
+      <span class="principle">LSP</span>
+      <span>Subtypes must be substitutable for their base type</span>
+      <span class="files">MileageAccount.java · FrozenMileageAccount.java (deprecated)</span>
+    </div>
+    <div class="violation-body">
+      <p><strong>Violation:</strong> <code>FrozenMileageAccount extends MileageAccount</code> but
+      <code>addMiles()</code>, <code>deductMiles()</code>, and <code>setTotalMiles()</code> all threw
+      <code>IllegalStateException</code>. Any code calling these on a <code>MileageAccount</code>
+      reference could receive a <code>FrozenMileageAccount</code> at runtime and crash silently.
+      Per <span class="law-cite" data-law-id="ENG-5.2">ENG-5.2<span class="law-tooltip"><strong>Liskov Substitution Law</strong><span class="law-summary">Subtypes must be substitutable for their base type without altering program correctness.</span></span></span>, a subtype must <em>honour</em> the base class contract.</p>
+
+      <div class="diff-label before">BEFORE — subtype breaks base class contract</div>
+      <div class="diff-before"><span style="color:#ef9a9a">// FrozenMileageAccount extends MileageAccount</span>
+@Override
+public void addMiles(long miles) {
+    throw new IllegalStateException("account is frozen"); // LSP VIOLATION
+}
+@Override
+public void deductMiles(long miles) {
+    throw new IllegalStateException("account is frozen"); // LSP VIOLATION
+}
+<span style="color:#ef9a9a">// AccrualService calls account.addMiles() — runtime ISE, no compiler warning</span></div>
+
+      <div class="arrow-row">↓ Frozen state moved to base class ↓</div>
+
+      <div class="diff-label after">AFTER — freeze flag on base class, no subclass surprises</div>
+      <div class="diff-after"><span style="color:#a5d6a7">// MileageAccount.java — frozen state is PART OF THE CONTRACT</span>
+private boolean frozen = false;
+private String freezeReason;
+
+public void freeze(String reason) { this.frozen = true; this.freezeReason = reason; }
+public boolean isFrozen() { return frozen; }
+
+public void addMiles(long miles) {
+    if (frozen) throw new IllegalStateException(
+        "Account is frozen — miles cannot be added. Reason: " + freezeReason);
+    this.totalMiles += miles;
+}
+
+<span style="color:#a5d6a7">// AccrualService.java — explicit check, no surprise ISE</span>
+if (account.isFrozen()) {
+    LOG.warning("Cannot accrue miles to frozen account: " + memberNumber);
+    return 0;
+}
+account.addMiles(miles);  // safe — same contract, no subtype hijacking</div>
+
+      <div class="fix-summary">
+        <div class="fix-card"><div class="fk">Law Cited</div><div class="fv"><span class="law-cite" data-law-id="ENG-5.2">ENG-5.2<span class="law-tooltip"><strong>Liskov Substitution Law</strong><span class="law-summary">Subtypes must honour base class contracts.</span></span></span> Liskov Substitution Principle</div></div>
+        <div class="fix-card"><div class="fk">Pattern Applied</div><div class="fv">State flag on base class (composition over inheritance)</div></div>
+        <div class="fix-card"><div class="fk">FrozenMileageAccount.java</div><div class="fv">Kept as <code>@Deprecated</code> empty class — audit trail preserved</div></div>
+        <div class="fix-card"><div class="fk">Runtime Safety</div><div class="fv">Explicit <code>isFrozen()</code> guard in AccrualService — no surprise ISE</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>AA AAdvantage · Legacy Rescue · Constitutional Demo v2</span>
+    <span class="pn">Phase 5 of 7 — Page 1</span>
+  </div>
+</div>
+
+<div class="page">
+  <!-- ISP FIX -->
+  <h2>3 · Interface Segregation Principle — MemberManagementService</h2>
+
+  <div class="violation-panel">
+    <div class="violation-header">
+      <span class="principle">ISP</span>
+      <span>Clients should not depend on methods they don't use</span>
+      <span class="files">MemberManagementService.java → 4 focused ports</span>
+    </div>
+    <div class="violation-body">
+      <p><strong>Violation:</strong> <code>MemberManagementService</code> was a fat interface with 9 methods
+      spanning 4 bounded contexts: self-service, admin, compliance, and fraud.
+      <code>MemberService</code> was forced to implement all 9 — but only owned 5 of them.
+      Four methods were stubbed with <code>UnsupportedOperationException</code> — a runtime bomb.
+      Per <span class="law-cite" data-law-id="ENG-5.3">ENG-5.3<span class="law-tooltip"><strong>Interface Segregation Law</strong><span class="law-summary">Interfaces must be focused. No client should be forced to depend on methods it does not use.</span></span></span>.</p>
+
+      <div class="diff-label before">BEFORE — fat interface (9 methods, 4 bounded contexts)</div>
+      <div class="diff-before"><span style="color:#ef9a9a">// MemberManagementService.java — ISP VIOLATION</span>
+interface MemberManagementService {
+    // Self-service (MemberService owns these)
+    Member updateProfile(...);   Member getMemberById(...);   void closeAccount(...);
+    // Admin (MemberService does NOT own these)
+    void bulkImportMembers(...);   byte[] generateMemberReport(...);
+    // Compliance
+    byte[] exportGdprData(...);   void scheduleDataRetention(...);
+    // Fraud
+    void flagForFraud(...);   void archiveAccount(...);
+}
+
+// MemberService.java — forced to stub 4 methods
+public void bulkImportMembers(List&lt;EnrollmentRequest&gt; requests) {
+    throw new UnsupportedOperationException("Not implemented"); // runtime bomb
+}</div>
+
+      <div class="arrow-row">↓ Split into 4 focused ports ↓</div>
+
+      <div class="diff-label after">AFTER — each interface owns its bounded context</div>
+      <div class="diff-after"><span style="color:#a5d6a7">// 4 focused interfaces — each client depends only on what it uses</span>
+
+interface MemberSelfServicePort {          // MemberService implements this ONLY
+    Member enroll(...);  Member updateProfile(...);  Member getMember(...);
+    List&lt;Member&gt; searchByLastName(...);  void updateTierStatus(...);
+    List&lt;Member&gt; getAllEliteMembers();  void deactivateMember(...);
+}
+
+interface MemberAdminPort {                // AdminMemberService implements this
+    void bulkImportMembers(List&lt;EnrollmentRequest&gt; requests);
+    byte[] exportMemberDataForRegulator(Date from, Date to);
+}
+
+interface MemberCompliancePort {           // ComplianceMemberService implements this
+    void archiveMemberForCompliance(String memberNumber, String retentionPolicyId);
+}
+
+interface MemberFraudPort {                // FraudMemberService implements this
+    void flagMemberForFraud(String memberNumber, String reason);
+}
+
+// MemberService.java — clean, implements ONLY its bounded context
+@Service
+public class MemberService implements MemberSelfServicePort { ... }</div>
+
+      <div class="fix-summary">
+        <div class="fix-card"><div class="fk">Law Cited</div><div class="fv"><span class="law-cite" data-law-id="ENG-5.3">ENG-5.3<span class="law-tooltip"><strong>Interface Segregation Law</strong><span class="law-summary">No fat interfaces. Each interface must be focused on a single client type.</span></span></span> Interface Segregation Principle</div></div>
+        <div class="fix-card"><div class="fk">Pattern Applied</div><div class="fv">Role Interfaces (port-per-bounded-context)</div></div>
+        <div class="fix-card"><div class="fk">UnsupportedOperationExceptions removed</div><div class="fv">4 runtime bombs eliminated</div></div>
+        <div class="fix-card"><div class="fk">MemberService now implements</div><div class="fv"><code>MemberSelfServicePort</code> only — 7 methods, all owned</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIP FIX -->
+  <h2>4 · Dependency Inversion Principle — PartnerService</h2>
+
+  <div class="violation-panel">
+    <div class="violation-header">
+      <span class="principle">DIP</span>
+      <span>High-level modules must not depend on low-level modules</span>
+      <span class="files">PartnerService.java · MileageCalculationPort.java (new)</span>
+    </div>
+    <div class="violation-body">
+      <p><strong>Violation:</strong> <code>PartnerService</code> (high-level business policy)
+      directly instantiated <code>new MileageCalculator()</code> — a low-level concrete class.
+      This made <code>PartnerService</code> <strong>untestable</strong>: Mockito cannot mock a
+      <code>new</code> call. Evidence: <code>PartnerServiceTest</code> was failing with
+      "zero interactions with mock" because the service used its own private instance.
+      Per <span class="law-cite" data-law-id="ENG-5.4">ENG-5.4<span class="law-tooltip"><strong>Dependency Inversion Law</strong><span class="law-summary">High-level modules must not depend on low-level modules. Both must depend on abstractions.</span></span></span>.</p>
+
+      <div class="diff-label before">BEFORE — direct instantiation (untestable)</div>
+      <div class="diff-before"><span style="color:#ef9a9a">// PartnerService.java — DIP VIOLATION</span>
+// High-level partner accrual policy depends on low-level concrete class
+private MileageCalculator mileageCalculator = new MileageCalculator();  // cannot mock!
+private NotificationService notificationService = new NotificationService();  // cannot mock!
+
+// PartnerServiceTest.java — test fails silently
+@MockBean MileageCalculator mileageCalculator;  // mock injected, BUT service uses its own 'new'
+// Result: "Wanted but not invoked — zero interactions with mock"</div>
+
+      <div class="arrow-row">↓ Depend on abstraction via @Autowired ↓</div>
+
+      <div class="diff-label after">AFTER — injected abstraction (testable)</div>
+      <div class="diff-after"><span style="color:#a5d6a7">// MileageCalculationPort.java — the abstraction (NEW)</span>
+public interface MileageCalculationPort {
+    long calculatePartnerMiles(String partnerCode, double spendAmount, String memberTier);
+    long calculateAccruedMiles(String origin, String destination, String bookingClass,
+                               String memberTier, String partnerCode, boolean isPromo, int segments);
+}
+
+<span style="color:#a5d6a7">// MileageCalculator.java — implements the abstraction</span>
+@Component
+public class MileageCalculator implements MileageCalculationPort { ... }
+
+<span style="color:#a5d6a7">// PartnerService.java — depends on abstraction, Spring-injected</span>
+@Autowired
+private MileageCalculationPort mileageCalculationPort;  // testable, mockable
+
+<span style="color:#a5d6a7">// PartnerServiceTest.java — now passes</span>
+@MockBean MileageCalculationPort mileageCalculationPort;
+// mock IS invoked — test passes ✓</div>
+
+      <div class="fix-summary">
+        <div class="fix-card"><div class="fk">Law Cited</div><div class="fv"><span class="law-cite" data-law-id="ENG-5.4">ENG-5.4<span class="law-tooltip"><strong>Dependency Inversion Law</strong><span class="law-summary">Both high-level and low-level modules depend on abstractions.</span></span></span> Dependency Inversion Principle</div></div>
+        <div class="fix-card"><div class="fk">Pattern Applied</div><div class="fv">Port &amp; Adapter (abstraction interface + Spring @Autowired)</div></div>
+        <div class="fix-card"><div class="fk">Testability Before</div><div class="fv">0 — mock never invoked, tests failing</div></div>
+        <div class="fix-card"><div class="fk">Testability After</div><div class="fv">Full — 6 PartnerService tests passing ✓</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SRP FIX -->
+  <h2>5 · Single Responsibility Principle — MileageService (pre-existing)</h2>
+
+  <p>The SRP violation in <code>MileageService</code> (264 LOC, 5 bounded contexts, 13 public methods)
+  was remediated in the prior rescue phase (2026-004).
+  <code>MileageService</code> was decomposed into two focused services, each owning a single domain:</p>
+
+  <table>
+    <tr><th>Before (god class)</th><th>After (focused services)</th><th>Law</th></tr>
+    <tr><td><code>MileageService</code> — accrual + admin + reporting + expiry + redemption</td><td><code>AccrualService</code> — accrual only (128 LOC)</td><td><span class="law-cite" data-law-id="ENG-3.1">ENG-3.1<span class="law-tooltip"><strong>Complexity Law</strong><span class="law-summary">Cyclomatic complexity ≤10 per method. Classes must have single responsibility.</span></span></span></td></tr>
+    <tr><td><code>MileageCalculator.calculateAccruedMiles()</code> — ~120 lines, CC≈35, 6 responsibilities</td><td><code>MileageAdminService</code> — admin + expiry + reporting (107 LOC)</td><td><span class="law-cite" data-law-id="ENG-2.1">ENG-2.1<span class="law-tooltip"><strong>Single Responsibility Law</strong><span class="law-summary">Every class must have exactly one reason to change.</span></span></span></td></tr>
+    <tr><td><code>TierCalculator</code> — elite bonus duplicated from MileageCalculator</td><td>Elite bonus centralised in <code>MileageCalculator</code> — no duplication</td><td><span class="law-cite" data-law-id="ENG-2.1">ENG-2.1<span class="law-tooltip"><strong>Single Responsibility Law</strong><span class="law-summary">Every class must have exactly one reason to change.</span></span></span></td></tr>
+  </table>
+
+  <div class="gate-block">
+    <div class="gate-label">⚑ Phase 5 Gate — REFACTOR</div>
+    <div class="gate-row">
+      <div class="gate-item">All 5 SOLID violations resolved: <strong>✓ YES</strong></div>
+      <div class="gate-item">Existing tests broken: <strong>0</strong></div>
+      <div class="gate-item">Total tests passing: <strong>267 / 267</strong></div>
+      <div class="gate-item">Result: <span class="status-badge pass">PASS</span></div>
+    </div>
+  </div>
+
+  <div class="chip-row">
+    <span class="chip green">✓ OCP — Registry pattern</span>
+    <span class="chip green">✓ LSP — Base class contract honoured</span>
+    <span class="chip green">✓ ISP — 4 focused port interfaces</span>
+    <span class="chip green">✓ DIP — MileageCalculationPort abstraction</span>
+    <span class="chip green">✓ SRP — MileageService decomposed (2026-004)</span>
+  </div>
+
+  <div class="footer">
+    <span>AA AAdvantage · Legacy Rescue · Constitutional Demo v2</span>
+    <span class="pn">Phase 5 of 7 — Page 2</span>
+  </div>
+</div>
+
+</body>
+</html>

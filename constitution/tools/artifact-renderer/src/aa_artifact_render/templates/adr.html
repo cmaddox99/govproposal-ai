@@ -1,0 +1,40 @@
+{% extends "_base.html" %}
+{% block title %}{{ frontmatter.get('adr_number', 'ADR') }}: {{ frontmatter.get('title', 'Architecture Decision Record') }}{% endblock %}
+{% block body %}
+{% set adr_num = frontmatter.get('adr_number', 'ADR') %}
+{% set title = frontmatter.get('title', 'Architecture Decision Record') %}
+{% set status = frontmatter.get('status', 'PROPOSED') | lower %}
+{% set date = frontmatter.get('date', '') %}
+{% set deciders = frontmatter.get('deciders', []) %}
+{% set laws_applied = frontmatter.get('laws_applied', []) %}
+
+<div class="page cover">
+  <div class="eyebrow">Hangar AI Constitution — Architecture Decision Record</div>
+  <div class="adr-header">
+    <div class="adr-num">{{ adr_num }}</div>
+    <h1>{{ title }}</h1>
+    <div class="adr-meta">
+      <span class="status-badge {{ status }}">{{ status | upper }}</span>
+      {% if date %}<div class="adr-meta-item"><strong>Date:</strong> {{ date }}</div>{% endif %}
+      {% if deciders %}<div class="adr-meta-item"><strong>Deciders:</strong> {{ deciders | join(', ') }}</div>{% endif %}
+    </div>
+  </div>
+  {% if laws_applied %}
+  <div class="chip-row">
+    {% for law in laws_applied %}<span class="chip">{{ law }}</span>{% endfor %}
+  </div>
+  {% endif %}
+  <div class="footer">
+    <div>{{ adr_num }}: {{ title }}</div>
+    <div class="pn">1</div>
+  </div>
+</div>
+
+<div class="page content">
+  {{ body | safe }}
+  <div class="footer">
+    <div>{{ adr_num }}: {{ title }}</div>
+    <div class="pn">2</div>
+  </div>
+</div>
+{% endblock %}

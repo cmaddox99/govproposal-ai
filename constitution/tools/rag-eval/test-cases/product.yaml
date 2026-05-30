@@ -1,0 +1,155 @@
+test_cases:
+
+  # --- Problem-First (PRD-1.2) ---
+
+  - id: tc-prd-001
+    question: "How do I justify this feature to leadership?"
+    expected_laws: [PRD-1.2]
+    expected_skills: [product-discovery-orchestration.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-002
+    question: "What problem does this feature actually solve for users?"
+    expected_laws: [PRD-1.2]
+    expected_skills: [product-discovery-orchestration.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-003
+    question: "We want to build a feature but haven't identified the user problem yet"
+    expected_laws: [PRD-1.2]
+    expected_skills: [product-discovery-orchestration.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-004
+    question: "How do I validate that the problem we are solving is real?"
+    expected_laws: [PRD-1.2]
+    expected_skills: [product-discovery-orchestration.md]
+    expected_avatars: []
+    category: product
+
+  # --- Evidence-Based (PRD-1.5) ---
+
+  - id: tc-prd-005
+    question: "What evidence do I need before making a product decision?"
+    expected_laws: [PRD-1.5]
+    expected_skills: [product-discovery-orchestration.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-006
+    question: "We are making this decision based on gut feel — is that okay?"
+    expected_laws: [PRD-1.5]
+    expected_skills: [product-discovery-orchestration.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-007
+    question: "How do I validate an assumption before we commit to building?"
+    expected_laws: [PRD-1.5]
+    expected_skills: [product-discovery-orchestration.md]
+    expected_avatars: []
+    category: product
+
+  # --- Discovery Stage-Gate (PRD-2.5) ---
+
+  - id: tc-prd-008
+    question: "What are the stage gate criteria to move from discovery to design?"
+    expected_laws: [PRD-2.5]
+    expected_skills: [product-discovery-orchestration.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-009
+    question: "Can we skip the discovery stage and go straight to development?"
+    expected_laws: [PRD-2.5]
+    expected_skills: [product-discovery-orchestration.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-010
+    question: "What evidence must I file before moving to the next discovery stage?"
+    expected_laws: [PRD-2.5]
+    expected_skills: [product-discovery-orchestration.md]
+    expected_avatars: []
+    category: product
+
+  # --- MVP (PRD-5.1) ---
+
+  - id: tc-prd-011
+    question: "How do I define an MVP for this new booking feature?"
+    expected_laws: [PRD-5.1]
+    expected_skills: [01-roadmapping.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-012
+    question: "What is the smallest thing we can build to test our riskiest assumption?"
+    expected_laws: [PRD-5.1]
+    expected_skills: [01-roadmapping.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-013
+    question: "What is the minimum viable feature we need to ship?"
+    expected_laws: [PRD-5.1]
+    expected_skills: [01-roadmapping.md]
+    expected_avatars: []
+    category: product
+
+  # --- Retention Over Acquisition (PRD-6.2) ---
+
+  - id: tc-prd-014
+    question: "We are losing customers after onboarding — what should we focus on first?"
+    expected_laws: [PRD-6.2]
+    expected_skills: [01-roadmapping.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-015
+    question: "Should we invest in acquisition or reduce churn first?"
+    expected_laws: [PRD-6.2]
+    expected_skills: [01-roadmapping.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-016
+    question: "How do I measure and improve retention metrics for AAdvantage?"
+    expected_laws: [PRD-6.2]
+    expected_skills: [01-roadmapping.md]
+    expected_avatars: []
+    category: product
+
+  # --- User Journey Mapping (PRD-3.1) ---
+
+  - id: tc-prd-017
+    question: "How do I create a user journey map for the check-in flow?"
+    expected_laws: [PRD-3.1]
+    expected_skills: [02-user-journey-mapping.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-018
+    question: "What touchpoints should I capture when mapping the customer journey?"
+    expected_laws: [PRD-3.1]
+    expected_skills: [02-user-journey-mapping.md]
+    expected_avatars: []
+    category: product
+
+  # --- Outcome-Based Roadmap (PRD-4.1) ---
+
+  - id: tc-prd-019
+    question: "How do I build a now next later roadmap?"
+    expected_laws: [PRD-4.1]
+    expected_skills: [01-roadmapping.md]
+    expected_avatars: []
+    category: product
+
+  - id: tc-prd-020
+    question: "How do I create an outcome-based roadmap instead of a feature list?"
+    expected_laws: [PRD-4.1]
+    expected_skills: [01-roadmapping.md]
+    expected_avatars: []
+    category: product

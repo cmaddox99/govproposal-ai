@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artifact — Hangar AI Constitution</title>
+<style>
+/* ── AA Constitutional Design System ── */
+@page { size: 1088px 1408px; margin: 0; }
+
+:root {
+  --aa-blue: #003087;
+  --aa-red:  #C8102E;
+  --ink:     #17202a;
+  --muted:   #5f6d7a;
+  --line:    #d9e1ea;
+  --soft:    #f3f7fb;
+  --soft-2:  #eef3f8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* ── Page layout ── */
+.page {
+  width: 1088px;
+  min-height: 1408px;
+  padding: 94px 88px 100px;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  page-break-after: always;
+}
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 12px;
+  background: linear-gradient(90deg, var(--aa-blue), var(--aa-red));
+}
+.page::after {
+  content: "✈";
+  position: absolute;
+  right: 34px; bottom: -10px;
+  font-size: 240px;
+  color: var(--aa-blue);
+  opacity: .03;
+  transform: rotate(18deg);
+  pointer-events: none;
+}
+.page.cover {
+  background:
+    radial-gradient(circle at 85% 16%, rgba(0,48,135,.08), transparent 22%),
+    linear-gradient(180deg, #fbfcfe 0%, #f1f6fa 100%);
+}
+.footer {
+  position: absolute;
+  left: 88px; right: 88px; bottom: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5ebf1;
+  padding-top: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #7f8b97;
+}
+.footer .pn { color: var(--aa-blue); font-weight: 800; }
+
+/* ── Typography ── */
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--aa-red);
+}
+h1 {
+  margin-top: 22px;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--aa-blue);
+  font-weight: 850;
+  max-width: 820px;
+}
+h2 {
+  margin-top: 32px;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -.6px;
+  color: var(--aa-blue);
+  font-weight: 800;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+h3 { margin-top: 20px; font-size: 19px; color: var(--aa-blue); font-weight: 700; }
+h4 { margin-top: 16px; font-size: 16px; color: var(--ink); font-weight: 700; }
+p  { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #32404d; }
+ul, ol { margin-top: 10px; padding-left: 24px; }
+li { font-size: 15px; line-height: 1.55; color: #32404d; margin-top: 4px; }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  background: var(--soft-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+pre {
+  margin-top: 14px;
+  background: #1e2832;
+  color: #c9d1d9;
+  padding: 16px 18px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.4; }
+th { border-top: 0; background: var(--soft); color: var(--aa-blue); font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+blockquote { border-left: 4px solid var(--aa-blue); margin-top: 14px; padding: 10px 16px; background: var(--soft); color: var(--muted); font-size: 14px; }
+
+/* ── Meta / stat cards ── */
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; max-width: 820px; }
+.meta-card { border: 1px solid var(--line); background: #fff; padding: 16px 18px; }
+.meta-card .k { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: var(--aa-red); font-weight: 800; }
+.meta-card .v { margin-top: 7px; font-size: 17px; line-height: 1.4; color: #23303d; }
+.summary-band { margin-top: 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card { border: 1px solid var(--line); background: #fff; padding: 14px; }
+.stat-card .n { font-size: 34px; line-height: 1; color: var(--aa-blue); font-weight: 850; letter-spacing: -1px; }
+.stat-card .l { margin-top: 7px; font-size: 13px; line-height: 1.35; color: #52606d; }
+
+/* ── Status badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.status-badge.proposed  { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.implemented { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.archived  { background: var(--soft-2); color: var(--muted); border: 1px solid var(--line); }
+.status-badge.accepted  { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.deprecated { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.high   { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.medium { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.low    { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+
+/* ── Chip row ── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--aa-blue);
+  letter-spacing: .3px;
+}
+
+/* ── ADR header ── */
+.adr-header {
+  border: 2px solid var(--aa-blue);
+  padding: 20px 24px;
+  margin-top: 24px;
+  background: var(--soft);
+}
+.adr-header .adr-num { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); font-weight: 700; }
+.adr-header h1 { margin-top: 8px; font-size: 32px; }
+.adr-header .adr-meta { display: flex; gap: 20px; margin-top: 14px; align-items: center; flex-wrap: wrap; }
+.adr-header .adr-meta-item { font-size: 13px; color: var(--muted); }
+.adr-header .adr-meta-item strong { color: var(--ink); }
+
+/* ── Confidence band ── */
+.confidence-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-left: 6px solid var(--aa-blue);
+  background: var(--soft);
+  margin-top: 24px;
+}
+.confidence-band .cb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.confidence-band.high  { border-left-color: #1b7a2b; }
+.confidence-band.medium { border-left-color: #b36b00; }
+.confidence-band.low   { border-left-color: var(--aa-red); }
+
+/* ── Tasks / checklist ── */
+.task-done, .task-pending {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 5px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.task-done .cb   { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; background: #1b7a2b; border: 2px solid #1b7a2b; display: flex; align-items: center; justify-content: center; }
+.task-done .cb::after { content: "✓"; color: #fff; font-size: 11px; font-weight: 900; }
+.task-pending .cb { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; border: 2px solid var(--aa-blue); }
+.task-done .task-text   { color: #52606d; text-decoration: line-through; }
+.task-pending .task-text { color: #32404d; }
+.phase-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+.phase-num {
+  background: var(--aa-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+.progress-table { margin-top: 20px; }
+
+/* ── Law citation tooltips (Task 4.4) ── */
+.law-cite {
+  position: relative;
+  display: inline;
+  color: var(--aa-blue);
+  font-weight: 700;
+  border-bottom: 1px dashed var(--aa-blue);
+  cursor: help;
+  white-space: nowrap;
+}
+.law-cite[data-non-negotiable="true"] {
+  color: var(--aa-red);
+  border-bottom-color: var(--aa-red);
+}
+.law-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 9999;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2832;
+  color: #e8edf2;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: normal;
+  min-width: 220px;
+  max-width: 340px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: opacity .15s ease, visibility .15s ease;
+  text-align: left;
+  font-weight: 400;
+}
+.law-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e2832;
+}
+.law-tooltip .law-summary { font-size: 12px; color: #9aaab8; margin-top: 4px; display: block; }
+.law-tooltip em { color: #f0a500; font-style: normal; font-size: 11px; font-weight: 700; }
+.law-cite:hover .law-tooltip,
+.law-cite:focus .law-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+/* Flip tooltip below when near top of viewport */
+.law-cite.flip-below .law-tooltip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.law-cite.flip-below .law-tooltip::after {
+  top: auto; bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1e2832;
+}
+
+@media print {
+  .law-tooltip { display: none; }
+  .law-cite { border-bottom: none; color: inherit; font-weight: inherit; }
+}
+</style>
+</head>
+<body>
+
+
+<div class="page cover">
+  <div class="eyebrow">Hangar AI Constitution</div>
+  <h1>Governance Artifact</h1>
+  <div class="footer"><div>Governance Artifact</div><div class="pn">1</div></div>
+</div>
+<div class="page content">
+  <h1>Proposal: C++ Technology Avatar Enrichment — Add Missing C++ Avatar with Non-Negotiable Law Coverage</h1>
+<p><strong>Proposal ID:</strong> c-plus-plus-avatar-enrichment<br />
+<strong>Submitted:</strong> April 5, 2026<br />
+<strong>Status:</strong> DRAFT — Proposal complete, Q1-Q9 resolved; SDD execution artifacts created</p>
+<h2>Laws Cited (<span class="law-cite" data-law-id="ENG-11.2" data-non-negotiable="false">ENG-11.2<span class="law-tooltip"><strong>Proposal Completeness Law</strong></span></span> Compliance)</h2>
+<p>Per <a href="laws/engineering/eng-11-hangar-sdd.md"><span class="law-cite" data-law-id="ENG-11.2" data-non-negotiable="false">ENG-11.2<span class="law-tooltip"><strong>Proposal Completeness Law</strong></span></span>: Proposal Completeness</a>, every proposal must cite at least one law. This proposal is governed by and implements the following laws:</p>
+<p>| Law ID | Title | Relevance |
+|--------|-------|-----------|
+| <a href="laws/engineering/eng-11-hangar-sdd.md"><span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> | Hangar SDD Law (Non-Negotiable) | Governs proposal lifecycle: PROPOSE → IMPLEMENT → ARCHIVE |
+| <a href="laws/engineering/eng-11-hangar-sdd.md"><span class="law-cite" data-law-id="ENG-11.2" data-non-negotiable="false">ENG-11.2<span class="law-tooltip"><strong>Proposal Completeness Law</strong></span></span></a> | Proposal Completeness | Requires law citations, success criteria, and deliverables |
+| <a href="laws/engineering/eng-4-testing.md"><span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> | Atomic TDD Law (Non-Negotiable) | Core testing law; C++ avatar must demonstrate TDD with GoogleTest |
+| <a href="laws/engineering/eng-4-testing.md"><span class="law-cite" data-law-id="ENG-4.2" data-non-negotiable="false">ENG-4.2<span class="law-tooltip"><strong>Test Pyramid Law</strong></span></span></a> | Test Pyramid Law | Defines test layer strategy; C++ guidance must specialize |
+| <a href="laws/engineering/eng-4-testing.md"><span class="law-cite" data-law-id="ENG-4.11" data-non-negotiable="false">ENG-4.11<span class="law-tooltip"><strong>Mutation Testing Law</strong></span></span></a> | Mutation Testing Governance | Defines mutation score thresholds; C++ avatar adopts Mull |
+| <a href="laws/engineering/eng-6-security.md"><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> | Security by Design (Non-Negotiable) | C++ avatar must demonstrate security-first patterns |
+| <a href="laws/engineering/eng-5-devops.md"><span class="law-cite" data-law-id="ENG-5.1" data-non-negotiable="false">ENG-5.1<span class="law-tooltip"><strong>Infrastructure as Code Law</strong></span></span></a> | Infrastructure as Code Law | Requires IaC tooling defaults (Terraform) |
+| <a href="laws/engineering/eng-5-devops.md"><span class="law-cite" data-law-id="ENG-5.2" data-non-negotiable="false">ENG-5.2<span class="law-tooltip"><strong>CI/CD Pipeline Law</strong></span></span></a> | CI/CD Pipeline Law | Governs mandatory/recommended CI gates for C++ |
+| <a href="laws/engineering/eng-5-devops.md"><span class="law-cite" data-law-id="ENG-5.5" data-non-negotiable="false">ENG-5.5<span class="law-tooltip"><strong>Observability Law</strong></span></span></a> | Observability Law | Requires observability stack defaults (OpenTelemetry) |
+| <a href="laws/engineering/eng-5-devops.md"><span class="law-cite" data-law-id="ENG-5.6" data-non-negotiable="false">ENG-5.6<span class="law-tooltip"><strong>Configuration Management Law</strong></span></span></a> | Configuration Management Law | Requires vault/secret-manager defaults |
+| <a href="laws/engineering/eng-10-constitution.md"><span class="law-cite" data-law-id="ENG-10.1" data-non-negotiable="true">ENG-10.1<span class="law-tooltip"><strong>Constitution Metrics Collection Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> | Constitution Compliance | Meta-governance: enrichments must comply with taxonomy rules |
+| <a href="laws/business/bus-7-operational-governance.md"><span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> | Audit Trail Law (Non-Negotiable) | Requires audit trail for governance decisions (PROGRESS.md) |
+| <a href="laws/product/prd-1-discovery.md"><span class="law-cite" data-law-id="PRD-1.2" data-non-negotiable="true">PRD-1.2<span class="law-tooltip"><strong>Problem-First Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> | Problem-First Law (Non-Negotiable) | Proposal must lead with validated problem statement |</p>
+<hr />
+<h2>Decision Summary</h2>
+<p>| Decision | Outcome |
+|----------|---------|
+| Q1 | <code>laws/index.yaml</code> is authoritative for law labeling and non-negotiable scope. |
+| Q2 | <code>manifest.yaml</code> remains engineering-focused; product/business/aviation non-negotiables are covered in <code>examples/</code>. |
+| Q3 | Version policy: greenfield C++20 minimum; C++23 recommended where supported; brownfield older standards allowed with modernization plans. |
+| Q4 | CI policy: mandatory <code>clang-tidy</code>, ASan, UBSan; recommended TSan, clang static analyzer, and Mull mutation testing where LLVM/Clang is available, with a documented brownfield exception path where Mull is not yet practical. |
+| Q5 | Unsafe-boundary governance: repository-configurable with Option 2 default/recommended. |
+| Q6 | Unit test framework policy: default GoogleTest + GoogleMock; brownfield with no framework adopts immediately; existing brownfield frameworks may continue temporarily under <span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span>/<span class="law-cite" data-law-id="ENG-4.2" data-non-negotiable="false">ENG-4.2<span class="law-tooltip"><strong>Test Pyramid Law</strong></span></span>. |
+| Q7 | Supplemental engineering-law examples are required for C++ in this change only (not yet global for all new technology avatars). |
+| Q8 | Package manager policy supports both <code>vcpkg</code> and <code>Conan</code> with selection criteria; <code>vcpkg</code> is the default recommendation. |
+| Q9 | <code>skill-04-business-domain-modeling</code> is mandatory by default, with documented exception only for low-domain-complexity infrastructure repositories. |</p>
+<hr />
+<h2>Governance Alignment</h2>
+<h3>Taxonomy Decision and Rationale</h3>
+<p>This change is classified as a <strong>technology/runtime capability enrichment</strong> request.</p>
+<ul>
+<li>It is <strong>not</strong> a product capability request.</li>
+<li>It is <strong>not</strong> an org/team taxonomy request.</li>
+<li>It appropriately maps to a new technology avatar under <code>avatars/technology/cpp/</code>.</li>
+</ul>
+<h3>Taxonomy Gate Results (skill-30 Required)</h3>
+<p>Per <a href="agent-skills/skills-by-domain/discovery-research/30-taxonomy-governed-avatar-enrichment.md">skill-30: Taxonomy-Governed Avatar Enrichment</a>, all five taxonomy gates must pass before enrichment proceeds:</p>
+<p>| Gate | Question | Result | Rationale |
+|------|----------|--------|-----------|
+| Domain | Durable business capability independent of team names? | ✅ PASS | C++ runtime/toolchain guidance is a stable engineering need, independent of any team or org structure. |
+| User Journey | Distinct end-user or operator journeys? | ✅ PASS (N/A for technology avatar) | Technology avatars serve developer/operator journeys (build, test, deploy C++ code). Not a product-type gate. |
+| Boundary | No overlap with existing product avatar? | ✅ PASS | No existing C++ technology avatar. No overlap with any product-type avatar. |
+| Stability | Remains valid if org structure changes? | ✅ PASS | C++ as a technology stack is org-independent; avatar remains valid regardless of team reorganization. |
+| Retrieval | Improves RAG precision versus adding ambiguity? | ✅ PASS | Adding a C++ avatar enables precise retrieval for C++ queries that currently fall through to generic guidance. |</p>
+<h3>Anti-Pattern Alias Canonical Mapping (skill-30 Required Output #2)</h3>
+<p>Per <a href="agent-skills/skills-by-domain/discovery-research/30-taxonomy-governed-avatar-enrichment.md">skill-30</a>, rejected aliases must be mapped to canonical taxons:</p>
+<p>| Anti-Pattern Alias | Canonical Mapping | Rationale |
+|--------------------|-------------------|-----------|
+| &quot;Embedded Systems avatar&quot; | <code>avatars/technology/cpp/</code> + domain-specific skills | Embedded is a deployment context, not a product taxon; C++ avatar covers the language; domain-specific guidance lives in skills. |
+| &quot;C/C++ combined avatar&quot; | <code>avatars/technology/cpp/</code> (C-only guidance out of scope) | C and C++ are distinct languages; this avatar targets modern C++ (C++20+). Pure C guidance requires a separate future proposal. |
+| &quot;Systems programming avatar&quot; | <code>avatars/technology/cpp/</code> + relevant skill modules | &quot;Systems programming&quot; is too broad for a single avatar; C++ avatar covers the language, while systems concerns (kernel, drivers) belong in domain skills. |
+| &quot;Game engine avatar&quot; | <code>avatars/technology/cpp/</code> + game-domain skills (future) | Game engine is a product domain, not a technology taxon; C++ language patterns apply, but game-specific guidance would need a product-type or skill extension. |
+| &quot;ORAA C++ team avatar&quot; | <code>avatars/technology/cpp/</code> | Team/org names are rejected as taxons per taxonomy governance. Route to technology avatar. |</p>
+<h3>Canonical Mapping Table</h3>
+<p>| Requested Need | Canonical Layer | Planned Output |
+|----------------|-----------------|----------------|
+| C++ runtime guidance and law specialization | Technology avatar | <code>avatars/technology/cpp/</code> |
+| Reusable C++ engineering practices | Agent skills | <code>agent-skills/skills-by-domain/platform-engineering/</code> guidance modules |
+| Retrieval and governance routing | Registry / guides / agent protocol | <code>avatars/index.yaml</code>, <code>avatars/AVATAR-RAG-INDEX.yaml</code>, relevant skill domain <code>index.yaml</code>, <code>AGENTS.md</code> |
+| Product capability enrichment | Not in scope | No new product avatar proposed |</p>
+<h3>Brownfield Non-Rewrite Safeguards</h3>
+<p>Per enrichment workflow requirements, brownfield C++ guidance in this proposal follows these constraints:</p>
+<ul>
+<li>No language rewrite is recommended by default.</li>
+<li>Migration is allowed only when explicitly requested and approved.</li>
+<li>Brownfield changes must document preserved behavior and test equivalence strategy.</li>
+<li>Compatibility and modernization guidance must preserve stack intent before suggesting transformation.</li>
+</ul>
+<h3>Minimum Review and Sign-Off Roles</h3>
+<p>Minimum governance sign-offs for this proposal and its implementation planning:</p>
+<ul>
+<li>Constitution steward (taxonomy and governance compliance)</li>
+<li>Engineering representative (C++ safety, toolchain, and brownfield safety)</li>
+<li>Product/business representative for realism of cross-domain PRD/BUS example content</li>
+</ul>
+<h3>Enrichment Intake Details (Workflow Step 1)</h3>
+<p>Per <a href="docs/guides/adoption/taxonomy-aligned-avatar-enrichment-workflow.md">taxonomy-aligned-avatar-enrichment-workflow.md</a> Step 1:</p>
+<p>| Field | Value |
+|-------|-------|
+| Requested Label | C++ Technology Avatar |
+| Problem Statement | See <strong>Problem</strong> section below |
+| Target Repositories/Services | All greenfield and brownfield C++ repositories governed by this constitution. No single repository is targeted; this is a horizontal capability enrichment. |
+| Brownfield Constraints | Diverse compiler versions (GCC, Clang, MSVC); legacy codebases may use pre-C++17 standards; some repos may lack CMake; Mull requires LLVM/Clang (not available in all brownfield environments). |
+| Classification | Technology/runtime capability |</p>
+<hr />
+<h2>Problem</h2>
+<p>The constitution has multiple technology avatars, but no C++ avatar exists under <code>avatars/technology/</code>. This creates a governance and execution gap for C++ teams:</p>
+<ol>
+<li><strong>No C++ stack guidance</strong> — no standard conventions for ownership, memory safety, concurrency, and toolchain selection</li>
+<li><strong>No law specialization examples</strong> — non-negotiable laws are not demonstrated in C++ context</li>
+<li><strong>No Rust-style safety baseline</strong> — no explicit translation of compile-time safety practices into C++ policy and CI enforcement</li>
+<li><strong>Inconsistent AI guidance risk</strong> — agents can produce generic or conflicting guidance for C++ projects</li>
+</ol>
+<p>Without a C++ technology avatar, teams building or modernizing C++ services cannot rely on constitution-grounded, stack-specific guidance.</p>
+<hr />
+<h2>Solution</h2>
+<p>Create a new technology avatar at <code>avatars/technology/cpp/</code> that is aligned to existing avatar standards and includes examples for all non-negotiable laws.</p>
+<h3>Phase 0: Hangar SDD Execution Artifacts</h3>
+<p>Create and maintain required change-tracking artifacts for governed execution:</p>
+<ul>
+<li><code>tasks.md</code> with checkbox-tracked implementation work</li>
+<li><code>PROGRESS.md</code> with review decisions, approvals, and implementation evidence</li>
+<li>Explicit record of taxonomy decision, canonical mapping, and brownfield safeguards</li>
+</ul>
+<h3>Phase 1: Avatar Foundation</h3>
+<p>Create core C++ avatar artifacts:</p>
+<ul>
+<li><code>manifest.yaml</code> with stack metadata, activated skills/workflows, specialized laws</li>
+<li><code>guidance.md</code> with C++ coding patterns, safety defaults, testing strategy, static analysis guidance</li>
+<li><code>examples/</code> directory with law-specific implementation examples</li>
+</ul>
+<h3>Phase 2: Rust-Inspired Safety Enforcement Profile</h3>
+<p>Apply Rust-inspired enforcement principles to C++ guidance:</p>
+<ul>
+<li>Ownership-first API design (explicit ownership transfer, avoid raw owning pointers)</li>
+<li>Lifetime and bounds safety defaults (<code>span</code>, <code>not_null</code>, RAII handles)</li>
+<li>Explicit unsafe boundary model (localized, documented, review-required)</li>
+<li>Concurrency-by-design (RAII locks, predictable synchronization, race prevention)</li>
+<li>Compile-time and static-analysis-first checks before runtime fallback</li>
+</ul>
+<h3>Phase 2a: C++ Version Policy (Greenfield and Brownfield)</h3>
+<p>Define and enforce version policy in the C++ avatar guidance:</p>
+<ul>
+<li>Greenfield requirement: C++20 minimum (mandatory)</li>
+<li>Preferred target: C++23 where toolchain support is available and verified</li>
+<li>Brownfield accommodation: older standards are allowed during staged modernization</li>
+<li>Modernization expectation: brownfield roadmaps must include progressive alignment toward C++20+</li>
+</ul>
+<h3>Phase 2b: CI Quality Toolchain Policy</h3>
+<p>Define mandatory vs recommended CI gates in C++ avatar guidance:</p>
+<ul>
+<li>Mandatory:
+<ul>
+<li><code>clang-tidy</code></li>
+<li>AddressSanitizer (ASan)</li>
+<li>UndefinedBehaviorSanitizer (UBSan)</li>
+</ul>
+</li>
+<li>Recommended:
+<ul>
+<li>ThreadSanitizer (TSan)</li>
+<li>clang static analyzer</li>
+<li>Mull mutation testing for unit tests where LLVM/Clang toolchain support is available</li>
+<li>coverage with mutation testing interpreted under <a href="laws/engineering/eng-4-testing.md"><span class="law-cite" data-law-id="ENG-4.11" data-non-negotiable="false">ENG-4.11<span class="law-tooltip"><strong>Mutation Testing Law</strong></span></span></a> expectations where feasible</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>Cross-Reference:</strong> The parallel <a href="hangar-ai-specs/changes/mutation-testing-governance/PROPOSAL.md">mutation-testing-governance proposal</a> is creating <span class="law-cite" data-law-id="ENG-4.11" data-non-negotiable="false">ENG-4.11<span class="law-tooltip"><strong>Mutation Testing Law</strong></span></span> as a new law. That proposal defines:</p>
+<ul>
+<li>≥70% mutation score for general code; ≥85% for critical paths (crew-scheduling, dispatch, maintenance compliance)</li>
+<li>Tool selection by language (Stryker/TypeScript, Pitest/Java, mutmut/Python)</li>
+<li>Integration with the atomic TDD cycle (mandatory in GREEN and REFACTOR phases)</li>
+<li>Performance SLA: &lt;5 minutes for 1000 LOC</li>
+</ul>
+<p><strong>Coordination required:</strong> The mutation-testing-governance tool matrix does not yet list C++/Mull. This proposal recommends adding <code>Mull</code> as the C++ entry in <span class="law-cite" data-law-id="ENG-4.11" data-non-negotiable="false">ENG-4.11<span class="law-tooltip"><strong>Mutation Testing Law</strong></span></span>'s language-tool matrix during that proposal's implementation. Until <span class="law-cite" data-law-id="ENG-4.11" data-non-negotiable="false">ENG-4.11<span class="law-tooltip"><strong>Mutation Testing Law</strong></span></span> is ratified, Mull adoption follows the policy below as an interim standard.</p>
+</blockquote>
+<p>Adoption rule for mutation testing in this avatar:</p>
+<ul>
+<li>Greenfield default: use Mull as the default C++ mutation testing tool when the approved LLVM/Clang toolchain is available</li>
+<li>Brownfield exception: if a repository cannot practically support Mull yet, document the constraint and treat mutation testing as a phased adoption item rather than blocking initial avatar adoption</li>
+<li>Unit testing and mutation testing remain separate concerns: GoogleTest + GoogleMock is the default test framework, while Mull is the recommended mutation analysis tool</li>
+</ul>
+<h4>Cross-Language Alignment Defaults for C++ (Security/DevOps)</h4>
+<p>To align C++ with established avatar patterns while selecting well-maintained C++-industry tools, defaults are defined as follows.
+This matrix is intended to minimize toolset drift versus existing Java/Python/Node/.NET avatar conventions.</p>
+<p>| Concern | Existing Cross-Language Pattern in Repository | C++ Default | Selection Rationale | Evidence Tag |
+|---------|-----------------------------------------------|-------------|---------------------|-------------|
+| SAST | Static analysis is required in CI; language avatars use native static analyzers | <code>clang-tidy</code> + CodeQL C/C++ | Combines fast compiler-adjacent diagnostics with mature security-focused query analysis for PR gating. | <code>code-evidenced</code> (existing avatar pattern) / <code>public-benchmark</code> (CodeQL security coverage) · confidence: high |
+| Dependency/Vulnerability Scanning | Security laws require dependency scanning in CI/CD | Dependabot alerts + GitHub dependency review | Matches repository GitHub-centric workflow and provides continuous CVE visibility with low operational overhead. | <code>code-evidenced</code> (existing GitHub workflows) · confidence: high |
+| DAST | Security laws require runtime security testing in pipeline | OWASP ZAP baseline in staging/test | Widely adopted baseline DAST signal for web-exposed services; practical to automate without heavy custom setup. | <code>public-benchmark</code> (OWASP project adoption data) · confidence: medium |
+| Secrets Management | DevOps laws require vault/secret-manager usage | HashiCorp Vault or cloud secret manager (AWS/Azure/GCP) | Preserves platform flexibility while enforcing managed secret storage and rotation controls. | <code>stakeholder-reported</code> (ops team conventions) · confidence: high |
+| IaC | DevOps laws require reproducible IaC with drift checks | Terraform + policy/drift checks in CI | Industry-standard multi-cloud IaC with mature ecosystem and strong policy tooling integration. | <code>code-evidenced</code> (existing repo IaC patterns) · confidence: high |
+| Coverage Tooling | Avatars define explicit coverage tooling per language | <code>llvm-cov</code> (or <code>gcov</code>-compatible output) in CI gates | Native C++ toolchain compatibility, stable reporting formats, and direct CI integration. | <code>public-benchmark</code> (LLVM project tooling) · confidence: high |
+| Observability | Repository has OpenTelemetry-oriented observability patterns | OpenTelemetry C++ + OTLP export + Prometheus metrics + centralized structured logs | Aligns with existing OTEL-first patterns and enables consistent traces/metrics/log correlation across stacks. | <code>code-evidenced</code> (opentelemetry-python avatar pattern) · confidence: high |</p>
+<p>Documentation location for users of the constitution:</p>
+<ul>
+<li><code>avatars/technology/cpp/guidance.md</code> will contain the normative defaults and adoption instructions.</li>
+<li><code>avatars/technology/cpp/manifest.yaml</code> will contain the command/tooling matrix entries.</li>
+<li>Relevant C++ skill modules and <code>AGENTS.md</code> routing notes will include concise rationale snippets so tool selection intent is visible to humans and agents.</li>
+</ul>
+<p>Brownfield exception style (applies to all defaults above):</p>
+<ul>
+<li>If a repository cannot practically adopt the default tool yet, document the current tool/constraint, map an equivalent control, and treat migration as phased adoption work rather than blocking initial avatar adoption.</li>
+<li>Brownfield repositories must define a modernization path toward the default stack (or an approved equivalent) with owners and milestones.</li>
+</ul>
+<h3>Phase 2c: Unsafe-Boundary Exception Governance (Repository-Configurable)</h3>
+<p>Adopt Option 2 as the constitution default, with repository-level policy selection:</p>
+<ul>
+<li>Default policy (recommended): architect approval + waiver logging required only for safety-critical paths</li>
+<li>Repository override support:
+<ul>
+<li>Strict mode (Option 1): architect approval + waiver logging required for all unsafe-boundary exceptions</li>
+<li>Default mode (Option 2): required only for safety-critical paths</li>
+<li>Lightweight mode (Option 3): reviewer approval only (must be explicitly justified in repo governance)</li>
+</ul>
+</li>
+</ul>
+<p>Brownfield/greenfield configuration behavior:</p>
+<ul>
+<li>Greenfield default: Option 2 and cannot downgrade to Option 3 without architecture governance approval</li>
+<li>Brownfield default: Option 2 with temporary phased exceptions allowed per repository implementation plan</li>
+<li>Brownfield modernization expectation: planned progression toward Option 2 (or Option 1 for higher-assurance repos)</li>
+</ul>
+<p>Per-repository configuration mechanism (planned):</p>
+<ul>
+<li>Add repository-level policy declaration in AGENTS.md or repository governance config</li>
+<li>Include unsafe-boundary policy mode, safety-critical path list, waiver process owner, and audit logging location</li>
+<li>Enforce mode in CI/policy checks where available</li>
+</ul>
+<h3>Phase 2d: Unit Testing Framework Policy (Greenfield and Brownfield)</h3>
+<p>Define framework defaults and compatibility rules in C++ avatar guidance:</p>
+<ul>
+<li>Default framework for this C++ avatar guidance: GoogleTest + GoogleMock</li>
+<li>Greenfield requirement: use GoogleTest + GoogleMock unless a governance-approved exception is documented</li>
+<li>Brownfield with an existing framework: may continue current framework during staged modernization if <span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> and <span class="law-cite" data-law-id="ENG-4.2" data-non-negotiable="false">ENG-4.2<span class="law-tooltip"><strong>Test Pyramid Law</strong></span></span> requirements are met</li>
+<li>Brownfield with no unit testing/mocking framework: adopt GoogleTest + GoogleMock immediately</li>
+<li>Include explicit guidance for unit vs integration test boundaries and mock usage expectations</li>
+</ul>
+<h3>Phase 2e: Cross-Avatar Parity Requirements</h3>
+<p>Align C++ avatar depth with mature Java/Python/Node/JavaScript-related avatars:</p>
+<ul>
+<li>Require <code>manifest.yaml</code> parity sections: stack metadata, test/build/lint command matrix, conventions, project structure template, anti-patterns, and retrieval triggers</li>
+<li>Require <code>guidance.md</code> parity sections: testing strategy, architecture patterns, anti-pattern catalog, and brownfield migration playbook</li>
+<li>Require baseline skill activation parity in <code>manifest.yaml</code>:
+<ul>
+<li><code>skill-06-atomic-tdd</code></li>
+<li><code>skill-07-vertical-slice-dev</code></li>
+<li><code>skill-08-code-review</code></li>
+<li><code>skill-04-business-domain-modeling</code> (or repository-approved equivalent)</li>
+</ul>
+</li>
+</ul>
+<h3>Phase 3: Non-Negotiable Law Example Coverage</h3>
+<p>Create C++ examples mapped to all non-negotiable laws from <code>laws/index.yaml</code>.</p>
+<h3>Phase 3a: Supplemental Engineering-Law Example Parity</h3>
+<p>In addition to 18/18 non-negotiable coverage, add supplemental C++ engineering-law examples commonly present in mature technology avatars:</p>
+<ul>
+<li><code>examples/ENG-2.1-aggregates.md</code></li>
+<li><code>examples/ENG-2.2-layers.md</code></li>
+<li><code>examples/ENG-3.1-complexity.md</code></li>
+<li><code>examples/ENG-3.2-immutability.md</code></li>
+<li><code>examples/ENG-3.3-demeter.md</code></li>
+<li><code>examples/ENG-3.5-naming.md</code></li>
+<li><code>examples/ENG-4.2-test-pyramid.md</code></li>
+<li><code>examples/ENG-4.4-test-structure.md</code></li>
+<li><code>examples/ENG-6.5-input-validation.md</code></li>
+</ul>
+<h3>Phase 4: Registry and Governance Integration</h3>
+<ul>
+<li>Register avatar in <code>avatars/index.yaml</code></li>
+<li>Update <code>avatars/AVATAR-RAG-INDEX.yaml</code> for C++ retrieval routing</li>
+<li>Update relevant skill domain <code>index.yaml</code> for new C++ skill modules</li>
+<li>Update <code>AGENTS.md</code> if retrieval protocol or activation guidance changes</li>
+<li>Add proposal acceptance criteria requiring complete non-negotiable law matrix for any new technology avatar</li>
+<li>Add explicit assumption handling for law metadata inconsistencies across law files</li>
+</ul>
+<h3>Phase 4a: Law Citation and Review Traceability</h3>
+<p>Add explicit traceability requirements for implementation artifacts:</p>
+<ul>
+<li>Every guidance/example file must use law citations consistent with <code>docs/guides/avatars/law-citation-guide.md</code></li>
+<li>Every reference to constitution laws or rules in proposal/manifest/guidance/example documents must use Markdown hyperlinks to canonical constitution sources (law files, guide files, or index entries), not plain text IDs only.</li>
+<li>Review evidence and sign-off outcomes must be recorded in <code>PROGRESS.md</code></li>
+<li>Proposal phase, file, and law mappings must be auditable during governance review</li>
+</ul>
+<hr />
+<h3>Phase 5: Example Quality Enhancement — Edge Cases &amp; Warnings</h3>
+<p><strong>Trigger:</strong> Post-completion quality audit (2026-04-13) identified that 34 of 51 example files (67%) lack a <code>## Edge Cases &amp; Warnings</code> section. The 16 fully-complete files all share this section as their distinguishing quality dimension. Without it, an AI agent reading the example knows <em>what</em> the rule is but not <em>when it breaks, what to watch for, or common misapplications</em>.</p>
+<p><strong>Scope:</strong> All 35 files missing either <code>## Edge Cases &amp; Warnings</code> or <code>## Why/Rationale</code> (files currently scoring 5/7 or 6/7 in the quality rubric).</p>
+<h4>Budget Analysis</h4>
+<p>A minimal <code>## Edge Cases &amp; Warnings</code> table (3–5 rows) adds approximately 80–100 tokens. All 35 files were modeled:</p>
+<p>| Disposition | Count | Files |
+|------------|:-----:|-------|
+| <strong>Direct add</strong> — current tokens + 100t ≤ 850t limit | <strong>34</strong> | All except <code>ENG-5.2-project-structure.md</code> |
+| <strong>Trim-to-fit</strong> — trim existing prose, then add edge cases | <strong>1</strong> | <code>ENG-5.2-project-structure.md</code> (803t, 47t headroom) |</p>
+<h4>Trim-to-Fit Method for <code>ENG-5.2-project-structure.md</code></h4>
+<p><code>ENG-5.2-project-structure.md</code> is at 803t with only 47t of headroom. The &quot;Brownfield Adaptation&quot; section is a verbose 4-step prose list (~80t). Replace it with a 2-row compact table (~30t), freeing ~50t for a 3-row edge-case table. Net token change: ≈ 0t. Quality score: 5/7 → 7/7.</p>
+<h4>Priority Order for Implementation</h4>
+<p>Prioritise by risk severity — files covering safety-critical and security topics where missing edge cases are most likely to cause incorrect AI guidance:</p>
+<p>| Priority | File | Current Score | Risk Reason |
+|----------|------|:------------:|-------------|
+| 🔴 P1 | <code>ENG-6.1-strict-aliasing.md</code> | 5/7 | UB from strict aliasing is silent; misuse causes ABI breaks in aviation code |
+| 🔴 P1 | <code>ENG-6.1-misra-do278a.md</code> | 5/7 | DO-278A compliance has non-obvious exception paths |
+| 🔴 P1 | <code>ENG-4.1-far117-traceability.md</code> | 5/7 | Regulatory traceability gaps have certification implications |
+| 🔴 P1 | <code>ENG-6.5-input-validation.md</code> | 5/7 | Security; incomplete validation leads to injection vulnerabilities |
+| 🔴 P1 | <code>ENG-6.1-smart-pointers.md</code> | 5/7 | Ownership transfer semantics have many silent failure modes |
+| 🟡 P2 | <code>ENG-6.1-raii-c-api-wrapper.md</code> | 5/7 | RAII wrapping C APIs has destructor-ordering edge cases |
+| 🟡 P2 | <code>ENG-6.1-thread-migration.md</code> | 5/7 | pthread → std::thread migration has subtle race conditions |
+| 🟡 P2 | <code>ENG-3.7-error-handling.md</code> | 5/7 | <code>std::expected</code> propagation has gotchas in void-returning functions |
+| 🟡 P2 | <code>ENG-7.1-failure-handling.md</code> | 5/7 | Degraded-mode handling has cascading failure edge cases |
+| 🟡 P2 | <code>ENG-3.1-perfect-forwarding.md</code> | 5/7 | Universal references interact unexpectedly with overload resolution |
+| 🟢 P3 | Remaining 25 files at 5/7 or 6/7 | 5–6/7 | Lower-risk topics; still improve AI guidance quality |</p>
+<h4>Execution Protocol</h4>
+<p>Per <span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span>, each file is a separate Atomic TDD cycle:</p>
+<ol>
+<li><strong>RED</strong> — write a test asserting <code>## Edge Cases</code> or <code>## Edge Cases &amp; Warnings</code> present in the target file</li>
+<li><strong>GREEN</strong> — add the section with ≥3 rows covering the most dangerous misapplications</li>
+<li><strong>REFACTOR</strong> — verify token count stays ≤ 850t; trim prose elsewhere if needed</li>
+<li><strong>VERIFY</strong> — run full test suite (currently 660 tests); confirm all pass</li>
+<li><strong>COMMIT</strong> — one commit per file, message format: <code>fix(cpp-avatar): add edge cases to {filename} [quality-phase5]</code></li>
+</ol>
+<h4>Success Gate</h4>
+<p>All 35 files score 7/7 on the quality rubric. No file exceeds 850t after additions. Test suite remains green.</p>
+<ol>
+<li><code>laws/index.yaml</code> is authoritative for law labeling and non-negotiable scope (Q1 resolved).</li>
+<li><code>manifest.yaml</code> remains engineering-focused; product/business/aviation non-negotiables are covered in <code>examples/</code> (Q2 resolved).</li>
+<li>Version policy: greenfield work must target C++20 minimum; C++23 is recommended where supported; brownfield codebases on older standards are permitted with modernization plans (Q3 resolved).</li>
+<li>CI quality toolchain: mandatory <code>clang-tidy</code>, ASan, UBSan; recommended TSan, clang static analyzer, and Mull mutation testing where LLVM/Clang is available, with documented brownfield exceptions when Mull is not yet practical (Q4 resolved).</li>
+<li>Unsafe-boundary exception governance is repository-configurable with Option 2 as default/recommended; greenfield and brownfield repos may select stricter/temporary modes under governance rules (Q5 resolved).</li>
+<li>Unit testing framework policy: default to GoogleTest + GoogleMock for this avatar; brownfield repos without existing frameworks adopt them immediately; brownfield repos with existing frameworks may continue temporarily under <span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span>/<span class="law-cite" data-law-id="ENG-4.2" data-non-negotiable="false">ENG-4.2<span class="law-tooltip"><strong>Test Pyramid Law</strong></span></span> constraints (Q6 resolved).</li>
+<li>Supplemental engineering-law examples are required for C++ in this change only; they are not yet mandatory for all future technology avatars (Q7 resolved).</li>
+<li>Package manager policy: support both <code>vcpkg</code> and <code>Conan</code> with explicit selection criteria, and recommend <code>vcpkg</code> as the default (Q8 resolved).</li>
+<li>Baseline domain-modeling skill policy: mandatory by default, with documented exceptions allowed only for low-domain-complexity infrastructure repositories (Q9 resolved).</li>
+</ol>
+<hr />
+<h2>External Pattern Inputs (for C++ Avatar Content)</h2>
+<p>The C++ avatar guidance will incorporate proven open-source patterns from:</p>
+<ul>
+<li>C++ Core Guidelines</li>
+<li>Google C++ Style Guide</li>
+<li>LLVM Coding Standards</li>
+<li>Microsoft GSL patterns</li>
+<li>Rust ownership, linting, and concurrency safety practices (as baseline reference model)</li>
+</ul>
+<p>These are used as pattern sources, then translated into constitution-compatible law specializations, skills, and examples.</p>
+<h3>Evidence Source Taxonomy</h3>
+<p>Per <a href="docs/templates/enrichment/01-metrics-collection.md">enrichment template conventions</a>, claims in this proposal carry evidence tags:</p>
+<p>| Tag | Definition |
+|-----|------------|
+| <code>code-evidenced</code> | Verified by inspecting existing constitution avatar files or repository code |
+| <code>public-benchmark</code> | Derived from publicly available project data, documentation, or adoption statistics |
+| <code>stakeholder-reported</code> | Reported by engineering or operations stakeholders |
+| <code>field-study</code> | Observed from production usage or team workflows |
+| <code>hypothesis-only</code> | Claimed without direct evidence; to be validated during implementation |</p>
+<p>Evidence tags applied in this proposal:</p>
+<p>| Claim | Tag | Confidence |
+|-------|-----|------------|
+| Cross-language alignment matrix tool defaults | <code>code-evidenced</code> / <code>public-benchmark</code> | high (see matrix Evidence Tag column) |
+| Reference repository pattern extraction (LLVM, Abseil, Chromium, etc.) | <code>public-benchmark</code> | high (open-source projects with public documentation) |
+| Mull as C++ mutation testing default | <code>public-benchmark</code> | medium (Mull is active but less widely adopted than Pitest/Stryker) |
+| GoogleTest + GoogleMock as default test framework | <code>public-benchmark</code> | high (dominant C++ test framework by adoption) |
+| PRD/BUS example realism for C++ aviation context | <code>hypothesis-only</code> | low (requires product/business reviewer validation) |
+| Brownfield compiler diversity constraint | <code>stakeholder-reported</code> | medium (based on known internal codebase diversity) |
+| Token impact estimate for 29+ new files | <code>hypothesis-only</code> | low (to be validated during Phase 5) |</p>
+<h3>Reference Repositories Reviewed for Implementation and Adoption Patterns</h3>
+<p>The following repositories are designated as high-quality reference sources for C++ implementation and adoption guidance in this proposal:</p>
+<ol>
+<li>LLVM / Clang (<code>llvm/llvm-project</code>)</li>
+<li>Abseil (<code>abseil/abseil-cpp</code>)</li>
+<li>Boost (<code>boostorg/boost</code>)</li>
+<li>Qt Base (<code>qt/qtbase</code>)</li>
+<li>Folly (<code>facebook/folly</code>)</li>
+<li>Chromium (<code>chromium/chromium</code>)</li>
+<li>Eigen (<code>libeigen/eigen</code>)</li>
+<li>POCO (<code>pocoproject/poco</code>)</li>
+<li>DuckDB (<code>duckdb/duckdb</code>)</li>
+<li>Seastar (<code>scylladb/seastar</code>)</li>
+</ol>
+<h3>Implementation and Adoption Patterns to Incorporate</h3>
+<p>Patterns derived from these repositories and planned for C++ avatar guidance:</p>
+<ul>
+<li>
+<p><strong>Layering and modular boundaries</strong> (LLVM, Chromium, Abseil, DuckDB):</p>
+<ul>
+<li>enforce explicit module boundaries</li>
+<li>separate stable API surfaces from implementation internals</li>
+<li>avoid leaking experimental/internal namespaces into public usage</li>
+</ul>
+</li>
+<li>
+<p><strong>API compatibility and lifecycle discipline</strong> (Abseil, Qt, LLVM):</p>
+<ul>
+<li>define compatibility contract per component</li>
+<li>include deprecation/upgrade guidance in implementation and adoption documentation</li>
+<li>require migration notes for breaking changes</li>
+</ul>
+</li>
+<li>
+<p><strong>Ownership/lifetime clarity with low hidden cost</strong> (Seastar, Folly, LLVM):</p>
+<ul>
+<li>explicit ownership transfer semantics</li>
+<li>constrained use of high-risk primitives behind reviewed boundaries</li>
+<li>favor clear &quot;no hidden cost&quot; API behavior in performance-sensitive paths</li>
+</ul>
+</li>
+<li>
+<p><strong>Presubmit and policy automation</strong> (Chromium, LLVM, Eigen):</p>
+<ul>
+<li>lint/style/static checks in presubmit pipelines</li>
+<li>directory ownership/review routing practices for critical modules</li>
+<li>stronger automated checks for security-sensitive code</li>
+</ul>
+</li>
+<li>
+<p><strong>Sanitizer-driven hardening</strong> (Seastar, Eigen, DuckDB, Chromium):</p>
+<ul>
+<li>routine ASan/UBSan execution</li>
+<li>recommended TSan and suppressions governance where needed</li>
+<li>sanitizer findings treated as first-class quality defects</li>
+</ul>
+</li>
+<li>
+<p><strong>Performance with evidence</strong> (Folly, DuckDB, Seastar, Eigen):</p>
+<ul>
+<li>benchmark-backed optimization requirements</li>
+<li>data-oriented design in critical paths</li>
+<li>explicit tradeoff documentation for abstraction vs speed</li>
+</ul>
+</li>
+<li>
+<p><strong>Portability and build governance</strong> (Boost, POCO, Abseil, Qt):</p>
+<ul>
+<li>multi-platform build matrix expectations</li>
+<li>stable build tooling conventions</li>
+<li>clear dependency and toolchain documentation</li>
+</ul>
+</li>
+<li>
+<p><strong>Template and generic programming discipline</strong> (Boost, Eigen, Abseil):</p>
+<ul>
+<li>constrain template complexity by policy</li>
+<li>document correctness/performance rationale for advanced templates</li>
+<li>require test coverage on specialized code paths</li>
+</ul>
+</li>
+</ul>
+<h3>Recommended Additional Skills for This Proposal</h3>
+<p>Add C++ proposal-focused skills (or equivalent guidance modules) to strengthen this proposal and its implementation artifacts:</p>
+<ol>
+<li>
+<p><code>skill-cpp-layering-and-boundaries</code><br />
+Focus: module boundaries, internal/public API separation, dependency direction rules.</p>
+</li>
+<li>
+<p><code>skill-cpp-api-compatibility-governance</code><br />
+Focus: compatibility guarantees, deprecation strategy, migration guidance.</p>
+</li>
+<li>
+<p><code>skill-cpp-ownership-lifetime-safety</code><br />
+Focus: ownership contracts, RAII enforcement, unsafe-boundary localization.</p>
+</li>
+<li>
+<p><code>skill-cpp-presubmit-and-code-ownership</code><br />
+Focus: presubmit gate design, reviewers/owners mapping, high-risk path enforcement.</p>
+</li>
+<li>
+<p><code>skill-cpp-sanitizer-hardening</code><br />
+Focus: ASan/UBSan mandatory usage, TSan strategy, suppression governance.</p>
+</li>
+<li>
+<p><code>skill-cpp-performance-benchmark-discipline</code><br />
+Focus: benchmark methodology, regression gates, optimization evidence standards.</p>
+</li>
+<li>
+<p><code>skill-cpp-template-complexity-management</code><br />
+Focus: template constraints, compile-time complexity controls, readability thresholds.</p>
+</li>
+<li>
+<p><code>skill-cpp-portable-build-governance</code><br />
+Focus: toolchain matrix, reproducible builds, cross-platform CI policy.</p>
+</li>
+</ol>
+<h3>How to Use These Repositories as &quot;Good Code&quot; References in This Proposal</h3>
+<p>During proposal refinement, implementation planning, and review:</p>
+<ul>
+<li>Use these repos as pattern references, not copy sources.</li>
+<li>Link example guidance to concepts (e.g., layering, ownership, presubmit policy), not to verbatim code.</li>
+<li>Prefer extracting principles that are stable across ecosystems over project-specific conventions.</li>
+<li>Where policy tradeoffs exist, capture rationale in <code>guidance.md</code> and in law-mapped example files.</li>
+</ul>
+<h3>Cross-Avatar Parity Review Baseline</h3>
+<p>Reviewed reference avatars for parity requirements in this proposal:</p>
+<ul>
+<li><code>avatars/technology/java-spring/</code></li>
+<li><code>avatars/technology/python-fastapi/</code></li>
+<li><code>avatars/technology/python-streamlit/</code></li>
+<li><code>avatars/technology/opentelemetry-python/</code></li>
+<li><code>avatars/technology/postgresql-sqlalchemy/</code></li>
+<li><code>avatars/technology/nodejs-typescript/</code></li>
+<li><code>avatars/technology/react-typescript/</code></li>
+<li><code>avatars/technology/angular/</code></li>
+<li><code>avatars/technology/mobile-react-native/</code></li>
+</ul>
+<p>Observed parity gaps to close in C++ implementation artifacts:</p>
+<ul>
+<li>Manifest depth gap (commands, conventions, structure, anti-patterns)</li>
+<li>Guidance depth gap (testing structure, architecture patterns, migration playbook)</li>
+<li>Example strategy gap (supplemental ENG-* examples beyond non-negotiables)</li>
+<li>Skill activation parity gap (baseline implementation skills in manifest)</li>
+<li>Brownfield rollout detail gap (explicit migration and compatibility structure)</li>
+</ul>
+<hr />
+<h2>Non-Negotiable Law Coverage Matrix (Planned)</h2>
+<p>Source of truth for this proposal: <code>laws/index.yaml</code> (authoritative per stakeholder decision, April 5, 2026)</p>
+<p>| Domain | Law ID | Planned Example File |
+|-------|------|----------------------|
+| Engineering | <span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/ENG-4.1-atomic-tdd.md</code> |
+| Engineering | <span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/ENG-6.1-security-by-design.md</code> |
+| Engineering | <span class="law-cite" data-law-id="ENG-6.4" data-non-negotiable="true">ENG-6.4<span class="law-tooltip"><strong>Data Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/ENG-6.4-data-protection.md</code> |
+| Engineering | <span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/ENG-6.7-audit-trail.md</code> |
+| Product | <span class="law-cite" data-law-id="PRD-1.2" data-non-negotiable="true">PRD-1.2<span class="law-tooltip"><strong>Problem-First Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/PRD-1.2-problem-first.md</code> |
+| Product | <span class="law-cite" data-law-id="PRD-1.5" data-non-negotiable="true">PRD-1.5<span class="law-tooltip"><strong>Evidence-Based Decision Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/PRD-1.5-evidence-based-decision.md</code> |
+| Product | <span class="law-cite" data-law-id="PRD-2.5" data-non-negotiable="true">PRD-2.5<span class="law-tooltip"><strong>Discovery Stage-Gate Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/PRD-2.5-stage-gate.md</code> |
+| Product | <span class="law-cite" data-law-id="PRD-5.1" data-non-negotiable="true">PRD-5.1<span class="law-tooltip"><strong>MVP Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/PRD-5.1-mvp.md</code> |
+| Product | <span class="law-cite" data-law-id="PRD-6.2" data-non-negotiable="true">PRD-6.2<span class="law-tooltip"><strong>Retention Over Acquisition Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/PRD-6.2-retention-over-acquisition.md</code> |
+| Business | <span class="law-cite" data-law-id="BUS-1.1" data-non-negotiable="true">BUS-1.1<span class="law-tooltip"><strong>Priority Hierarchy Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/BUS-1.1-priority-hierarchy.md</code> |
+| Business | <span class="law-cite" data-law-id="BUS-4.3" data-non-negotiable="true">BUS-4.3<span class="law-tooltip"><strong>Data Subject Rights Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/BUS-4.3-data-subject-rights.md</code> |
+| Business | <span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/BUS-7.1-audit-trail.md</code> |
+| Business | <span class="law-cite" data-law-id="BUS-9.3" data-non-negotiable="true">BUS-9.3<span class="law-tooltip"><strong>Breach Notification Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/BUS-9.3-breach-notification.md</code> |
+| Aviation | <span class="law-cite" data-law-id="BUS-2.1" data-non-negotiable="true">BUS-2.1<span class="law-tooltip"><strong>FAA Compliance Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/BUS-2.1-faa-compliance.md</code> |
+| Aviation | <span class="law-cite" data-law-id="BUS-2.2" data-non-negotiable="true">BUS-2.2<span class="law-tooltip"><strong>Control Framework Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/BUS-2.2-tsa-security.md</code> |
+| Aviation | <span class="law-cite" data-law-id="BUS-2.3" data-non-negotiable="true">BUS-2.3<span class="law-tooltip"><strong>DOT Consumer Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/BUS-2.3-dot-consumer-protection.md</code> |
+| Aviation | <span class="law-cite" data-law-id="BUS-3.1" data-non-negotiable="true">BUS-3.1<span class="law-tooltip"><strong>Data Classification Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/BUS-3.1-pnr-retention.md</code> |
+| Aviation | <span class="law-cite" data-law-id="BUS-6.1" data-non-negotiable="true">BUS-6.1<span class="law-tooltip"><strong>Risk Assessment Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>examples/BUS-6.1-dangerous-goods.md</code> |</p>
+<hr />
+<h2>Files Changed</h2>
+<h3>New Proposal Artifact</h3>
+<p>| File | Action |
+|------|--------|
+| <code>hangar-ai-specs/changes/c-plus-plus-avatar-enrichment/PROPOSAL.md</code> | Created |
+| <code>hangar-ai-specs/changes/c-plus-plus-avatar-enrichment/tasks.md</code> | Created |
+| <code>hangar-ai-specs/changes/c-plus-plus-avatar-enrichment/PROGRESS.md</code> | Created |</p>
+<h3>Planned Implementation Files (Future Phases)</h3>
+<p>| File | Action |
+|------|--------|
+| <code>avatars/technology/cpp/manifest.yaml</code> | Create (includes command/tooling matrix and default mutation testing guidance for Mull when LLVM/Clang is available) |
+| <code>avatars/technology/cpp/guidance.md</code> | Create (captures unit testing framework policy: GoogleTest + GoogleMock defaults, Mull mutation testing policy, and brownfield compatibility/exception rules) |
+| <code>avatars/technology/cpp/examples/ENG-4.1-atomic-tdd.md</code> | Create |
+| <code>avatars/technology/cpp/examples/ENG-4.2-test-pyramid.md</code> | Create |
+| <code>avatars/technology/cpp/examples/ENG-4.4-test-structure.md</code> | Create |
+| <code>avatars/technology/cpp/examples/ENG-6.1-security-by-design.md</code> | Create |
+| <code>avatars/technology/cpp/examples/ENG-6.4-data-protection.md</code> | Create |
+| <code>avatars/technology/cpp/examples/ENG-6.5-input-validation.md</code> | Create |
+| <code>avatars/technology/cpp/examples/ENG-6.7-audit-trail.md</code> | Create |
+| <code>avatars/technology/cpp/examples/ENG-2.1-aggregates.md</code> | Create |
+| <code>avatars/technology/cpp/examples/ENG-2.2-layers.md</code> | Create |
+| <code>avatars/technology/cpp/examples/ENG-3.1-complexity.md</code> | Create |
+| <code>avatars/technology/cpp/examples/ENG-3.2-immutability.md</code> | Create |
+| <code>avatars/technology/cpp/examples/ENG-3.3-demeter.md</code> | Create |
+| <code>avatars/technology/cpp/examples/ENG-3.5-naming.md</code> | Create |
+| <code>avatars/technology/cpp/examples/PRD-1.2-problem-first.md</code> | Create |
+| <code>avatars/technology/cpp/examples/PRD-1.5-evidence-based-decision.md</code> | Create |
+| <code>avatars/technology/cpp/examples/PRD-2.5-stage-gate.md</code> | Create |
+| <code>avatars/technology/cpp/examples/PRD-5.1-mvp.md</code> | Create |
+| <code>avatars/technology/cpp/examples/PRD-6.2-retention-over-acquisition.md</code> | Create |
+| <code>avatars/technology/cpp/examples/BUS-1.1-priority-hierarchy.md</code> | Create |
+| <code>avatars/technology/cpp/examples/BUS-4.3-data-subject-rights.md</code> | Create |
+| <code>avatars/technology/cpp/examples/BUS-7.1-audit-trail.md</code> | Create |
+| <code>avatars/technology/cpp/examples/BUS-9.3-breach-notification.md</code> | Create |
+| <code>avatars/technology/cpp/examples/BUS-2.1-faa-compliance.md</code> | Create |
+| <code>avatars/technology/cpp/examples/BUS-2.2-tsa-security.md</code> | Create |
+| <code>avatars/technology/cpp/examples/BUS-2.3-dot-consumer-protection.md</code> | Create |
+| <code>avatars/technology/cpp/examples/BUS-3.1-pnr-retention.md</code> | Create |
+| <code>avatars/technology/cpp/examples/BUS-6.1-dangerous-goods.md</code> | Create |
+| <code>avatars/index.yaml</code> | Update (register C++ avatar) |
+| <code>avatars/AVATAR-RAG-INDEX.yaml</code> | Update (add C++ avatar retrieval mappings) |
+| <code>agent-skills/skills-by-domain/platform-engineering/skill-cpp-layering-and-boundaries.md</code> | Create (or equivalent guidance module) |
+| <code>agent-skills/skills-by-domain/platform-engineering/skill-cpp-api-compatibility-governance.md</code> | Create (or equivalent guidance module) |
+| <code>agent-skills/skills-by-domain/platform-engineering/skill-cpp-ownership-lifetime-safety.md</code> | Create (or equivalent guidance module) |
+| <code>agent-skills/skills-by-domain/platform-engineering/skill-cpp-presubmit-and-code-ownership.md</code> | Create (or equivalent guidance module) |
+| <code>agent-skills/skills-by-domain/platform-engineering/skill-cpp-sanitizer-hardening.md</code> | Create (or equivalent guidance module) |
+| <code>agent-skills/skills-by-domain/platform-engineering/skill-cpp-performance-benchmark-discipline.md</code> | Create (or equivalent guidance module) |
+| <code>agent-skills/skills-by-domain/platform-engineering/skill-cpp-template-complexity-management.md</code> | Create (or equivalent guidance module) |
+| <code>agent-skills/skills-by-domain/platform-engineering/skill-cpp-portable-build-governance.md</code> | Create (or equivalent guidance module) |
+| <code>agent-skills/skills-by-domain/platform-engineering/index.yaml</code> | Update (register new C++ skill modules) |
+| Repository-level AGENTS.md / governance config templates | Update (document unsafe-boundary policy mode selection) |
+| <code>AGENTS.md</code> | Update if retrieval or activation protocol requires C++ routing guidance |</p>
+<hr />
+<h2>Success Criteria</h2>
+<p>| Criteria | Target | Current |
+|---------|--------|---------|
+| Proposal created in required SDD location | 1 | ✅ Done |
+| Required SDD execution artifacts created (<code>tasks.md</code>, <code>PROGRESS.md</code>) | 2 | ✅ Done |
+| C++ avatar foundation files created | 2 | ⬜ Not started |
+| Non-negotiable laws mapped to C++ examples | 18/18 | ⬜ Planned |
+| Avatar registered in index | 1 | ⬜ Not started |
+| C++ avatar wired into RAG routing artifacts | Complete | ⬜ Planned |
+| Rust-inspired safety enforcement documented in C++ guidance | Complete | ⬜ Not started |
+| Version policy documented (greenfield/brownfield) | Complete | ✅ Done |
+| CI toolchain policy documented (mandatory/recommended) | Complete | ✅ Done |
+| Repository-configurable unsafe-boundary policy documented | Complete | ✅ Done |
+| Unit testing framework policy documented (greenfield/brownfield) | Complete | ✅ Done |
+| C++ manifest parity sections documented (commands, conventions, structure, anti-patterns) | Complete | ⬜ Planned |
+| C++ guidance parity sections documented (testing, architecture, anti-patterns, migration) | Complete | ⬜ Planned |
+| Supplemental engineering-law examples added (in addition to 18/18 non-negotiables) | 9 | ⬜ Planned |
+| Example quality: all 51 files score 7/7 (COMPLIANT+NON-COMPLIANT+Rule+EdgeCases+≥2blocks+≥15lines+≥250t) | 51/51 | ⬜ Phase 5 (34 files need <code>## Edge Cases &amp; Warnings</code>) |
+| <code>ENG-5.2-project-structure.md</code> trim-to-fit for edge cases (803t → ≤850t after add) | Complete | ⬜ Phase 5 |
+| Baseline skill activation parity documented in C++ manifest | Complete | ⬜ Planned |
+| Taxonomy decision, canonical mapping, and brownfield safeguards recorded explicitly | Complete | ✅ Done |
+| Minimum governance sign-off roles recorded in proposal/progress artifacts | Complete | ⬜ Planned |
+| Law citation and traceability requirements documented for implementation artifacts | Complete | ⬜ Planned |
+| Constitution law/rule references rendered as hyperlinks in implementation documents | Complete | ⬜ Planned |
+| Proposal-recommended skills/pattern modules defined from reference repositories | 8 modules | ⬜ Planned |
+| Taxonomy gate results documented (5/5 gates) | 5/5 | ✅ Done |
+| Anti-pattern alias canonical mapping documented | Complete | ✅ Done |
+| <span class="law-cite" data-law-id="ENG-4.11" data-non-negotiable="false">ENG-4.11<span class="law-tooltip"><strong>Mutation Testing Law</strong></span></span> cross-reference and coordination noted | Complete | ✅ Done |
+| Evidence source taxonomy tags on key claims | Complete | ✅ Done |
+| Risk register with mitigations documented | Complete | ✅ Done |
+| Draft YAML for index/RAG-index entries included | Complete | ⬜ Planned |
+| Token impact assessment documented | Complete | ✅ Done |
+| Enrichment intake details documented (workflow Step 1) | Complete | ✅ Done |
+| Archival instructions documented | Complete | ✅ Done |
+| Rollback/deprecation plan documented | Complete | ✅ Done |</p>
+<hr />
+<h2>Risk Register</h2>
+<p>| # | Risk | Likelihood | Impact | Mitigation |
+|---|------|-----------|--------|------------|
+| R1 | Toolchain fragmentation — Mull / LLVM version skew across teams | Medium | Medium | Brownfield exception path allows phased adoption; mandate minimum LLVM version in guidance. |
+| R2 | Brownfield adoption friction — legacy codebases cannot upgrade compilers to meet C++20 minimum | Medium | High | Greenfield/brownfield split policy explicitly permits older standards with modernization plans; no blocking on avatar adoption. |
+| R3 | PRD/BUS example realism gap — aviation-domain C++ examples may feel artificial without production input | High | Medium | Require product/business representative sign-off on example content; mark examples as <code>hypothesis-only</code> until validated. |
+| R4 | Token budget impact — 29+ new files may degrade RAG retrieval precision or exceed context windows | Low | Medium | Token impact assessment included; follow token optimization guidelines from law-citation-guide; monitor retrieval quality during Phase 5 validation. |
+| R5 | <span class="law-cite" data-law-id="ENG-4.11" data-non-negotiable="false">ENG-4.11<span class="law-tooltip"><strong>Mutation Testing Law</strong></span></span> dependency — if mutation-testing-governance proposal is rejected or materially changed, Mull policy needs revision | Low | High | Mull adoption is documented as interim standard; proposal includes coordination note; policy can stand independently if <span class="law-cite" data-law-id="ENG-4.11" data-non-negotiable="false">ENG-4.11<span class="law-tooltip"><strong>Mutation Testing Law</strong></span></span> is delayed. |
+| R6 | Skill module scope creep — 8 new skill modules may overlap with existing skills or exceed implementation capacity | Medium | Low | Skill modules are scoped narrowly to C++ patterns; each has defined focus area; implementation is planned as Phase 4 work with explicit registry checks. |
+| R7 | Cross-avatar drift — C++ defaults may diverge from future avatar updates in Java/Python/Node ecosystems | Low | Medium | Cross-language alignment matrix provides baseline; future avatar updates should reference this matrix for consistency checks. |
+| R8 | Edge-case content accuracy — Phase 5 edge-case additions authored by AI may contain C++ UB or incorrect safety guidance without expert review | Medium | High | Each P1 file (5 safety/security files) requires human C++ expert sign-off before merge; P2/P3 files require peer review. Mark additions with <code># reviewed: pending</code> until approved. |
+| R9 | Token budget creep during Phase 5 — adding edge cases to files near the 850t limit may require successive trim/re-add cycles | Low | Low | Trim-to-fit method documented for <code>ENG-5.2-project-structure.md</code>; apply same method to any file within 100t of limit before adding. |</p>
+<hr />
+<h2>Draft Registry YAML</h2>
+<h3>Planned <code>avatars/index.yaml</code> Entry</h3>
+<pre><code class="language-yaml">- id: avatar-cpp
+  name: C++ (Modern)
+  path: technology/cpp/
+  stack:
+    language: C++20 / C++23
+    framework: N/A (library-level; CMake build system)
+    testing: GoogleTest, GoogleMock, Mull (mutation)
+    build: CMake, vcpkg (default) / Conan
+  activates:
+    skills:
+      - skill-06-atomic-tdd
+      - skill-07-vertical-slice-dev
+      - skill-08-code-review
+      - skill-04-business-domain-modeling
+    workflows:
+      - greenfield-development
+  specializes_laws:
+    - ENG-4.1
+    - ENG-6.1
+    - ENG-6.4
+    - ENG-6.7
+    - ENG-3.1
+    - ENG-3.2
+    - ENG-2.1
+    - ENG-2.2
+</code></pre>
+<h3>Planned <code>avatars/AVATAR-RAG-INDEX.yaml</code> Entry</h3>
+<pre><code class="language-yaml">cpp:
+  id: cpp
+  name: C++ (Modern)
+  category: technology
+  registry_path: technology/index.yaml
+  files:
+    manifest: manifest.yaml
+    guidance: guidance.md
+  specializes_laws:
+    ENG-4.1: &quot;Atomic TDD with GoogleTest — red/green/refactor cycle in C++&quot;
+    ENG-6.1: &quot;Security by design — memory safety, bounds checking, RAII, sanitizer-driven hardening&quot;
+    ENG-6.4: &quot;Data protection — encryption at rest/transit, PII handling in C++ services&quot;
+    ENG-6.7: &quot;Audit trail — structured logging, OpenTelemetry integration&quot;
+  search_queries:
+    - &quot;C++ testing&quot; → guidance.md
+    - &quot;C++ memory safety&quot; → guidance.md
+    - &quot;C++ ownership&quot; → guidance.md
+    - &quot;C++ CI pipeline&quot; → manifest.yaml
+    - &quot;C++ sanitizers&quot; → guidance.md
+  key_metrics:
+    non_negotiable_examples: 18
+    supplemental_examples: 9
+    skill_modules: 8
+</code></pre>
+<hr />
+<h2>Token Impact Assessment</h2>
+<p>Per <a href="docs/guides/avatars/law-citation-guide.md">law-citation-guide.md</a> token optimization requirements (&lt;50 tokens per citation, &lt;8% of 800 token budget per example):</p>
+<p>| Artifact Category | Count | Estimated Tokens/File | Total Estimate | RAG Impact |
+|-------------------|-------|-----------------------|----------------|------------|
+| manifest.yaml | 1 | ~800-1200 | ~1,000 | Loaded on C++ query match |
+| guidance.md | 1 | ~2000-3000 | ~2,500 | Loaded on C++ query match |
+| Non-negotiable examples | 18 | ~400-600 each | ~9,000 | Loaded selectively by law ID |
+| Supplemental examples | 9 | ~400-600 each | ~4,500 | Loaded selectively by law ID |
+| Skill modules | 8 | ~600-800 each | ~5,600 | Loaded by skill activation |
+| <strong>Total</strong> | <strong>37</strong> | | <strong>~22,600</strong> | |</p>
+<p>Mitigation strategy:</p>
+<ul>
+<li>Examples are loaded selectively (by law ID match), not all at once</li>
+<li>Keep each example under 600 tokens following token optimization guidelines</li>
+<li>Manifest and guidance are the only files loaded together on avatar match</li>
+<li>Monitor retrieval quality during Phase 5 validation; adjust if context window pressure is observed</li>
+</ul>
+<hr />
+<h2>Dependencies</h2>
+<ul>
+<li>Product/Business reviewers to validate PRD and BUS example realism</li>
+<li>Engineering standards reviewers to approve C++ safety conventions</li>
+<li>Agreement on C++ baseline and CI toolchain constraints</li>
+<li>Agreement on default C++ unit testing/mocking framework policy for rollout and modernization</li>
+<li>Validation of C++ build/dependency management defaults in guidance (CMake and package manager policy)</li>
+<li>Validation of baseline skill activation parity expectations for C++ manifest</li>
+<li>Repository owners to declare unsafe-boundary policy mode during implementation planning</li>
+<li>Coordination with <a href="hangar-ai-specs/changes/mutation-testing-governance/PROPOSAL.md">mutation-testing-governance</a> proposal to add C++/Mull to <span class="law-cite" data-law-id="ENG-4.11" data-non-negotiable="false">ENG-4.11<span class="law-tooltip"><strong>Mutation Testing Law</strong></span></span> language-tool matrix</li>
+</ul>
+<hr />
+<h2>Open Questions</h2>
+<p>None currently. Stakeholder decisions Q1-Q9 are resolved.</p>
+<hr />
+<h2>Archival Instructions</h2>
+<p>Per <a href="laws/engineering/eng-11-hangar-sdd.md"><span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> SDD lifecycle (PROPOSE → IMPLEMENT → ARCHIVE):</p>
+<ul>
+<li><strong>Archival trigger:</strong> After Phase 5 validation passes and all minimum governance sign-offs are recorded in <code>PROGRESS.md</code></li>
+<li><strong>Archival command:</strong> <code>mv hangar-ai-specs/changes/c-plus-plus-avatar-enrichment hangar-ai-specs/archive/$(date +%Y-%m-%d)-c-plus-plus-avatar-enrichment</code></li>
+<li><strong>Post-archival:</strong> Update any cross-references in active proposals that point to this change directory</li>
+</ul>
+<hr />
+<h2>Rollback and Deprecation Plan</h2>
+<p>If the C++ avatar is adopted but later found to be problematic:</p>
+<ol>
+<li><strong>Soft deprecation:</strong> Mark avatar as <code>status: deprecated</code> in <code>avatars/index.yaml</code> and <code>AVATAR-RAG-INDEX.yaml</code>; RAG retrieval stops routing new queries to C++ avatar files</li>
+<li><strong>Guidance freeze:</strong> Stop updating <code>guidance.md</code> and <code>manifest.yaml</code>; existing adopters retain current files</li>
+<li><strong>Hard removal (if needed):</strong> Remove <code>avatars/technology/cpp/</code> directory and all registry entries; archive proposal with deprecation rationale appended to <code>PROGRESS.md</code></li>
+<li><strong>Skill module handling:</strong> C++ skill modules under <code>agent-skills/skills-by-domain/platform-engineering/</code> are removed or reclassified if no other avatar depends on them</li>
+<li><strong>Communication:</strong> Notify adopting teams via governance channel before any deprecation step</li>
+</ol>
+<hr />
+<h2>Optional SDD Artifacts</h2>
+<p>Per <a href="agent-skills/skills-by-domain/discovery-research/spec-governance.md">spec-governance.md</a>, the following optional artifacts are available if reviewers request pre-implementation structural visibility:</p>
+<ul>
+<li><code>design.md</code> — Skeleton of <code>manifest.yaml</code> and <code>guidance.md</code> structure for early review. Not yet created; recommended if governance reviewers want to validate structure before Phase 1 implementation begins.</li>
+<li><code>SPEC.md</code> — Formal specification. Not required for this enrichment; the proposal serves as the governing specification.</li>
+</ul>
+<hr />
+<h2>Amendment A: Testing Strategy Upgrade (2026-04-05)</h2>
+<p><strong>Rationale:</strong> During Phase 2 implementation, a review of the unit test strategy identified that the current tests only verify text presence in files (e.g., <code>assert &quot;unique_ptr&quot; in content</code>). While these tests catch regressions and document structure, they do not verify governance behavior, law compliance, or cross-avatar parity. This amendment adds three concrete improvements to the testing approach within this proposal.</p>
+<p><strong>Laws governing this amendment:</strong> <a href="laws/engineering/eng-4-testing.md"><span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a>, <a href="laws/engineering/eng-4-testing.md"><span class="law-cite" data-law-id="ENG-4.2" data-non-negotiable="false">ENG-4.2<span class="law-tooltip"><strong>Test Pyramid Law</strong></span></span></a>, <a href="laws/engineering/eng-10-constitution.md"><span class="law-cite" data-law-id="ENG-10.1" data-non-negotiable="true">ENG-10.1<span class="law-tooltip"><strong>Constitution Metrics Collection Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a></p>
+<h3>Problem Statement</h3>
+<p>The current unit tests for the C++ avatar:</p>
+<ul>
+<li>✅ Verify that YAML keys exist and headings are present (structure scaffolding)</li>
+<li>❌ Do not verify that law IDs referenced in <code>manifest.yaml</code> are valid per <code>laws/index.yaml</code></li>
+<li>❌ Do not verify cross-file consistency (e.g., <code>specializes_laws</code> entries match actual example files)</li>
+<li>❌ Do not verify token budgets, citation format, or parity with reference avatars</li>
+<li>❌ Do not use the existing <code>constitution-lint</code> governance engine (<code>LawRegistry</code>, <code>Rule</code> base class)</li>
+</ul>
+<h3>Amendment Actions</h3>
+<p><strong>A.1: Create <code>avatar_test_helpers.py</code> (before resuming task 2.7)</strong></p>
+<p>Create a reusable test helper module at <code>tests/unit/test_cpp_avatar/avatar_test_helpers.py</code> providing:</p>
+<ul>
+<li><code>load_manifest(avatar_id)</code> — YAML loader with caching</li>
+<li><code>validate_law_references(manifest, laws_dir)</code> — uses <code>LawRegistry.load()</code> to verify all law IDs are valid</li>
+<li><code>check_example_file_exists(manifest, avatar_dir)</code> — verifies every <code>specializes_laws</code> entry has a matching example file</li>
+<li><code>check_token_budget(file_path, max_tokens=600)</code> — word count × 1.3 estimate</li>
+<li><code>check_parity_sections(manifest, reference_sections)</code> — verifies required manifest sections exist</li>
+<li><code>check_citation_format(content)</code> — regex for <code>[LAW-ID](path)</code> hyperlink format in markdown</li>
+</ul>
+<p>This module integrates with the existing <code>constitution-lint</code> infrastructure (<code>aa_constitution_lint.infrastructure.law_registry.LawRegistry</code>) rather than reimplementing governance checks.</p>
+<p><strong>A.2: Upgrade future tests to use schema/compliance checks (tasks 2.7+)</strong></p>
+<p>Starting with task 2.7, new unit tests should use the helpers from A.1 where applicable. Specifically:</p>
+<ul>
+<li>Tests for example files (Phase 3, 3a) must validate token budget and law ID validity</li>
+<li>Tests for guidance sections must validate citation hyperlink format</li>
+<li>Existing text-presence tests are retained (they still catch regressions) but new tests prioritize behavioral governance checks</li>
+</ul>
+<p><strong>A.3: Build <code>test_constitution_compliance.py</code> during Phase 5</strong></p>
+<p>Create <code>tests/unit/test_cpp_avatar/test_constitution_compliance.py</code> as a comprehensive governance validation suite:</p>
+<ul>
+<li><code>test_all_law_ids_valid()</code> — all law references in manifest and guidance resolve to real laws</li>
+<li><code>test_citations_use_hyperlinks()</code> — guidance.md uses <code>[ENG-X.Y](path)</code> format, not bare IDs</li>
+<li><code>test_example_token_budgets()</code> — every example file under 600 tokens</li>
+<li><code>test_non_negotiable_coverage()</code> — all 18 non-negotiable laws have example files</li>
+<li><code>test_manifest_registry_schema()</code> — manifest structure matches <code>avatars/index.yaml</code> schema</li>
+<li><code>test_retrieval_triggers_no_conflicts()</code> — triggers don't overlap with other avatars in <code>AVATAR-RAG-INDEX.yaml</code></li>
+</ul>
+<p>This aligns with existing Phase 5 validation tasks (5.1–5.12) and provides automated governance checks.</p>
+<h3>Impact on Task Count</h3>
+<p>This amendment adds 2 new tasks:</p>
+<ul>
+<li>Task 2.7a: Create <code>avatar_test_helpers.py</code> (inserted before current 2.7)</li>
+<li>Task 5.6a: Build <code>test_constitution_compliance.py</code> (inserted during Phase 5)</li>
+</ul>
+<p>Total task count increases from 89 to 91.</p>
+<h3>Future Work (Out of Scope)</h3>
+<p>Extending <code>constitution-lint</code> itself with a dedicated <code>AvatarValidationRule</code> is deferred to a separate proposal: <a href="hangar-ai-specs/changes/avatar-constitution-lint-extension/PROPOSAL.md"><code>avatar-constitution-lint-extension</code></a>. This avoids scope creep while preserving the design direction.</p>
+<hr />
+<h2>Amendment B: Advanced C++20+ Governance &amp; Missing Guardrails (2026-04-06)</h2>
+<p><strong>Rationale:</strong> A senior C++ architect review of the completed avatar (Phases 0–5, 107 tests) identified critical governance gaps in areas that production C++20/23 teams encounter daily. The avatar excels at application-level safety patterns (ownership, RAII, sanitizers, DDD) but lacks guidance for exception safety, coroutines, structured logging, C++20 modules, and memory allocation strategies. These gaps are especially significant for safety-critical aviation systems where exception guarantees and async patterns directly impact reliability.</p>
+<p><strong>Laws governing this amendment:</strong> <a href="laws/engineering/eng-6-security.md"><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a>, <a href="laws/engineering/eng-6-security.md"><span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a>, <a href="laws/engineering/eng-3-code-quality.md"><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span></a>, <a href="laws/engineering/eng-2-architecture.md"><span class="law-cite" data-law-id="ENG-2.2" data-non-negotiable="false">ENG-2.2<span class="law-tooltip"><strong>Layered Architecture Law</strong></span></span></a>, <a href="laws/engineering/eng-5-devops.md"><span class="law-cite" data-law-id="ENG-5.1" data-non-negotiable="false">ENG-5.1<span class="law-tooltip"><strong>Infrastructure as Code Law</strong></span></span></a></p>
+<h3>Problem Statement</h3>
+<p>The current C++ avatar:</p>
+<ul>
+<li>✅ Covers ownership, sanitizers, CI toolchain, DDD, brownfield migration (strong)</li>
+<li>❌ Has no exception safety governance (nothrow/strong/weak guarantees, noexcept contracts)</li>
+<li>❌ Mentions C++20 coroutines but provides zero usage guidance or governance</li>
+<li>❌ Has no structured logging standard (spdlog patterns, PII redaction, log levels)</li>
+<li>❌ Mentions C++20 modules but provides no migration or governance guidance</li>
+<li>❌ Has no allocator governance (PMR, arena, custom allocator strategies)</li>
+<li>❌ Example files rarely use C++20 features (ranges, concepts, coroutines) — missed opportunity</li>
+<li>❌ 26/27 example files are pseudocode that won't compile (acceptable but could be improved)</li>
+</ul>
+<h3>Amendment Actions</h3>
+<p><strong>B.1: Add exception safety &amp; error handling governance to guidance.md</strong></p>
+<p>Add a new section covering:</p>
+<ul>
+<li>Exception safety guarantee levels (nothrow, strong, basic) with C++ examples</li>
+<li><code>noexcept</code> contract policy (destructors, move operations, swap must be noexcept)</li>
+<li><code>std::expected&lt;T,E&gt;</code> (C++23) vs exceptions vs error codes — decision matrix</li>
+<li>Exception boundary policy (exceptions allowed within modules, error codes at API boundaries)</li>
+</ul>
+<p><strong>B.2: Add coroutines governance to guidance.md</strong></p>
+<p>Add a new section covering:</p>
+<ul>
+<li>When coroutines are appropriate (async I/O, generators, lazy evaluation)</li>
+<li>Thread affinity and executor requirements</li>
+<li>Cancellation semantics and exception propagation in coroutines</li>
+<li>Testing coroutine-based code with GoogleTest</li>
+</ul>
+<p><strong>B.3: Add structured logging &amp; diagnostics governance to guidance.md</strong></p>
+<p>Add a new section covering:</p>
+<ul>
+<li>spdlog as recommended logging framework (consistent with OpenTelemetry integration)</li>
+<li>Log level policy (TRACE/DEBUG/INFO/WARN/ERROR/CRITICAL) with C++ examples</li>
+<li>PII redaction requirements (per <span class="law-cite" data-law-id="ENG-6.4" data-non-negotiable="true">ENG-6.4<span class="law-tooltip"><strong>Data Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span>) in log output</li>
+<li>Structured JSON logging format for machine-readable audit trails (per <span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span>)</li>
+</ul>
+<p><strong>B.4: Add C++20 modules governance to guidance.md</strong></p>
+<p>Add a new section covering:</p>
+<ul>
+<li>Module interface stability requirements (per <span class="law-cite" data-law-id="ENG-2.3" data-non-negotiable="false">ENG-2.3<span class="law-tooltip"><strong>Vertical Slice Architecture Law</strong></span></span> API compatibility)</li>
+<li>Migration path from headers to modules (phased, non-breaking)</li>
+<li>Build system requirements (CMake 3.28+ for module support)</li>
+<li>When to use modules vs traditional headers (decision criteria)</li>
+</ul>
+<p><strong>B.5: Add allocator governance to guidance.md</strong></p>
+<p>Add a new section covering:</p>
+<ul>
+<li>Default allocator policy (standard allocator unless profiling shows need)</li>
+<li>PMR (Polymorphic Memory Resource) patterns for arena allocation</li>
+<li>Custom allocator requirements (must be testable, must support sanitizers)</li>
+<li>When to escalate to custom allocators (profiling evidence required, per <span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span>)</li>
+</ul>
+<p><strong>B.6: Create 3 new C++ skill modules</strong></p>
+<p>Create skill modules for the highest-priority gaps:</p>
+<ul>
+<li><code>skill-cpp-exception-safety-governance.md</code> (<span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span>) — exception guarantees, noexcept policy</li>
+<li><code>skill-cpp-coroutines-governance.md</code> (<span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span>, <span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span>) — async patterns, cancellation, testing</li>
+<li><code>skill-cpp-logging-diagnostics-standards.md</code> (<span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span>, <span class="law-cite" data-law-id="ENG-6.4" data-non-negotiable="true">ENG-6.4<span class="law-tooltip"><strong>Data Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span>) — structured logging, PII redaction</li>
+</ul>
+<p><strong>B.7: Update manifest.yaml with new retrieval triggers and anti-patterns</strong></p>
+<p>Add retrieval triggers for new topics (exception safety, coroutines, logging, modules, allocators) and anti-patterns (unguarded exceptions, fire-and-forget coroutines, PII in logs).</p>
+<p><strong>B.8: Update AVATAR-RAG-INDEX.yaml with new search queries</strong></p>
+<p>Add search queries for new governance topics so RAG retrieval discovers the new guidance sections.</p>
+<p><strong>B.9: Update platform-engineering index.yaml</strong></p>
+<p>Register the 3 new skill modules (count 15→18).</p>
+<h3>Impact on Task Count</h3>
+<p>This amendment adds 18 new tasks in a new Phase 6:</p>
+<ul>
+<li>6.1–6.5: Guidance sections (exception safety, coroutines, logging, modules, allocators)</li>
+<li>6.6–6.8: Skill modules (exception safety, coroutines, logging)</li>
+<li>6.9: Update manifest.yaml (triggers + anti-patterns)</li>
+<li>6.10: Update AVATAR-RAG-INDEX.yaml (search queries)</li>
+<li>6.11: Update platform-engineering index.yaml (register 3 skills)</li>
+<li>6.12–6.16: Tests for each new guidance section</li>
+<li>6.17: Tests for 3 new skill modules</li>
+<li>6.18: Full suite verification and commit</li>
+</ul>
+<p>Total task count increases from 91 to 109.</p>
+<hr />
+<h2>Amendment C — Critical Fixes (Law ID Bugs + Compiler Warnings)</h2>
+<p><strong>Added:</strong> 2026-04-06<br />
+<strong>Trigger:</strong> Expert architecture review (Phase 7 review — 4 parallel Opus 4.6 deep-dive agents) identified critical law ID mismatches and a missing compiler warning policy.</p>
+<h3>C.1: Fix Swapped Law IDs in guidance.md</h3>
+<p>Four law IDs are swapped between their titles. The titles match the intended law, but the IDs point to the wrong law text:</p>
+<p>| guidance.md Location | Current (Wrong) | Correct |
+|---|---|---|
+| CI Quality Toolchain (line ~562) | <code>ENG-5.1</code> (CI/CD Pipeline Law) | <code>ENG-5.2</code> (CI/CD Pipeline Law) |
+| Secrets Management (line ~623) | <code>ENG-5.5</code> (Secrets Management) | <code>ENG-5.6</code> (Configuration Management Law) |
+| Infrastructure as Code (line ~636) | <code>ENG-5.2</code> (Infrastructure as Code) | <code>ENG-5.1</code> (Infrastructure as Code Law) |
+| Observability (line ~669) | <code>ENG-5.6</code> (Observability Law) | <code>ENG-5.5</code> (Observability Law) |
+| Cross-Language Table (lines ~689-692) | Same swaps | Same corrections |</p>
+<p>Actual law definitions per <code>laws/engineering/devops.md</code>:</p>
+<ul>
+<li><span class="law-cite" data-law-id="ENG-5.1" data-non-negotiable="false">ENG-5.1<span class="law-tooltip"><strong>Infrastructure as Code Law</strong></span></span> = Infrastructure as Code Law</li>
+<li><span class="law-cite" data-law-id="ENG-5.2" data-non-negotiable="false">ENG-5.2<span class="law-tooltip"><strong>CI/CD Pipeline Law</strong></span></span> = CI/CD Pipeline Law</li>
+<li><span class="law-cite" data-law-id="ENG-5.5" data-non-negotiable="false">ENG-5.5<span class="law-tooltip"><strong>Observability Law</strong></span></span> = Observability Law</li>
+<li><span class="law-cite" data-law-id="ENG-5.6" data-non-negotiable="false">ENG-5.6<span class="law-tooltip"><strong>Configuration Management Law</strong></span></span> = Configuration Management Law (covers secrets)</li>
+</ul>
+<h3>C.2: Fix Swapped Law IDs in PROPOSAL.md</h3>
+<p>The same swaps exist in the proposal's own law citation table (lines 19-22).</p>
+<h3>C.3: Add Compiler Warning Policy</h3>
+<p>Add a mandatory compiler warning flags subsection to the CI Quality Toolchain Policy section. This is a <strong>glaring omission</strong> — without <code>-Werror</code>, warnings accumulate until they mask real bugs. A <code>-Wsign-compare</code> warning in fuel calculation could silently wrap <code>size_t</code>.</p>
+<p>Content: Mandatory flags (<code>-Wall -Wextra -Wpedantic -Werror</code>), CMake integration snippet, CI gate requirement.</p>
+<h3>C.4: Add Compiler Warnings to Manifest CI Toolchain</h3>
+<p>Add <code>-Wall -Wextra -Wpedantic -Werror</code> to <code>manifest.yaml</code> mandatory CI toolchain gates.</p>
+<h3>Impact on Task Count</h3>
+<p>Amendment C adds 7 tasks in Phase 7 (tasks 7.1–7.7). Total: 109 → 116.</p>
+<hr />
+<h2>Amendment D — P0 Governance Gaps (New Skills, Sections, Anti-Patterns)</h2>
+<p><strong>Added:</strong> 2026-04-06<br />
+<strong>Trigger:</strong> Expert architecture review identified 3 lifecycle phases with zero coverage (deploy, debug, incident), missing concurrency/resiliency governance, absent ABI stability section, and incomplete anti-patterns/law specializations.</p>
+<h3>New Guidance Sections (6)</h3>
+<p><strong>D.1: ABI Stability &amp; Binary Compatibility</strong> — ABI break detection in CI (<code>abi-compliance-checker</code>, <code>libabigail</code>), Pimpl idiom for public APIs, symbol visibility (<code>-fvisibility=hidden</code>), versioned namespaces, SOName versioning.</p>
+<p><strong>D.2: Template &amp; Metaprogramming Governance</strong> — C++20 concepts usage requirements, SFINAE→concepts migration, template instantiation bloat control (<code>extern template</code>), <code>constexpr</code>/<code>consteval</code> policies, compile-time vs runtime decision framework.</p>
+<p><strong>D.3: Panic/Abort vs Recovery Policy</strong> — Decision matrix for when to <code>std::terminate</code> vs recover. Safety-critical invariant violations (corrupted flight data, memory corruption) should terminate immediately.</p>
+<p><strong>D.4: C/C++ FFI Error Propagation</strong> — <code>checked_call()</code> patterns for C library boundaries (libcurl, OpenSSL, POSIX). Custom deleters for C handles (<code>FILE*</code>, sockets, HSM handles).</p>
+<p><strong>D.5: Reproducible Builds</strong> — Pinned compiler versions, deterministic flags (<code>SOURCE_DATE_EPOCH</code>), locked dependency versions, environment hashes. Required for FAA/DOT regulatory audit.</p>
+<p><strong>D.6: License Compliance &amp; Dependency Governance</strong> — Automated license scanning in CI, approved-license allowlist (MIT, BSD, Apache-2.0, BSL-1.0), Boost usage policy, header-only vs compiled policy, vendoring policy.</p>
+<h3>New Skills (5)</h3>
+<p><strong>D.7: skill-cpp-concurrency-thread-safety-governance.md</strong> — Lock hierarchies, lock-free structures, <code>std::atomic</code> memory ordering, <code>std::jthread</code>/<code>std::stop_source</code>, data race prevention patterns.</p>
+<p><strong>D.8: skill-cpp-resiliency-failure-modes.md</strong> — ENG-7.x specialization: circuit breakers, retries with backoff, timeouts, bulkheads for C++ services calling Sabre/ACARS/gate systems.</p>
+<p><strong>D.9: skill-cpp-deployment-hardening.md</strong> — Static vs dynamic linking policy, symbol stripping, ASLR/PIE/stack canary flags, container images, rollback procedures, feature flags (compile-time vs runtime).</p>
+<p><strong>D.10: skill-cpp-debugging-diagnostics-playbook.md</strong> — Core dump configuration, GDB/LLDB procedures, Valgrind memcheck, <code>perf</code> profiling, crash symbolization, post-mortem analysis runbook.</p>
+<p><strong>D.11: skill-cpp-dependency-governance.md</strong> — License scanning, approved library list, Boost module policy, transitive dependency auditing, SBOM generation.</p>
+<h3>Registry Updates (5)</h3>
+<p><strong>D.12:</strong> Bump minimum compiler versions — GCC 13+, Clang 16+, MSVC 19.38+ (VS 2022 17.8+), CMake 3.25+.</p>
+<p><strong>D.13:</strong> Add 10 missing anti-patterns to <code>manifest.yaml</code> — dangling <code>string_view</code>/<code>span</code>, <code>shared_ptr</code> cycles, signed integer overflow (UB), use-after-move, SIOF, blocking in async context, implicit <code>this</code> capture in lambdas, exception in destructor, unvalidated deserialization, exception across DLL boundary.</p>
+<p><strong>D.14:</strong> Expand <code>specializes_laws</code> — add <span class="law-cite" data-law-id="ENG-3.3" data-non-negotiable="false">ENG-3.3<span class="law-tooltip"><strong>Law of Demeter</strong></span></span> (Demeter), <span class="law-cite" data-law-id="ENG-3.5" data-non-negotiable="false">ENG-3.5<span class="law-tooltip"><strong>Naming Conventions Law</strong></span></span> (Naming), <span class="law-cite" data-law-id="ENG-3.7" data-non-negotiable="false">ENG-3.7<span class="law-tooltip"><strong>Error Handling Law</strong></span></span> (Error Handling), <span class="law-cite" data-law-id="ENG-5.2" data-non-negotiable="false">ENG-5.2<span class="law-tooltip"><strong>CI/CD Pipeline Law</strong></span></span> (CI/CD), <span class="law-cite" data-law-id="ENG-5.5" data-non-negotiable="false">ENG-5.5<span class="law-tooltip"><strong>Observability Law</strong></span></span> (Observability), <span class="law-cite" data-law-id="ENG-6.5" data-non-negotiable="false">ENG-6.5<span class="law-tooltip"><strong>Input Validation Law</strong></span></span> (Input Validation), <span class="law-cite" data-law-id="ENG-7.1" data-non-negotiable="false">ENG-7.1<span class="law-tooltip"><strong>Failure Handling Law</strong></span></span> (Failure Handling). Expand retrieval triggers with developer-vocabulary queries. Bump version to 2.0.0. Add <code>product-discovery-stage-a-f</code> workflow for cross-avatar parity.</p>
+<p><strong>D.15:</strong> Update <code>AVATAR-RAG-INDEX.yaml</code> with new search queries for all new governance topics.</p>
+<p><strong>D.16:</strong> Update <code>platform-engineering/index.yaml</code> — register 5 new skills (count 18→23).</p>
+<h3>Impact on Task Count</h3>
+<p>Amendment D adds 27 tasks in Phase 8 (tasks 8.1–8.27). Total: 116 → 143.</p>
+<hr />
+<h2>Amendment E — C++20+ Examples &amp; Novice/Legacy Code Guidance</h2>
+<p><strong>Added:</strong> 2026-04-06<br />
+<strong>Trigger:</strong> Expert review found all 27 examples are C++17-level despite requiring C++20+, and identified a completely missing dimension for novice engineers on legacy codebases.</p>
+<h3>New C++20+ Examples (10)</h3>
+<p>| # | Filename | Law | Description |
+|---|----------|-----|-------------|
+| E.1 | <code>ENG-6.1-smart-pointers.md</code> | <span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>unique_ptr</code>/<code>shared_ptr</code>/<code>weak_ptr</code> in flight connection graph |
+| E.2 | <code>ENG-6.1-move-semantics.md</code> | <span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>noexcept</code> move with swap idiom; anti-pattern: throwing move ctor |
+| E.3 | <code>ENG-6.1-thread-safety.md</code> | <span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>SeatInventory</code> with <code>scoped_lock</code> + <code>atomic</code> counter |
+| E.4 | <code>ENG-6.1-raii-resources.md</code> | <span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | RAII wrappers with custom deleters for GDS connection |
+| E.5 | <code>ENG-3.1-concepts.md</code> | <span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span> | C++20 <code>concept Serializable</code> constraining audit template |
+| E.6 | <code>ENG-6.1-expected-errors.md</code> | <span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | <code>std::expected</code> with monadic <code>and_then</code>/<code>transform_error</code> |
+| E.7 | <code>ENG-3.1-coroutines.md</code> | <span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span> | <code>FlightSearchTask</code> with <code>co_await</code> and <code>stop_token</code> |
+| E.8 | <code>ENG-6.7-structured-logging.md</code> | <span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span> | spdlog JSON with PII redaction via <code>mask_pnr()</code> |
+| E.9 | <code>ENG-5.2-cmake-governance.md</code> | <span class="law-cite" data-law-id="ENG-5.2" data-non-negotiable="false">ENG-5.2<span class="law-tooltip"><strong>CI/CD Pipeline Law</strong></span></span> | Well-structured <code>CMakeLists.txt</code> with sanitizer flags, GoogleTest |
+| E.10 | <code>ENG-3.1-pmr-allocators.md</code> | <span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span> | PMR <code>monotonic_buffer_resource</code> in hot-path fare calculation |</p>
+<h3>New Guidance Section: Legacy Code Navigation for New Engineers</h3>
+<p>A comprehensive section in <code>guidance.md</code> targeting novice C++ developers assigned to existing AA codebases:</p>
+<ol>
+<li><strong>Code Archaeology Techniques</strong> — read build system first, headers before impl, trace from <code>main()</code>, generate call graphs with Doxygen</li>
+<li><strong>Understanding Legacy Patterns</strong> — C++98/03 vs modern equivalents (<code>auto_ptr</code>→<code>unique_ptr</code>), raw pointer ownership conventions, macro-heavy code, callback-based async</li>
+<li><strong>Safe Modification Strategies</strong> — characterization tests (Michael Feathers), &quot;Sprout Method&quot; and &quot;Wrap Method&quot; techniques, never mix behavior change + refactor</li>
+<li><strong>Debugging Legacy Code</strong> — GDB/LLDB basics, ASan for first-time discovery, Valgrind, <code>strace</code>/<code>ltrace</code>, core dump analysis</li>
+<li><strong>Common Legacy Pitfalls</strong> — implicit conversions, UB that &quot;works on my machine&quot;, header order deps, SIOF, tribal knowledge</li>
+<li><strong>Modernization Entry Points</strong> — smart pointers in touched code, <code>const</code> correctness, <code>nullptr</code>, <code>override</code>, range-for</li>
+<li><strong>Skill Development Path</strong> — 4-phase progression: Read → Modify safely → Modernize → Design new components</li>
+</ol>
+<h3>New Skill: Legacy Code Navigation</h3>
+<p><strong>E.12: skill-cpp-legacy-code-navigation.md</strong> — invoked when a developer says &quot;help me understand this code&quot;, &quot;I'm new to this codebase&quot;, or &quot;how do I read legacy C++.&quot;</p>
+<h3>Impact on Task Count</h3>
+<p>Amendment E adds 15 tasks in Phase 9 (tasks 9.1–9.15). Total: 143 → 158.</p>
+<hr />
+<h2>Amendment F — Standard-Tier Governance Foundation</h2>
+<p><strong>Added:</strong> 2026-04-06<br />
+<strong>Trigger:</strong> Expert review found the avatar treats brownfield as a single undifferentiated exception clause. C++98/03, C++11, C++14, and C++17 codebases all receive identical &quot;document a modernization plan&quot; guidance with no tier-specific policies, toolchain minimums, or anti-patterns.</p>
+<h3>Changes to manifest.yaml</h3>
+<p><strong>F.1:</strong> Add <code>standard_tiers</code> structured block — 5 tiers (C++98/03 frozen, C++11 sunset, C++14/17 active, C++20 required, C++23 recommended) with per-tier compiler minimums, status, policy, and key features.</p>
+<p><strong>F.2:</strong> Replace single <code>compilers:</code> list with tiered compiler structure (recommended / active / supported / frozen).</p>
+<p><strong>F.3:</strong> Add <code>anti_patterns_by_tier</code> block — tier-scoped anti-patterns for C++98/03, C++11, and C++14/17.</p>
+<p><strong>F.4:</strong> Parameterize lint command — replace hardcoded <code>-std=c++20</code> with per-tier examples.</p>
+<h3>Changes to guidance.md</h3>
+<p><strong>F.5:</strong> Add per-tier clang-tidy configuration profiles (C++11, C++14/17, C++20+) with specific check enable/disable lists.</p>
+<p><strong>F.6:</strong> Add per-tier testing framework matrix (CppUnit/Boost.Test for C++98, GoogleTest ≤1.12 for C++11, GoogleTest 1.14+ for C++14+).</p>
+<p><strong>F.7:</strong> Add per-tier code review criteria (what to flag, what to modernize-when-touched, what to leave alone).</p>
+<p><strong>F.8:</strong> Add cross-standard ABI boundary guidance — GCC dual ABI, std library types at boundaries, ODR compliance, link-time validation.</p>
+<p><strong>F.9:</strong> Add feature-detection macro governance — <code>__cplusplus</code>, <code>__has_include</code>, <code>__cpp_*</code> SD-6 macros, cross-standard header patterns.</p>
+<p><strong>F.10:</strong> Add compiler flag progression guide — 6-phase incremental flag adoption during migration.</p>
+<p><strong>F.11:</strong> Add sanitizer availability matrix by compiler version with fallback policies (Valgrind when ASan/UBSan unavailable).</p>
+<h3>Impact on Task Count</h3>
+<p>Amendment F adds 15 tasks in Phase 10 (tasks 10.1–10.15). Total: 158 → 173.</p>
+<hr />
+<h2>Amendment G — Migration Playbooks &amp; Examples</h2>
+<p><strong>Added:</strong> 2026-04-06<br />
+<strong>Trigger:</strong> Expert review found zero migration playbooks for any standard-to-standard upgrade path. C++98→C++11 (the largest jump in C++ history) has no feature adoption sequence, no pitfall documentation, and no CI change guidance.</p>
+<h3>Migration Playbooks (guidance.md)</h3>
+<p><strong>G.1:</strong> C++98/03 → C++11 playbook — 10-step feature adoption sequence (nullptr → override → enum class → auto → range-for → smart pointers → move semantics → lambdas → constexpr → std::thread), pitfalls (auto_ptr migration, GCC 5.1 ABI break, throw()→noexcept), CI changes.</p>
+<p><strong>G.2:</strong> C++11 → C++14 playbook — generic lambdas, <code>[[deprecated]]</code>, make_unique, relaxed constexpr, variable templates.</p>
+<p><strong>G.3:</strong> C++14 → C++17 playbook — std::optional, string_view (dangling!), structured bindings, if constexpr, <code>[[nodiscard]]</code>, std::variant, filesystem. Pitfalls: optional&lt;T&amp;&gt; doesn't exist, auto_ptr/random_shuffle removed.</p>
+<p><strong>G.4:</strong> C++17 → C++20 playbook — std::span, three-way comparison, concepts, ranges, consteval/constinit, coroutines (need library), modules (adopt last). Pitfalls: ranges dangling, module ABI mismatch, compile time increase.</p>
+<p><strong>G.5:</strong> Dual-toolchain governance — CMake per-target standard, CI matrix under both compilers, release build authority, sanitizer allocation.</p>
+<p><strong>G.6:</strong> Dependency standard mismatch guidance — adapter library pattern, vcpkg custom triplets.</p>
+<p><strong>G.7:</strong> &quot;Writing New Code for Legacy Standards&quot; section — what patterns are available at each tier, polyfill strategies, forward-compatible coding.</p>
+<h3>New Example Files</h3>
+<p><strong>G.8:</strong> <code>ENG-5.2-cmake-mixed-standard.md</code> — CMake multi-standard repository with per-target features.<br />
+<strong>G.9:</strong> <code>ENG-6.1-auto-ptr-migration.md</code> — auto_ptr → unique_ptr before/after with move semantics.<br />
+<strong>G.10:</strong> <code>ENG-6.1-smart-pointer-migration.md</code> — Raw new/delete → RAII including C++98 guard pattern.<br />
+<strong>G.11:</strong> <code>ENG-6.1-raii-c-api-wrapper.md</code> — RAII wrappers for C APIs (FILE*, sockets) with custom deleters.<br />
+<strong>G.12:</strong> <code>ENG-6.1-thread-migration.md</code> — pthread/Win32 → std::thread/jthread migration.<br />
+<strong>G.13:</strong> <code>ENG-3.1-feature-detection.md</code> — Feature-test macros, __cplusplus, __has_include patterns.<br />
+<strong>G.14:</strong> <code>ENG-6.1-legacy-modernization-before-after.md</code> — Comprehensive C++98→C++11 before/after.</p>
+<h3>Impact on Task Count</h3>
+<p>Amendment G adds 19 tasks in Phase 11 (tasks 11.1–11.19). Total: 173 → 192.</p>
+<hr />
+<h2>Amendment H — Legacy Anti-Patterns, Skills &amp; RAG</h2>
+<p><strong>Added:</strong> 2026-04-06<br />
+<strong>Trigger:</strong> Expert review found 13 missing legacy-specific anti-patterns, 6 skills that assume C++20+ without legacy fallbacks, and severe RAG retrieval blind spots (only 1 of 23 queries matches legacy content).</p>
+<h3>New Anti-Patterns (manifest.yaml)</h3>
+<p><strong>H.1:</strong> Add 13 legacy anti-patterns:</p>
+<ul>
+<li>CRITICAL: std::auto_ptr usage, C-style strings (strcpy/sprintf), manual resource management without RAII, raw new/delete in C++98</li>
+<li>HIGH: void* containers, C-style arrays, exception-unsafe code, volatile for synchronization, implicit conversions/narrowing, pthread/Win32 threading</li>
+<li>MEDIUM: #define constants, missing include guards, manual iterator loops</li>
+</ul>
+<h3>New Skills</h3>
+<p><strong>H.2:</strong> <code>skill-cpp-standard-migration.md</code> — Decision matrix, standard-by-standard checklist, CMake multi-standard config, feature detection, compiler upgrade prerequisites, rollback procedures.</p>
+<p><strong>H.3:</strong> <code>skill-cpp-legacy-modernization.md</code> — Modernization entry points formalized as governance, priority order, compatibility macros, module-by-module workflow, &quot;do not touch&quot; rules, clang-tidy integration.</p>
+<p><strong>H.4:</strong> <code>skill-cpp-compatibility-headers.md</code> — Portability macros, polyfill patterns, gsl::span vs std::span, conditional noexcept, ABI stability.</p>
+<p><strong>H.5:</strong> <code>skill-cpp-feature-detection.md</code> — __cplusplus values per standard, __has_include, __has_cpp_attribute, SD-6 macros, CMake check_cxx_source_compiles, anti-pattern: _MSC_VER as standard proxy.</p>
+<h3>Existing Skill Updates</h3>
+<p><strong>H.6:</strong> Add legacy mode sections to 4 existing skills:</p>
+<ul>
+<li><code>skill-cpp-portable-build-governance</code> — brownfield standard configuration</li>
+<li><code>skill-cpp-concurrency-thread-safety-governance</code> — C++11/14/17 alternatives (std::thread + atomic<bool>)</li>
+<li><code>skill-cpp-template-complexity-management</code> — SFINAE governance, tag dispatch, migration to concepts</li>
+<li><code>skill-cpp-exception-safety-governance</code> — tl::expected for pre-C++23, error codes for pre-C++11</li>
+</ul>
+<h3>RAG &amp; Registry Updates</h3>
+<p><strong>H.7:</strong> Add 12 legacy-focused retrieval triggers to manifest.yaml.</p>
+<p><strong>H.8:</strong> Add 10 legacy search queries to AVATAR-RAG-INDEX.yaml.</p>
+<p><strong>H.9:</strong> Add 5 legacy anti-patterns to AVATAR-RAG-INDEX.yaml.</p>
+<p><strong>H.10:</strong> Update platform-engineering/index.yaml — register 4 new skills (count 24→28).</p>
+<h3>Impact on Task Count</h3>
+<p>Amendment H adds 20 tasks in Phase 12 (tasks 12.1–12.20). Total: 192 → 212.</p>
+<hr />
+<h2>Amendment I — Novice C++ Developer Guidance</h2>
+<p><strong>Added:</strong> 2026-04-06<br />
+<strong>Trigger:</strong> Expert C++ architecture review identified that the avatar is ~40% complete for brownfield/legacy audience. Experienced programmers novice to C++ taking over poorly-maintained codebases need: mental model transitions, code smell recognition, triage methodology, survival patterns, and object design rehabilitation.</p>
+<h3>New Guidance Sections (guidance.md)</h3>
+<p><strong>I.1:</strong> &quot;Mental Model Transitions&quot; section — 8 critical gaps for developers coming from Java/Python/C#:</p>
+<ol>
+<li>Value semantics vs reference semantics (copies happen everywhere)</li>
+<li>RAII vs garbage collection (deterministic destruction)</li>
+<li>Compilation model (headers, translation units, preprocessor — not imports)</li>
+<li>Undefined behavior (not exceptions — literally anything can happen)</li>
+<li>Pointers vs references vs values (decision tree)</li>
+<li>The preprocessor (textual substitution engine)</li>
+<li>Linking (why &quot;undefined reference&quot; happens)</li>
+<li>const correctness (not Java's <code>final</code> — propagates transitively)</li>
+</ol>
+<p><strong>I.2:</strong> &quot;Legacy Code Smell Catalog&quot; section — 14 structural smells with recognition patterns, severity ratings, and remediation steps:</p>
+<ul>
+<li>CRITICAL: God classes (&gt;2000 LOC), deep inheritance (4+ levels), manual resource cleanup with multiple returns</li>
+<li>HIGH: Circular #include, #ifdef spaghetti, copy-paste polymorphism, singleton abuse, Rule of 3/5/0 violations, implicit conversions</li>
+<li>MEDIUM: Fragile base class, header-only bloat, output parameters, public data members, mixed error handling</li>
+</ul>
+<p><strong>I.3:</strong> &quot;Legacy Codebase Triage Playbook&quot; section — Day-by-day week-1 priorities (build → sanitizers → warnings → dependency graph → characterization tests), monthly remediation plan, &quot;DO NOT TOUCH&quot; list, characterization testing procedure (10-step), and seam identification guide (preprocessing, link, object seams).</p>
+<p><strong>I.4:</strong> Expand &quot;Skill Development Path&quot; into full &quot;Survival Patterns&quot; section — Week-1 reading strategies (execution-path-first, debugger-as-reader, pointer ownership annotation), Month-1 safe modification patterns (Sprout Method, Wrap Method, Extract Interface, RAII Conversion, Boy Scout Rule), Month-3 contribution patterns, Month-6 modernization leadership.</p>
+<p><strong>I.5:</strong> &quot;Object Design Rehabilitation&quot; section — 6 design debt vectors with recognition, severity, and fix approach:</p>
+<ol>
+<li>Multiple inheritance diamond problems</li>
+<li>Operator overloading hiding expensive operations</li>
+<li>Implicit conversions causing silent bugs</li>
+<li>Copy semantics creating performance problems</li>
+<li>Over-reliance on virtual functions where templates would be better</li>
+<li>Missing move semantics on large objects</li>
+</ol>
+<h3>Skill Updates</h3>
+<p><strong>I.6:</strong> Expand <code>skill-cpp-legacy-code-navigation.md</code> — Add triage timeline (day-by-day), seam identification guide, characterization test procedure, and metrics to track.</p>
+<p><strong>I.7:</strong> Create <code>skill-cpp-legacy-survival-patterns.md</code> — Operationalize the survival patterns as an invokable skill with week/month/quarter progression and actionable checklists.</p>
+<h3>Manifest &amp; RAG Updates</h3>
+<p><strong>I.8:</strong> Add 14 code smell entries to <code>manifest.yaml</code> <code>anti_patterns[]</code>.</p>
+<p><strong>I.9:</strong> Add 8 retrieval triggers for novice content to <code>manifest.yaml</code>.</p>
+<p><strong>I.10:</strong> Add novice guidance RAG entries to <code>AVATAR-RAG-INDEX.yaml</code>.</p>
+<h3>New Examples</h3>
+<p><strong>I.11:</strong> <code>ENG-3.1-code-smell-raii-conversion.md</code> — Before/after RAII conversion of function with multiple returns and manual cleanup.</p>
+<p><strong>I.12:</strong> <code>ENG-4.1-characterization-test-pattern.md</code> — Characterization test capturing black-box behavior of legacy function.</p>
+<h3>Impact on Task Count</h3>
+<p>Amendment I adds 19 tasks in Phase 13 (tasks 13.1–13.19). Total: 212 → 231.</p>
+<hr />
+<h2>Amendment J — Constitution Compliance Rating System</h2>
+<p><strong>Added:</strong> 2026-04-06<br />
+<strong>Trigger:</strong> Need for a consistent, reproducible 0–10 compliance rating for C++ codebases. Enables deployment gating, remediation tracking, and cross-tier normalization.</p>
+<h3>Rating Dimensions (10 weighted dimensions, 4 with veto power)</h3>
+<p>| Dim | Name | Weight | Veto? | Key Laws |
+|-----|------|--------|-------|----------|
+| D1 | Test Governance | 15% | Yes (≥4) | <a href="laws/engineering/eng-4-testing.md"><span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a>, <a href="laws/engineering/eng-4-testing.md"><span class="law-cite" data-law-id="ENG-4.2" data-non-negotiable="false">ENG-4.2<span class="law-tooltip"><strong>Test Pyramid Law</strong></span></span></a> |
+| D2 | Security Posture | 15% | Yes (≥4) | <a href="laws/engineering/eng-6-security.md"><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a>, <a href="laws/engineering/eng-6-security.md"><span class="law-cite" data-law-id="ENG-6.4" data-non-negotiable="true">ENG-6.4<span class="law-tooltip"><strong>Data Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> |
+| D3 | CI/CD Pipeline | 10% | No | <a href="laws/engineering/eng-5-devops.md"><span class="law-cite" data-law-id="ENG-5.2" data-non-negotiable="false">ENG-5.2<span class="law-tooltip"><strong>CI/CD Pipeline Law</strong></span></span></a> |
+| D4 | Architecture &amp; Design | 10% | No | <a href="laws/engineering/eng-2-architecture.md"><span class="law-cite" data-law-id="ENG-2.1" data-non-negotiable="false">ENG-2.1<span class="law-tooltip"><strong>Domain-Driven Design Law</strong></span></span></a>, <a href="laws/engineering/eng-3-code-quality.md"><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span></a> |
+| D5 | Observability &amp; Audit | 12% | Yes (≥3) | <a href="laws/engineering/eng-6-security.md"><span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a>, <a href="laws/business/bus-7-operational-governance.md"><span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> |
+| D6 | Memory Safety | 12% | Yes (≥3) | <a href="laws/engineering/eng-6-security.md"><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> |
+| D7 | Dependency Governance | 6% | No | <a href="laws/engineering/eng-6-security.md"><span class="law-cite" data-law-id="ENG-6.6" data-non-negotiable="false">ENG-6.6<span class="law-tooltip"><strong>Vulnerability Management Law</strong></span></span></a>, <a href="laws/business/bus-8-intellectual-property.md">BUS-8.5</a> |
+| D8 | Documentation | 6% | No | <a href="laws/engineering/eng-3-code-quality.md"><span class="law-cite" data-law-id="ENG-3.5" data-non-negotiable="false">ENG-3.5<span class="law-tooltip"><strong>Naming Conventions Law</strong></span></span></a>, <a href="laws/engineering/eng-1-core-principles.md"><span class="law-cite" data-law-id="ENG-1.2" data-non-negotiable="false">ENG-1.2<span class="law-tooltip"><strong>AI-Engineer Pairing Law</strong></span></span></a> |
+| D9 | Modernization Readiness | 6% | No | Manifest <code>standard_tiers</code> |
+| D10 | Regulatory Compliance | 8% | Yes (≥3) | <a href="laws/business/bus-1-strategic-alignment.md"><span class="law-cite" data-law-id="BUS-1.1" data-non-negotiable="true">BUS-1.1<span class="law-tooltip"><strong>Priority Hierarchy Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a>, <a href="laws/business/bus-2-compliance.md"><span class="law-cite" data-law-id="BUS-2.1" data-non-negotiable="true">BUS-2.1<span class="law-tooltip"><strong>FAA Compliance Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> |</p>
+<h3>Scoring Formula</h3>
+<pre><code>composite = Σ(dimension_score × weight) × tier_multiplier
+
+Tier multipliers: T5/T4 = 1.00, T3 = 0.95, T2 = 0.90, T1 = 0.80
+</code></pre>
+<h3>Grade Boundaries</h3>
+<p>| Grade | Score Range | Meaning |
+|-------|------------|---------|
+| Exemplary | 8.0–10.0 | Full constitutional compliance |
+| Compliant | 6.0–7.9 | Meets minimum requirements, minor gaps |
+| Remediation Required | 4.0–5.9 | Significant gaps, must remediate within 90 days |
+| Non-Compliant | 0.0–3.9 | Fails constitutional minimum, production deployment blocked |</p>
+<h3>Example Scorecards</h3>
+<p><strong>J.1:</strong> C++20 greenfield (score ~9.0 — Exemplary): Full TDD, sanitizers, modern ownership, CI/CD green.<br />
+<strong>J.2:</strong> C++17 brownfield (score ~5.3 — Remediation Required): Partial tests, some raw pointers, missing audit logging.<br />
+<strong>J.3:</strong> C++11 legacy (score ~2.2 — Non-Compliant): No tests, manual memory, no CI, missing AGENTS.md.</p>
+<h3>Deliverables</h3>
+<p><strong>J.4:</strong> Add &quot;Constitution Compliance Rating&quot; section to <code>guidance.md</code> — overview, 10 dimensions with full rubric, scoring formula, grade boundaries, tier adjustments, and 3 example scorecards.</p>
+<p><strong>J.5:</strong> Create <code>skill-cpp-compliance-rating.md</code> — Operationalize rating as an invokable skill with step-by-step assessment procedure, dimension inspection methods, and report template.</p>
+<p><strong>J.6:</strong> Add compliance rating retrieval triggers to <code>manifest.yaml</code>.</p>
+<p><strong>J.7:</strong> Add compliance rating RAG entries to <code>AVATAR-RAG-INDEX.yaml</code>.</p>
+<h3>Impact on Task Count</h3>
+<p>Amendment J adds 13 tasks in Phase 14 (tasks 14.1–14.13). Total: 231 → 244.</p>
+<hr />
+<h2>Amendment K — Advanced C++ Governance &amp; Resiliency Patterns</h2>
+<p>Amendment K addresses 36 governance gaps identified by a comprehensive law coverage audit. The audit compared all 105 constitutional laws against the C++ avatar and found 13 applicable laws with zero coverage, 13 partially covered, and critical advanced C++ topics with no governance. All new examples remain within the standard 600-token budget.</p>
+<h3>Phase 15a: ENG-7.x Resiliency Patterns (5 Law Gaps Closed)</h3>
+<p>New <code>## Resiliency Patterns</code> section in guidance.md with C++-specific implementations:</p>
+<p>| Law | Pattern | C++ Implementation |
+|-----|---------|-------------------|
+| <a href="laws/engineering/eng-7-reliability.md"><span class="law-cite" data-law-id="ENG-7.2" data-non-negotiable="false">ENG-7.2<span class="law-tooltip"><strong>Circuit Breaker Law</strong></span></span></a> | Circuit Breaker | Atomic state machine (<code>std::atomic&lt;State&gt;</code>, <code>std::chrono</code>) |
+| <a href="laws/engineering/eng-7-reliability.md"><span class="law-cite" data-law-id="ENG-7.3" data-non-negotiable="false">ENG-7.3<span class="law-tooltip"><strong>Retry & Backoff Law</strong></span></span></a> | Retry/Backoff | Exponential backoff with jitter (<code>std::mt19937</code>, <code>std::chrono</code>) |
+| <a href="laws/engineering/eng-7-reliability.md"><span class="law-cite" data-law-id="ENG-7.4" data-non-negotiable="false">ENG-7.4<span class="law-tooltip"><strong>Timeout Law</strong></span></span></a> | Timeout | <code>std::future::wait_for</code>, <code>DeadlineContext</code> for budget propagation |
+| <a href="laws/engineering/eng-7-reliability.md"><span class="law-cite" data-law-id="ENG-7.5" data-non-negotiable="false">ENG-7.5<span class="law-tooltip"><strong>Bulkhead Law</strong></span></span></a> | Bulkhead | <code>std::counting_semaphore</code> (C++20), per-dependency isolation |
+| <a href="laws/engineering/eng-7-reliability.md"><span class="law-cite" data-law-id="ENG-7.6" data-non-negotiable="false">ENG-7.6<span class="law-tooltip"><strong>Idempotency Law</strong></span></span></a> | Idempotency | Atomic compare-and-swap, request deduplication cache |</p>
+<p>New example files: <code>ENG-7.2-circuit-breaker.md</code>, <code>ENG-7.3-retry-backoff.md</code>, <code>ENG-7.4-timeout-governance.md</code>, <code>ENG-7.5-bulkhead-isolation.md</code></p>
+<h3>Phase 15b: P0 Advanced Governance (7 Critical UB/Bug Gaps)</h3>
+<p>New guidance sections:</p>
+<ol>
+<li>
+<p><strong>Advanced Memory and Object Lifetime</strong> (<a href="laws/engineering/eng-6-security.md"><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a>, <a href="laws/engineering/eng-3-code-quality.md"><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span></a>)</p>
+<ul>
+<li>Strict aliasing rules (<code>std::memcpy</code>, <code>std::bit_cast</code>, <code>reinterpret_cast</code> safety)</li>
+<li>Placement new (alignment, manual destructor calls, <code>std::optional</code> as simpler alternative)</li>
+<li><code>std::launder</code> and storage reuse (const/reference member edge cases)</li>
+<li>Custom allocators (arena, GPU/shared memory, custom deleters)</li>
+</ul>
+</li>
+<li>
+<p><strong>Forwarding, ADL, and Template Safety</strong> (<a href="laws/engineering/eng-3-code-quality.md"><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span></a>, <a href="laws/engineering/eng-6-security.md"><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a>)</p>
+<ul>
+<li>Perfect forwarding (forwarding reference rules, forward-once, simplification guide)</li>
+<li>ADL pitfalls (unqualified calls in templates, two-step idiom for <code>swap</code>)</li>
+<li>Forwarding reference vs rvalue reference distinction</li>
+</ul>
+</li>
+<li>
+<p><strong>Lambda and Functional Pattern Governance</strong> (<a href="laws/engineering/eng-6-security.md"><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a>)</p>
+<ul>
+<li>Lambda capture traps (<code>[=]</code> captures <code>this</code> by pointer, <code>[&amp;]</code> in async is UB)</li>
+<li><code>std::function</code> overhead (heap allocation, template alternative, <code>std::move_only_function</code>)</li>
+<li><code>std::initializer_list</code> surprises (constructor ambiguity, dangling, narrowing)</li>
+</ul>
+</li>
+<li>
+<p><strong>Coroutines section enriched</strong> — lifetime traps (dangling frame references, reference parameter UB, temporary lifetime, symmetric transfer)</p>
+</li>
+</ol>
+<p>New example files: <code>ENG-6.1-strict-aliasing.md</code>, <code>ENG-3.1-perfect-forwarding.md</code></p>
+<p>New anti-patterns: <code>strict-aliasing-violation</code>, <code>dangling-lambda-capture</code>, <code>unchecked-adl-resolution</code></p>
+<h3>Phase 15c: P1 Patterns (Templates, Inheritance, Testing, Type Safety)</h3>
+<p>Enriched guidance sections:</p>
+<ol>
+<li>
+<p><strong>Template and Metaprogramming Governance</strong> (enriched)</p>
+<ul>
+<li>Template specialization traps (ODR violations, full vs partial, namespace rules)</li>
+<li>Variadic templates and fold expressions (bounded, constrained)</li>
+<li>SFINAE → Concepts migration path (table with pre/post examples)</li>
+</ul>
+</li>
+<li>
+<p><strong>Object Design Rehabilitation</strong> (enriched)</p>
+<ul>
+<li>Protected/private inheritance (when justified, <code>dynamic_cast</code> interaction)</li>
+<li>Mixin/policy-based design (Alexandrescu-style, CRTP mixins)</li>
+<li>Migration from MI to delegation/composition</li>
+</ul>
+</li>
+<li>
+<p><strong>Test Isolation and Mock Boundaries</strong> (<a href="laws/engineering/eng-4-testing.md"><span class="law-cite" data-law-id="ENG-4.7" data-non-negotiable="false">ENG-4.7<span class="law-tooltip"><strong>Test Isolation Law</strong></span></span></a>, <a href="laws/engineering/eng-4-testing.md"><span class="law-cite" data-law-id="ENG-4.8" data-non-negotiable="false">ENG-4.8<span class="law-tooltip"><strong>Mock Boundaries Law</strong></span></span></a>) — NEW</p>
+<ul>
+<li>Link-time isolation (template injection, link seam, gmock)</li>
+<li>Mock boundary rules (mock externals, don't mock value types, max 3 mocks)</li>
+<li>Static state in tests (singleton avoidance, fixture patterns)</li>
+</ul>
+</li>
+<li>
+<p><strong>Implicit Conversions and Type Safety</strong> (<a href="laws/engineering/eng-3-code-quality.md"><span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span></a>, <a href="laws/engineering/eng-6-security.md"><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1<span class="law-tooltip"><strong>Security by Design Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a>) — NEW</p>
+<ul>
+<li><code>explicit</code> governance (all single-arg constructors, conversion operators)</li>
+<li>Copy elision / RVO / NRVO (guaranteed vs optional, don't <code>std::move</code> returns)</li>
+</ul>
+</li>
+<li>
+<p><strong>SRP and C++ Refactoring Patterns</strong> (<a href="laws/engineering/eng-3-code-quality.md"><span class="law-cite" data-law-id="ENG-3.4" data-non-negotiable="false">ENG-3.4<span class="law-tooltip"><strong>Single Responsibility Principle</strong></span></span></a>, <a href="laws/engineering/eng-3-code-quality.md"><span class="law-cite" data-law-id="ENG-3.8" data-non-negotiable="false">ENG-3.8<span class="law-tooltip"><strong>Continuous Refactoring Patterns</strong></span></span></a>) — NEW</p>
+<ul>
+<li>C++ SRP indicators (header LOC, include count, friend count)</li>
+<li>PIMPL, extract interface, refactoring safety checklist</li>
+</ul>
+</li>
+</ol>
+<p>New anti-patterns: <code>initializer-list-trap</code>, <code>implicit-narrowing-conversion</code>, <code>template-odr-violation</code></p>
+<h3>Phase 15d: Code Simplification Skill</h3>
+<p>New skill: <code>skill-cpp-code-simplification.md</code></p>
+<ul>
+<li>3-tier simplification rules (Always Simplify / Unless Justified / Warn But Allow)</li>
+<li>Pattern detection → recommendation procedure</li>
+<li>Covers: MI→composition, SFINAE→concepts, raw new→smart pointers, CRTP→virtual, etc.</li>
+<li>6 new retrieval triggers in manifest.yaml</li>
+<li>3 new RAG search queries</li>
+</ul>
+<h3>Impact on Task Count</h3>
+<p>Amendment K adds Phase 15 (15a–15d). Total: 244 → 268.</p>
+<h3>Deliverables Summary</h3>
+<p>| Category | Count |
+|----------|-------|
+| New guidance sections | 7 |
+| Enriched guidance sections | 4 |
+| New example files | 6 (49 → 52 total) |
+| New anti-patterns | 7 (manifest.yaml) |
+| New skill | 1 (skill-cpp-code-simplification.md) |
+| New retrieval triggers | 6 |
+| New RAG search queries | 3 |
+| Laws covered (new) | 8 (<span class="law-cite" data-law-id="ENG-7.2" data-non-negotiable="false">ENG-7.2<span class="law-tooltip"><strong>Circuit Breaker Law</strong></span></span>-7.6, <span class="law-cite" data-law-id="ENG-4.7" data-non-negotiable="false">ENG-4.7<span class="law-tooltip"><strong>Test Isolation Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-4.8" data-non-negotiable="false">ENG-4.8<span class="law-tooltip"><strong>Mock Boundaries Law</strong></span></span>, <span class="law-cite" data-law-id="ENG-3.4" data-non-negotiable="false">ENG-3.4<span class="law-tooltip"><strong>Single Responsibility Principle</strong></span></span>) |
+| Laws enriched | 2 (<span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Limits</strong></span></span>, <span class="law-cite" data-law-id="ENG-3.8" data-non-negotiable="false">ENG-3.8<span class="law-tooltip"><strong>Continuous Refactoring Patterns</strong></span></span>) |
+| Tests | 671 (657 → 671) |</p>
+<hr />
+<h2>Amendment L — Java Developer Guidance &amp; Const Philosophy</h2>
+<p><strong>Date:</strong> 2026-04-07
+<strong>Commit:</strong> <code>5c19291</code>
+<strong>Justification:</strong> The primary audience for this avatar is experienced Java developers managing legacy C++ codebases. The review (PR #14 deep analysis) identified 6 high-impact Java→C++ mental model traps with zero or minimal coverage, and found that 7 of 12 critical C++ acronyms were used without expansion.</p>
+<h3>Deliverables</h3>
+<p><strong>Mental Model Transitions (expanded 8→13 subsections):</strong></p>
+<ul>
+<li>§9: <code>volatile</code> trap — Java <code>volatile</code> ≠ C++ <code>volatile</code></li>
+<li>§10: Generics vs Templates — type erasure vs compile-time code generation</li>
+<li>§11: Exception handling — no checked exceptions, no <code>finally</code>, no <code>synchronized</code></li>
+<li>§12: Lambda capture lifetime — no GC safety net, dangling captures = UB</li>
+<li>§13: <code>static</code> keyword — 4 meanings in C++ vs 1 in Java</li>
+</ul>
+<p><strong>New guidance sections:</strong></p>
+<ul>
+<li>Glossary for Java Developers — 12 C++ acronyms mapped to Java equivalents</li>
+<li>Cast Governance — Java safe casts vs C++ UB-prone casts, decision table, <code>const_cast</code> rules</li>
+<li>Const Correctness Philosophy — const-by-default design, checklist, common Java developer mistakes</li>
+<li>Preprocessor and Macro Governance — <code>#define</code>→<code>constexpr</code> migration, macro risks</li>
+<li>Java Developer Fast Track — rewritten Quick-Start subsection with top-5 traps callout</li>
+<li>Error Handling Strategy Comparison — Java→C++ error pattern mapping table</li>
+</ul>
+<p><strong>New example files (3):</strong></p>
+<ul>
+<li><code>ENG-6.1-cast-governance.md</code> — cast decision table with Java comparison</li>
+<li><code>ENG-6.1-volatile-vs-atomic.md</code> — Java <code>volatile</code> vs C++ <code>std::atomic</code></li>
+<li><code>ENG-3.1-macro-modernization.md</code> — <code>#define</code> → <code>constexpr</code> migration</li>
+</ul>
+<p><strong>Enrichments:</strong></p>
+<ul>
+<li>12 example files enriched with Java context (3 HIGH-risk + 9 MODERATE-risk)</li>
+<li>5 &quot;Simpler alternative&quot; callouts added to advanced sections (Coroutines, Templates, Allocators, ABI, Modules)</li>
+</ul>
+<p><strong>Manifest updates:</strong></p>
+<ul>
+<li>3 new anti-patterns: <code>volatile-for-synchronization</code>, <code>c-style-cast-in-cpp</code>, <code>define-constant-macro</code></li>
+<li>12 new retrieval triggers (5 simplification + 7 Java developer)</li>
+</ul>
+<h3>Summary</h3>
+<p>| Metric | Before | After |
+|--------|--------|-------|
+| Guidance sections | 57 | 65 |
+| Example files | 52 | 58 |
+| Anti-patterns | 54 | 60 |
+| Retrieval triggers | ~70 | 80 |
+| Mental Model subsections | 8 | 13 |
+| Tests | 671 | 683 |</p>
+<blockquote>
+<p><em>Note: Counts include Amendment M (designated initializers, null safety, void</em> migration) and consistency fixes committed alongside Amendment L.*</p>
+</blockquote>
+<hr />
+<h2>Amendment M — P2 Guidance: Designated Initializers, Null Safety, void* Migration</h2>
+<p><strong>Status:</strong> ✅ IMPLEMENTED
+<strong>Date:</strong> 2026-04-07
+<strong>Commit:</strong> <code>69130fb</code> — <em>&quot;feat: add P2 guidance — designated initializers, null safety, void* migration&quot;</em>
+<strong>Implemented alongside:</strong> Amendment L (Java Developer Guidance), folded into the same delivery sprint</p>
+<p><strong>Changes:</strong></p>
+<ul>
+<li>New <code>### Designated Initializers</code> section — C++20 named-field construction as a replacement for
+the Builder pattern; Java developer bridge note</li>
+<li>New <code>### Null Safety and Pointer Contracts</code> — null contract hierarchy, <code>gsl::not_null</code>,
+comparison to Java's NullPointerException semantics</li>
+<li>New <code>### Type-Safe Unions</code> — <code>void*</code> → <code>std::variant</code>/<code>std::any</code> migration with decision table</li>
+<li>3 new anti-patterns added to <code>manifest.yaml</code></li>
+<li>7 new retrieval triggers added to <code>manifest.yaml</code></li>
+<li>TOC updated with new sections</li>
+</ul>
+<p><strong>Metrics delta (Amendment M):</strong></p>
+<p>| Metric | Before | After |
+|--------|--------|-------|
+| Example files | 55 | 58 |
+| Tests passing | ~680 | 683 |</p>
+<p><strong>Note:</strong> Amendment M was implemented as a companion sprint to Amendment L rather than a
+separate phase. Its tasks and test counts are included in the Phase totals note at Amendment L.</p>
+<hr />
+<h2>Amendment N — Visual Studio 2022 Built-In Toolchain Equivalents</h2>
+<p>Teams developing C++ in Visual Studio should not need to install additional tools to satisfy the constitution's mandatory CI quality gates. This amendment adds a new subsection to the CI Quality Toolchain Policy mapping each mandated tool to its VS 2022 built-in equivalent.</p>
+<p><strong>Changes:</strong></p>
+<ul>
+<li>New <code>### Visual Studio 2022 Built-In Equivalents</code> subsection under CI Quality Toolchain Policy</li>
+<li>Covers: MSVC <code>/analyze</code> + C++ Core Check (replaces <code>clang-tidy</code>), <code>/fsanitize=address</code> (replaces standalone ASan), VS clang-tidy integration, VS Test Explorer + GoogleTest via vcpkg, CRT Debug Heap for leak detection</li>
+<li>Documents the known UBSan gap on MSVC with declared equivalent controls and migration path</li>
+<li>Lists VS 2022 Installer components required to enable each tool</li>
+<li>Compliance matrix showing VS-native vs. standard tool for each constitution requirement</li>
+<li>10 new retrieval triggers in manifest.yaml</li>
+<li>Java developer note: VS code analysis is analogous to Checkstyle/SpotBugs in Maven</li>
+</ul>
+<p><strong>Metrics delta (Amendment N):</strong></p>
+<p>| Metric | Before | After |
+|--------|--------|-------|
+| Guidance sections (H2) | 65 | 66 |
+| Retrieval triggers | ~82 | ~92 |</p>
+<p><strong>Rationale:</strong> The CWR repository team uses Visual Studio for development. This amendment ensures the avatar explicitly documents how VS-native tools satisfy constitution requirements, reducing adoption friction for Windows/VS-based C++ teams without weakening any governance requirements.</p>
+<hr />
+<h2>Amendment O — Constitutional Compliance Corrections (Governance Review Response)</h2>
+<p><strong>Date:</strong> 2026-04-11
+<strong>Triggered by:</strong> Governance panel review — PR #14 review <code>4086806910</code> (adeel-ali-aa, 2026-04-10)
+<strong>Status:</strong> IN PROGRESS</p>
+<h3>Problem</h3>
+<p>The governance panel's Assess &amp; Correct review of PR #14 found <strong>8 constitutional violations</strong> across
+5 safeguard families. The avatar was blocked from merge. All violations must be corrected in the
+existing branch before re-review. No new content is added by this amendment — it is a
+compliance correction only.</p>
+<p><strong>Violations identified:</strong></p>
+<p>| # | Violation | Safeguard | Severity |
+|---|-----------|-----------|----------|
+| V1 | 9 BUS-* example files in <code>avatars/technology/cpp/examples/</code> | Law Domain Boundary | 🔴 BLOCKING |
+| V2 | 5 PRD-* example files in <code>avatars/technology/cpp/examples/</code> | Law Domain Boundary | 🔴 BLOCKING |
+| V3 | <code>governance_overrides</code> block self-approving token budget in <code>manifest.yaml</code> | Shadow Governance | 🔴 BLOCKING |
+| V4 | <code>anti_patterns</code>, <code>anti_patterns_by_tier</code>, <code>retrieval_triggers</code> blocks in <code>manifest.yaml</code> | Shadow Governance / Manifest Scope | 🔴 BLOCKING |
+| V5 | <code>skill-cpp-compliance-rating.md</code> references <code>BUS-7.1</code> and <code>BUS-1.1</code> | Law Domain Boundary | 🔴 BLOCKING |
+| V6 | <code>compliance-rating-system.md</code> embedded in avatar directory as shadow governance | Shadow Governance | 🔴 BLOCKING |
+| V7 | <code>guidance.md</code> is ~66,500 tokens — 147× over the 450-token constitutional limit | RAG Token Budget | 🔴 BLOCKING |
+| V8 | No separate proposals filed for compliance rating framework or extended reference docs | <span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> Hangar SDD | 🟡 REQUIRED |</p>
+<h3>Solution</h3>
+<p>Seven surgical corrections to the existing avatar artifacts, each executed as an atomic TDD cycle
+per <a href="laws/engineering/testing.md"><span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a>. Two companion proposals filed as separate PRs.</p>
+<p><strong>Correction plan:</strong></p>
+<p>| Step | Action | Files Modified |
+|------|--------|----------------|
+| 16.1 | Delete 14 BUS-<em>/PRD-</em> example files | <code>examples/BUS-*.md</code> (9), <code>examples/PRD-*.md</code> (5) |
+| 16.2 | Remove <code>governance_overrides</code> block | <code>manifest.yaml</code> |
+| 16.3 | Remove <code>anti_patterns</code>, <code>anti_patterns_by_tier</code>, <code>retrieval_triggers</code> blocks | <code>manifest.yaml</code> |
+| 16.4 | Replace <span class="law-cite" data-law-id="BUS-7.1" data-non-negotiable="true">BUS-7.1<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span>/<span class="law-cite" data-law-id="BUS-1.1" data-non-negotiable="true">BUS-1.1<span class="law-tooltip"><strong>Priority Hierarchy Law</strong> · <em>NON-NEGOTIABLE</em></span></span> → <span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7<span class="law-tooltip"><strong>Audit Trail Law</strong> · <em>NON-NEGOTIABLE</em></span></span>/<span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> in skill | <code>skill-cpp-compliance-rating.md</code> |
+| 16.5 | Delete <code>compliance-rating-system.md</code> | <code>avatars/technology/cpp/compliance-rating-system.md</code> |
+| 16.6 | Rebuild <code>guidance.md</code> to ≤450 tokens | <code>avatars/technology/cpp/guidance.md</code> |
+| 16.7 | Update all tests broken by corrections | <code>test_phase16_compliance_corrections.py</code> + affected tests |</p>
+<p><strong>Note on guidance.md rebuild:</strong> The existing 5,693-line guidance.md content is not lost. It is
+preserved by the companion proposal <code>cpp-extended-reference-docs</code> which routes it to
+<code>docs/guides/avatars/cpp/</code> as non-RAG-indexed reference material.</p>
+<p><strong>Note on token budget override (V3):</strong> The <a href="docs/guides/avatar-model-schema.md">avatar-model-schema.md</a>
+maximum for example files is 850 tokens (warning level). The removed <code>governance_overrides</code> block
+claimed an 800-token budget — below the schema maximum. No exception proposal is needed for the
+number; the violation was the self-approval process.</p>
+<p><strong>Note on constitution inconsistency:</strong> <code>avatar-model-schema.md</code> references &quot;<span class="law-cite" data-law-id="ENG-10.3" data-non-negotiable="false">ENG-10.3<span class="law-tooltip"><strong>Compliance Reporting Law</strong></span></span> Exception
+Request&quot; for token budget overrides, but <span class="law-cite" data-law-id="ENG-10.3" data-non-negotiable="false">ENG-10.3<span class="law-tooltip"><strong>Compliance Reporting Law</strong></span></span> is the Compliance Reporting Law. The correct
+process for any governance override is <span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> (PROPOSE → IMPLEMENT → ARCHIVE). This
+inconsistency should be addressed in a separate constitution amendment.</p>
+<h3>Deliverables</h3>
+<p>| Deliverable | Location |
+|-------------|----------|
+| 14 BUS-<em>/PRD-</em> examples removed | <code>avatars/technology/cpp/examples/</code> |
+| <code>manifest.yaml</code> cleaned (governance_overrides, anti_patterns, anti_patterns_by_tier, retrieval_triggers removed) | <code>avatars/technology/cpp/manifest.yaml</code> |
+| <code>manifest.yaml</code> enriched with <code>authorities:</code> block (schema parity with android-kotlin, newest avatar) | <code>avatars/technology/cpp/manifest.yaml</code> |
+| <code>skill-cpp-compliance-rating.md</code> law refs corrected | <code>agent-skills/.../skill-cpp-compliance-rating.md</code> |
+| <code>compliance-rating-system.md</code> removed from avatar | <code>avatars/technology/cpp/</code> |
+| <code>guidance.md</code> rebuilt to ≤450 tokens | <code>avatars/technology/cpp/guidance.md</code> |
+| Phase 16 tests all passing | <code>tests/unit/test_cpp_avatar/test_phase16_compliance_corrections.py</code> |
+| Full test suite green (≥683 tests) | All test files |
+| Avatar scan evidence file committed | <code>hangar-ai-specs/evidence/avatar-scan-cpp.md</code> |
+| Companion proposal: <code>cpp-extended-reference-docs</code> | <code>hangar-ai-specs/changes/cpp-extended-reference-docs/</code> |
+| Companion proposal: <code>cpp-tier-compliance-rating</code> (tier system + evaluation — combined, architecturally inseparable) | <code>hangar-ai-specs/changes/cpp-tier-compliance-rating/</code> |
+| Companion proposal: <code>product-avatar-bus-enrichment</code> | <code>hangar-ai-specs/changes/product-avatar-bus-enrichment/</code> |
+| PROGRESS.md updated with governance review status | <code>hangar-ai-specs/changes/c-plus-plus-avatar-enrichment/PROGRESS.md</code> |</p>
+<p><strong>Cross-avatar parity findings (from comparison with all 4 reference avatars):</strong></p>
+<p>| Avatar | Added | Notes |
+|--------|-------|-------|
+| <code>java-spring</code> | v2.0.0, reference | 7 ENG-* laws, no custom blocks |
+| <code>python-fastapi</code> | v2.0.0, reference | 9 ENG-* laws, no custom blocks |
+| <code>mobile-react-native</code> | Feb 2026 (original) | 4 ENG-* laws; has <code>PRD-3.4-accessibility.md</code> in examples (pre-workflow domain boundary exception — governance panel ruling requested) |
+| <code>android-kotlin</code> | Apr 8, 2026 (newest) | 8 ENG-* laws; introduces <code>authorities:</code> field; establishes custom block precedent (<code>fastlane_lines:</code>, <code>test_idioms:</code>) |
+| <code>cpp</code> (post-O) | — | <em><em>44 ENG-</em> laws</em>* (most complete); <code>brownfield_adoption:</code>, <code>skill_parity:</code>, <code>project_archetypes:</code> blocks permitted per android-kotlin precedent; <code>authorities:</code> added for parity |</p>
+<h3>Success Criteria</h3>
+<p>| Criterion | Measure |
+|-----------|---------|
+| Zero BUS-<em>/PRD-</em> files in <code>examples/</code> | <code>ls examples/BUS-*.md</code> returns empty |
+| <code>manifest.yaml</code> passes schema token budget (≤150 tokens) | Token count check |
+| <code>manifest.yaml</code> contains <code>authorities:</code> block | Key-presence assertion in test |
+| <code>guidance.md</code> ≤450 tokens | Token count assertion in test |
+| <code>compliance-rating-system.md</code> absent from avatar dir | File absence assertion in test |
+| <code>skill-cpp-compliance-rating.md</code> references only ENG-* laws | Test asserts no <code>BUS-</code> in law refs |
+| <code>avatar-scan-cpp.md</code> committed in <code>hangar-ai-specs/evidence/</code> | File presence assertion |
+| All Phase 16 tests pass | <code>pytest test_phase16_compliance_corrections.py</code> green |
+| Full suite ≥683 tests passing | <code>pytest tests/unit/test_cpp_avatar/</code> |
+| Three companion proposals created with <span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> scaffolding | Each has <code>PROPOSAL.md</code> + <code>tasks.md</code> |</p>
+<h3>Laws Cited</h3>
+<p>| Law | Requirement | Relevance |
+|-----|-------------|-----------|
+| <a href="laws/engineering/testing.md"><span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> | Atomic TDD (Non-Negotiable) | Each correction step follows RED→GREEN→COMMIT |
+| <a href="laws/engineering/spec-driven-development.md"><span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> | Hangar SDD (Non-Negotiable) | Corrections governed by PROPOSE→IMPLEMENT→ARCHIVE |
+| <a href="laws/engineering/spec-driven-development.md"><span class="law-cite" data-law-id="ENG-11.2" data-non-negotiable="false">ENG-11.2<span class="law-tooltip"><strong>Proposal Completeness Law</strong></span></span></a> | Proposal Completeness | This amendment satisfies required sections |
+| <a href="laws/engineering/spec-driven-development.md"><span class="law-cite" data-law-id="ENG-11.3" data-non-negotiable="false">ENG-11.3<span class="law-tooltip"><strong>Spec Freshness Law</strong></span></span></a> | Spec Freshness | PROGRESS.md updated to reflect governance review state |</p>
+<h3>Impact on Task Count</h3>
+<p>Amendment O adds Phase 16 (7 steps). Total: 268 → 275 (Phase 16 tasks added to tasks.md).</p>
+<hr />
+<h2>Amendment P — Relocate <code>full-reference.md</code> Into Avatar Directory (Linter Compliance)</h2>
+<p><strong>Status:</strong> 📋 PROPOSED
+<strong>Triggered by:</strong> Post-Amendment O governance investigation (April 12, 2026) — constitutional linter
+correctly reported <code>docs/guides/avatars/cpp/full-reference.md</code> as a missing-file violation because
+all files in an avatar's RAG index block must reside inside the avatar directory.
+<strong>Scope:</strong> Move file, update AVATAR-RAG-INDEX.yaml, update guidance.md link, update conftest.py
+fixture path, revert linter patch <code>f2e1552</code> from <code>main</code>, run linter + full test suite.
+<strong>Laws:</strong> <a href="laws/engineering/eng-10-constitution.md"><span class="law-cite" data-law-id="ENG-10.1" data-non-negotiable="true">ENG-10.1<span class="law-tooltip"><strong>Constitution Metrics Collection Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> — Constitution Compliance;
+<a href="laws/engineering/spec-driven-development.md"><span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> — Hangar SDD</p>
+<hr />
+<h3>Problem Statement</h3>
+<p>Amendment O (<code>9d6c8af</code>, April 11 14:08 CST) placed <code>full-reference.md</code> at
+<code>docs/guides/avatars/cpp/full-reference.md</code> and registered it in <code>AVATAR-RAG-INDEX.yaml</code> with
+that repo-root-relative path. The constitutional linter (<code>AvatarRagFilesExistRule</code>) then reported:</p>
+<pre><code>AVATAR-RAG-INDEX.yaml references missing file:
+  avatars/technology/cpp/docs/guides/avatars/cpp/full-reference.md
+</code></pre>
+<p>An attempt was made to resolve this by patching the linter (<code>f2e1552</code>, April 11 17:35 CST) to
+accept repo-root-relative paths. <strong>That patch was the wrong fix.</strong> The linter's original path
+resolution logic was intentional governance: all files declared in an avatar's RAG index block
+must reside inside that avatar's directory. The linter was correctly enforcing that rule.
+<code>full-reference.md</code> was placed in the wrong location.</p>
+<hr />
+<h3>Root Cause Analysis</h3>
+<p>The <code>AvatarRagFilesExistRule</code> original design:</p>
+<pre><code class="language-python">base_dir = project_path / &quot;avatars&quot; / category / avatar_name
+# e.g. base_dir = project_path / &quot;avatars&quot; / &quot;technology&quot; / &quot;cpp&quot;
+full = base_dir / file_val_clean
+</code></pre>
+<p>All file values in an avatar's <code>files:</code> block in <code>AVATAR-RAG-INDEX.yaml</code> are resolved relative to
+the avatar's own directory. This is intentional: an avatar is a self-contained unit. Its extended
+reference file belongs inside the avatar directory alongside <code>guidance.md</code>, <code>manifest.yaml</code>, and
+<code>examples/</code> — not scattered across <code>docs/</code>.</p>
+<p>The correct location for the C++ extended reference is:</p>
+<pre><code>avatars/technology/cpp/full-reference.md
+</code></pre>
+<p>The corresponding <code>AVATAR-RAG-INDEX.yaml</code> entry should use a relative filename (not a path):</p>
+<pre><code class="language-yaml">full_reference: full-reference.md (extended, on-demand via RAG)
+</code></pre>
+<p>Amendment O placed the file in <code>docs/guides/avatars/cpp/</code> based on the assumption that the
+docs layer has no token limit and is the right home for large reference files. That assumption was
+correct about token limits but incorrect about avatar governance: extended reference content for
+a technology avatar is still an avatar artifact and must live in the avatar directory. The absence
+of a token limit on <code>full-reference.md</code> makes it permissible in the avatar directory — it is not
+subject to the guidance.md ≤450-token constraint.</p>
+<hr />
+<h3>Investigation Evidence (April 12, 2026 Session)</h3>
+<p><strong>Step 1 — Path history on PR #14 branch:</strong>
+Confirmed that <code>full-reference.md</code> has never existed under <code>avatars/technology/cpp/</code> at any point
+in this branch's git history. The predecessor content lived in <code>avatars/technology/cpp/guidance.md</code>,
+which grew from 329 lines (first commit <code>05ea2b9</code>) to 5,693 lines (~66,500 tokens). Amendment O
+split it but placed the output file in the wrong directory layer.</p>
+<p><strong>Step 2 — When <code>docs/guides/avatars/cpp/full-reference.md</code> was created:</strong>
+Added in Amendment O (<code>9d6c8af</code>) as the V7 correction. The intent was correct (split oversized
+guidance.md), but the destination was wrong (<code>docs/guides/</code> instead of inside the avatar dir).</p>
+<p><strong>Step 3 — The linter patch <code>f2e1552</code> was incorrect:</strong>
+Commit <code>f2e1552</code> (April 11 17:35 CST) modified <code>AvatarRagFilesExistRule</code> to accept
+<code>docs/</code>, <code>laws/</code>, <code>agent-skills/</code>, <code>avatars/</code>, <code>tools/</code> prefixed paths as repo-root-relative.
+This silenced the linter error but did so by weakening a correct governance rule. The patch must
+be <strong>reverted on <code>main</code></strong>; that revert is tracked in the independent proposal
+<code>hangar-ai-specs/changes/avatar-full-reference-pattern/</code>.</p>
+<p><strong>Step 4 — Documentation gap:</strong>
+The <code>full-reference.md</code> pattern (when to create it, where it lives, how to register it) is
+entirely undocumented on <code>main</code>. The independent proposal <code>avatar-full-reference-pattern</code> will
+produce <code>docs/guides/constitution/avatar-reference-doc-architecture.md</code> to fill this gap.</p>
+<p><strong>Step 5 — Dependency audit (files requiring updates in this amendment):</strong></p>
+<p>| File | Required Change |
+|------|----------------|
+| <code>docs/guides/avatars/cpp/full-reference.md</code> | <strong>Move</strong> → <code>avatars/technology/cpp/full-reference.md</code> |
+| <code>avatars/AVATAR-RAG-INDEX.yaml</code> line ~998 | Change <code>docs/guides/avatars/cpp/full-reference.md</code> → <code>full-reference.md</code> in the <code>full_reference:</code> entry |
+| <code>avatars/technology/cpp/guidance.md</code> line 27 | Update relative link to new path |
+| <code>tests/unit/test_cpp_avatar/conftest.py</code> lines 39–42 | Update <code>cpp_full_reference</code> fixture path |
+| All 20 test files using <code>cpp_full_reference</code> fixture | Path change is encapsulated in conftest.py fixture — no individual test changes needed if fixture is updated correctly |</p>
+<p>The 40+ query-mapping lines in <code>AVATAR-RAG-INDEX.yaml</code> that reference section names
+(e.g., <code>→ full-reference.md testing section</code>) are prose descriptions, not file paths — they do
+not require changes.</p>
+<hr />
+<h3>Required Actions</h3>
+<p>| Step | Action | Notes |
+|------|--------|-------|
+| P.1 | Merge <code>main</code> into PR #14 branch | Required to pick up any other main updates, but <strong>exclude</strong> <code>f2e1552</code> — cherry-pick or merge then revert that commit on the branch |
+| P.2 | <code>git mv docs/guides/avatars/cpp/full-reference.md avatars/technology/cpp/full-reference.md</code> | Moves file to the correct avatar-local location |
+| P.3 | Update <code>avatars/AVATAR-RAG-INDEX.yaml</code> | Change <code>full_reference:</code> value from <code>docs/guides/avatars/cpp/full-reference.md (extended, on-demand via RAG)</code> → <code>full-reference.md (extended, on-demand via RAG)</code> |
+| P.4 | Update <code>avatars/technology/cpp/guidance.md</code> | Fix the Extended Reference link (line 27) to point to the new relative location |
+| P.5 | Update <code>tests/unit/test_cpp_avatar/conftest.py</code> | Change <code>cpp_full_reference</code> fixture to load from <code>avatars/technology/cpp/full-reference.md</code> |
+| P.6 | Run full test suite | All tests must pass (fixture path is the single change point for all 20 test files) |
+| P.7 | Run <code>aa-constitution-lint .</code> (without <code>f2e1552</code> patch) | Linter must now PASS — the file is in the correct avatar-relative location |
+| P.8 | Commit with amendment reference | <code>fix(cpp-avatar): move full-reference.md into avatar dir, fix RAG index (Amendment-P)</code> |</p>
+<hr />
+<h3>Deliverables</h3>
+<p>| Deliverable | Location |
+|-------------|----------|
+| <code>full-reference.md</code> at correct path | <code>avatars/technology/cpp/full-reference.md</code> |
+| <code>docs/guides/avatars/cpp/full-reference.md</code> deleted | (moved, not copied) |
+| <code>AVATAR-RAG-INDEX.yaml</code> <code>full_reference:</code> entry corrected | <code>avatars/AVATAR-RAG-INDEX.yaml</code> |
+| <code>guidance.md</code> link corrected | <code>avatars/technology/cpp/guidance.md</code> |
+| <code>conftest.py</code> fixture path corrected | <code>tests/unit/test_cpp_avatar/conftest.py</code> |
+| Linter passing (zero failures) | <code>aa-constitution-lint .</code> output |
+| Full test suite green (≥683 tests) | <code>pytest tests/unit/test_cpp_avatar/</code> |</p>
+<hr />
+<h3>Note on <code>f2e1552</code> on <code>main</code></h3>
+<p>The linter patch <code>f2e1552</code> on <code>main</code> weakens a correct governance rule and must be reverted
+separately. This is tracked as a task in the independent proposal
+<code>hangar-ai-specs/changes/avatar-full-reference-pattern/</code>. That revert is <strong>not</strong> part of PR #14
+scope — it is a <code>main</code>-branch correction.</p>
+<hr />
+<h3>Companion Reference</h3>
+<p>The general governance pattern for when and how to create <code>full-reference.md</code> for any avatar
+(correct location, RAG registration, linter rules, token budget context) is addressed in the
+independent proposal: <code>hangar-ai-specs/changes/avatar-full-reference-pattern/</code></p>
+<h3>Note on PR #26 (<code>cpp-external-references</code>)</h3>
+<p>PR #26 (stacked on PR #25 → PR #14) introduces a three-layer <em>external references</em> architecture:
+authoritative URLs the AI follows when it reaches the boundary of what the avatar documents
+(cppreference, GTest docs, FAA eCFR, MSVC docs, etc.). Its Layer 3 adds inline &quot;Further Reading&quot;
+callouts inside <code>full-reference.md</code>.</p>
+<p>PR #26 is <strong>sequencing-compatible</strong> with Amendment P: since it is already stacked on PR #14,
+the <code>full-reference.md</code> file will be at its corrected location (<code>avatars/technology/cpp/</code>) by
+the time PR #26's tasks execute. No merge conflict; no additional action required in this amendment.</p>
+<hr />
+<h3>Laws Cited</h3>
+<p>| Law | Relevance |
+|-----|-----------|
+| <a href="laws/engineering/eng-10-constitution.md"><span class="law-cite" data-law-id="ENG-10.1" data-non-negotiable="true">ENG-10.1<span class="law-tooltip"><strong>Constitution Metrics Collection Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> | Constitution Compliance — linter must pass without linter patches |
+| <a href="laws/engineering/eng-4-testing.md"><span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> | Atomic TDD — test suite must remain green after all changes |
+| <a href="laws/engineering/spec-driven-development.md"><span class="law-cite" data-law-id="ENG-11.1" data-non-negotiable="true">ENG-11.1<span class="law-tooltip"><strong>Hangar SDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span></a> | Hangar SDD — amendment documented before implementation |</p>
+<hr />
+<h2>Amendment Q — Example Quality: Edge Cases &amp; Warnings Enhancement</h2>
+<p><strong>Status:</strong> Proposed — 2026-04-14<br />
+<strong>Trigger:</strong> Post-validation example quality audit (avatar-scan-cpp.md, 2026-04-13)<br />
+<strong>Scope:</strong> <code>avatars/technology/cpp/examples/</code> — 51 files</p>
+<hr />
+<h3>Problem Statement</h3>
+<p>A quality audit of all 51 example files (2026-04-14) scored each file across 7 dimensions: COMPLIANT pattern, NON-COMPLIANT pattern, Rule section, Why/Rationale section, ≥2 code blocks, ≥15 code lines, and ≥250 tokens.</p>
+<p><strong>Findings:</strong></p>
+<p>| Score | Count | Implication |
+|-------|:-----:|-------------|
+| 7/7 — fully complete | 16 | Gold standard: includes <code>## Edge Cases &amp; Warnings</code> table |
+| 6/7 — missing edge cases | 18 | Has rule + both patterns; lacks edge-case table |
+| 5/7 — missing edge cases + rationale | 16 | Has both patterns; lacks rule context and edge cases |
+| 3/7 — structural (index) | 1 | <code>ENG-6.1-index.md</code> — navigation file by design; not a code example |</p>
+<p><strong>Root cause:</strong> The 16 files scoring 7/7 (the best tier) all share the <code>## Edge Cases &amp; Warnings</code> table pattern. The 34 files at 5–6/7 were created before this pattern was established, or were written to the minimum spec (COMPLIANT + NON-COMPLIANT) without the &quot;why it matters&quot; layer.</p>
+<p><strong>Risk significance:</strong> The gap is highest in safety-critical files. A developer reading <code>ENG-6.1-misra-do278a.md</code> or <code>ENG-4.1-far117-traceability.md</code> without edge-case context may apply the pattern correctly in the normal case but miss the exceptions that matter most in aviation-grade code.</p>
+<hr />
+<h3>Token Budget Analysis</h3>
+<p>Before adding edge cases, a budget check was run on all 34 affected files. A typical <code>## Edge Cases &amp; Warnings</code> table costs ~90 tokens.</p>
+<p>| Risk level | Count | Condition | Action |
+|------------|:-----:|-----------|--------|
+| ✅ SAFE | 33 | Current tokens + 90t ≤ 850t | Add full edge-cases table directly |
+| ⚠️ AT RISK | 1 | <code>ENG-5.2-project-structure.md</code> (803t + 90t = 893t &gt; 850t) | See special handling below |</p>
+<p><strong>Special handling for <code>ENG-5.2-project-structure.md</code>:</strong><br />
+This file is 803t and already contains the edge-case material under <code>## Brownfield Adaptation</code> (4-step incremental migration guide) and <code>## Key Rules</code> table. The content intent of an edge-cases section is satisfied by those sections. The fix is to <strong>rename</strong> the <code>## Key Rules</code> section to <code>## Edge Cases &amp; Warnings</code> and consolidate the brownfield notes into it — a structural rename, not new content. This costs 0 additional tokens and brings the file to 7/7.</p>
+<hr />
+<h3>Files Requiring Edge Cases Addition (33 direct + 1 rename)</h3>
+<p><strong>Priority 1 — Safety-critical (highest impact if edge cases missing):</strong></p>
+<p>| File | Current | Headroom | Key edge cases to add |
+|------|--------:|--------:|----------------------|
+| <code>ENG-6.1-misra-do278a.md</code> | 597t | 253t | MISRA C++:2008 vs 2023 rule differences; <code>extern &quot;C&quot;</code> linkage edge case; header-only violations |
+| <code>ENG-6.1-strict-aliasing.md</code> | 516t | 334t | <code>memcpy</code> as the safe aliasing workaround; placement new + pointer cast patterns; union type-punning |
+| <code>ENG-6.1-smart-pointers.md</code> | 320t | 530t | Circular reference / <code>shared_ptr</code> cycles; <code>make_shared</code> vs <code>new</code> in exception safety context |
+| <code>ENG-6.5-input-validation.md</code> | 348t | 502t | Validation at trust boundaries only; over-validation performance cost; UTF-8 multi-byte edge cases |
+| <code>ENG-4.1-far117-traceability.md</code> | 459t | 391t | DO-178C vs FAR 117 distinction; test names must survive refactor (regex-based tracing); CI must archive test reports |
+| <code>ENG-6.1-thread-safety.md</code> | 367t | 483t | <code>shared_ptr</code> reference count is atomic but pointed-to object is not; TSan false positives on benign races |</p>
+<p><strong>Priority 2 — Core quality (frequently retrieved):</strong></p>
+<p>| File | Current | Headroom | Key edge cases to add |
+|------|--------:|--------:|----------------------|
+| <code>ENG-3.1-complexity.md</code> | 354t | 496t | Complexity limit exceptions for state machines; generated code exemption |
+| <code>ENG-3.7-error-handling.md</code> | 467t | 383t | <code>std::expected</code> + coroutines interaction; error type should be <code>enum class</code>, not <code>std::string</code> |
+| <code>ENG-4.2-test-pyramid.md</code> | 347t | 503t | Integration tests that ARE unit-speed (no I/O); pyramid inversion in legacy brownfield |
+| <code>ENG-4.1-characterization-test-pattern.md</code> | 530t | 320t | When characterization tests become permanent vs temporary; characterizing non-deterministic output |
+| <code>ENG-7.1-failure-handling.md</code> | 510t | 340t | Degraded-mode state machine; when NOT to degrade (hard-fail is correct for safety systems) |
+| <code>ENG-5.5-observability.md</code> | 451t | 399t | PII in log fields (cross-ref <span class="law-cite" data-law-id="ENG-6.4" data-non-negotiable="true">ENG-6.4<span class="law-tooltip"><strong>Data Protection Law</strong> · <em>NON-NEGOTIABLE</em></span></span>); structured log field naming conventions; sampling strategy |</p>
+<p><strong>Priority 3 — Remaining 22 files</strong> (all SAFE, standard edge cases table, no exceptional concerns):<br />
+<code>ENG-2.1-aggregates.md</code>, <code>ENG-2.2-layers.md</code>, <code>ENG-3.1-code-smell-raii-conversion.md</code>, <code>ENG-3.1-concepts.md</code>, <code>ENG-3.1-coroutines.md</code>, <code>ENG-3.1-feature-detection.md</code>, <code>ENG-3.1-perfect-forwarding.md</code>, <code>ENG-3.1-pmr-allocators.md</code>, <code>ENG-3.2-immutability.md</code>, <code>ENG-3.5-naming.md</code>, <code>ENG-4.4-test-structure.md</code>, <code>ENG-5.2-cmake-governance.md</code>, <code>ENG-5.2-cmake-mixed-standard.md</code>, <code>ENG-6.1-legacy-modernization-before-after.md</code>, <code>ENG-6.1-move-semantics.md</code>, <code>ENG-6.1-raii-c-api-wrapper.md</code>, <code>ENG-6.1-thread-migration.md</code>, <code>ENG-7.2-circuit-breaker.md</code>, <code>ENG-7.3-retry-backoff.md</code>, <code>ENG-7.4-timeout-governance.md</code>, <code>ENG-7.5-bulkhead-isolation.md</code></p>
+<hr />
+<h3>Implementation Plan</h3>
+<p>Apply as atomic TDD cycles per <span class="law-cite" data-law-id="ENG-4.1" data-non-negotiable="true">ENG-4.1<span class="law-tooltip"><strong>Atomic TDD Law</strong> · <em>NON-NEGOTIABLE</em></span></span> — one file per cycle. Each cycle:</p>
+<ol>
+<li><strong>RED</strong> — Write a test asserting <code>## Edge Cases</code> present in target file (test_constitution_compliance.py)</li>
+<li><strong>GREEN</strong> — Add the <code>## Edge Cases &amp; Warnings</code> table to the file</li>
+<li><strong>VERIFY</strong> — Token count ≤ 850t; full suite passes</li>
+<li><strong>COMMIT</strong> — <code>feat(cpp-avatar): add edge cases to {filename} [amendment-Q]</code></li>
+</ol>
+<p><strong>Test change required</strong> (RED step for each file):</p>
+<pre><code class="language-python"># In test_constitution_compliance.py — TestExampleCompliance
+def test_every_example_has_edge_cases_section(self, all_examples):
+    &quot;&quot;&quot;Every example must include ## Edge Cases &amp; Warnings section.&quot;&quot;&quot;
+    missing = [ex.name for ex in all_examples
+               if &quot;## Edge Cases&quot; not in ex.read_text()
+               and ex.name != &quot;ENG-6.1-index.md&quot;]  # index is exempt
+    assert len(missing) == 0, f&quot;Examples missing edge cases: {missing}&quot;
+</code></pre>
+<p>This test currently <strong>fails</strong> (RED) on 33 files. Each file fixed advances the RED→GREEN cycle.</p>
+<p><strong>Priority order:</strong> P1 (6 safety-critical files) → P2 (6 core quality files) → P3 (22 standard files) → <code>ENG-5.2-project-structure.md</code> rename (0-cost structural fix).</p>
+<hr />
+<h3>Acceptance Criteria</h3>
+<ul>
+<li><div class="task-pending"><div class="cb"></div><div class="task-text">All 51 example files (except <code>ENG-6.1-index.md</code>) contain <code>## Edge Cases &amp; Warnings</code></div></div></li>
+<li><div class="task-pending"><div class="cb"></div><div class="task-text">No example file exceeds 850 tokens after changes</div></div></li>
+<li><div class="task-pending"><div class="cb"></div><div class="task-text">660+ tests pass (suite grows by 1 for the new <code>test_every_example_has_edge_cases_section</code> test)</div></div></li>
+<li><div class="task-pending"><div class="cb"></div><div class="task-text"><code>ENG-5.2-project-structure.md</code> resolves via section rename, not new content</div></div></li>
+</ul>
+<hr />
+<h2>References</h2>
+<ul>
+<li><a href="hangar-ai-specs/README.md">hangar-ai-specs/README.md</a></li>
+<li><a href="hangar-ai-specs/changes/check-in-avatar-enrichment/PROPOSAL.md">hangar-ai-specs/changes/check-in-avatar-enrichment/PROPOSAL.md</a></li>
+<li><a href="hangar-ai-specs/changes/mutation-testing-governance/PROPOSAL.md">hangar-ai-specs/changes/mutation-testing-governance/PROPOSAL.md</a></li>
+<li><a href="docs/guides/adoption/taxonomy-aligned-avatar-enrichment-workflow.md">docs/guides/adoption/taxonomy-aligned-avatar-enrichment-workflow.md</a></li>
+<li><a href="docs/guides/avatars/law-citation-guide.md">docs/guides/avatars/law-citation-guide.md</a></li>
+<li><a href="docs/guides/avatars/product-taxonomy-governance.md">docs/guides/avatars/product-taxonomy-governance.md</a></li>
+<li><a href="docs/templates/enrichment/01-metrics-collection.md">docs/templates/enrichment/01-metrics-collection.md</a></li>
+<li><a href="agent-skills/skills-by-domain/discovery-research/30-taxonomy-governed-avatar-enrichment.md">agent-skills/skills-by-domain/discovery-research/30-taxonomy-governed-avatar-enrichment.md</a></li>
+<li><a href="agent-skills/skills-by-domain/discovery-research/spec-governance.md">agent-skills/skills-by-domain/discovery-research/spec-governance.md</a></li>
+<li><a href="avatars/index.yaml">avatars/index.yaml</a></li>
+<li><a href="avatars/AVATAR-RAG-INDEX.yaml">avatars/AVATAR-RAG-INDEX.yaml</a></li>
+<li><a href="avatars/technology/java-spring/manifest.yaml">avatars/technology/java-spring/manifest.yaml</a></li>
+<li><a href="avatars/technology/python-fastapi/manifest.yaml">avatars/technology/python-fastapi/manifest.yaml</a></li>
+<li><a href="agent-skills/skills-by-domain/platform-engineering/index.yaml">agent-skills/skills-by-domain/platform-engineering/index.yaml</a></li>
+<li><a href="AGENTS.md">AGENTS.md</a></li>
+<li><a href="laws/index.yaml">laws/index.yaml</a></li>
+<li><a href="laws/engineering/_domain.yaml">laws/engineering/_domain.yaml</a></li>
+<li><a href="laws/product/_domain.yaml">laws/product/_domain.yaml</a></li>
+<li><a href="laws/business/_domain.yaml">laws/business/_domain.yaml</a></li>
+</ul>
+
+  <div class="footer"><div>Governance Artifact</div><div class="pn">2</div></div>
+</div>
+
+<script>
+// Flip tooltip below the citation when it would overflow the top of the viewport
+document.querySelectorAll('.law-cite').forEach(function(el) {
+  el.addEventListener('mouseenter', function() {
+    var rect = el.getBoundingClientRect();
+    var tooltip = el.querySelector('.law-tooltip');
+    if (!tooltip) return;
+    var tipH = tooltip.offsetHeight || 80;
+    if (rect.top < tipH + 12) {
+      el.classList.add('flip-below');
+    } else {
+      el.classList.remove('flip-below');
+    }
+  });
+  // Keyboard accessibility
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  el.setAttribute('aria-describedby', 'tooltip-' + el.dataset.lawId);
+  var tip = el.querySelector('.law-tooltip');
+  if (tip) tip.id = 'tooltip-' + el.dataset.lawId;
+});
+</script>
+</body>
+</html>

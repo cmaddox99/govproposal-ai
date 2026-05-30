@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>aa-citation-audit — Implementation Proposal</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1.5rem; color: #1a1a1a; line-height: 1.6; }
+  h1 { color: #0d1117; border-bottom: 2px solid #d0021b; padding-bottom: 0.5rem; }
+  h2 { color: #0d1117; border-bottom: 1px solid #e1e4e8; padding-bottom: 0.3rem; margin-top: 2rem; }
+  h3 { color: #0d1117; margin-top: 1.5rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { border: 1px solid #d0d7de; padding: 0.5rem 0.75rem; text-align: left; }
+  th { background: #f6f8fa; font-weight: 600; }
+  tr:nth-child(even) { background: #f9fafb; }
+  code { background: #f6f8fa; padding: 0.15em 0.4em; border-radius: 3px; font-size: 0.9em; font-family: 'SFMono-Regular', Consolas, monospace; }
+  pre { background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 6px; padding: 1rem; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 4px solid #d0021b; margin: 0; padding: 0.5rem 1rem; background: #fff8f8; color: #555; }
+  hr { border: none; border-top: 1px solid #e1e4e8; margin: 2rem 0; }
+  .badge { display: inline-block; padding: 0.2em 0.6em; border-radius: 12px; font-size: 0.8em; font-weight: 600; background: #fff3cd; color: #856404; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #e1e4e8; font-size: 0.85em; color: #666; }
+</style>
+</head>
+<body>
+<div class="badge">PROPOSED — PENDING JURY APPROVAL</div>
+<h1>aa-citation-audit: Implementation Proposal</h1>
+
+<blockquote><strong>Project:</strong> <code>citation-auditor-2026-001</code></blockquote>
+<blockquote><strong>Tool:</strong> <code>aa-citation-audit</code> — Law Citation Auditor CLI</blockquote>
+<blockquote><strong>Owner:</strong> Hangar AI Constitution Engineering</blockquote>
+<blockquote><strong>Date:</strong> 2026-05-23</blockquote>
+
+<hr>
+
+<h2>What We're Building</h2>
+
+<p>A Python CLI tool that validates law citations in Hangar AI Constitution workflow artifacts</p>
+<p><strong>before</strong> jury invocation. When a practitioner references a law like <code>ENG-4.1</code> in a discovery</p>
+<p>document, this tool confirms the ID is real, registered, and accurately described — catching</p>
+<p>hallucinated citations before they corrupt jury deliberation.</p>
+
+<p><strong>The problem it solves:</strong> In disc-2026-006 (Mobile Platform Health Engineering), law citation</p>
+<p>hallucinations were identified post-jury — an embarrassing and compliance-drifting outcome.</p>
+<p>This tool closes the pre-jury gap with a two-layer defense:</p>
+<ul>
+<li><strong>L1 gate (ENG-14.1):</strong> <code>aa-citation-audit</code> scans every artifact → blocks jury on FAIL</li>
+<li><strong>J6 seat (ENG-14.2):</strong> A Citation Auditor juror (gpt-4.1) joins every jury panel that triggers</li>
+</ul>
+<p>  activation conditions (≥1 WARN, Stage E/F artifacts, or ≥5 cited laws)</p>
+
+<hr>
+
+<h2>Implementation Plan: 6 Vertical Slices</h2>
+
+<table>
+<tr><th>Slice</th><th>What Gets Built</th><th>Story Points</th></tr>
+<tr><td><strong>S-01</strong></td><td>Project scaffold + <code>registry.py</code> — loads <code>laws/index.yaml</code> + all law markdown files to build an in-memory ID registry</td><td>3</td></tr>
+<tr><td><strong>S-02</strong></td><td><code>scanner.py</code> — strips code blocks, extracts law ID citations with context, enforces size/encoding guards</td><td>3</td></tr>
+<tr><td><strong>S-03</strong></td><td><code>auditor.py</code> + data models — verdict logic (FAIL/WARN/PASS), rapidfuzz title mismatch, status mismatch detection</td><td>5</td></tr>
+<tr><td><strong>S-04</strong></td><td><code>cli.py</code> — click interface, 4-surface input validation, 3 output modes, atomic write, BUS-7.1 audit log</td><td>5</td></tr>
+<tr><td><strong>S-05</strong></td><td>BDD scenarios, fixture suite, integration tests, ReDoS regression, CI pipeline config</td><td>8</td></tr>
+<tr><td><strong>S-06</strong></td><td>Amend all 7 constitution workflow files — add pre-jury citation audit step + J6 jury seat</td><td>5</td></tr>
+<tr><td></td><td><strong>Total</strong></td><td><strong>29</strong></td></tr>
+</table>
+
+<p><strong>Build order:</strong> S-01 → (S-02 ∥ S-03) → S-04 → S-05 → S-06</p>
+
+<hr>
+
+<h2>Quality Gates (Per Slice)</h2>
+
+<p>Every slice must pass before the next begins (ENG-4.1 NON-NEGOTIABLE):</p>
+
+<ul>
+<li>✅ All unit tests green (RED → GREEN → REFACTOR → VERIFY → COMMIT)</li>
+<li>✅ Code coverage ≥ 90% (<code>--cov-fail-under=90</code>)</li>
+<li>✅ Mutation score ≥ 85% on <code>scanner.py</code> and <code>auditor.py</code></li>
+<li>✅ SonarQube: <code>new_coverage ≥ 90%</code>, <code>bugs = 0</code></li>
+</ul>
+
+<hr>
+
+<h2>What Happens After Phase 6 (Ship — Phase 8)</h2>
+
+<p>Once the tool is verified and all workflows amended:</p>
+
+<p>1. Article XIV (ENG-14.1 + ENG-14.2) merges into <code>laws/engineering/</code> — requires executive approval</p>
+<p>2. <code>laws/index.yaml</code> updated with 2 new ENG laws (70 → 72 engineering laws)</p>
+<p>3. <code>--allow-draft ENG-14.1,ENG-14.2</code> removed from CI — citations now fully enforced</p>
+<p>4. Every future jury invocation across all 7 workflows is protected</p>
+
+<hr>
+
+<h2>Key Decisions Already Approved</h2>
+
+<table>
+<tr><th>Decision</th><th>ADR</th><th>Rationale</th></tr>
+<tr><td>4-layer DI architecture (registry/scanner/auditor/cli)</td><td>ADR-001</td><td>ENG-3.4 SRP; cli.py is DI host</td></tr>
+<tr><td>Title/summary from law markdown files</td><td>ADR-002</td><td>index.yaml has no per-law metadata</td></tr>
+<tr><td>Fenced-then-inline code block stripping</td><td>ADR-003</td><td>Prevents false PASS from code-block IDs</td></tr>
+<tr><td>rapidfuzz partial_ratio threshold 60</td><td>ADR-004</td><td>Best overlap match for constitutional law titles</td></tr>
+<tr><td>Python 3.11+ only</td><td>ADR-005</td><td>AA platform baseline</td></tr>
+</table>
+
+<hr>
+
+<h2>Blockers Before Phase 6</h2>
+
+<table>
+<tr><th>Blocker</th><th>Action Required</th></tr>
+<tr><td>SonarQube not running</td><td><code>docker run -d -p 9000:9000 sonarqube:community</code></td></tr>
+<tr><td></td><td><code>./tools/sonarqube-gate/provision.sh --project-key citation-auditor-2026-001</code></td></tr>
+</table>
+
+<footer>citation-auditor-2026-001 | Hangar AI Constitution | 2026-05-23 | Rendered per ENG-13.1</footer>
+</body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 8 — SOLID Design Rescue — AAdvantage Legacy Rescue</title>
+<style>
+/* ── AA Constitutional Design System ── */
+@page { size: 1088px 1408px; margin: 0; }
+
+:root {
+  --aa-blue: #003087;
+  --aa-red:  #C8102E;
+  --ink:     #132033;
+  --aa-gold: #c79b2c;
+  --paper:   #f6f2e9;
+  --muted:   #5f6d7a;
+  --line:    #d9e1ea;
+  --soft:    #f3f7fb;
+  --soft-2:  #eef3f8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* ── Page layout ── */
+.page {
+  width: 1088px;
+  min-height: 1408px;
+  padding: 94px 88px 100px;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  page-break-after: always;
+}
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 12px;
+  background: linear-gradient(90deg, var(--aa-blue), var(--aa-red));
+}
+.page::after {
+  content: "✈";
+  position: absolute;
+  right: 34px; bottom: -10px;
+  font-size: 240px;
+  color: var(--aa-blue);
+  opacity: .03;
+  transform: rotate(18deg);
+  pointer-events: none;
+}
+.page.cover {
+  background:
+    radial-gradient(circle at 85% 16%, rgba(0,48,135,.08), transparent 22%),
+    linear-gradient(180deg, #fbfcfe 0%, #f1f6fa 100%);
+}
+.footer {
+  position: absolute;
+  left: 88px; right: 88px; bottom: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5ebf1;
+  padding-top: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #7f8b97;
+}
+.footer .pn { color: var(--aa-blue); font-weight: 800; }
+
+/* ── Typography ── */
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--aa-red);
+}
+h1 {
+  margin-top: 22px;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--aa-blue);
+  font-weight: 850;
+  max-width: 820px;
+}
+h2 {
+  margin-top: 32px;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -.6px;
+  color: var(--aa-blue);
+  font-weight: 800;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+h3 { margin-top: 20px; font-size: 19px; color: var(--aa-blue); font-weight: 700; }
+h4 { margin-top: 16px; font-size: 16px; color: var(--ink); font-weight: 700; }
+p  { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #32404d; }
+ul, ol { margin-top: 10px; padding-left: 24px; }
+li { font-size: 15px; line-height: 1.55; color: #32404d; margin-top: 4px; }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  background: var(--soft-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+pre {
+  margin-top: 14px;
+  background: #1e2832;
+  color: #c9d1d9;
+  padding: 16px 18px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.4; }
+th { border-top: 0; background: var(--soft); color: var(--aa-blue); font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+blockquote { border-left: 4px solid var(--aa-blue); margin-top: 14px; padding: 10px 16px; background: var(--soft); color: var(--muted); font-size: 14px; }
+
+/* ── Meta / stat cards ── */
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; max-width: 820px; }
+.meta-card { border: 1px solid var(--line); background: #fff; padding: 16px 18px; }
+.meta-card .k { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: var(--aa-red); font-weight: 800; }
+.meta-card .v { margin-top: 7px; font-size: 17px; line-height: 1.4; color: #23303d; }
+.summary-band { margin-top: 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card { border: 1px solid var(--line); background: #fff; padding: 14px; }
+.stat-card .n { font-size: 34px; line-height: 1; color: var(--aa-blue); font-weight: 850; letter-spacing: -1px; }
+.stat-card .l { margin-top: 7px; font-size: 13px; line-height: 1.35; color: #52606d; }
+.stat-card.danger .n { color: var(--aa-red); }
+.stat-card.warn .n { color: #b36b00; }
+
+/* ── Status badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.status-badge.proposed  { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.implemented { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.archived  { background: var(--soft-2); color: var(--muted); border: 1px solid var(--line); }
+.status-badge.accepted  { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.deprecated { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.pass   { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.fail   { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.warn   { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.critical { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.high   { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+
+/* ── Chip row ── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--aa-blue);
+  letter-spacing: .3px;
+}
+
+/* ── Confidence band ── */
+.confidence-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-left: 6px solid var(--aa-blue);
+  background: var(--soft);
+  margin-top: 24px;
+}
+.confidence-band .cb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.confidence-band.high  { border-left-color: #1b7a2b; }
+.confidence-band.medium { border-left-color: #b36b00; }
+.confidence-band.low   { border-left-color: var(--aa-red); }
+
+/* ── Phase header ── */
+.phase-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+.phase-num {
+  background: var(--aa-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+
+/* ── Law citation tooltips ── */
+.law-cite {
+  position: relative;
+  display: inline;
+  color: var(--aa-blue);
+  font-weight: 700;
+  border-bottom: 1px dashed var(--aa-blue);
+  cursor: help;
+  white-space: nowrap;
+}
+.law-cite[data-non-negotiable="true"] {
+  color: var(--aa-red);
+  border-bottom-color: var(--aa-red);
+}
+.law-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 9999;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2832;
+  color: #e8edf2;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: normal;
+  min-width: 220px;
+  max-width: 340px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: opacity .15s ease, visibility .15s ease;
+  text-align: left;
+  font-weight: 400;
+}
+.law-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e2832;
+}
+.law-tooltip .law-summary { font-size: 12px; color: #9aaab8; margin-top: 4px; display: block; }
+.law-cite:hover .law-tooltip,
+.law-cite:focus .law-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+.law-cite.flip-below .law-tooltip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.law-cite.flip-below .law-tooltip::after {
+  top: auto; bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1e2832;
+}
+
+.gate-block {
+  margin-top: 24px;
+  border: 2px solid var(--aa-red);
+  padding: 18px 22px;
+  background: #fdf2f4;
+}
+.gate-block .gate-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--aa-red); font-weight: 800; margin-bottom: 8px; }
+.gate-block .gate-row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+.gate-block .gate-item { font-size: 14px; color: var(--ink); }
+.gate-block .gate-item strong { color: var(--aa-red); }
+
+td.critical { color: var(--aa-red); font-weight: 700; }
+td.high-sev { color: #b36b00; font-weight: 700; }
+
+/* ── Two-column code compare ── */
+.code-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 14px; }
+.code-compare .col-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .9px; margin-bottom: 6px; }
+.code-compare .before-label { color: var(--aa-red); }
+.code-compare .after-label { color: #1b7a2b; }
+
+@media print {
+  .law-tooltip { display: none; }
+  .law-cite { border-bottom: none; color: inherit; font-weight: inherit; }
+}
+</style>
+</head>
+<body>
+
+<!-- AI-GENERATED DEMO REPO BANNER — copy exactly, do not omit -->
+<div style="position:fixed; top:0; left:0; right:0; z-index:9999; background:#fef3c7; border-bottom:2px solid #f59e0b; padding:6px 16px; display:flex; align-items:center; gap:10px; font-family:sans-serif; font-size:0.8rem; color:#78350f;">
+  <span style="font-size:1rem;">&#9888;&#65039;</span>
+  <strong>AI-GENERATED DEMO REPO</strong> &mdash; This codebase (<code>aa-loyalty-legacy</code>) is entirely AI-generated for illustration purposes. It is <strong>not</strong> real AA production code and does not represent any AA system.
+</div>
+<div style="height:38px;"></div>
+
+<!-- PAGE 1: COVER -->
+<div class="page cover">
+  <div class="eyebrow">Legacy Rescue · AAdvantage Loyalty Platform</div>
+  <h1>Phase 8 — SOLID Design Rescue</h1>
+  <div class="meta" style="margin-top:48px; max-width:760px;">
+    <div class="meta-card"><div class="k">Project</div><div class="v">AA AAdvantage Loyalty Platform</div></div>
+    <div class="meta-card"><div class="k">Codebase</div><div class="v"><code>aa-loyalty-legacy — Java 8 / Spring Boot 2.3 / Maven</code></div></div>
+    <div class="meta-card"><div class="k">Phase</div><div class="v">8 of 9 — SOLID Principle Enforcement</div></div>
+    <div class="meta-card"><div class="k">Date</div><div class="v">2026-05-11</div></div>
+  </div>
+  <div class="chip-row" style="margin-top:40px;">
+    <span class="chip">Nick's Challenge</span>
+    <span class="chip">OCP Violation</span>
+    <span class="chip">Strategy Pattern</span>
+    <span class="chip">335 Tests Green</span>
+    <span class="chip">Gate PASSED</span>
+  </div>
+  <div class="gate-block" style="margin-top:52px; max-width:680px; border-color:#1b7a2b; background:#e8f5e9;">
+    <div class="gate-label" style="color:#1b7a2b;">Constitutional Gate — Phase 8 Result</div>
+    <div class="gate-row">
+      <div class="gate-item" style="color:#1b7a2b;">SonarQube Quality Gate: <strong>GREEN — PASSED</strong></div>
+      <div class="gate-item" style="color:#1b7a2b;">Constitutional Gate: <strong>PASSED</strong></div>
+      <div class="gate-item" style="color:#1b7a2b;">Disposition: <strong>PHASE 9 MAY BEGIN</strong></div>
+    </div>
+    <p style="margin-top:10px; font-size:13px; color:#1b5e20;">3 planted SOLID violations detected and remediated by constitutional AI. 96 new tests written. Nick's challenge met. ENG-3.9 compliant.</p>
+  </div>
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 8 — SOLID Design Rescue</div><div class="pn">1</div></div>
+</div>
+
+<!-- PAGE 2: NICK'S CHALLENGE -->
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 8</span>
+    <span style="font-size:20px; font-weight:800; color:var(--aa-blue);">Nick's SOLID Challenge — Phase 8 Origin</span>
+  </div>
+
+  <blockquote style="margin-top:22px; font-size:16px; font-style:italic; line-height:1.7;">
+    "SonarQube is green — but the code has design principle violations that Sonar won't catch. Can the constitutional AI detect and remediate SOLID violations?"
+    <br><br>
+    <span style="font-style:normal; font-size:13px; color:#52606d; font-weight:700;">— Nick, Senior Architect (observed Phase 6 certification demo)</span>
+  </blockquote>
+
+  <p>After Phase 6 certification, Nick pushed the constitutional AI further: SonarQube's quality gates catch bugs, security issues, and complexity — but SOLID principle violations are an architectural concern above the tool's default ruleset. This prompted a deliberate experiment: plant 3 SOLID violations into the codebase and run them through constitutional AI review under <span class="law-cite" data-law-id="ENG-3.9" data-non-negotiable="false">ENG-3.9<span class="law-tooltip"><strong>Open/Closed Principle</strong><span class="law-summary">Software entities SHALL be open for extension and closed for modification; new behaviors extend, never mutate.</span></span></span>.</p>
+
+  <h2>The 3 Planted SOLID Violations</h2>
+
+  <h3>1. OCP Violation — Open/Closed Principle</h3>
+  <p><strong>Class:</strong> <code>TierBenefitCalculator.java</code><br>
+  <strong>Pattern:</strong> A large <code>if/else</code> chain switching on a raw tier name string. Adding any new tier (e.g., AAdvantage MVP) requires modifying this class — a direct violation of the Open/Closed Principle.<br>
+  <strong>SonarQube severity:</strong> MAJOR (cognitive complexity spike, switch-on-string anti-pattern)</p>
+
+  <h3>2. SRP Violation — Single Responsibility Principle</h3>
+  <p><strong>Class:</strong> <code>MemberService.java</code><br>
+  <strong>Pattern:</strong> Enrollment orchestration logic, notification dispatch, and audit logging all co-mingled in a single <code>enrollMember()</code> method. Two distinct reasons to change this class: enrollment workflow changes <em>and</em> notification template changes.<br>
+  <strong>Constitutional law:</strong> <span class="law-cite" data-law-id="ENG-3.4">ENG-3.4<span class="law-tooltip"><strong>Single Responsibility Principle</strong><span class="law-summary">Every module/class/function SHALL have ONE reason to change.</span></span></span> — SRP breach in application layer.</p>
+
+  <h3>3. DIP Violation — Dependency Inversion Principle</h3>
+  <p><strong>Classes:</strong> <code>AccrualService.java</code>, <code>TierService.java</code><br>
+  <strong>Pattern:</strong> Application services directly instantiating concrete infrastructure classes (<code>new SmtpNotificationSender()</code>, <code>new JpaAuditRepository()</code>) rather than depending on port interfaces.<br>
+  <strong>Constitutional law:</strong> <span class="law-cite" data-law-id="ENG-2.5" data-non-negotiable="false">ENG-2.5<span class="law-tooltip"><strong>Dependency Inversion Law</strong><span class="law-summary">High-level modules SHALL NOT depend on low-level modules; both depend on abstractions. Implementations provided by infrastructure layer.</span></span></span> — infrastructure bleeds into application layer.</p>
+
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 8 — SOLID Design Rescue</div><div class="pn">2</div></div>
+</div>
+
+<!-- PAGE 3: BEFORE / AFTER CODE — OCP VIOLATION -->
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 8</span>
+    <span style="font-size:20px; font-weight:800; color:var(--aa-blue);">Before / After — OCP Violation Remediation</span>
+  </div>
+  <p>The OCP violation in <code>TierBenefitCalculator.java</code> is the canonical case: every new tier required modifying production code. Constitutional AI detected the <code>if/else</code> string chain as an <span class="law-cite" data-law-id="ENG-3.9">ENG-3.9<span class="law-tooltip"><strong>Open/Closed Principle</strong><span class="law-summary">Software entities SHALL be open for extension and closed for modification; new behaviors extend, never mutate.</span></span></span> violation and proposed the Strategy Pattern (constant Map + enum dispatch).</p>
+
+  <div class="code-compare">
+    <div>
+      <div class="col-label before-label">❌ BEFORE — OCP VIOLATION</div>
+      <pre><code>// TierBenefitCalculator.java
+// OCP VIOLATION: must modify this
+// class for every new tier added
+
+public String getTierBenefitSummary(
+        String tier) {
+    if ("GENERAL".equals(tier)) {
+        return "Basic miles accrual, "
+             + "no lounge access";
+    } else if ("GOLD".equals(tier)) {
+        return "1.5x miles, priority "
+             + "boarding, 1 upgrade";
+    } else if ("PLATINUM".equals(tier)) {
+        return "2x miles, lounge access, "
+             + "4 upgrades";
+    } else if ("PLATINUM_PRO".equals(tier)){
+        return "2.5x miles, lounge access,"
+             + " 8 upgrades, same-day change";
+    } else if (
+        "EXECUTIVE_PLATINUM".equals(tier)) {
+        return "3x miles, Flagship Lounge, "
+             + "unlimited upgrades, "
+             + "dedicated agent";
+    } else {
+        return "Unknown tier";
+    }
+}
+// Adding MVP Gold = MODIFY THIS FILE</code></pre>
+    </div>
+    <div>
+      <div class="col-label after-label">✅ AFTER — OCP COMPLIANT (ENG-3.9)</div>
+      <pre><code>// TierBenefitCalculator.java
+// OCP compliant: new tiers extend,
+// never modify — ENG-3.9 satisfied
+
+public class TierBenefitCalculator {
+
+  private static final Map&lt;TierStatus, String&gt;
+      TIER_BENEFITS = Map.of(
+    TierStatus.GENERAL,
+        "Basic miles accrual, "
+        + "no lounge access",
+    TierStatus.GOLD,
+        "1.5x miles, priority boarding, "
+        + "1 upgrade",
+    TierStatus.PLATINUM,
+        "2x miles, lounge access, "
+        + "4 upgrades",
+    TierStatus.PLATINUM_PRO,
+        "2.5x miles, lounge access, "
+        + "8 upgrades, same-day change",
+    TierStatus.EXECUTIVE_PLATINUM,
+        "3x miles, Flagship Lounge, "
+        + "unlimited upgrades, "
+        + "dedicated agent"
+  );
+
+  public String getTierBenefitSummary(
+          String tier) {
+    try {
+      return TIER_BENEFITS.getOrDefault(
+          TierStatus.valueOf(tier),
+          "Unknown tier"
+      );
+    } catch (IllegalArgumentException e) {
+      return "Unknown tier";
+    }
+  }
+}
+// Adding MVP Gold = add ONE Map entry.
+// Zero modification to existing logic.</code></pre>
+    </div>
+  </div>
+
+  <div style="margin-top:20px; background:#e8f5e9; border-left:4px solid #1b7a2b; padding:14px 18px;">
+    <p style="margin:0; font-size:14px; color:#1b5e20;"><strong>Constitutional outcome:</strong> New tier added → add one <code>Map.entry()</code>. The <code>getTierBenefitSummary</code> method is <strong>closed for modification</strong>, <strong>open for extension</strong> via the enum and Map. <span class="law-cite" data-law-id="ENG-3.9">ENG-3.9<span class="law-tooltip"><strong>Open/Closed Principle</strong><span class="law-summary">Software entities SHALL be open for extension and closed for modification; new behaviors extend, never mutate.</span></span></span> compliant. 12 parameterized tests cover all tier paths.</p>
+  </div>
+
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 8 — SOLID Design Rescue</div><div class="pn">3</div></div>
+</div>
+
+<!-- PAGE 4: SOLID REMEDIATION SUMMARY -->
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 8</span>
+    <span style="font-size:20px; font-weight:800; color:var(--aa-blue);">SOLID Remediation Summary — All 3 Violations Resolved</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Violation</th>
+        <th>Class</th>
+        <th>SOLID Principle</th>
+        <th>Fix Applied</th>
+        <th>Tests</th>
+        <th>Gate</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>if/else</code> tier chain on raw string</td>
+        <td><code>TierBenefitCalculator</code></td>
+        <td>OCP — Open/Closed</td>
+        <td>Constant <code>Map&lt;TierStatus, String&gt;</code> + <code>TierStatus</code> enum dispatch. New tier = one Map entry, zero class modification.</td>
+        <td>+12 parameterized tests</td>
+        <td><span class="status-badge pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Enrollment + notification + audit in one method</td>
+        <td><code>MemberService</code></td>
+        <td>SRP — Single Responsibility</td>
+        <td>Domain event published (<code>MemberEnrolledEvent</code>); <code>NotificationEventListener</code> handles notification separately. Two classes, two reasons to change.</td>
+        <td>+8 characterization tests</td>
+        <td><span class="status-badge pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Concrete infrastructure instantiated in services</td>
+        <td><code>AccrualService</code>, <code>TierService</code></td>
+        <td>DIP — Dependency Inversion</td>
+        <td>Port interfaces (<code>NotificationPort</code>, <code>AuditPort</code>) + ACL adapter pattern per <span class="law-cite" data-law-id="ENG-2.5">ENG-2.5<span class="law-tooltip"><strong>Dependency Inversion Law</strong><span class="law-summary">High-level modules SHALL NOT depend on low-level modules; both depend on abstractions. Implementations provided by infrastructure layer.</span></span></span>. Services depend on abstractions only.</td>
+        <td>+8 integration-boundary tests</td>
+        <td><span class="status-badge pass">PASS</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="summary-band">
+    <div class="stat-card">
+      <div class="n">335</div>
+      <div class="l">Tests<br><span style="color:#1b7a2b;font-size:11px;font-weight:700;">up from 239 (+96)</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="n">93.3%</div>
+      <div class="l">Overall Coverage<br><span style="font-size:11px;">up from 89.7%</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="n">0</div>
+      <div class="l">SOLID Violations<br><span style="color:#1b7a2b;font-size:11px;font-weight:700;">down from 3</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="n">GREEN</div>
+      <div class="l">SonarQube Gate<br><span style="color:#1b7a2b;font-size:11px;font-weight:700;">sustained</span></div>
+    </div>
+  </div>
+
+  <div class="gate-block" style="margin-top:28px; border-color:#1b7a2b; background:#e8f5e9; border-width:3px;">
+    <div class="gate-label" style="color:#1b7a2b; font-size:14px;">GATE GREEN — SOLID Rescue Complete · Phase 9 May Begin</div>
+    <div class="gate-row" style="margin-top:8px;">
+      <div class="gate-item" style="color:#1b7a2b; font-size:14px;">3 SOLID violations identified and remediated</div>
+      <div class="gate-item" style="color:#1b7a2b; font-size:14px;">96 new tests written</div>
+      <div class="gate-item" style="color:#1b7a2b; font-size:14px;">SonarQube gate remains GREEN</div>
+    </div>
+    <p style="margin-top:12px; font-size:14px; color:#1b5e20; line-height:1.6;">
+      <span class="law-cite" data-law-id="ENG-3.9">ENG-3.9 (Open/Closed Principle)<span class="law-tooltip"><strong>Open/Closed Principle</strong><span class="law-summary">Software entities SHALL be open for extension and closed for modification; new behaviors extend, never mutate.</span></span></span> satisfied. Nick's SOLID challenge met. Constitutional AI proved capable of detecting and remediating design-principle violations beyond SonarQube's default ruleset. 239 → 335 tests. Gate sustained GREEN. Phase 9 (DDD Modernization) may begin.
+    </p>
+  </div>
+
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 8 — SOLID Design Rescue</div><div class="pn">4</div></div>
+</div>
+
+<script>
+document.querySelectorAll('.law-cite').forEach(function(el) {
+  el.addEventListener('mouseenter', function() {
+    var rect = el.getBoundingClientRect();
+    var tooltip = el.querySelector('.law-tooltip');
+    if (!tooltip) return;
+    var tipH = tooltip.offsetHeight || 80;
+    if (rect.top < tipH + 12) { el.classList.add('flip-below'); } else { el.classList.remove('flip-below'); }
+  });
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  var tip = el.querySelector('.law-tooltip');
+  if (tip) tip.id = 'tooltip-' + el.dataset.lawId;
+});
+</script>
+</body>
+</html>

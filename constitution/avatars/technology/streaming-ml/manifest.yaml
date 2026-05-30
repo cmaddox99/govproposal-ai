@@ -1,0 +1,153 @@
+# Streaming ML Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-streaming-ml
+  type: technology
+  name: Streaming ML
+  version: "2.0.0"
+
+stack:
+  language: Python 3.11+
+  frameworks:
+    - Apache Kafka
+    - Apache Flink
+    - Feast (Feature Store)
+    - Redis
+  testing:
+    - pytest
+    - pytest-kafka
+    - pytest-asyncio
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - kafka-python: ">=2.0.0"
+    - feast: ">=0.35.0"
+    - redis: ">=5.0.0"
+  dev:
+    - pytest: ">=8.0.0"
+    - pytest-asyncio: ">=0.23.0"
+    - pytest-cov: ">=4.1.0"
+    - ruff: ">=0.1.0"
+    - mypy: ">=1.8.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-6.1
+    title: Observability Law
+    example_file: examples/ENG-6.1-observability.md
+  - id: ENG-2.1
+    title: Simplicity Law
+    example_file: examples/ENG-2.1-simplicity.md
+
+conventions:
+  naming:
+    modules: snake_case
+    functions: snake_case
+    classes: PascalCase
+    topics: lowercase-dashes
+    consumer_groups: lowercase-dashes
+    features: snake_case
+
+  patterns:
+    processor: "StreamProcessor with consume/transform/produce"
+    feature_store: "OnlineFeatureStore for real-time features"
+    predictor: "RealtimePredictor with latency SLOs"
+    feast_view: "FeatureView with online=True"
+
+commands:
+  test:
+    all: pytest
+    unit: pytest tests/ -m "not integration"
+    kafka: pytest tests/streaming/ --run-kafka
+    coverage: pytest --cov=src --cov-report=html
+  dev:
+    kafka_start: docker-compose up -d kafka zookeeper
+    redis_start: docker run -d -p 6379:6379 redis
+    feast_init: cd feast/feature_repo && feast apply
+  ops:
+    materialize: "feast materialize $(date -d '1 day ago' +%Y-%m-%dT%H:%M:%S) $(date +%Y-%m-%dT%H:%M:%S)"
+    consumer_lag: kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group ml-processor
+
+project_structure: |
+  streaming_ml_project/
+  ├── src/
+  │   ├── streaming/               # Stream processing
+  │   │   ├── __init__.py
+  │   │   ├── processor.py         # Event processor
+  │   │   ├── consumers/           # Kafka consumers
+  │   │   │   ├── __init__.py
+  │   │   │   ├── events.py
+  │   │   │   └── features.py
+  │   │   ├── producers/           # Kafka producers
+  │   │   │   ├── __init__.py
+  │   │   │   └── predictions.py
+  │   │   └── transforms/          # Stream transforms
+  │   │       ├── __init__.py
+  │   │       └── feature_eng.py
+  │   ├── features/                # Feature store
+  │   │   ├── __init__.py
+  │   │   ├── online_store.py      # Online feature retrieval
+  │   │   ├── offline_store.py     # Offline feature storage
+  │   │   ├── definitions/         # Feature definitions
+  │   │   │   ├── user_features.py
+  │   │   │   └── product_features.py
+  │   │   └── materialization.py   # Feature materialization
+  │   ├── inference/               # Real-time inference
+  │   │   ├── __init__.py
+  │   │   ├── realtime.py          # Real-time predictor
+  │   │   └── batch.py             # Micro-batch inference
+  │   ├── models/                  # Model management
+  │   │   ├── __init__.py
+  │   │   └── loader.py            # Model loading
+  │   ├── monitoring/              # Stream monitoring
+  │   │   ├── __init__.py
+  │   │   ├── lag_monitor.py
+  │   │   └── metrics.py
+  │   └── utils/
+  │       ├── __init__.py
+  │       └── serialization.py
+  ├── tests/
+  │   ├── streaming/
+  │   │   └── test_processor.py
+  │   ├── features/
+  │   │   └── test_online_store.py
+  │   ├── inference/
+  │   │   └── test_realtime.py
+  │   └── conftest.py
+  ├── flink_jobs/                  # Flink streaming jobs
+  │   ├── feature_aggregation.py
+  │   └── prediction_stream.py
+  ├── feast/                       # Feast feature store config
+  │   ├── feature_repo/
+  │   │   ├── features.py
+  │   │   └── feature_store.yaml
+  │   └── data/
+  ├── configs/
+  │   ├── kafka.yaml
+  │   ├── redis.yaml
+  │   └── flink.yaml
+  ├── docker/
+  │   ├── processor/
+  │   │   └── Dockerfile
+  │   └── inference/
+  │       └── Dockerfile
+  ├── manifests/                   # Kubernetes manifests
+  │   ├── kafka/
+  │   ├── redis/
+  │   └── flink/
+  ├── requirements.txt
+  └── README.md

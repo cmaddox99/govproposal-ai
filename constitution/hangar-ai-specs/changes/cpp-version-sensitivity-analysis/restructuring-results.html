@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restructuring Results — C++ Avatar RAG Evaluation</title>
+  <style>
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px; line-height: 1.6; color: #24292e;
+  max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem;
+  background: #fff;
+}
+h1 { font-size: 2em; border-bottom: 2px solid #e1e4e8; padding-bottom: .4em; margin-top: 0; }
+h2 { font-size: 1.5em; border-bottom: 1px solid #e1e4e8; padding-bottom: .3em; margin-top: 2em; }
+h3 { font-size: 1.15em; margin-top: 1.5em; color: #0366d6; }
+h4 { font-size: 1em; margin-top: 1.2em; color: #586069; }
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1em 0; }
+table {
+  border-collapse: collapse;
+  width: auto;
+  font-size: 0.88em;
+}
+th, td {
+  border: 1px solid #d1d5da;
+  padding: .45em .8em;
+  vertical-align: top;
+  white-space: nowrap;
+}
+th { background: #f6f8fa; font-weight: 600; text-align: left; }
+tr:nth-child(even) td { background: #f6f8fa; }
+code {
+  background: #f3f4f6; border-radius: 3px; padding: .1em .3em;
+  font-size: 0.88em; font-family: "SFMono-Regular", Consolas, monospace;
+  white-space: nowrap;
+}
+pre {
+  background: #f6f8fa; border: 1px solid #e1e4e8; border-radius: 6px;
+  padding: 1em 1.2em; overflow-x: auto; font-size: 0.88em;
+}
+pre code { background: none; padding: 0; font-size: 1em; white-space: pre; }
+blockquote {
+  border-left: 4px solid #0366d6; margin: 1em 0;
+  padding: .5em 1em; background: #f1f8ff; color: #444;
+}
+blockquote p { margin: 0; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #e1e4e8; margin: 2em 0; }
+.toc-wrapper {
+  background: #f6f8fa; border: 1px solid #e1e4e8;
+  border-radius: 6px; padding: 1em 1.5em; margin-bottom: 2em;
+}
+.toc-wrapper ul { margin: .3em 0; padding-left: 1.4em; }
+.toc-wrapper li { margin: .2em 0; }
+footer {
+  margin-top: 3em; font-size: 0.82em; color: #586069;
+  border-top: 1px solid #e1e4e8; padding-top: 1em;
+}
+.dashboard {
+  background: #0d1117; color: #c9d1d9;
+  border-radius: 6px; padding: 1.2em 1.5em;
+  font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.88em;
+  margin: 1em 0;
+}
+.dashboard .dim { color: #8b949e; }
+.dashboard .pass { color: #3fb950; font-weight: 700; }
+.dashboard .fail { color: #f85149; font-weight: 700; }
+.dashboard .head { color: #58a6ff; font-weight: 700; }
+.badge-pass {
+  display: inline-block; background: #2ea44f; color: #fff;
+  border-radius: 2em; padding: .1em .65em; font-size: 0.8em; font-weight: 600;
+}
+.badge-fail {
+  display: inline-block; background: #cf222e; color: #fff;
+  border-radius: 2em; padding: .1em .65em; font-size: 0.8em; font-weight: 600;
+}
+.prompt-box {
+  background: #fffbdd; border: 1px solid #e3b341;
+  border-radius: 6px; padding: 1em 1.2em; margin: 1em 0;
+}
+.prompt-box p { margin: 0 0 .5em 0; }
+  </style>
+</head>
+<body>
+
+<h1>Restructuring Results &mdash; C++ Avatar RAG Evaluation</h1>
+
+<blockquote>
+  <p><strong>Status: COMPLETE.</strong> This document records the empirical evaluation of the C++ avatar
+  version-sensitivity routing implemented in Phase&nbsp;1 (PR&nbsp;#47) and Phase&nbsp;2 (PR&nbsp;#48).
+  It answers the question: <em>"Did the restructuring work?"</em></p>
+</blockquote>
+
+<hr>
+
+<div class="toc-wrapper">
+  <strong>Contents</strong>
+  <ul>
+    <li><a href="#executive-summary">Executive Summary</a></li>
+    <li><a href="#how-it-works">How the Evaluation Works</a>
+      <ul>
+        <li><a href="#routing-simulation">Routing Simulation</a></li>
+        <li><a href="#four-metrics">Four Metrics</a></li>
+        <li><a href="#design-decisions">Design Decision: Multi-Version Reference Files</a></li>
+      </ul>
+    </li>
+    <li><a href="#scenario-coverage">Scenario Coverage</a></li>
+    <li><a href="#tier-safety">Hard-Fail Tier Safety Results</a></li>
+    <li><a href="#rerun">How to Re-Run the Evaluation</a></li>
+    <li><a href="#test-suite">Test Suite Context</a></li>
+    <li><a href="#relationship">Relationship to Original Analysis</a></li>
+  </ul>
+</div>
+
+<h2 id="executive-summary">Executive Summary</h2>
+
+<p>The C++ avatar version-sensitivity restructuring <strong>passed all evaluation criteria</strong> across
+30 test scenarios spanning C++98 through C++23. All four routing quality metrics scored
+at or near 100%, and no hard-fail (version-unsafe) conditions were found.</p>
+
+<div class="table-wrap"><table>
+<thead>
+<tr><th>Metric</th><th>Score</th><th>Threshold</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td>Routing accuracy</td><td>30/30 (100%)</td><td>&ge;70%</td><td><span class="badge-pass">&#10003; PASS</span></td></tr>
+<tr><td>Tier version safety</td><td>30/30 (100%)</td><td>100%</td><td><span class="badge-pass">&#10003; PASS</span></td></tr>
+<tr><td>Answer coverage</td><td>30/30 (100%)</td><td>&ge;70%</td><td><span class="badge-pass">&#10003; PASS</span></td></tr>
+<tr><td>No ungated leakage</td><td>30/30 (100%)</td><td>100%</td><td><span class="badge-pass">&#10003; PASS</span></td></tr>
+<tr><td>Hard fails</td><td>0</td><td>0</td><td><span class="badge-pass">&#10003; PASS</span></td></tr>
+</tbody>
+</table></div>
+
+<div class="dashboard">
+<div class="head">=================================================================</div>
+<div class="head">  C++ Avatar RAG Routing Evaluation Dashboard</div>
+<div class="head">=================================================================</div>
+<div>  Scenarios evaluated  : 30</div>
+<div class="dim">  ------------------------------------------------</div>
+<div>  Routing accuracy     : <span class="pass">30/30  (100%)</span></div>
+<div>  Tier version safety  : <span class="pass">30/30  (100%)</span></div>
+<div>  Answer coverage      : <span class="pass">30/30  (100%)</span></div>
+<div>  No ungated leakage   : <span class="pass">30/30  (100%)</span></div>
+<div>  Hard fails           : <span class="pass">0  (must be 0)</span></div>
+<div class="head">=================================================================</div>
+</div>
+
+<hr>
+
+<h2 id="how-it-works">How the Evaluation Works</h2>
+
+<h3>What &ldquo;RAG Routing&rdquo; Means Here</h3>
+
+<p>The C++ avatar is a collection of Markdown reference files loaded into a RAG
+(Retrieval-Augmented Generation) context window when GitHub Copilot answers a C++
+question. The routing system determines <em>which files</em> get loaded based on two inputs:</p>
+<ol>
+  <li><strong>The developer's query</strong> &mdash; matched against <code>search_queries</code> entries in <code>AVATAR-RAG-INDEX.yaml</code></li>
+  <li><strong>The project's declared C++ standard</strong> &mdash; mapped to a tier whose <code>prefer</code> list defines the default file set</li>
+</ol>
+
+<h3 id="routing-simulation">Routing Simulation</h3>
+
+<p>The harness (<code>tests/unit/test_cpp_avatar/test_phase2_e4_rag_eval.py</code>) implements three steps:</p>
+
+<h4>Step 1 &mdash; Query-based routing</h4>
+<p>Each scenario's natural-language query is matched against the 106+ <code>search_queries</code>
+entries in <code>AVATAR-RAG-INDEX.yaml</code> using keyword overlap scoring (&ge;2 words match).
+Matched ref file paths are collected.</p>
+
+<h4>Step 2 &mdash; Tier-based routing</h4>
+<p>The scenario's declared <code>cpp_version</code> is mapped to a tier via <code>TIER_MAP</code>:</p>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Tier</th><th>Standards</th></tr></thead>
+<tbody>
+<tr><td><code>legacy</code></td><td>pre-C++98</td></tr>
+<tr><td><code>brownfield</code></td><td>C++98, C++03</td></tr>
+<tr><td><code>transitional</code></td><td>C++11, C++14</td></tr>
+<tr><td><code>modern</code></td><td>C++17</td></tr>
+<tr><td><code>greenfield</code></td><td>C++20, C++23</td></tr>
+</tbody>
+</table></div>
+
+<p>The tier's <code>prefer</code> list from <code>version_routing_policy.by_standard</code> is added to the route.</p>
+
+<h4>Step 3 &mdash; Combined route</h4>
+<p>Query-matched files come first (intent-specific), tier-preferred files follow
+(always-serve defaults). Top 6 are used, simulating a RAG context window slot budget.</p>
+
+<h3 id="four-metrics">Four Metrics</h3>
+
+<h4>1. Routing Accuracy</h4>
+<p>The expected primary ref file (or one of its allowed alternates) must appear in the
+combined top-6 route. Tests whether the routing infrastructure correctly connects a
+query+version pair to the right content.</p>
+
+<h4>2. Tier Version Safety <em>(hard safety gate)</em></h4>
+<p>Every file in the tier <code>prefer</code> list must have <code>cpp_version_min &le; project_standard</code>.
+This is the primary safety property: the &ldquo;always-serve&rdquo; default path must never expose
+a developer to content from a newer standard than their project uses.</p>
+<p>This metric uses <code>cpp_version_min</code> frontmatter added to all 34 ref files in Phase 2 (C4).</p>
+
+<h4>3. Answer Coverage</h4>
+<p>The combined content of all routed files must contain the expected keywords for the
+scenario (e.g., a C++11 threading query must find <code>lock_guard</code>; a C++98 printf query
+must find <code>literal</code>).</p>
+
+<h4>4. No Ungated Leakage</h4>
+<p>Keywords that should not appear for a given version must either be absent, or &mdash;
+in the case of intentional multi-version reference files &mdash; clearly behind a
+<code>&#9733; C++NN</code> version callout marker. The harness checks a 10-line context window around
+each keyword occurrence to detect unmarked leakage.</p>
+
+<h3 id="design-decisions">Design Decision: Multi-Version Reference Files</h3>
+
+<p>Some reference files (e.g., <code>ref-io-formatting.md</code>, <code>ref-templates-metaprogramming.md</code>)
+intentionally cover C++98 through C++23 in a single file, with each newer section
+introduced by a <code>&#9733; C++20</code> or <code>&#9733; C++23</code> header. This is not leakage &mdash; it is correct
+comprehensive reference behavior. A C++98 developer who sees a section labeled
+<code>&#9733; C++20: std::format</code> knows it does not apply to their project.</p>
+
+<p>Similarly, brownfield migration guides intentionally mention <code>unique_ptr</code> and <code>make_unique</code>
+as <em>migration targets</em> for C++98 projects. This mention is correct and helpful.</p>
+
+<p>The harness treats both of these as <strong>acceptable</strong>. Hard-fail criteria are reserved for
+truly ungated leakage and tier-routing safety violations.</p>
+
+<hr>
+
+<h2 id="scenario-coverage">Scenario Coverage</h2>
+
+<p>Scenarios are drawn from the five domain areas identified in the original
+version-sensitivity analysis (see <code>PROPOSAL.md</code>):</p>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Domain</th><th>Scenarios</th><th>Versions Tested</th></tr></thead>
+<tbody>
+<tr><td>Memory management</td><td>4</td><td>C++98, C++11, C++14, C++20</td></tr>
+<tr><td>Concurrency</td><td>5</td><td>C++98, C++11, C++17, C++20</td></tr>
+<tr><td>I/O and formatting</td><td>5</td><td>C++98, C++11, C++20, C++23</td></tr>
+<tr><td>Templates / metaprogramming</td><td>2</td><td>C++11, C++20</td></tr>
+<tr><td>Brownfield / migration</td><td>3</td><td>C++98, C++11</td></tr>
+<tr><td>Tier routing safety</td><td>4</td><td>C++98, C++11, C++17, C++20</td></tr>
+<tr><td>Cross-cutting (ABI, aviation, testing)</td><td>7</td><td>C++11, C++14, C++17</td></tr>
+</tbody>
+</table></div>
+
+<h3>Key Boundary Scenarios</h3>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Scenario ID</th><th>Query</th><th>Version</th><th>Expected Result</th></tr></thead>
+<tbody>
+<tr><td><code>conc-98-pthread</code></td><td>pthread POSIX threading</td><td>C++98</td><td>Routes to brownfield ref; not std::thread content</td></tr>
+<tr><td><code>conc-20-coroutine</code></td><td>co_await coroutines</td><td>C++20</td><td>Routes to coroutines ref (C++20+)</td></tr>
+<tr><td><code>io-98-printf</code></td><td>printf format string security</td><td>C++98</td><td>Routes to io-formatting ref; printf + literal present</td></tr>
+<tr><td><code>io-23-print</code></td><td>std::print println</td><td>C++23</td><td>Routes to io-formatting ref; std::print present</td></tr>
+<tr><td><code>tmpl-11-sfinae</code></td><td>SFINAE enable_if</td><td>C++11</td><td>Routes to templates ref; enable_if present</td></tr>
+<tr><td><code>tmpl-20-concepts</code></td><td>concepts requires constraints</td><td>C++20</td><td>Routes to templates ref; concept present</td></tr>
+<tr><td><code>tier-cpp98-no-coroutines</code></td><td>tier routing safety</td><td>C++98</td><td>co_await never ungated in C++98 tier routes</td></tr>
+<tr><td><code>boundary-coroutines-needs-20</code></td><td>co_await from C++11 project</td><td>C++11</td><td>Coroutines ref NOT in C++11 tier prefer list</td></tr>
+</tbody>
+</table></div>
+
+<hr>
+
+<h2 id="tier-safety">Hard-Fail Tier Safety Results</h2>
+
+<p>All four version tiers pass the hard safety gate (zero version-unsafe files in
+any tier's <code>prefer</code> list):</p>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Tier</th><th>Standards</th><th>Files in Prefer List</th><th>All Files Safe?</th></tr></thead>
+<tbody>
+<tr><td><code>brownfield</code></td><td>C++98, C++03</td><td>4</td><td><span class="badge-pass">&#10003; All cpp_version_min: 98</span></td></tr>
+<tr><td><code>transitional</code></td><td>C++11, C++14</td><td>3</td><td><span class="badge-pass">&#10003; All cpp_version_min: 11</span></td></tr>
+<tr><td><code>modern</code></td><td>C++17</td><td>3</td><td><span class="badge-pass">&#10003; All cpp_version_min &le; 17</span></td></tr>
+<tr><td><code>greenfield</code></td><td>C++20, C++23</td><td>4</td><td><span class="badge-pass">&#10003; All cpp_version_min &le; 20</span></td></tr>
+</tbody>
+</table></div>
+
+<p>Specific protections verified:</p>
+<ul>
+  <li><code>ref-concurrency-coroutines.md</code> (<code>cpp_version_min: 20</code>) does NOT appear in C++11 or C++98 tier prefer lists</li>
+  <li><code>ref-concurrency-threading.md</code> (<code>cpp_version_min: 11</code>) does NOT appear in C++98 brownfield tier</li>
+  <li>C++98 tier routes exclusively to files with <code>cpp_version_min: 98</code></li>
+</ul>
+
+<hr>
+
+<h2 id="rerun">How to Re-Run the Evaluation</h2>
+
+<h3>Prerequisites</h3>
+<pre><code># Install dependencies
+cd hangar-ai-constitution
+pip install -e .
+pip install pytest pyyaml</code></pre>
+
+<h3>Run the Full Evaluation</h3>
+<pre><code># Run with dashboard output visible
+python -m pytest tests/unit/test_cpp_avatar/test_phase2_e4_rag_eval.py -v -s
+
+# Run only the dashboard summary
+python -m pytest tests/unit/test_cpp_avatar/test_phase2_e4_rag_eval.py::TestRAGEvalDashboard -v -s
+
+# Run only the hard-fail tier safety checks
+python -m pytest tests/unit/test_cpp_avatar/test_phase2_e4_rag_eval.py::TestVersionLeakageHardFails -v
+
+# Run a specific scenario
+python -m pytest "tests/unit/test_cpp_avatar/test_phase2_e4_rag_eval.py::test_scenario[conc-98-pthread]" -v -s</code></pre>
+
+<h3>Re-Evaluation Prompt</h3>
+
+<p>Use the following prompt to instruct an AI agent to re-run or extend the evaluation:</p>
+
+<div class="prompt-box">
+<p><strong>Prompt for re-running the C++ avatar RAG routing evaluation:</strong></p>
+
+<p>Re-run the C++ avatar RAG routing evaluation harness and report the results.</p>
+
+<p>1. Run: <code>python -m pytest tests/unit/test_cpp_avatar/test_phase2_e4_rag_eval.py -v -s</code><br>
+Capture the full dashboard output and all pass/fail/xfail results.</p>
+
+<p>2. For any FAILED or XFAIL scenarios, identify the root cause:</p>
+<ul>
+  <li>Routing miss: the expected ref file is not in the top-6 combined route</li>
+  <li>Version safety violation: a tier prefer list includes a file with <code>cpp_version_min</code> &gt; project standard</li>
+  <li>Coverage gap: required keywords are absent from all routed content</li>
+  <li>Ungated leakage: a version-specific keyword appears without a <code>&#9733; C++NN</code> callout</li>
+</ul>
+
+<p>3. For each FAILED scenario, determine whether the fix is in:</p>
+<ul>
+  <li><code>AVATAR-RAG-INDEX.yaml</code> (add/update a <code>search_queries</code> entry)</li>
+  <li><code>version_routing_policy.by_standard</code> (fix a tier's prefer list)</li>
+  <li>A ref file (add missing content or version callout)</li>
+  <li>The scenario itself (the expected routing was wrong)</li>
+</ul>
+
+<p>4. To add new test scenarios, add a tuple to the <code>SCENARIOS</code> list in
+<code>tests/unit/test_cpp_avatar/test_phase2_e4_rag_eval.py</code>:</p>
+<pre><code>("scenario-id",
+ "Natural language query describing the developer's question",
+ cpp_version_int,              # e.g., 11 for C++11
+ "refs/path/to/primary.md",   # expected primary ref file
+ ["refs/path/allowed-alt.md"],# acceptable alternatives (can be [])
+ ["must", "contain"],         # keywords that MUST appear in routed content
+ ["must-not"],                # keywords that must be absent (ungated)
+ hard_fail_bool)              # True only for tier routing safety checks</code></pre>
+
+<p>5. Report: routing accuracy %, tier version safety %, answer coverage %,
+no-ungated-leakage %, hard fail count, and any new gaps found.</p>
+
+<p>Reference files for context:</p>
+<ul>
+  <li><code>AVATAR-RAG-INDEX.yaml</code> &mdash; routing table (search_queries + version_routing_policy)</li>
+  <li><code>avatars/technology/cpp/refs/**/*.md</code> &mdash; all ref files with <code>cpp_version_min</code> frontmatter</li>
+  <li><code>hangar-ai-specs/changes/cpp-version-routing-foundation/PHASE2-PROPOSAL.md</code> &mdash; governance record</li>
+  <li><code>hangar-ai-specs/changes/cpp-version-sensitivity-analysis/restructuring-results.md</code> &mdash; this document</li>
+</ul>
+</div>
+
+<hr>
+
+<h2 id="test-suite">Test Suite Context</h2>
+
+<p>The evaluation harness is one of 1,182 tests in the C++ avatar test suite:</p>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Test file</th><th>Tests</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>test_phase2_e4_rag_eval.py</code></td><td>42</td><td>RAG routing evaluation (this harness)</td></tr>
+<tr><td><code>test_phase2d_c4_ref_frontmatter.py</code></td><td>107</td><td>All 34 ref files have <code>cpp_version_min</code> frontmatter</td></tr>
+<tr><td><code>test_phase2b_concurrency.py</code></td><td>17</td><td>Concurrency ref coverage + token estimates</td></tr>
+<tr><td><code>test_phase2d_e3_token_automation.py</code></td><td>105</td><td>Token estimate drift detection (&plusmn;25%)</td></tr>
+<tr><td><code>test_phase2d_e1_same_tier_mismatch.py</code></td><td>22</td><td>Same-tier version boundary logic</td></tr>
+<tr><td><code>test_phase2d_e2_mixed_repo_detection.py</code></td><td>11</td><td>Mixed build-system detection edge cases</td></tr>
+</tbody>
+</table></div>
+
+<hr>
+
+<h2 id="relationship">Relationship to Original Analysis</h2>
+
+<p>This evaluation confirms that the restructuring addressed the root causes identified
+in the original <code>PROPOSAL.md</code> analysis:</p>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Original Finding</th><th>Addressed By</th><th>Verified</th></tr></thead>
+<tbody>
+<tr>
+  <td>Avatar silently defaulted to C++20/23 for all queries</td>
+  <td>Tier routing with <code>version_routing_policy</code></td>
+  <td><span class="badge-pass">&#10003;</span> <code>tier-cpp98-*</code> scenarios</td>
+</tr>
+<tr>
+  <td>No version callouts in ref files</td>
+  <td><code>cpp_version_min</code> frontmatter on all 34 refs + <code>&#9733; C++NN</code> inline callouts</td>
+  <td><span class="badge-pass">&#10003;</span> C4 test suite (107 tests)</td>
+</tr>
+<tr>
+  <td>Token budget too small for concurrency</td>
+  <td>Budget raised to 1200t; concurrency ref split</td>
+  <td><span class="badge-pass">&#10003;</span> E3 token automation (105 tests)</td>
+</tr>
+<tr>
+  <td>printf/iostream/std::format conflated</td>
+  <td><code>ref-io-formatting.md</code> per-version progression</td>
+  <td><span class="badge-pass">&#10003;</span> <code>io-98-printf</code>, <code>io-20-format</code>, <code>io-23-print</code></td>
+</tr>
+<tr>
+  <td>C++98 projects getting C++11 threading advice</td>
+  <td>Brownfield tier routes only to <code>cpp_version_min:98</code> files</td>
+  <td><span class="badge-pass">&#10003;</span> Tier safety (100%)</td>
+</tr>
+<tr>
+  <td>SFINAE vs Concepts conflated</td>
+  <td><code>ENG-3.1-sfinae-cpp11.md</code> example + templates ref callouts</td>
+  <td><span class="badge-pass">&#10003;</span> <code>tmpl-11-sfinae</code>, <code>tmpl-20-concepts</code></td>
+</tr>
+</tbody>
+</table></div>
+
+<footer>
+  Generated: 2026-04-26 &nbsp;|&nbsp;
+  Branch: <code>feat/cpp-version-routing-phase2</code> &nbsp;|&nbsp;
+  PR: <a href="https://github.com/AAInternal/hangar-ai-constitution/pull/48">#48</a>
+</footer>
+
+</body>
+</html>

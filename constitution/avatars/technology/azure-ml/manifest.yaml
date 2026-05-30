@@ -1,0 +1,125 @@
+# Azure Machine Learning Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-azure-ml
+  type: technology
+  name: Azure Machine Learning
+  version: "2.0.0"
+
+stack:
+  language: Python 3.11+
+  platform: Azure Machine Learning
+  frameworks:
+    - azure-ai-ml SDK
+    - MLflow
+  testing:
+    - pytest
+    - azure-ai-ml
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - azure-ai-ml: ">=1.12.0"
+    - azure-identity: ">=1.14.0"
+    - mlflow: ">=2.9.0"
+  dev:
+    - pytest: ">=8.0.0"
+    - pytest-cov: ">=4.1.0"
+    - ruff: ">=0.1.0"
+    - mypy: ">=1.8.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-6.1
+    title: Observability Law
+    example_file: examples/ENG-6.1-observability.md
+  - id: ENG-2.1
+    title: Simplicity Law
+    example_file: examples/ENG-2.1-simplicity.md
+
+conventions:
+  naming:
+    modules: snake_case
+    functions: snake_case
+    classes: PascalCase
+    environments: lowercase-dashes
+    compute: lowercase-dashes
+    experiments: lowercase-dashes
+
+  patterns:
+    trainer: "AzureMLTrainer wrapper class"
+    pipeline: "DSL pipeline with components"
+    deployer: "ModelDeployer for endpoints"
+    registry: "Model registry operations"
+
+commands:
+  test:
+    all: pytest
+    unit: pytest tests/ -m "not integration"
+    integration: pytest tests/integration/ --run-azure
+    coverage: pytest --cov=src --cov-report=html
+  dev:
+    authenticate: az login
+    workspace_info: az ml workspace show --name <workspace> --resource-group <rg>
+  job:
+    create: az ml job create --file job.yaml
+    show: az ml job show --name <job-name>
+    stream_logs: az ml job stream --name <job-name>
+
+project_structure: |
+  azure_ml_project/
+  ├── src/
+  │   ├── training/                # Training code
+  │   │   ├── __init__.py
+  │   │   ├── train.py             # Training script
+  │   │   ├── trainer.py           # Azure ML trainer wrapper
+  │   │   └── hyperparameters.py
+  │   ├── inference/               # Inference code
+  │   │   ├── __init__.py
+  │   │   ├── score.py             # Scoring script
+  │   │   ├── predictor.py         # Endpoint predictor
+  │   │   └── model_wrapper.py
+  │   ├── pipelines/               # Azure ML Pipelines
+  │   │   ├── __init__.py
+  │   │   ├── training_pipeline.py
+  │   │   └── components/
+  │   │       ├── preprocess.py
+  │   │       ├── train.py
+  │   │       └── evaluate.py
+  │   ├── data/                    # Data handling
+  │   │   ├── __init__.py
+  │   │   └── data_asset.py
+  │   ├── environments/            # Environment definitions
+  │   │   ├── pytorch/
+  │   │   │   ├── Dockerfile
+  │   │   │   └── conda.yaml
+  │   │   └── sklearn/
+  │   │       └── conda.yaml
+  │   └── utils/
+  │       ├── __init__.py
+  │       └── workspace.py
+  ├── tests/
+  │   ├── training/
+  │   │   └── test_trainer.py
+  │   ├── inference/
+  │   │   └── test_predictor.py
+  │   └── conftest.py
+  ├── configs/
+  │   ├── compute.yaml
+  │   ├── training.yaml
+  │   └── deployment.yaml
+  ├── requirements.txt
+  └── README.md

@@ -1,0 +1,4 @@
+[mutmut]
+paths_to_mutate = src/citation_auditor/auditor.py
+runner = python3.11 -m pytest tests/unit/test_auditor.py -q --no-header --override-ini=addopts=
+tests_dir = tests/unit

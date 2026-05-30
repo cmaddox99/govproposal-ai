@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en"
+      data-page-id="P8"
+      data-registry-version="2.0.0"
+      data-render-timestamp="2026-05-07T16:30:00Z">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 Phase Gate Evidence Guide</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   ADOPTION GUIDE DESIGN SYSTEM v2 — ENG-13.1 ⛔ COMPLIANT
+   Zero external deps. System fonts only. Inner pages.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── RESET & TOKENS ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #132033;
+  background:
+    radial-gradient(circle at top right, rgba(199,155,44,0.12), transparent 30%),
+    radial-gradient(circle at left 20%, rgba(0,51,102,0.06), transparent 25%),
+    linear-gradient(180deg, #fdfcf8 0%, #f2f5fa 50%, #f8f2ea 100%);
+  min-height: 100vh;
+}
+a { color: inherit; }
+h1,h2,h3,h4 {
+  margin: 0;
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-weight: 700;
+  line-height: 1.08;
+}
+p { margin: 0 0 1rem; }
+ul, ol { margin: 0 0 1rem; padding-left: 1.4rem; }
+li { margin-bottom: 0.4rem; }
+code {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88em;
+  background: rgba(0,51,102,0.07);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+pre {
+  background: #0f1f3d;
+  color: #e8f0f8;
+  padding: 20px;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────────────── */
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+main { padding-bottom: 72px; }
+section { margin-top: 56px; }
+.section-head { margin-bottom: 28px; }
+.section-label {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #cc0000;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.section-head h2 {
+  font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+  letter-spacing: -0.03em;
+  color: #132033;
+}
+.section-head p {
+  margin: 12px 0 0;
+  max-width: 680px;
+  color: #566579;
+  font-size: 1rem;
+}
+
+/* ── STICKY NAV ──────────────────────────────────────────────────── */
+.site-nav {
+  background: #001a40;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+  gap: 16px;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.88);
+  text-decoration: none;
+}
+.nav-brand-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fff, #f7ca66);
+  flex-shrink: 0;
+}
+.nav-links { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.nav-link {
+  color: rgba(255,255,255,0.68);
+  text-decoration: none;
+  font-size: 0.83rem;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+.nav-link:hover { color: #fff; }
+.btn-nav-home {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: #fff;
+  font-size: 0.80rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btn-nav-home:hover { background: rgba(255,255,255,0.18); }
+
+/* ── PAGE HERO ───────────────────────────────────────────────────── */
+.page-hero-wrap { padding: 36px 0 28px; }
+.page-hero {
+  padding: 44px 44px 40px;
+  border-radius: 30px;
+  background: linear-gradient(140deg, #001a40 0%, #003366 58%, #0d4080 100%);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 20px 60px rgba(0,26,64,0.22);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: auto -8% -40% 55%;
+  height: 280px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+  transform: rotate(-8deg);
+}
+.page-hero::after {
+  content: "";
+  position: absolute;
+  right: -50px; top: -50px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.07);
+  pointer-events: none;
+}
+.eyebrow {
+  display: inline-block;
+  color: #ffd880;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+.page-hero h1 {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-top: 14px;
+  text-shadow: 0 2px 20px rgba(0,26,64,0.30);
+}
+.page-hero .subtitle {
+  margin: 16px 0 0;
+  max-width: 680px;
+  color: rgba(255,255,255,0.80);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+.persona-routing { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.routing-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* ── CONTENT CARDS ───────────────────────────────────────────────── */
+.card {
+  padding: 28px 26px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  box-shadow: 0 14px 36px rgba(0,26,64,0.09);
+  margin-bottom: 16px;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 48px rgba(0,26,64,0.14);
+}
+.card h3 {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: #132033;
+  margin-bottom: 10px;
+}
+
+/* ── CALLOUTS ────────────────────────────────────────────────────── */
+.callout-warning, .callout-amber {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(255,215,0,0.08); border-left: 4px solid #c79b2c;
+  margin: 12px 0;
+}
+.callout-danger, .callout-red {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(204,0,0,0.06); border-left: 4px solid #cc0000;
+  margin: 12px 0;
+}
+.callout-info, .callout-blue {
+  padding: 16px 20px; border-radius: 14px;
+  background: #eaf0f7; border-left: 4px solid #0066cc;
+  margin: 12px 0;
+}
+.callout-success, .callout-green {
+  padding: 16px 20px; border-radius: 14px;
+  background: rgba(0,153,76,0.07); border-left: 4px solid #009934;
+  margin: 12px 0;
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: #003366;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-primary:hover { background: #001a40; transform: translateY(-1px); }
+
+.btn-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: rgba(0,51,102,0.08);
+  border: 1px solid rgba(0,51,102,0.14);
+  color: #003366;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.btn-copy:hover { background: rgba(0,51,102,0.14); }
+.btn-copy.copied { background: rgba(0,153,76,0.12); border-color: rgba(0,153,76,0.20); color: #007a2e; }
+
+/* ── ACCORDIONS ──────────────────────────────────────────────────── */
+details {
+  border-radius: 14px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+details[open] { box-shadow: 0 8px 24px rgba(0,26,64,0.09); }
+summary {
+  padding: 18px 20px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #132033;
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  gap: 12px;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after {
+  content: "▾";
+  color: #566579;
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+  font-family: sans-serif;
+  flex-shrink: 0;
+}
+details[open] summary::after { transform: rotate(180deg); }
+.details-body { padding: 4px 20px 20px; }
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+th {
+  background: #003366;
+  color: #fff;
+  padding: 12px 14px;
+  font-size: 0.83rem;
+  text-align: left;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0,51,102,0.09);
+  vertical-align: top;
+  font-size: 0.92rem;
+  color: #132033;
+}
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: rgba(0,51,102,0.03); }
+
+/* ── TAGS / PILLS ────────────────────────────────────────────────── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #eaf0f7;
+  color: #003366;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.tag-gold { background: rgba(199,155,44,0.15); color: #7a5800; }
+.tag-red { background: rgba(204,0,0,0.08); color: #cc0000; }
+.tag-green { background: rgba(0,153,76,0.10); color: #007a2e; }
+.tag-navy { background: rgba(0,51,102,0.12); color: #003366; }
+
+/* ── PHASE STEPS (workflow pages) ────────────────────────────────── */
+.phase-step {
+  padding: 28px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,51,102,0.09);
+  box-shadow: 0 14px 36px rgba(0,26,64,0.08);
+  margin-bottom: 20px;
+}
+.phase-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: #003366;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0,26,64,0.20);
+}
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.phase-header h3 {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: #132033;
+}
+
+/* ── GRID HELPERS ────────────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 820px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* ── FOOTER ──────────────────────────────────────────────────────── */
+footer {
+  background: #003366;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.82rem;
+  padding: 36px 24px;
+  text-align: center;
+  line-height: 2;
+  border-top: 2px solid #001a40;
+}
+.footer-inner { max-width: 1180px; margin: 0 auto; }
+.footer-title {
+  color: rgba(255,255,255,0.82);
+  font-weight: 700;
+  font-size: 0.92rem;
+  margin-bottom: 4px;
+}
+footer a { color: rgba(106,171,221,0.90); text-decoration: none; font-weight: 600; }
+footer a:hover { text-decoration: underline; color: #fff; }
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin-top: 12px;
+}
+.footer-sep { color: rgba(255,255,255,0.20); }
+
+/* ── PAGE-SPECIFIC: Phase Gate Guide (P8) ────────────────────────── */
+
+/* Layout */
+.content { max-width: 860px; margin: 0 auto; padding: 32px 24px 0; }
+section { margin-bottom: 36px; }
+h2 {
+  font-size: 1.25rem; font-weight: 700; color: #003366;
+  border-bottom: 2px solid #d0d6de;
+  padding-bottom: 8px; margin-bottom: 18px;
+}
+h3 { font-size: 1rem; font-weight: 700; color: #003366; margin-bottom: 8px; }
+p { color: #4a5568; }
+ul, ol { color: #4a5568; }
+
+/* Who badge */
+.who-badge {
+  display: inline-flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  background: #003366; color: #ffffff;
+  border-radius: 40px; padding: 10px 22px;
+  font-size: .92rem; font-weight: 600;
+}
+.who-badge .sep { opacity: .4; }
+.who-badge .persona { display: inline-flex; align-items: center; gap: 4px; }
+
+/* Green callout sub-styles */
+.callout-green strong { color: #1a5c2e; }
+.callout-green .callout-title {
+  font-size: 1rem; font-weight: 700; color: #1a5c2e;
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+
+/* Anatomy diagram */
+.anatomy-wrap {
+  background: #ffffff; border: 2px solid #d0d6de;
+  border-radius: 8px; overflow: hidden;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: .88rem;
+}
+.anatomy-row {
+  padding: 11px 20px;
+  border-bottom: 1px solid #d0d6de;
+  display: flex; align-items: center; gap: 12px;
+}
+.anatomy-row:last-child { border-bottom: none; }
+.anatomy-label { font-weight: 700; min-width: 130px; color: #003366; }
+.anatomy-desc { color: #4a5568; font-size: .85rem; }
+.anatomy-ascii {
+  background: #1a1a2e; color: #a8d8a8;
+  padding: 18px 22px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: .84rem; line-height: 1.5; overflow-x: auto;
+  white-space: pre; border-bottom: 1px solid #d0d6de;
+}
+
+/* Gate card accordions (JS-driven) */
+.gate-cards { display: flex; flex-direction: column; gap: 12px; }
+.gate-card {
+  border: 1px solid #e4eaf2; border-radius: 8px;
+  overflow: hidden; background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.gate-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px; cursor: pointer;
+  background: none; border: none; width: 100%;
+  text-align: left; font: inherit; color: #132033;
+}
+.gate-header:hover { background: #f8fafc; }
+.gate-header:focus { outline: 3px solid #0066cc; outline-offset: -3px; }
+.gate-icon { font-size: 1.3rem; flex-shrink: 0; }
+.gate-title { font-weight: 700; font-size: 1rem; flex: 1; color: #003366; }
+.gate-tag {
+  font-size: .75rem; font-weight: 700; padding: 2px 9px;
+  border-radius: 20px; background: #d0d6de; color: #003366;
+  margin-left: auto;
+}
+.gate-chevron { transition: transform 0.18s; font-size: .85rem; color: #4a5568; flex-shrink: 0; }
+.gate-card.open .gate-chevron { transform: rotate(90deg); }
+.gate-body { display: none; padding: 0 20px 22px 20px; }
+.gate-card.open .gate-body { display: block; }
+.gate-sub { font-size: .82rem; font-weight: 400; color: #4a5568; margin-left: 4px; }
+
+/* Check list */
+.check-list { list-style: none; padding: 0; margin-bottom: 14px; }
+.check-list li { padding: 4px 0 4px 1.6em; position: relative; color: #4a5568; font-size: .92rem; }
+.check-list li::before { content: "✓"; position: absolute; left: 0; color: #34a853; font-weight: 700; }
+
+/* Decision badges */
+.decision-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.badge-approve {
+  background: #e6f4ea; color: #1a5c2e;
+  border: 1px solid #34a853; border-radius: 8px;
+  padding: 8px 14px; font-size: .85rem; font-weight: 600;
+}
+.badge-object {
+  background: #fff0f0; color: #8b0000;
+  border: 1px solid #cc0000; border-radius: 8px;
+  padding: 8px 14px; font-size: .85rem; font-weight: 600;
+}
+
+/* Scope example */
+.scope-example {
+  margin-top: 14px; background: #f0f5ff;
+  border-left: 4px solid #0066cc;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px; font-size: .88rem; color: #003366;
+}
+.scope-example strong { display: block; margin-bottom: 4px; }
+
+/* SonarQube table status */
+.status-pass { color: #34a853; font-weight: 700; }
+.status-warn { color: #f9a825; font-weight: 700; }
+.status-fail { color: #cc0000; font-weight: 700; }
+
+/* Drift signals */
+.callout-amber .callout-title {
+  font-size: 1rem; font-weight: 700; color: #7a4f00;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.drift-list { list-style: none; padding: 0; }
+.drift-list li {
+  padding: 10px 0; border-bottom: 1px solid #ffe082;
+  font-size: .9rem; color: #5a3a00;
+}
+.drift-list li:last-child { border-bottom: none; }
+.drift-signal { font-weight: 700; color: #7a4f00; }
+.drift-action { font-style: italic; margin-top: 3px; color: #3e2700; }
+
+/* Monitoring prompts */
+.prompt-cards { display: flex; flex-direction: column; gap: 16px; }
+.prompt-card {
+  background: #ffffff; border: 1px solid #e4eaf2;
+  border-radius: 8px; padding: 18px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+.prompt-card h3 { margin-bottom: 10px; font-size: .95rem; color: #003366; }
+.prompt-text {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: .84rem; background: #f0f5ff;
+  border: 1px solid #c7d9f5; border-radius: 6px;
+  padding: 12px 14px; color: #003366;
+  margin-bottom: 12px; line-height: 1.55;
+  word-break: break-word;
+}
+.copy-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #0066cc; color: #ffffff;
+  border: none; border-radius: 6px;
+  padding: 8px 16px; font: inherit;
+  font-size: .85rem; font-weight: 600;
+  cursor: pointer; transition: background .15s;
+}
+.copy-btn:hover { background: #0055aa; }
+.copy-btn:focus { outline: 3px solid #80b3ff; outline-offset: 2px; }
+.copy-btn.copied { background: #34a853; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Site navigation">
+  <div class="nav-inner">
+    <a href="p1-landing.html" class="nav-brand" aria-label="Adoption Guide Home">
+      <div class="nav-brand-dot" aria-hidden="true"></div>
+      Hangar AI · Adoption Guide
+    </a>
+    <div class="nav-links">
+      <a href="workflows/index.html" class="nav-link">Workflows</a>
+      <a href="p3-coach-quick-start.html" class="nav-link">Coach Quick Start</a>
+      <a href="p1-landing.html" class="btn-nav-home">← Guide Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="page-hero-wrap">
+    <div class="page-hero">
+      <div class="eyebrow">REFERENCE GUIDE · ALL ROLES</div>
+      <h1>Phase Gate Evidence Guide</h1>
+      <p class="subtitle">What to produce at every gate, how to detect drift, and the three monitoring prompts that keep every team constitutionally compliant.</p>
+      <div class="persona-routing" aria-label="Intended audiences">
+        <span class="routing-chip">🎓 Coach ✅</span>
+        <span class="routing-chip">🏗️ Architect ✅</span>
+        <span class="routing-chip">⚙️ Engineer ✅</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main class="content">
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION 1 — Who uses this (DC-12)
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="who-heading">
+    <h2 id="who-heading">👥 Who Uses This</h2>
+    <div class="who-badge" role="note" aria-label="Personas: Technical Coach, Senior Architect, and Engineer all use this guide">
+      <span>👥 Who uses this:</span>
+      <span class="sep">|</span>
+      <span class="persona">🧑‍🏫 Technical Coach <span aria-label="applicable">✅</span></span>
+      <span class="sep">|</span>
+      <span class="persona">🏛️ Senior Architect <span aria-label="applicable">✅</span></span>
+      <span class="sep">|</span>
+      <span class="persona">👩‍💻 Engineer <span aria-label="applicable">✅</span></span>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION 2 — DC-11 Non-Determinism + Human Agency
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="dc11-heading">
+    <h2 id="dc11-heading">🤖 Non-Determinism & Human Agency</h2>
+    <div class="callout-green" role="note">
+      <div class="callout-title">🔑 DC-11: Your Approval is the Constitutional Gate</div>
+      <p style="color:#1a5c2e; margin-bottom:10px;">
+        <strong>These workflows are non-deterministic.</strong> The agent's output varies between runs.
+        Your job at each phase gate is to:
+      </p>
+      <ol style="color:#1a5c2e; padding-left:1.4em; margin-bottom:10px;">
+        <li>Read the evidence artifact carefully</li>
+        <li>Ask: <em>does this match my intent?</em></li>
+        <li><strong>APPROVE</strong> to proceed, or <strong>OBJECT</strong> to scope down or re-propose</li>
+      </ol>
+      <p style="color:#1a5c2e; margin-bottom:0; font-weight:600;">
+        Your approval is the constitutional gate. It is never automatic.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION 3 — What is a Phase Gate Artifact?
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="artifact-heading">
+    <h2 id="artifact-heading">📁 What Is a Phase Gate Artifact?</h2>
+    <p>
+      A phase gate artifact is an HTML file stored in
+      <code>hangar-ai-specs/changes/[spec-id]/</code> and named
+      <code>phase-N-[name].html</code>. It is produced by the AI agent at the
+      end of each phase and contains structured evidence for your review.
+    </p>
+
+    <div class="anatomy-wrap" role="img" aria-label="Anatomy diagram of a phase gate artifact showing five sections: header, evidence table, gate status, decision row, and commit hash">
+      <div class="anatomy-ascii">┌─────────────────────────────────────────────────┐
+│ HEADER: Workflow ID · Phase N · Status          │
+├─────────────────────────────────────────────────┤
+│ EVIDENCE TABLE: What was found/done this phase  │
+├─────────────────────────────────────────────────┤
+│ GATE STATUS: ✅ PASS / ⚠️  WARN / ❌ FAIL       │
+├─────────────────────────────────────────────────┤
+│ DECISION ROW: Human approved/objected + reason  │
+├─────────────────────────────────────────────────┤
+│ COMMIT HASH: Links to the code change           │
+└─────────────────────────────────────────────────┘</div>
+      <div class="anatomy-row">
+        <span class="anatomy-label">HEADER</span>
+        <span class="anatomy-desc">Identifies the workflow ID, current phase number, and overall status at a glance.</span>
+      </div>
+      <div class="anatomy-row">
+        <span class="anatomy-label">EVIDENCE TABLE</span>
+        <span class="anatomy-desc">Structured rows of what the agent found or changed during this phase — the raw facts.</span>
+      </div>
+      <div class="anatomy-row">
+        <span class="anatomy-label">GATE STATUS</span>
+        <span class="anatomy-desc">Machine-evaluated signal: <strong>✅ PASS</strong>, <strong>⚠️ WARN</strong>, or <strong>❌ FAIL</strong>. Not a substitute for human review.</span>
+      </div>
+      <div class="anatomy-row">
+        <span class="anatomy-label">DECISION ROW</span>
+        <span class="anatomy-desc">Where you record APPROVE or OBJECT along with the reason. Required before the next phase begins.</span>
+      </div>
+      <div class="anatomy-row">
+        <span class="anatomy-label">COMMIT HASH</span>
+        <span class="anatomy-desc">SHA of the code change associated with this phase — links evidence to source control.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION 4 — Decisions at Each Gate Type
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="gates-heading">
+    <h2 id="gates-heading">🚦 Decisions at Each Gate Type</h2>
+    <div class="gate-cards">
+
+      <!-- Gate 1: PROPOSE -->
+      <div class="gate-card" id="gate-1">
+        <button class="gate-header"
+                onclick="toggleGate(this)"
+                aria-expanded="false"
+                aria-controls="gate-1-body">
+          <span class="gate-icon" aria-hidden="true">📝</span>
+          <span class="gate-title">Gate 1: PROPOSE<span class="gate-sub"> — Proposal review</span></span>
+          <span class="gate-tag">PROPOSE</span>
+          <span class="gate-chevron" aria-hidden="true">▶</span>
+        </button>
+        <div class="gate-body" id="gate-1-body">
+          <h3>What you're reading</h3>
+          <p>A <code>PROPOSAL.md</code> rendered as HTML — contains the problem statement, law citations, scope boundaries, and kill-if criteria.</p>
+
+          <h3>What to check</h3>
+          <ul class="check-list">
+            <li>Problem statement matches <strong>your</strong> intent — not the agent's interpretation of it</li>
+            <li>Law IDs are real and applicable (e.g., <code>ENG-4.1</code>, <code>DC-11</code>) — not invented identifiers</li>
+            <li>Scope is appropriate — not too large, not spanning multiple bounded contexts</li>
+            <li>Kill-if criteria are measurable and time-bounded (not vague)</li>
+          </ul>
+
+          <h3>Decision</h3>
+          <div class="decision-row">
+            <div class="badge-approve">✅ APPROVE — "The proposal matches my intent and scope"</div>
+            <div class="badge-object">❌ OBJECT — "Revise the proposal: [specific change]"</div>
+          </div>
+
+          <div class="scope-example">
+            <strong>📐 Scoping example</strong>
+            "Scope this adoption to <code>setup</code> and <code>AGENTS.md</code> only — defer SonarQube and avatar creation to a separate session."
+          </div>
+        </div>
+      </div>
+
+      <!-- Gate 2: IMPLEMENT -->
+      <div class="gate-card" id="gate-2">
+        <button class="gate-header"
+                onclick="toggleGate(this)"
+                aria-expanded="false"
+                aria-controls="gate-2-body">
+          <span class="gate-icon" aria-hidden="true">⚙️</span>
+          <span class="gate-title">Gate 2: IMPLEMENT<span class="gate-sub"> — Implementation evidence</span></span>
+          <span class="gate-tag">IMPLEMENT</span>
+          <span class="gate-chevron" aria-hidden="true">▶</span>
+        </button>
+        <div class="gate-body" id="gate-2-body">
+          <h3>What you're reading</h3>
+          <p>A <code>phase-N-[name].html</code> file — structured evidence of every file the agent changed, why, and what tests were updated.</p>
+
+          <h3>What to check</h3>
+          <ul class="check-list">
+            <li>Changes match the <strong>approved proposal</strong> — no unrequested additions</li>
+            <li>No extra files modified outside the agreed scope boundary</li>
+            <li>Tests were updated alongside production code</li>
+            <li>Commit message references the proposal ID</li>
+          </ul>
+
+          <h3>Decision</h3>
+          <div class="decision-row">
+            <div class="badge-approve">✅ APPROVE — proceed to ARCHIVE phase</div>
+            <div class="badge-object">❌ OBJECT — "Revert [specific files] and re-implement within scope"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gate 3: ARCHIVE -->
+      <div class="gate-card" id="gate-3">
+        <button class="gate-header"
+                onclick="toggleGate(this)"
+                aria-expanded="false"
+                aria-controls="gate-3-body">
+          <span class="gate-icon" aria-hidden="true">🗄️</span>
+          <span class="gate-title">Gate 3: ARCHIVE<span class="gate-sub"> — Governed trail completion</span></span>
+          <span class="gate-tag">ARCHIVE</span>
+          <span class="gate-chevron" aria-hidden="true">▶</span>
+        </button>
+        <div class="gate-body" id="gate-3-body">
+          <h3>What you're reading</h3>
+          <p>The final archive confirmation — showing the proposal moved to <code>hangar-ai-specs/archive/</code> and all phase artifacts committed.</p>
+
+          <h3>What to check</h3>
+          <ul class="check-list">
+            <li>Proposal was <strong>moved</strong> (not deleted) to <code>hangar-ai-specs/archive/</code></li>
+            <li>All phase artifacts are committed to source control</li>
+            <li><code>PROGRESS.md</code> updated to reflect the completed phase</li>
+          </ul>
+
+          <h3>Decision</h3>
+          <div class="decision-row">
+            <div class="badge-approve">✅ APPROVE — the governed trail is complete</div>
+            <div class="badge-object">❌ OBJECT — "Archive is missing artifacts: [list what's absent]"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gate 4: SONARQUBE -->
+      <div class="gate-card" id="gate-4">
+        <button class="gate-header"
+                onclick="toggleGate(this)"
+                aria-expanded="false"
+                aria-controls="gate-4-body">
+          <span class="gate-icon" aria-hidden="true">🔍</span>
+          <span class="gate-title">Gate 4: SONARQUBE<span class="gate-sub"> — Quality delta review</span></span>
+          <span class="gate-tag">SONARQUBE</span>
+          <span class="gate-chevron" aria-hidden="true">▶</span>
+        </button>
+        <div class="gate-body" id="gate-4-body">
+          <h3>What you're reading</h3>
+          <p>A <code>sonarqube-delta.md</code> file — comparing baseline metrics vs. current metrics for this change set.</p>
+
+          <h3>Key metrics to review</h3>
+          <ul class="check-list">
+            <li><code>coverage</code> — overall project coverage (context only)</li>
+            <li><code>new_coverage</code> — coverage of <strong>new code only</strong> (constitutional threshold)</li>
+            <li><code>vulnerabilities</code> — must be 0 for Phase 4+</li>
+            <li><code>bugs</code> — no new bugs introduced</li>
+            <li><code>code_smells</code> — no new smells on new code</li>
+          </ul>
+
+          <h3>What to check</h3>
+          <ul class="check-list">
+            <li>No <strong>NEW</strong> issues added — the constitutional rule targets new debt, not pre-existing</li>
+            <li><code>new_coverage</code> ≥ configured threshold for this phase</li>
+            <li><code>vulnerabilities</code> = 0 for Phase 4 and beyond</li>
+          </ul>
+
+          <h3>Example comparison table</h3>
+          <table class="sq-table" aria-label="SonarQube metrics before and after comparison">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Before</th>
+                <th>After</th>
+                <th>Change</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>new_coverage</code></td>
+                <td>—</td>
+                <td>84.2%</td>
+                <td>+84.2%</td>
+                <td class="status-pass">✅ PASS</td>
+              </tr>
+              <tr>
+                <td><code>vulnerabilities</code></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="status-pass">✅ PASS</td>
+              </tr>
+              <tr>
+                <td><code>bugs</code></td>
+                <td>3</td>
+                <td>3</td>
+                <td>0 new</td>
+                <td class="status-pass">✅ PASS</td>
+              </tr>
+              <tr>
+                <td><code>code_smells</code></td>
+                <td>12</td>
+                <td>14</td>
+                <td>+2 new</td>
+                <td class="status-warn">⚠️ WARN</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin-top:14px;">Decision</h3>
+          <div class="decision-row">
+            <div class="badge-approve">✅ APPROVE — no new issues introduced</div>
+            <div class="badge-object">❌ OBJECT — "New [metric] violations detected; resolve before proceeding"</div>
+          </div>
+
+          <div class="scope-example">
+            <strong>📌 Important</strong>
+            Pre-existing violations (bugs, smells, coverage gaps) do <strong>NOT</strong> block adoption. Only violations on <em>new code in this change set</em> are constitutional blockers.
+          </div>
+        </div>
+      </div>
+
+      <!-- Gate 5: MUTATION -->
+      <div class="gate-card" id="gate-5">
+        <button class="gate-header"
+                onclick="toggleGate(this)"
+                aria-expanded="false"
+                aria-controls="gate-5-body">
+          <span class="gate-icon" aria-hidden="true">🧬</span>
+          <span class="gate-title">Gate 5: MUTATION<span class="gate-sub"> — Mutation test score review</span></span>
+          <span class="gate-tag">MUTATION</span>
+          <span class="gate-chevron" aria-hidden="true">▶</span>
+        </button>
+        <div class="gate-body" id="gate-5-body">
+          <h3>What you're reading</h3>
+          <p>A mutation test HTML report located in <code>hangar-ai-specs/evidence/mutation-report/</code> — showing which synthetic code mutations were killed by the test suite and which survived.</p>
+
+          <h3>Thresholds by phase</h3>
+          <ul class="check-list">
+            <li>Legacy Rescue Phase 4 — mutation score <strong>≥ 70%</strong></li>
+            <li>Phase 7 (full constitutional) — mutation score <strong>≥ 90%</strong></li>
+          </ul>
+
+          <h3>What to check</h3>
+          <ul class="check-list">
+            <li>Mutation score meets the threshold for this phase</li>
+            <li>Surviving mutants have been reviewed individually</li>
+            <li>Each surviving mutant has either a <strong>killing test added</strong> or an <strong>explicit acceptance note</strong> (e.g., "trivial getter — accepted")</li>
+          </ul>
+
+          <h3>Decision</h3>
+          <div class="decision-row">
+            <div class="badge-approve">✅ APPROVE — score meets threshold and surviving mutants reviewed</div>
+            <div class="badge-object">❌ OBJECT — "Mutation score is [X]% — below [threshold]%. Add killing tests for surviving mutants."</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.gate-cards -->
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION 5 — Detecting AI Drift
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="drift-heading">
+    <h2 id="drift-heading">⚠️ Detecting AI Drift</h2>
+    <div class="callout-amber" role="alert">
+      <div class="callout-title">⚠️ Signs the AI Has Drifted from the Constitution</div>
+      <ol class="drift-list">
+        <li>
+          <div class="drift-signal">1. Proposal cites no law IDs</div>
+          <div class="drift-action">→ Ask: "Re-propose and cite the specific law IDs that govern each decision."</div>
+        </li>
+        <li>
+          <div class="drift-signal">2. Proposal scope grew between sessions</div>
+          <div class="drift-action">→ Ask: "What changed in the scope from the previous proposal? Revert to the approved scope."</div>
+        </li>
+        <li>
+          <div class="drift-signal">3. ARCHIVE step was skipped</div>
+          <div class="drift-action">→ Do not start next phase. Say: "Archive the completed proposal before proceeding."</div>
+        </li>
+        <li>
+          <div class="drift-signal">4. SonarQube gate was not consulted</div>
+          <div class="drift-action">→ Pause. Say: "Run the constitutional gate and show me the sonarqube-delta.md before we continue."</div>
+        </li>
+        <li>
+          <div class="drift-signal">5. Phase artifact references laws that don't apply to this project</div>
+          <div class="drift-action">→ Ask: "Explain why [law ID] applies to this change."</div>
+        </li>
+        <li>
+          <div class="drift-signal">6. Agent proposes fixing ALL pre-existing violations</div>
+          <div class="drift-action">→ Detect: proposal mentions "fix existing X issues", lists violations from before your change, or scope includes files you didn't touch. Correct: "The constitutional gate only requires no NEW violations. Scope to new code only — remove any pre-existing issues from this proposal."</div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION 6 — Monitoring Across Sessions
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="monitoring-heading">
+    <h2 id="monitoring-heading">🔭 Monitoring Across Sessions</h2>
+    <p>Use these prompts in your next session to audit constitutional health without starting a new workflow.</p>
+    <div class="prompt-cards">
+
+      <!-- Prompt 1 -->
+      <div class="prompt-card">
+        <h3>📋 Summarise all open proposals</h3>
+        <div class="prompt-text" id="prompt-1">Summarise all open proposals in hangar-ai-specs/changes/ for this repo. List the proposal ID, status, and last phase completed.</div>
+        <button class="copy-btn"
+                onclick="copyPrompt(this, document.getElementById('prompt-1').textContent)"
+                aria-label="Copy summarise open proposals prompt">
+          📋 Copy prompt
+        </button>
+      </div>
+
+      <!-- Prompt 2 -->
+      <div class="prompt-card">
+        <h3>🔍 Review a phase artifact for drift</h3>
+        <div class="prompt-text" id="prompt-2">Review phase-[N]-[name].html in hangar-ai-specs/changes/[spec-id]/ and tell me: (1) what evidence was produced, (2) what gate status was reached, (3) any signs of constitutional drift.</div>
+        <button class="copy-btn"
+                onclick="copyPrompt(this, document.getElementById('prompt-2').textContent)"
+                aria-label="Copy review phase artifact for drift prompt">
+          📋 Copy prompt
+        </button>
+      </div>
+
+      <!-- Prompt 3 -->
+      <div class="prompt-card">
+        <h3>📐 Re-propose with reduced scope</h3>
+        <div class="prompt-text" id="prompt-3">The current proposal scope is larger than I want. Re-propose scoped to [bounded context — e.g., com.aa.loyalty.mileage package only]. Keep all other constitutional requirements.</div>
+        <button class="copy-btn"
+                onclick="copyPrompt(this, document.getElementById('prompt-3').textContent)"
+                aria-label="Copy re-propose with reduced scope prompt">
+          📋 Copy prompt
+        </button>
+      </div>
+
+    </div><!-- /.prompt-cards -->
+  </section>
+
+</main><!-- /.content -->
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-title">Hangar AI Constitution — Adoption Guide</div>
+    <div>American Airlines · Hangar AI Program · Adoption Guide v1.0.0</div>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="p1-landing.html">Guide Home</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="p3-coach-quick-start.html">Coach Quick Start</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="p3-architect-quick-start.html">Architect Quick Start</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="p3-engineer-quick-start.html">Engineer Quick Start</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="workflows/index.html">Workflows Hub</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  function copyPrompt(btn, promptText) {
+    navigator.clipboard.writeText(promptText).then(() => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✅ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => {
+      btn.innerHTML = '⚠️ Select + copy manually';
+      setTimeout(() => {
+        btn.innerHTML = btn.getAttribute('aria-label').replace('Copy ', '📋 Copy ');
+      }, 3000);
+    });
+  }
+
+  function toggleGate(btn) {
+    const card = btn.parentElement;
+    card.classList.toggle('open');
+    btn.setAttribute('aria-expanded', card.classList.contains('open'));
+  }
+</script>
+</body>
+</html>

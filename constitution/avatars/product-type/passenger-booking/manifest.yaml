@@ -1,0 +1,330 @@
+avatar:
+  id: avatar-passenger-booking
+  type: product
+  name: "Passenger Booking & Reservations"
+  version: "1.7.0"
+  created: "2026-03-31"
+  last_updated: "2026-04-30"
+
+domain:
+  category: "Passenger Booking & Reservations"
+  description: |
+    Core revenue-generating booking funnel: flight search, fare display, seat selection,
+    ancillary upsell, payment, and PNR management. Handles GDS/Sabre API contracts,
+    PCI-DSS card data in the booking flow, DOT consumer protection for denied boarding,
+    refund rules, and GDPR obligations for EU passengers.
+
+  personas:
+    - Leisure Traveler
+    - Business Traveler
+    - Travel Agent
+    - Revenue Management Analyst
+
+core_journeys:
+  - "Flight Search & Fare Display"
+  - "Seat Selection & Ancillary Purchase"
+  - "Payment Processing"
+  - "Booking Modification & Cancellation"
+  - "Denied Boarding & Compensation"
+
+activates:
+  skills:
+    - spec-governance
+    - 02-user-journey-mapping
+    - 02-research-synthesis
+    - 03-executable-spec
+    - 04-business-domain-modeling
+    - 05-business-rules
+    - 06-atomic-tdd
+    - 07-vertical-slice-dev
+    - 08-code-review
+    - 10-security-review
+    - 27-constitution-compliance
+
+  workflows:
+    - product-discovery-stage-a-f
+    - legacy-rescue-decision-track
+    - legacy-rescue-refactor
+
+specializes_laws:
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: "Map PCI-DSS SAQ-D for card-present/not-present booking flows; DOT 14 CFR Part 250 (denied boarding); DOT 14 CFR Part 260 (refund rules); GDPR Article 6(1)(b) for EU passenger data processing"
+  - id: BUS-2.2
+    title: "Control Framework"
+    description: "PCI-DSS 12-requirement control framework applied to booking; tokenize card data before persistence; no PAN in logs or URLs"
+  - id: BUS-2.4
+    title: "Evidence Collection"
+    description: "DOT refund SLA: 7 business days (credit card), 20 calendar days (other). Denied boarding compensation tiers documented per FAR 250. Audit trail per booking event"
+  - id: ENG-6.1
+    title: "Security by Design"
+    description: "PCI-DSS zone isolation: booking flow in CDE-scoped service; GDS API credentials in vault; no card data in application logs"
+  - id: ENG-6.4
+    title: "PII & GDPR"
+    description: "EU passenger PII: lawful basis (Article 6(1)(b) contract performance); right to erasure for non-travelled bookings; data minimization in search logs"
+  - id: ENG-6.7
+    title: "Audit Trail"
+    description: "Every booking state transition (create/modify/cancel/rebook) must be immutably logged with timestamp, agent ID, and triggering regulation reference"
+
+  - id: PRD-1.1
+    title: "Continuous Discovery"
+    description: |
+      Continuously research the passenger booking experience to surface friction signals.
+      Analyze funnel abandonment by step, interview abandoned-checkout passengers, and
+      benchmark competitor booking flows before proposing any redesign investment.
+    key_practices:
+      - "Weekly funnel analysis: search-to-payment abandonment by step and device type"
+      - "Monthly passenger interviews focused on search, fare comparison, and payment friction"
+      - "Benchmark: compare booking flow completion against Delta, United, and Southwest"
+      - "Accessibility audit: test booking flow with screen readers and voice control"
+    example_file: examples/PRD-1.1-discovery.md
+    law_citations:
+      - "Passenger booking experience discovery and abandonment analysis"
+      - "Competitor booking flow benchmarks"
+
+  - id: PRD-2.1
+    title: "User Journey Mapping"
+    description: |
+      Map the full passenger booking journey from search intent through PNR confirmation.
+      Capture three paths: app-native booking, mobile web, and agent-assisted.
+      Identify loyalty touchpoints, fare transparency gates, and payment friction points.
+    key_practices:
+      - "Map booking journey: Search → Fare Select → Seat → Passenger Info → Payment → Confirm"
+      - "Track AAdvantage recognition and loyalty upsell touchpoints in journey"
+      - "Identify DOT fare transparency gate before payment step"
+      - "Measure time-to-completion and drop-off by journey step and persona"
+    example_file: examples/PRD-2.1-journey.md
+    law_citations:
+      - "Passenger booking journey from search to PNR"
+      - "Fare transparency and payment journey"
+
+  - id: PRD-1.2
+    title: "Problem-First Development"
+    description: |
+      Before building new booking features, deeply understand the passenger problem being solved.
+      Root-cause booking friction through data before designing solutions.
+    key_practices:
+      - "Analyze booking abandonment signals to identify friction points"
+      - "Define the specific booking problem before proposing solutions"
+      - "Document the problem statement and evidence before any feature begins design"
+    example_file: examples/PRD-1.2-problem-first.md
+    law_citations:
+      - "Booking funnel friction discovery and root-cause analysis"
+
+  - id: PRD-1.5
+    title: "Evidence-Based Decision Law"
+    description: |
+      Booking product decisions must be grounded in measurable data from real passenger behavior.
+      Conversion rates, payment success rates, and fare acceptance metrics must drive investment.
+    key_practices:
+      - "Use A/B test results on booking flow changes before full rollout"
+      - "Track payment success rate by payment method and route"
+      - "Report booking abandonment by step as a leading KPI"
+    example_file: examples/PRD-1.5-evidence-based.md
+    law_citations:
+      - "Data-driven booking flow decisions and payment success metrics"
+
+  - id: PRD-2.5
+    title: "Discovery Stage-Gate Law"
+    description: |
+      New booking features must pass defined discovery gates before development investment.
+      PCI-DSS compliance gates must be validated before any payment feature ships.
+    key_practices:
+      - "Gate 1: Passenger problem validated before solution design"
+      - "Gate 2: PCI-DSS compliance review completed before payment feature design"
+      - "Gate 3: Security review before build commitment"
+    example_file: examples/PRD-2.5-stage-gate.md
+    law_citations:
+      - "Stage-gating new booking and payment features"
+
+  - id: PRD-5.1
+    title: "Metrics & Success Definition"
+    description: |
+      Define and track KPIs for booking conversion, payment success, and regulatory compliance.
+    key_practices:
+      - "Booking conversion rate by channel and fare class"
+      - "Payment success rate and failure root causes"
+      - "DOT refund SLA compliance rate"
+      - "PCI-DSS incident rate"
+    example_file: examples/PRD-5.1-metrics.md
+    law_citations:
+      - "Booking KPIs for conversion, payment, and compliance"
+
+  - id: PRD-6.2
+    title: "Retention Law"
+    description: |
+      Booking products must prioritize loyal passenger experiences. AAdvantage earn recognition
+      and elite benefits in the booking flow are retention levers that must be protected.
+    key_practices:
+      - "Track AAdvantage recognition rate in booking flow"
+      - "Measure repeat booking rate by loyalty tier"
+      - "Report post-IROP rebooking experience quality"
+    example_file: examples/PRD-6.2-retention.md
+    law_citations:
+      - "Loyalty-aware booking and AAdvantage retention"
+
+  - id: BUS-1.1
+    title: "Priority Hierarchy Law"
+    description: |
+      Booking decisions must follow: Legal > Safety > Privacy > Security > Business Continuity >
+      Efficiency. PCI-DSS card tokenization is non-negotiable. DOT refund SLAs cannot be extended
+      for operational efficiency. GDPR consent overrides EU conversion optimization.
+    key_practices:
+      - "PCI-DSS: No PAN in logs or URLs — ever"
+      - "DOT refund SLA (7 business days) is a legal obligation, not a target"
+      - "GDPR consent for EU passengers must not be pre-ticked or inferred"
+      - "CDE zone isolation is non-negotiable regardless of feature velocity demands"
+    example_file: examples/BUS-1.1-priority-hierarchy.md
+    law_citations:
+      - "PCI-DSS, DOT, and GDPR hierarchy for booking decisions"
+
+  - id: BUS-4.3
+    title: "Data Subject Rights Law"
+    description: |
+      Passengers have the right to access, erase, and port their PNR data, booking history,
+      and fare history. EU passengers have GDPR Article 17 rights for cancelled non-travelled
+      bookings. SLAs and audit confirmation required for all requests.
+    key_practices:
+      - "Erasure SLA: 30 days for PNR PII (GDPR Article 17 for non-travelled bookings)"
+      - "Financial record exception: de-identified transaction record retained 7 years"
+      - "Access request must include payment method (masked), fare applied, seat"
+      - "Portability: booking history in JSON or CSV format within 30 days"
+    example_file: examples/BUS-4.3-data-subject-rights.md
+    law_citations:
+      - "GDPR Article 17 erasure for EU passenger booking data"
+      - "PNR data subject rights and financial record retention"
+
+  - id: BUS-7.1
+    title: "Audit Trail Law"
+    description: |
+      Every PNR state transition, payment event, denied boarding compensation, and fare rule
+      application must be recorded in an append-only audit log with regulatory reference,
+      retained 7 years.
+    key_practices:
+      - "Log every PNR create/modify/cancel with regulation_ref"
+      - "Payment events must use tokenized card reference — never PAN"
+      - "Denied boarding audit must include DOT tier, compensation, written statement"
+      - "Fare rule application must cite rule_id and rule_version"
+    example_file: examples/BUS-7.1-audit-trail.md
+    law_citations:
+      - "PNR audit trail (DOT 14 CFR 250, PCI DSS v4.0)"
+      - "7-year retention for booking and payment audit events"
+
+  - id: BUS-9.3
+    title: "Breach Notification Law"
+    description: |
+      Unauthorized exposure of booking data triggers notification across multiple frameworks:
+      PCI DSS (card brands within 72h), GDPR (DPA within 72h), and CCPA for California residents.
+      All frameworks must be assessed in parallel.
+    key_practices:
+      - "PCI DSS: Notify card brands (Visa, Mastercard) within 72h of confirmed card data exposure"
+      - "GDPR: DPA notification within 72h for EU passenger booking data exposure"
+      - "CCPA: California resident notification per state law timing"
+      - "Run multi-framework checklist at start of every incident"
+    example_file: examples/BUS-9.3-breach-notification.md
+    law_citations:
+      - "PCI DSS, GDPR, and CCPA breach notification for booking data"
+
+compliance_domains:
+  - standard: "PCI-DSS v4.0"
+    scope: "Card data in booking and payment flows"
+    key_controls: ["Tokenization", "CDE isolation", "No PAN in logs"]
+  - standard: "DOT 14 CFR Part 250"
+    scope: "Denied boarding — involuntary and voluntary"
+    key_rules:
+      - "250.5: IDB compensation tiers by delay length"
+      - "250.9: Written statement of rights at gate"
+  - standard: "DOT 14 CFR Part 260"
+    scope: "Prompt refund rules"
+    key_rules:
+      - "7 business days for credit card refunds"
+      - "20 calendar days for other payment forms"
+  - standard: "GDPR"
+    scope: "EU passenger personal data"
+    key_rules:
+      - "Article 6(1)(b): contract performance basis"
+      - "Article 17: right to erasure for cancelled non-travelled bookings"
+
+dependencies:
+  - "Sabre GDS / NDC API"
+  - "Payment Gateway (PCI-scoped)"
+  - "PNR Management System"
+  - "Revenue Management System"
+  - "Customer Profile Service"
+
+project_structure:
+  booking_ios:
+    root: ios/booking-ios/ios/
+    key_dirs:
+      - Sources/BookingSearch/    # BookingSearchCoordinator, BookingSearchViewController
+      - Sources/FareMap/          # FareMapSearchViewModel (Combine publisher)
+      - Sources/PassengerInfo/    # PassengerListViewModel, PassengerDetailsViewModel
+      - Sources/NativeBooking/    # NativeBookingViewController
+      - Sources/DataModel/        # BookingDataModel, fare data types
+      - Sources/Relevancy/        # AAFeature* feature flag files
+      - Sources/BookingFinish/    # PNR confirmation, boarding pass deep-link
+    test_dir: ios/AmericanBookingTests/
+    ui_test_dir: ios/AmericanBookingUITests/Screens/
+    config: ios/fastlane/Fastfile
+  booking_bff:
+    root: bff/aa-ct-mobile-booking-bff/src/main/java/com/aa/mobile/booking/
+    key_dirs:
+      - api/controller/   # PassengerController, VPNRController
+      - api/service/      # VPNRServiceImpl
+      - api/connector/    # AirfareSalesConnector (external API calls)
+      - api/builder/      # PassengerBuilder, VPNRBuilder
+      - api/mapper/       # VPNRRequestMapper, VPNRErrorFieldMapper
+      - model/            # vpnr/infrastructure/, vpnr/presentation/
+      - config/           # ApigeeTokenConfig, LoggingAspectConfig
+      - exception/        # ErrorExceptionHandler
+    test_dir: src/test/java/com/aa/mobile/booking/
+    build: build.gradle
+
+commands:
+  ios:
+    setup: "fastlane ios setup_dependencies"
+    test: "fastlane ios run_unit_tests"
+    build: "fastlane ios build_ios"
+    release: "fastlane ios create_framework_release"
+    signing: "fastlane ios sync_signing_assets_jenkins"
+  bff:
+    build: "./gradlew build"
+    test: "./gradlew test"
+    integration_test: "./gradlew integrationTest"
+    coverage: "./gradlew jacocoTestReport"
+    lint: "./gradlew checkstyle"
+
+conventions:
+  ios_naming:
+    view_models: "*ViewModel.swift"
+    coordinators: "*Coordinator.swift"
+    view_controllers: "*ViewController.swift"
+    builders: "*Builder.swift"
+    networking: "*Fetcher.swift, *Endpoint.swift"
+    data_models: "*Data.swift"
+    feature_flags: "AAFeature*.swift"
+    extensions: "*_DelegateName.swift"
+    tests: "*Tests.swift, *UITests.swift"
+  java_naming:
+    controllers: "*Controller.java"
+    services: "*Service.java (interface), *ServiceImpl.java"
+    connectors: "*Connector.java"
+    builders: "*Builder.java"
+    mappers: "*Mapper.java"
+    config: "*Config.java, *Configuration.java"
+    exceptions: "*Exception.java, *ExceptionHandler.java"
+    tests: "*Test.java"
+  testing:
+    ios: "XCTest + XCUITest; coverage via Fastlane code coverage"
+    bff: "JUnit 5 (Jupiter) + Mockito; coverage via Jacoco 0.8.14"
+  complexity_limits:
+    ios: "Flag ViewModels > 300 lines (FareMapSearchViewModel 511 lines is a known violation)"
+    bff: "Flag controllers with no service layer (AirfareSalesConnector handles direct business logic)"
+
+tags:
+  - product
+  - booking
+  - pci-dss
+  - gdpr
+  - dot-consumer-protection
+  - revenue

@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Discovery Workflow Workshop · Hangar Wave 4 · May 2026</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --aa-blue:    #0078D2;
+    --aa-navy:    #003057;
+    --aa-red:     #C8102E;
+    --aa-sky:     #e8f4fd;
+    --aa-gold:    #F0A500;
+    --white:      #ffffff;
+    --gray-50:    #f8f9fa;
+    --gray-100:   #f0f2f5;
+    --gray-200:   #e0e4ea;
+    --gray-600:   #555e6e;
+    --gray-800:   #1a2332;
+    --green:      #1b7a3e;
+    --green-bg:   #e8f5ee;
+    --yellow:     #b45309;
+    --yellow-bg:  #fef9e7;
+    --red-bg:     #fce8ec;
+    --slide-w:    960px;
+  }
+
+  html, body { height: 100vh; overflow: hidden; }
+  html { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: #1a1a2a; }
+
+  #nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(0,48,87,0.96); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 24px; gap: 12px;
+  }
+  #nav .brand { color: #fff; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+  #nav .controls { display: flex; align-items: center; gap: 8px; }
+  #nav button {
+    background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 6px;
+    padding: 5px 14px; font-size: 0.8rem; cursor: pointer; transition: background 0.15s;
+  }
+  #nav button:hover { background: rgba(255,255,255,0.28); }
+  #nav button:disabled { opacity: 0.3; cursor: default; }
+  #slide-counter { color: rgba(255,255,255,0.65); font-size: 0.78rem; min-width: 52px; text-align: center; }
+  #progress-bar { position: fixed; top: 42px; left: 0; height: 3px; background: var(--aa-gold); transition: width 0.3s; z-index: 999; }
+
+  #deck {
+    position: fixed; top: 45px; left: 0; right: 0; bottom: 36px;
+    display: flex; align-items: flex-start; justify-content: center;
+    overflow: hidden; padding: 8px 16px 0;
+  }
+  .slide {
+    display: none; width: var(--slide-w); flex-shrink: 0;
+    background: var(--white); border-radius: 14px; overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.45); transform-origin: top center;
+  }
+  .slide.active { display: block; }
+
+  .slide-header {
+    padding: 32px 44px 28px;
+    background: linear-gradient(135deg, var(--aa-navy) 0%, #005b9f 100%);
+    color: #fff;
+  }
+  .slide-header.dark  { background: linear-gradient(135deg, #0d1b2a 0%, var(--aa-navy) 100%); }
+  .slide-header.red   { background: linear-gradient(135deg, var(--aa-red) 0%, #8b0d1e 100%); }
+  .slide-header.gold  { background: linear-gradient(135deg, #7c4d00 0%, #c47d00 100%); }
+  .slide-header.teal  { background: linear-gradient(135deg, #005f6b 0%, #0097a7 100%); }
+  .slide-header.green { background: linear-gradient(135deg, #0f4c25 0%, #1b7a3e 100%); }
+  .slide-header .eyebrow { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.75; margin-bottom: 6px; }
+  .slide-header h1 { font-size: 2rem; font-weight: 800; line-height: 1.15; }
+  .slide-header h2 { font-size: 1.35rem; font-weight: 700; line-height: 1.2; }
+  .slide-header .sub { margin-top: 10px; opacity: 0.88; font-size: 0.92rem; line-height: 1.55; }
+
+  .slide-body { padding: 28px 44px 32px; }
+
+  h3  { font-size: 1.05rem; font-weight: 700; color: var(--aa-navy); margin: 18px 0 8px; }
+  h4  { font-size: 0.9rem; font-weight: 700; color: var(--aa-navy); margin: 12px 0 6px; }
+  p   { font-size: 0.9rem; color: var(--gray-600); line-height: 1.6; margin-bottom: 10px; }
+  ul  { padding-left: 20px; }
+  li  { font-size: 0.88rem; color: var(--gray-600); line-height: 1.6; margin-bottom: 4px; }
+
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em;
+  }
+  .badge.blue   { background: #dbeafe; color: #1e40af; }
+  .badge.green  { background: var(--green-bg); color: var(--green); }
+  .badge.yellow { background: var(--yellow-bg); color: var(--yellow); }
+  .badge.red    { background: var(--red-bg); color: #b91c1c; }
+  .badge.gray   { background: var(--gray-100); color: var(--gray-600); }
+  .badge.navy   { background: #dbeafe; color: var(--aa-navy); }
+  .badge.gold   { background: #fef3c7; color: #92400e; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+  .card {
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+    border-radius: 10px; padding: 16px 18px;
+  }
+  .card.blue-border  { border-left: 4px solid var(--aa-blue); }
+  .card.navy-border  { border-left: 4px solid var(--aa-navy); }
+  .card.green-border { border-left: 4px solid var(--green); }
+  .card.red-border   { border-left: 4px solid var(--aa-red); }
+  .card.gold-border  { border-left: 4px solid var(--aa-gold); }
+  .card h4 { margin-top: 0; }
+
+  .stat-row { display: flex; gap: 14px; flex-wrap: wrap; margin: 16px 0; }
+  .stat-box {
+    flex: 1; min-width: 100px;
+    background: var(--aa-sky); border-radius: 10px;
+    padding: 14px 12px; text-align: center;
+  }
+  .stat-box .num  { font-size: 1.9rem; font-weight: 800; color: var(--aa-navy); line-height: 1; }
+  .stat-box .lbl  { font-size: 0.7rem; color: var(--gray-600); margin-top: 5px; line-height: 1.3; }
+  .stat-box.warn  { background: var(--red-bg); }
+  .stat-box.warn .num { color: #b91c1c; }
+  .stat-box.ok    { background: var(--green-bg); }
+  .stat-box.ok .num { color: var(--green); }
+  .stat-box.gold  { background: #fef3c7; }
+  .stat-box.gold .num { color: #92400e; }
+
+  .phase-row { display: flex; gap: 0; margin: 18px 0; align-items: stretch; }
+  .phase-pill {
+    flex: 1; text-align: center; padding: 12px 6px;
+    background: var(--gray-100); border: 1px solid var(--gray-200);
+    font-size: 0.73rem; font-weight: 600; line-height: 1.3; color: var(--gray-600);
+  }
+  .phase-pill:first-child { border-radius: 8px 0 0 8px; }
+  .phase-pill:last-child  { border-radius: 0 8px 8px 0; }
+  .phase-pill.active { background: #dbeafe; color: var(--aa-blue); border-color: #93c5fd; }
+  .phase-pill.done   { background: var(--green-bg); color: var(--green); border-color: #a7d7b8; }
+  .phase-pill.locked { background: var(--gray-100); color: #aaa; }
+  .phase-pill .icon  { font-size: 1.1rem; display: block; margin-bottom: 3px; }
+
+  .flow-row { display: flex; align-items: center; gap: 0; margin: 16px 0; flex-wrap: wrap; }
+  .flow-step {
+    flex: 1; min-width: 80px; background: var(--aa-sky); border-radius: 8px;
+    padding: 10px 8px; text-align: center; font-size: 0.76rem; font-weight: 700;
+    color: var(--aa-navy); line-height: 1.3;
+  }
+  .flow-step.highlight { background: var(--aa-navy); color: #fff; }
+  .flow-step.active    { background: var(--aa-blue); color: #fff; }
+  .flow-step .icon { font-size: 1.2rem; display: block; margin-bottom: 3px; }
+  .flow-arrow { font-size: 1.1rem; color: var(--gray-600); padding: 0 3px; flex-shrink: 0; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.83rem; margin: 12px 0; }
+  th { background: var(--aa-navy); color: #fff; padding: 8px 12px; text-align: left; font-size: 0.78rem; }
+  td { padding: 7px 12px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--gray-50); }
+
+  .highlight-block {
+    background: linear-gradient(135deg, #003057 0%, #005b9f 100%);
+    color: #fff; border-radius: 10px; padding: 16px 22px; margin: 16px 0;
+  }
+  .highlight-block p { color: rgba(255,255,255,0.88); margin: 0; }
+  .highlight-block strong { color: #fff; }
+
+  .quote {
+    border-left: 4px solid var(--aa-gold); padding: 12px 18px;
+    background: var(--yellow-bg); border-radius: 0 8px 8px 0; margin: 12px 0;
+  }
+  .quote p { color: #78350f; font-style: italic; margin: 0; font-size: 0.88rem; line-height: 1.55; }
+  .quote .src { font-style: normal; font-size: 0.72rem; color: var(--yellow); margin-top: 6px; display: block; }
+
+  .law-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--aa-navy); color: #fff; border-radius: 6px;
+    padding: 3px 10px; font-size: 0.75rem; font-weight: 700; margin: 2px 3px 2px 0;
+  }
+  .law-tag.non-neg { background: var(--aa-red); }
+  .law-tag.prd     { background: #1e40af; }
+  .law-tag.bus     { background: #065f46; }
+  .law-tag.eng     { background: #4c1d95; }
+
+  .dim-card {
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+    border-radius: 10px; padding: 14px 16px;
+  }
+  .dim-card .dim-num {
+    display: inline-block; background: var(--aa-navy); color: #fff;
+    border-radius: 50%; width: 26px; height: 26px; line-height: 26px;
+    text-align: center; font-size: 0.78rem; font-weight: 800; margin-right: 8px; flex-shrink: 0;
+  }
+  .dim-card .dim-title {
+    font-size: 0.88rem; font-weight: 700; color: var(--aa-navy);
+    display: flex; align-items: center; margin-bottom: 6px;
+  }
+  .dim-card p { font-size: 0.82rem; margin: 0; }
+
+  .noneg-banner {
+    background: var(--red-bg); border: 1px solid #fca5a5; border-radius: 8px;
+    padding: 10px 16px; display: flex; align-items: center; gap: 10px; margin: 12px 0;
+  }
+  .noneg-banner .icon { font-size: 1.3rem; flex-shrink: 0; }
+  .noneg-banner p { color: #b91c1c; font-size: 0.82rem; margin: 0; }
+
+  .slide-footer {
+    background: var(--gray-50); border-top: 1px solid var(--gray-200);
+    padding: 8px 44px; display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.72rem; color: var(--gray-600);
+  }
+
+  .title-slide .slide-header {
+    background: linear-gradient(145deg, #003057 0%, #00509e 60%, #0078D2 100%);
+    padding: 52px 44px 44px; min-height: 360px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .title-slide .slide-header h1 { font-size: 2.4rem; line-height: 1.1; }
+  .title-slide .slide-header .tag { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .title-slide .slide-header .tag span {
+    background: rgba(255,255,255,0.18); border-radius: 20px;
+    padding: 5px 16px; font-size: 0.78rem; font-weight: 600; color: #fff;
+  }
+  .title-slide .slide-body { background: var(--aa-navy); padding: 22px 44px; }
+
+  .closing-slide .slide-header {
+    background: linear-gradient(145deg, #0d1b2a 0%, #003057 100%);
+    padding: 52px 44px; min-height: 380px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .closing-slide .slide-header h1 { font-size: 2.2rem; line-height: 1.15; }
+
+  #keyboard-hint {
+    position: fixed; bottom: 4px; left: 0; right: 0;
+    text-align: center; color: rgba(255,255,255,0.4); font-size: 0.72rem;
+  }
+
+  /* ── Draft / Internal watermark ── */
+  #draft-watermark {
+    position: fixed; top: 45px; left: 0; right: 0; bottom: 28px;
+    pointer-events: none; z-index: 998; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #draft-watermark span {
+    font-size: 5.5rem; font-weight: 900; letter-spacing: 0.12em;
+    color: rgba(200, 16, 46, 0.07);
+    transform: rotate(-32deg); white-space: nowrap; user-select: none;
+    text-transform: uppercase;
+  }
+
+  /* ── Draft badge in nav ── */
+  .draft-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--aa-red); color: #fff;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+    padding: 3px 10px; border-radius: 20px; text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ── Internal disclaimer bar at bottom ── */
+  #disclaimer-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 1001;
+    background: rgba(0,48,87,0.97);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 4px 16px;
+    font-size: 0.68rem; color: rgba(255,255,255,0.7); text-align: center;
+  }
+  #disclaimer-bar strong { color: #fff; }
+  #disclaimer-bar .dot { color: rgba(255,255,255,0.35); }
+
+  @media (max-width: 680px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .slide-header, .slide-body, .slide-footer { padding-left: 22px; padding-right: 22px; }
+    .flow-row { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    .phase-row { flex-direction: column; }
+    .phase-pill:first-child { border-radius: 8px 8px 0 0; }
+    .phase-pill:last-child  { border-radius: 0 0 8px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="nav">
+  <div class="brand">🔍 Product Discovery Workshop · Hangar Wave 4 · May 2026</div>
+  <div class="controls">
+    <span class="draft-badge">🔒 Draft · Internal Only</span>
+    <button id="btn-prev" onclick="changeSlide(-1)">← Prev</button>
+    <span id="slide-counter">1 / 19</span>
+    <button id="btn-next" onclick="changeSlide(1)">Next →</button>
+  </div>
+</div>
+<div id="progress-bar"></div>
+
+<!-- Diagonal watermark -->
+<div id="draft-watermark"><span>Draft · Hangar Team Only</span></div>
+
+<!-- Disclaimer bar -->
+<div id="disclaimer-bar">
+  <strong>🔒 INTERNAL — HANGAR TEAM ONLY</strong>
+  <span class="dot">·</span>
+  <span>This is a <strong>draft</strong> document for internal use within the AA Hangar team. Do not distribute externally.</span>
+  <span class="dot">·</span>
+  <span>Use ← → arrow keys or buttons to navigate</span>
+</div>
+
+<div id="deck">
+
+<!-- ══════════════════════════════════════════════════════ SLIDE 1 — TITLE ══ -->
+<div class="slide active title-slide" id="slide-1">
+  <div class="slide-header">
+    <div class="eyebrow">Hangar Wave 4 Mobile · Workshop · May 2026</div>
+    <h1>Product Discovery<br>Workflow</h1>
+    <div class="sub">How to validate a problem before you build anything — using the Hangar AI Constitution</div>
+    <div class="tag">
+      <span>🎯 Product Coaches</span>
+      <span>📋 Product Managers</span>
+      <span>⚙️ Tech Coaches</span>
+      <span>Track A — Live Discovery</span>
+      <span>Track B — Meta Prompts</span>
+    </div>
+  </div>
+  <div class="slide-body">
+    <p style="color:rgba(255,255,255,0.75); font-size:0.88rem;">Facilitators: Hangar Coaching Team — Charles · Willem · Adeel · Shayne · Griff</p>
+    <p style="color:rgba(255,255,255,0.55); font-size:0.8rem; margin-top:4px;">Sponsored by Ram Santhanam, Director of Product Agility · <strong style="color:rgba(255,255,255,0.7);">Hangar AI Constitution enforced throughout</strong></p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ SLIDE 2 — AGENDA ══ -->
+<div class="slide" id="slide-2">
+  <div class="slide-header">
+    <div class="eyebrow">Today's Session</div>
+    <h2>What We're Doing in the Next 90 Minutes</h2>
+    <div class="sub">Two tracks. One goal: leave with a real committed discovery artifact.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:24px; margin-bottom:18px;">
+      <div class="card navy-border">
+        <h4>🎯 Track A — Live Discovery (60 min)</h4>
+        <p>We run a <strong>real accelerated discovery</strong> together, right now, using Shayne's user complaint data as evidence. You will:</p>
+        <ul style="margin-top:8px;">
+          <li>See the discovery workflow executed against the constitution</li>
+          <li>Map real user complaints to constitutional laws</li>
+          <li>Watch a Stage A artifact get built and rendered live</li>
+          <li>Ram approves Stage A — it becomes a real committed discovery, not a simulation</li>
+        </ul>
+        <div style="margin-top:10px;"><span class="badge blue">Socratic format — you drive the answers</span></div>
+      </div>
+      <div class="card blue-border">
+        <h4>🤖 Track B — Meta Prompts (30 min)</h4>
+        <p>We share the <strong>prompt patterns</strong> that let you run this workflow yourself — so every coach and PM can run a constitutional discovery without needing a facilitator.</p>
+        <ul style="margin-top:8px;">
+          <li>What a meta prompt is and why it works</li>
+          <li>Live demo: the prompt that bootstrapped today's session</li>
+          <li>Template prompts you can use for your own discoveries</li>
+          <li>Q&amp;A open</li>
+        </ul>
+        <div style="margin-top:10px;"><span class="badge green">Take-home: prompts you can use tomorrow</span></div>
+      </div>
+    </div>
+    <div class="noneg-banner">
+      <span class="icon">📌</span>
+      <p><strong>Ground rule for Track A:</strong> Hold all questions for 60 minutes. Let the workflow breathe. You'll see why at the end.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>2 / 19</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════ SLIDE 3 — WHY DISCOVERY FIRST ══ -->
+<div class="slide" id="slide-3">
+  <div class="slide-header">
+    <div class="eyebrow">The Foundation</div>
+    <h2>Why Discovery Before Anything Else?</h2>
+    <div class="sub">PRD-2.1 — Problem Validation Law</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:24px; align-items:start;">
+      <div>
+        <h3>What happens without discovery</h3>
+        <div class="card red-border" style="margin-bottom:12px;">
+          <h4>🚫 The Default Path</h4>
+          <ul>
+            <li>Team gets a feature request from a stakeholder</li>
+            <li>Engineers estimate it, PM writes stories</li>
+            <li>6 weeks of build → shipped to users</li>
+            <li>Low adoption, stakeholder says "that's not what I meant"</li>
+            <li>Rework begins — now 12 weeks in</li>
+          </ul>
+        </div>
+        <div class="card red-border">
+          <h4>⚡ The Real Cost</h4>
+          <p>The Standish Chaos Report estimates <strong>65–70% of software features</strong> are rarely or never used. Most of those features passed zero evidence validation before build started.</p>
+        </div>
+      </div>
+      <div>
+        <h3>What the constitution requires</h3>
+        <div style="background:#dbeafe; border-radius:10px; padding:16px 18px; margin-bottom:14px;">
+          <div style="font-size:0.75rem; font-weight:700; color:#1e40af; letter-spacing:0.05em; margin-bottom:6px;">PRD-2.1 — PROBLEM VALIDATION LAW</div>
+          <p style="color:#1e3a8a; font-size:0.88rem; margin:0; font-style:italic;">"All problems MUST be validated before solution design. Complete all four dimensions of problem validation before any solution work begins."</p>
+        </div>
+        <div class="card green-border">
+          <h4>✅ The Constitutional Path</h4>
+          <ul>
+            <li>Validate the problem first — 4 dimensions of evidence</li>
+            <li>Activate the right avatars to load domain intelligence</li>
+            <li>Get stakeholder approval on a rendered artifact</li>
+            <li>Then — and only then — design solutions</li>
+          </ul>
+          <p style="margin-top:8px; font-size:0.82rem;"><strong>Result:</strong> Every hour of build time is backed by validated evidence, not assumptions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>3 / 19</span></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 4 — THE WORKFLOW OVERVIEW ══ -->
+<div class="slide" id="slide-4">
+  <div class="slide-header">
+    <div class="eyebrow">The Workflow</div>
+    <h2>Stage A through F — The Full Discovery Pipeline</h2>
+    <div class="sub">Six stages. Every stage produces a rendered HTML artifact reviewed by a human before advancement. <strong>PRD-2.5 (NON-NEGOTIABLE):</strong> stages are sequential — no skipping.</div>
+  </div>
+  <div class="slide-body">
+    <div class="phase-row" style="margin-bottom:22px;">
+      <div class="phase-pill active"><span class="icon">🔑</span><strong>A</strong><div class="lbl">Initialize</div></div>
+      <div class="phase-pill locked"><span class="icon">🔭</span><strong>B</strong><div class="lbl">Field Study</div></div>
+      <div class="phase-pill locked"><span class="icon">💻</span><strong>C</strong><div class="lbl">Code Evidence</div></div>
+      <div class="phase-pill locked"><span class="icon">✅</span><strong>D</strong><div class="lbl">Validation</div></div>
+      <div class="phase-pill locked"><span class="icon">📊</span><strong>E</strong><div class="lbl">Metrics</div></div>
+      <div class="phase-pill locked"><span class="icon">🗺️</span><strong>F</strong><div class="lbl">Roadmap Lock</div></div>
+    </div>
+    <table>
+      <tr>
+        <th>Stage</th><th>What happens</th><th>Exit Gate</th><th>Laws</th>
+      </tr>
+      <tr>
+        <td><strong>A — Initialize</strong><br><span class="badge blue">Today</span></td>
+        <td>Assign discovery ID · Activate avatars · Define problem (4 dimensions) · Get stakeholder approval</td>
+        <td>Approved rendered HTML + named Director+ sign-off</td>
+        <td><span class="law-tag prd">PRD-2.1</span><span class="law-tag non-neg">PRD-2.5</span></td>
+      </tr>
+      <tr>
+        <td><strong>B — Field Study</strong></td>
+        <td>Market research · Competitive analysis · User interviews · JTBD framing</td>
+        <td>≥3 validated user insights · Landscape documented</td>
+        <td><span class="law-tag prd">PRD-2.3</span><span class="law-tag prd">PRD-3.1</span></td>
+      </tr>
+      <tr>
+        <td><strong>C — Code Evidence</strong></td>
+        <td>Repository ingestion · Tech debt inventory · Domain model extraction</td>
+        <td>Evidence report · No unreviewed critical findings</td>
+        <td><span class="law-tag eng">ENG-3.1</span><span class="law-tag eng">ENG-6.7</span></td>
+      </tr>
+      <tr>
+        <td><strong>D — Validation</strong></td>
+        <td>Stakeholder review · Assumption mapping · Blocker resolution</td>
+        <td>All blockers resolved · DVFT matrix complete</td>
+        <td><span class="law-tag prd">PRD-2.2</span><span class="law-tag prd">PRD-2.1</span></td>
+      </tr>
+      <tr>
+        <td><strong>E — Metrics</strong></td>
+        <td>Define success metrics · Baselines · PMF targets</td>
+        <td>Metrics spec committed · Measurability confirmed</td>
+        <td><span class="law-tag prd">PRD-6.1</span><span class="law-tag eng">ENG-10.1</span></td>
+      </tr>
+      <tr>
+        <td><strong>F — Roadmap Lock</strong></td>
+        <td>Now/Next/Later roadmap · Vertical slices · Implementation proposal + PDF</td>
+        <td>Roadmap approved · Impl. proposal scaffolded · PDF generated</td>
+        <td><span class="law-tag prd">PRD-4.1</span><span class="law-tag prd">PRD-4.2</span></td>
+      </tr>
+    </table>
+    <div class="noneg-banner" style="margin-top:12px;">
+      <span class="icon">🔒</span>
+      <p><strong>ENG-13.1 (NON-NEGOTIABLE):</strong> Every stage transition requires a rendered artifact reviewed by a human in a browser. APPROVE / REJECT / ENHANCE. No stage advances on text alone.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>4 / 19</span></div>
+</div>
+
+<!-- ═════════════════════════════════════════════ SLIDE 5 — TWO MODES ══ -->
+<div class="slide" id="slide-5">
+  <div class="slide-header">
+    <div class="eyebrow">Discovery Modes</div>
+    <h2>Exploratory vs Accelerated — When to Use Each</h2>
+    <div class="sub">Mode is declared once in Stage A and is immutable for the entire discovery.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:28px; align-items:start;">
+      <div>
+        <div style="background: linear-gradient(135deg, #003057, #005b9f); border-radius:10px; padding:18px 20px; margin-bottom:14px;">
+          <div style="color:#93c5fd; font-size:0.72rem; font-weight:700; letter-spacing:0.08em; margin-bottom:6px;">EXPLORATORY MODE</div>
+          <div style="color:#fff; font-size:1.1rem; font-weight:800; margin-bottom:10px;">Start from Zero</div>
+          <p style="color:rgba(255,255,255,0.8); font-size:0.85rem; margin:0;">No existing validated problem statement. All 4 PRD-2.1 dimensions must be completed from new evidence.</p>
+        </div>
+        <div class="card navy-border">
+          <h4>When to use it</h4>
+          <ul>
+            <li>Net-new product idea with no prior research</li>
+            <li>Entering a domain the team has never built in</li>
+            <li>Stakeholder mandate with no evidence backing</li>
+            <li>Discovery triggered by a vague complaint or trend</li>
+          </ul>
+        </div>
+        <div class="card navy-border" style="margin-top:12px;">
+          <h4>AA Example</h4>
+          <p style="font-size:0.83rem;">disc-2026-001 — <em>"Does the AA Mobile platform comply with the constitutional engineering discipline?"</em> — No prior validation. Full Exploratory run.</p>
+        </div>
+      </div>
+      <div>
+        <div style="background: linear-gradient(135deg, #065f46, #1b7a3e); border-radius:10px; padding:18px 20px; margin-bottom:14px;">
+          <div style="color:#6ee7b7; font-size:0.72rem; font-weight:700; letter-spacing:0.08em; margin-bottom:6px;">ACCELERATED MODE</div>
+          <div style="color:#fff; font-size:1.1rem; font-weight:800; margin-bottom:10px;">Pre-Validated Evidence Exists</div>
+          <p style="color:rgba(255,255,255,0.8); font-size:0.85rem; margin:0;">A validated problem statement already exists — from a prior discovery, stakeholder mandate, or gathered evidence corpus. Cite the source.</p>
+        </div>
+        <div class="card green-border">
+          <h4>When to use it</h4>
+          <ul>
+            <li>Existing user research or complaint data (like today)</li>
+            <li>Prior discovery already validated a related problem</li>
+            <li>Regulatory mandate with documented evidence</li>
+            <li>Leadership directive backed by business metrics</li>
+          </ul>
+        </div>
+        <div class="card green-border" style="margin-top:12px;">
+          <h4>Today's AA Example</h4>
+          <p style="font-size:0.83rem;">disc-2026-003 — <em>"AA Mobile booking flow is broken."</em> Pre-validated by Shayne's 69 booking complaints. Accelerated mode — cite the source and go.</p>
+          <span class="badge green" style="margin-top:6px;">This is what we're running today</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>5 / 19</span></div>
+</div>
+
+<!-- ══════════════════════════════ SLIDE 6 — INTERNAL VS EXTERNAL ══ -->
+<div class="slide" id="slide-6">
+  <div class="slide-header teal">
+    <div class="eyebrow">Scope of Discovery</div>
+    <h2>Discovery Works for Any Product — Internal or External</h2>
+    <div class="sub">The workflow is the same. The evidence sources and avatars differ.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:24px; margin-bottom:16px;">
+      <div>
+        <h3>🌍 External — Customer-Facing Products</h3>
+        <div class="card blue-border" style="margin-bottom:10px;">
+          <h4>Evidence sources</h4>
+          <ul>
+            <li>App Store / Google Play reviews</li>
+            <li>Reddit, Trustpilot, social listening</li>
+            <li>Support ticket categories</li>
+            <li>Session analytics, funnel drop-off</li>
+            <li>NPS / CSAT surveys</li>
+          </ul>
+        </div>
+        <div class="card blue-border">
+          <h4>AA Examples</h4>
+          <ul>
+            <li><strong>Booking flow</strong> — disc-2026-003 (today)</li>
+            <li><strong>Check-in failures</strong> — passenger can't get boarding pass</li>
+            <li><strong>TSA PreCheck missing</strong> — 9 complaints in Shayne's data</li>
+            <li><strong>Loyalty redemption confusion</strong> — miles booking broken</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>🏭 Internal — Platform &amp; Tooling Products</h3>
+        <div class="card gold-border" style="margin-bottom:10px;">
+          <h4>Evidence sources</h4>
+          <ul>
+            <li>Engineering team surveys and retrospectives</li>
+            <li>Deployment frequency &amp; lead time metrics</li>
+            <li>Code quality analysis (complexity, coverage)</li>
+            <li>Avatar Mode 4 enrichment findings</li>
+            <li>Incident post-mortems</li>
+          </ul>
+        </div>
+        <div class="card gold-border">
+          <h4>AA Examples</h4>
+          <ul>
+            <li><strong>Platform quality</strong> — disc-2026-001: mobile codebase vs. constitutional standard</li>
+            <li><strong>CI/CD pipeline gaps</strong> — ENG-4.1 compliance across 78 Android modules</li>
+            <li><strong>Accessibility audit</strong> — ENG-12.1 compliance in ios-swift</li>
+            <li><strong>BFF observability gaps</strong> — ENG-6.7 audit trail coverage</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="highlight-block">
+      <p style="text-align:center;">💡 <strong>Key insight:</strong> The same Stage A–F workflow. The same PRD-2.1 four dimensions. The same render gate. What changes is where you look for evidence — and which avatars you activate.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>6 / 19</span></div>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 7 — PRD-2.1 FOUR DIMENSIONS ══ -->
+<div class="slide" id="slide-7">
+  <div class="slide-header">
+    <div class="eyebrow">PRD-2.1 — Problem Validation Law</div>
+    <h2>The Four Dimensions Every Problem Must Pass</h2>
+    <div class="sub">All four dimensions must be filled with cited evidence before Stage A exits. No exceptions.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:16px; margin-bottom:16px;">
+      <div class="dim-card">
+        <div class="dim-title"><span class="dim-num">1</span>Problem Exists</div>
+        <p>What is the pain or gap? Who experiences it? Where is the evidence it exists <em>today</em>?</p>
+        <div style="margin-top:10px; padding:8px 12px; background:#fff; border-radius:6px; border:1px solid var(--gray-200);">
+          <p style="font-size:0.78rem; margin:0; color:#555;"><strong>Good evidence:</strong> Verbatim user quotes, support tickets, error logs, audit findings.</p>
+        </div>
+      </div>
+      <div class="dim-card">
+        <div class="dim-title"><span class="dim-num">2</span>Problem Matters</div>
+        <p>Why is this significant enough to act on? What is the business impact or user harm if we do nothing?</p>
+        <div style="margin-top:10px; padding:8px 12px; background:#fff; border-radius:6px; border:1px solid var(--gray-200);">
+          <p style="font-size:0.78rem; margin:0; color:#555;"><strong>Good evidence:</strong> Revenue impact, churn data, competitor switches, regulatory exposure.</p>
+        </div>
+      </div>
+      <div class="dim-card">
+        <div class="dim-title"><span class="dim-num">3</span>Problem Is Solvable</div>
+        <p>Is a solution technically and organisationally feasible? What gives you confidence we can actually fix this?</p>
+        <div style="margin-top:10px; padding:8px 12px; background:#fff; border-radius:6px; border:1px solid var(--gray-200);">
+          <p style="font-size:0.78rem; margin:0; color:#555;"><strong>Good evidence:</strong> Existing capabilities, avatar patterns, analogous solutions, technical proof-of-concept.</p>
+        </div>
+      </div>
+      <div class="dim-card">
+        <div class="dim-title"><span class="dim-num">4</span>Users Will Exchange Value</div>
+        <p>Will users invest time, money, or behaviour change to solve this? What's the evidence of intent?</p>
+        <div style="margin-top:10px; padding:8px 12px; background:#fff; border-radius:6px; border:1px solid var(--gray-200);">
+          <p style="font-size:0.78rem; margin:0; color:#555;"><strong>Good evidence:</strong> Retry behaviour, explicit demand statements, early adopter signals, willingness-to-pay.</p>
+        </div>
+      </div>
+    </div>
+    <div class="noneg-banner">
+      <span class="icon">⚠️</span>
+      <p>Each dimension requires at least one <strong>SRC-A-NNN</strong> inline citation in the problem statement, traceable to a source with a verbatim quote and date. Attribution without evidence is shadow governance.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>7 / 19</span></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 8 — FINDING EVIDENCE ══ -->
+<div class="slide" id="slide-8">
+  <div class="slide-header gold">
+    <div class="eyebrow">Evidence Craft</div>
+    <h2>How to Find Good Evidence</h2>
+    <div class="sub">Evidence is not opinion. It has a source, a date, a verbatim quote, and a confidence level.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-3" style="margin-bottom:18px;">
+      <div class="card" style="border-top:4px solid var(--green);">
+        <h4 style="color:var(--green);">🟢 High Confidence</h4>
+        <ul>
+          <li>Verbatim user quote (App Store, support)</li>
+          <li>Signed stakeholder statement</li>
+          <li>Audit finding with evidence</li>
+          <li>Measured metric from analytics</li>
+          <li>Constitution avatar enrichment finding</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top:4px solid var(--aa-gold);">
+        <h4 style="color:#92400e;">🟡 Medium Confidence</h4>
+        <ul>
+          <li>Market research report</li>
+          <li>Prior discovery reference</li>
+          <li>Team retrospective data</li>
+          <li>Inferred from aggregate patterns</li>
+          <li>Secondary research (analyst data)</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top:4px solid var(--aa-red);">
+        <h4 style="color:#b91c1c;">🔴 Low Confidence</h4>
+        <ul>
+          <li>Stakeholder "feeling" or opinion</li>
+          <li>Anecdote without broader pattern</li>
+          <li>Competitor assumption</li>
+          <li>Inferred from indirect signals only</li>
+        </ul>
+        <p style="font-size:0.78rem; margin-top:8px;">Low confidence evidence must be upgraded or replaced before Stage A exits.</p>
+      </div>
+    </div>
+    <h3>Where to Look</h3>
+    <div class="grid-2" style="gap:16px;">
+      <div class="card blue-border">
+        <h4>External Products</h4>
+        <p style="font-size:0.82rem;">App Store · Google Play · Reddit · Trustpilot · Intercom / Zendesk tickets · NPS verbatims · Session recordings · Funnel analytics · User interviews</p>
+      </div>
+      <div class="card gold-border">
+        <h4>Internal / Platform Products</h4>
+        <p style="font-size:0.82rem;">Avatar Mode 4 enrichment findings · `git log` complexity signals · CI failure rates · Deployment frequency · ENG-3.1 scan reports · Team retro action items · Incident post-mortems</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>8 / 19</span></div>
+</div>
+
+<!-- ══════════════════════════════════════ SLIDE 9 — AVATARS IN DISCOVERY ══ -->
+<div class="slide" id="slide-9">
+  <div class="slide-header dark">
+    <div class="eyebrow">Constitutional Intelligence</div>
+    <h2>Avatars Are Not Optional — They Load the Domain Intelligence</h2>
+    <div class="sub">Stage A requires activating the right avatars before the problem statement is written. They bring laws, patterns, and codebase context to your discovery.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:22px; align-items:start;">
+      <div>
+        <h3>What Avatar Activation Does</h3>
+        <div class="card navy-border" style="margin-bottom:12px;">
+          <h4>Without Avatar Activation</h4>
+          <ul>
+            <li>Problem statement is generic</li>
+            <li>No law citations — solutions won't be constitutionally grounded</li>
+            <li>Stage B field study has no domain scaffold to build on</li>
+            <li>Stage C code evidence has no structural baseline</li>
+          </ul>
+        </div>
+        <div class="card green-border">
+          <h4>With Avatar Activation</h4>
+          <ul>
+            <li>Domain-specific laws are loaded immediately</li>
+            <li>Codebase patterns (from Mode 4 enrichment) inform evidence framing</li>
+            <li>Problem dimensions can cite avatar-specific risks</li>
+            <li>Stage B–F build on a grounded foundation</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>Today's Activated Avatars</h3>
+        <div style="background:#dbeafe; border-radius:10px; padding:16px 18px; margin-bottom:14px;">
+          <div style="font-weight:700; color:var(--aa-navy); margin-bottom:8px;">🎯 passenger-booking v1.7.0</div>
+          <ul style="margin:0; padding-left:18px;">
+            <li style="font-size:0.82rem;">Grounded in: <code style="background:#fff; padding:1px 6px; border-radius:4px; font-size:0.78rem;">booking-ios</code>, <code style="background:#fff; padding:1px 6px; border-radius:4px; font-size:0.78rem;">aa-ct-mobile-booking-bff</code></li>
+            <li style="font-size:0.82rem;">Laws: PRD-1.1, PRD-2.1, PRD-5.1, BUS-4.3</li>
+            <li style="font-size:0.82rem;">RAG validated ✅ PASS 5/5 (2026-04-30)</li>
+          </ul>
+        </div>
+        <div style="background:var(--green-bg); border-radius:10px; padding:16px 18px;">
+          <div style="font-weight:700; color:var(--green); margin-bottom:8px;">💼 business</div>
+          <ul style="margin:0; padding-left:18px;">
+            <li style="font-size:0.82rem;">BUS-2.1 — Regulatory compliance</li>
+            <li style="font-size:0.82rem;">BUS-4.3 — Data subject rights</li>
+            <li style="font-size:0.82rem;">BUS-7.1 — Audit trail (NON-NEGOTIABLE)</li>
+          </ul>
+        </div>
+        <div class="noneg-banner" style="margin-top:12px;">
+          <span class="icon">📌</span>
+          <p><strong>BUS-7.1:</strong> Avatar activation is a governance-significant action. It must be recorded in Stage A with load timestamp and confirming agent.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>9 / 19</span></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 10 — TODAY'S DISCOVERY INTRO ══ -->
+<div class="slide" id="slide-10">
+  <div class="slide-header red">
+    <div class="eyebrow">disc-2026-003 · Accelerated · Tier 1</div>
+    <h2>Today's Discovery: AA Mobile Booking Experience</h2>
+    <div class="sub">Shayne gathered 372 real user complaints. 69 are about the booking flow. Let's look at the data.</div>
+  </div>
+  <div class="slide-body">
+    <div class="stat-row" style="margin-bottom:20px;">
+      <div class="stat-box"><div class="num">372</div><div class="lbl">Total user complaints<br>gathered by Shayne</div></div>
+      <div class="stat-box warn"><div class="num">69</div><div class="lbl">Booking / Search<br>Broken complaints</div></div>
+      <div class="stat-box warn"><div class="num">79%</div><div class="lbl">Rated 1-star among<br>those with ratings</div></div>
+      <div class="stat-box"><div class="num">4</div><div class="lbl">Sources: App Store,<br>Google Play, Reddit,<br>Trustpilot</div></div>
+    </div>
+    <div class="grid-2" style="gap:20px;">
+      <div>
+        <h3>Complaint Category Breakdown</h3>
+        <table>
+          <tr><th>Category</th><th>Count</th><th>%</th></tr>
+          <tr><td>App Crashes / Performance</td><td><strong>116</strong></td><td>31%</td></tr>
+          <tr><td>Check-in / Boarding Pass Failures</td><td><strong>88</strong></td><td>24%</td></tr>
+          <tr><td><strong>Booking / Search Broken</strong> ← Today</td><td><strong>69</strong></td><td>19%</td></tr>
+          <tr><td>Login / Account Access</td><td><strong>39</strong></td><td>10%</td></tr>
+          <tr><td>Ads / Clutter / Hostile UX</td><td><strong>38</strong></td><td>10%</td></tr>
+          <tr><td>Notifications / Gate Info Wrong</td><td>12</td><td>3%</td></tr>
+          <tr><td>TSA PreCheck Not Showing</td><td>9</td><td>2%</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Owning Teams in Booking Complaints</h3>
+        <table>
+          <tr><th>Team</th><th>Complaints</th></tr>
+          <tr><td>Buy Checkout</td><td>22</td></tr>
+          <tr><td>Buy Booking</td><td>22</td></tr>
+          <tr><td>Service Recovery</td><td>11</td></tr>
+          <tr><td>Mobile Platform</td><td>4</td></tr>
+          <tr><td>Airfare Search</td><td>3</td></tr>
+          <tr><td>Booking Journey</td><td>2</td></tr>
+        </table>
+        <div class="highlight-block" style="margin-top:12px;">
+          <p style="font-size:0.85rem;">💡 <strong>Socratic question:</strong> You're looking at this data. What's the first thing you notice? What pattern stands out before we read a single complaint?</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>10 / 19</span></div>
+</div>
+
+<!-- ════════════════════════════════ SLIDE 11 — DIMENSION 1 ══ -->
+<div class="slide" id="slide-11">
+  <div class="slide-header">
+    <div class="eyebrow">PRD-2.1 · Dimension 1</div>
+    <h2>Problem Exists — What the Users Are Saying</h2>
+    <div class="sub">💬 Socratic: Read each quote. Which constitutional law does it point to?</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:16px; margin-bottom:16px;">
+      <div>
+        <div class="quote">
+          <p>"They keep kicking me out while booking a flight. When I get to the payment page, the app locks up and kicks me out. When I go back in, it hasn't saved my booking and the price has increased every time."</p>
+          <span class="src">⭐1 · App Store · Buy Checkout team · Apr 2026</span>
+        </div>
+        <div class="quote">
+          <p>"App Broken. I haven't been able to check or book flights in over two months. I always receive an error that it's 'currently unavailable.' We are going on 2+ months with bi-weekly updates."</p>
+          <span class="src">⭐1 · App Store · Buy Booking team · Mar 2026</span>
+        </div>
+      </div>
+      <div>
+        <div class="quote">
+          <p>"Terrible ux. Had to type in a million fields to book flights but at the end, there's no way to review it all to make sure there are no typos! Had to go to the beginning to start over."</p>
+          <span class="src">⭐2 · App Store · ME - Engagement · Apr 2026</span>
+        </div>
+        <div class="quote">
+          <p>"The app is unable to complete a booking. UI becomes unresponsive for a few minutes on each page, followed by selection fields being un-selectable which makes it impossible to continue."</p>
+          <span class="src">⭐2 · Google Play · Nov 2025</span>
+        </div>
+      </div>
+    </div>
+    <div class="grid-3" style="gap:12px;">
+      <div class="card" style="border-top:3px solid #4c1d95; text-align:center;">
+        <div style="font-size:1.4rem;">🧪</div>
+        <h4>ENG-4.1</h4>
+        <p style="font-size:0.8rem;">Atomic TDD — the payment state transition was never test-driven. Session loss is an untested path.</p>
+      </div>
+      <div class="card" style="border-top:3px solid #4c1d95; text-align:center;">
+        <div style="font-size:1.4rem;">🏗️</div>
+        <h4>ENG-3.1</h4>
+        <p style="font-size:0.8rem;">Complexity Limits — the booking coordinator has too many responsibilities. It breaks under payment conditions.</p>
+      </div>
+      <div class="card" style="border-top:3px solid #1e40af; text-align:center;">
+        <div style="font-size:1.4rem;">🗺️</div>
+        <h4>PRD-3.2</h4>
+        <p style="font-size:0.8rem;">Journey Mapping — a confirmation / review screen is a required journey step. It's missing entirely.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>11 / 19</span></div>
+</div>
+
+<!-- ════════════════════════════════ SLIDE 12 — DIMENSION 2 ══ -->
+<div class="slide" id="slide-12">
+  <div class="slide-header">
+    <div class="eyebrow">PRD-2.1 · Dimension 2</div>
+    <h2>Problem Matters — The Business Case for Acting Now</h2>
+    <div class="sub">💬 Socratic: PRD-2.1 says the problem must matter enough to act on. What's your evidence?</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:20px; margin-bottom:16px;">
+      <div>
+        <div class="quote">
+          <p>"I am now booking my trips through United since AA can't seem to get their act together."</p>
+          <span class="src">⭐1 · Google Play · Buy Booking · Jan 2026</span>
+        </div>
+        <div class="quote">
+          <p>"Flights on their website are cheaper than on the app, but when I try to book through the website the continue button fails to appear. Sneaky, and absolutely horrible. American might lose my business soon."</p>
+          <span class="src">⭐1 · Google Play · Buy Booking · Dec 2025</span>
+        </div>
+      </div>
+      <div>
+        <div class="stat-row">
+          <div class="stat-box warn"><div class="num">79%</div><div class="lbl">of rated booking complaints are 1-star — App Store ranking suppressed</div></div>
+          <div class="stat-box warn"><div class="num">2+</div><div class="lbl">months of unresolved booking failures across multiple app updates</div></div>
+        </div>
+        <div class="card red-border" style="margin-top:4px;">
+          <h4>🚨 BUS-2.1 Risk — Regulatory Exposure</h4>
+          <p style="font-size:0.83rem;">Session loss causes fare to reprice higher on re-entry. A user pays more the second time through no fault of their own. This is a <strong>consumer protection and pricing transparency risk</strong> — not just a UX issue.</p>
+          <span class="law-tag bus" style="margin-top:6px; display:inline-block;">BUS-2.1 Regulatory Compliance</span>
+        </div>
+      </div>
+    </div>
+    <div class="highlight-block">
+      <p>💡 <strong>The question to ask the room:</strong> What's the difference between a user who complained once and left — and a user who tried to book three times, failed each time, and then switched to United? What does their behaviour tell you about the severity of this problem?</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>12 / 19</span></div>
+</div>
+
+<!-- ════════════════════════════════ SLIDE 13 — DIMENSION 3 ══ -->
+<div class="slide" id="slide-13">
+  <div class="slide-header green">
+    <div class="eyebrow">PRD-2.1 · Dimension 3</div>
+    <h2>Problem Is Solvable — What the Constitution Gives Us</h2>
+    <div class="sub">💬 Socratic: Open the passenger-booking avatar. What does the constitution already give us to solve this?</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:20px; align-items:start;">
+      <div>
+        <h3>The Constitutional Answer</h3>
+        <div class="card green-border" style="margin-bottom:12px;">
+          <h4>passenger-booking avatar v1.7.0</h4>
+          <ul>
+            <li><strong>Grounded in:</strong> <code style="background:var(--gray-100); padding:1px 5px; border-radius:3px; font-size:0.78rem;">booking-ios</code>, <code style="background:var(--gray-100); padding:1px 5px; border-radius:3px; font-size:0.78rem;">aa-ct-mobile-booking-bff</code>, <code style="background:var(--gray-100); padding:1px 5px; border-radius:3px; font-size:0.78rem;">mobile-airfare-search-bff</code></li>
+            <li><strong>Specializes:</strong> PRD-1.1, PRD-2.1, PRD-5.1, BUS-4.3</li>
+            <li><strong>Has:</strong> real project structure, CI/CD commands, naming conventions from ≥10 real files</li>
+            <li><strong>RAG validated:</strong> PASS 5/5 — 2026-04-30</li>
+          </ul>
+        </div>
+        <div class="card green-border">
+          <h4>What the Avatar Points At</h4>
+          <p style="font-size:0.83rem;">The avatar's <code style="background:var(--gray-100); padding:1px 5px; border-radius:3px; font-size:0.78rem;">project_structure</code> block gives Stage C a starting point. Its <code style="background:var(--gray-100); padding:1px 5px; border-radius:3px; font-size:0.78rem;">commands</code> block shows where to run tests. The <code style="background:var(--gray-100); padding:1px 5px; border-radius:3px; font-size:0.78rem;">ENG-4.1</code> example shows what atomic TDD looks like in this specific codebase.</p>
+        </div>
+      </div>
+      <div>
+        <h3>Laws That Directly Address the Failures</h3>
+        <table>
+          <tr><th>Failure Pattern</th><th>Constitutional Fix</th></tr>
+          <tr>
+            <td>Payment crash + session loss</td>
+            <td><span class="law-tag eng">ENG-4.1</span> Atomic TDD — test the payment state machine</td>
+          </tr>
+          <tr>
+            <td>Booking coordinator complexity</td>
+            <td><span class="law-tag eng">ENG-3.1</span> Complexity Limits — decompose the coordinator</td>
+          </tr>
+          <tr>
+            <td>Missing review screen</td>
+            <td><span class="law-tag prd">PRD-3.2</span> Journey Mapping — add the missing step</td>
+          </tr>
+          <tr>
+            <td>Session state not persisted</td>
+            <td><span class="law-tag eng">ENG-2.2</span> Layered Architecture — separate UI from booking state</td>
+          </tr>
+          <tr>
+            <td>Price escalation after session loss</td>
+            <td><span class="law-tag bus">BUS-2.1</span> Regulatory compliance — price consistency guarantee</td>
+          </tr>
+        </table>
+        <div class="noneg-banner" style="margin-top:10px;">
+          <span class="icon">💡</span>
+          <p>The constitution is not abstract. It points at <em>these specific files</em> in <em>this specific codebase</em>. That's the difference between a standard and a system.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>13 / 19</span></div>
+</div>
+
+<!-- ════════════════════════════════ SLIDE 14 — DIMENSION 4 ══ -->
+<div class="slide" id="slide-14">
+  <div class="slide-header">
+    <div class="eyebrow">PRD-2.1 · Dimension 4</div>
+    <h2>Users Will Exchange Value — The Intent Is There</h2>
+    <div class="sub">💬 Socratic: What's the difference between a user who doesn't want to book on mobile — and a user who can't?</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:20px; margin-bottom:16px;">
+      <div>
+        <div class="quote">
+          <p>"AA app won't open on iPad. My iPad OS is 17 and is up to date, per Apple. AA says I need OS 18?! What's up? Want to book a trip."</p>
+          <span class="src">⭐1 · App Store · Buy Booking · Apr 2026</span>
+        </div>
+        <div class="quote">
+          <p>"IN February when I booked trip on app, I was kicked off app many times when trying to pay for trip and had to start all over with different flights many times."</p>
+          <span class="src">⭐2 · Trustpilot · Buy Booking · Mar 2026</span>
+        </div>
+      </div>
+      <div>
+        <div class="card blue-border" style="margin-bottom:12px;">
+          <h4>What the Retry Behaviour Tells Us</h4>
+          <p style="font-size:0.84rem;">Multiple users describe trying to complete a booking <strong>many times</strong> before giving up. That is not a user who doesn't want to book. That is a user with strong intent being stopped by a broken experience.</p>
+          <p style="font-size:0.84rem; margin-top:8px;">The OS version gate (iOS 17 vs 18 requirement) alone is blocking users with current-generation devices who are <em>actively trying to buy</em>.</p>
+        </div>
+        <div class="card blue-border">
+          <h4>Why This Satisfies Dimension 4</h4>
+          <ul>
+            <li>Users attempt and retry — intent to transact is demonstrated</li>
+            <li>Channel preference is mobile — users are not switching to desktop by choice</li>
+            <li>When the flow works, they book — demand is there</li>
+            <li>The exchange (money for flight) is high-value — motivation is strong</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="highlight-block">
+      <p style="text-align:center;">✅ <strong>All four PRD-2.1 dimensions satisfied.</strong> The problem exists, it matters, it is solvable, and users will exchange value. Stage A evidence is complete.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>14 / 19</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SLIDE 15 — RENDER GATE ══ -->
+<div class="slide" id="slide-15">
+  <div class="slide-header dark">
+    <div class="eyebrow">ENG-13.1 — NON-NEGOTIABLE</div>
+    <h2>The Render Gate — Nothing Advances Without This</h2>
+    <div class="sub">Every stage transition requires a rendered HTML artifact reviewed by a human in a browser. This is not optional.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:24px; align-items:start;">
+      <div>
+        <h3>Why Rendering Matters</h3>
+        <div class="card navy-border" style="margin-bottom:12px;">
+          <h4>Markdown is a draft. HTML is evidence.</h4>
+          <p style="font-size:0.84rem;">A raw markdown file can contain broken citations, unresolved placeholders, and layout issues that are invisible in a text editor. The rendered HTML forces all of these to surface <em>before</em> a stakeholder reviews the document.</p>
+          <p style="font-size:0.84rem; margin-top:8px;">The <code style="background:var(--gray-100); padding:1px 5px; border-radius:3px;">aa-artifact-render</code> tool resolves every <code style="background:var(--gray-100); padding:1px 5px; border-radius:3px;">[SRC-A-NNN]</code> citation to a card. 0 unresolved = the evidence is complete.</p>
+        </div>
+        <div class="card navy-border">
+          <h4>The Gate Command</h4>
+          <div style="background:#0d1b2a; border-radius:8px; padding:12px 14px; font-family:monospace; font-size:0.78rem; color:#93c5fd; margin-top:6px;">
+            aa-artifact-render \<br>
+            &nbsp;&nbsp;hangar-ai-specs/changes/disc-2026-003/stage-a-initialize.md \<br>
+            &nbsp;&nbsp;--laws-dir laws
+          </div>
+          <p style="font-size:0.78rem; margin-top:8px; color:var(--green);">✓ Rendered: stage-a-initialize.html [10 citations resolved, 0 unresolved]</p>
+        </div>
+      </div>
+      <div>
+        <h3>The Three Decisions</h3>
+        <div class="card green-border" style="margin-bottom:10px;">
+          <h4>✅ APPROVE</h4>
+          <p style="font-size:0.83rem;">HTML reads correctly. All citations resolve. Content is complete. Record approval in audit log. Stage advances.</p>
+        </div>
+        <div class="card gold-border" style="margin-bottom:10px;">
+          <h4>🔧 ENHANCE</h4>
+          <p style="font-size:0.83rem;">Specific issues identified. Agent produces a remediation checklist. Fixes are made and re-rendered. Max 3 rounds per stage.</p>
+        </div>
+        <div class="card red-border">
+          <h4>❌ REJECT</h4>
+          <p style="font-size:0.83rem;">Fundamental problem with the evidence or framing. Blocker documented. Discovery does not advance until resolved.</p>
+        </div>
+        <div class="noneg-banner" style="margin-top:10px;">
+          <span class="icon">🔒</span>
+          <p><strong>Ram Santhanam</strong> is the approver for disc-2026-003 Stage A. His APPROVE closes the gate and Stage A becomes a real committed discovery.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>15 / 19</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════ SLIDE 16 — STAGE A EXIT GATE ══ -->
+<div class="slide" id="slide-16">
+  <div class="slide-header">
+    <div class="eyebrow">PRD-2.5 — Discovery Stage-Gate Law (NON-NEGOTIABLE)</div>
+    <h2>Stage A Exit Gate — The Checklist</h2>
+    <div class="sub">All items must be met before Stage B can begin. No partial credit.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:20px;">
+      <div>
+        <table>
+          <tr><th colspan="2">Stage A Exit Checklist — disc-2026-003</th></tr>
+          <tr><td>✅</td><td>Discovery ID assigned: <strong>disc-2026-003</strong></td></tr>
+          <tr><td>✅</td><td><code>stage-a-initialize.md</code> created from template</td></tr>
+          <tr><td>✅</td><td>Problem statement complete — all 4 PRD-2.1 dimensions</td></tr>
+          <tr><td>✅</td><td>Scope defined — in/out table populated</td></tr>
+          <tr><td>✅</td><td>Mode declared: <strong>Accelerated</strong></td></tr>
+          <tr><td>✅</td><td>Tier declared: <strong>Tier 1</strong></td></tr>
+          <tr><td>✅</td><td>passenger-booking + business avatars activated &amp; recorded</td></tr>
+          <tr><td>✅</td><td>All SRC-A-NNN citations traceable to evidence entries</td></tr>
+          <tr><td>✅</td><td>HTML rendered — 10 citations resolved, 0 unresolved</td></tr>
+          <tr><td>⏳</td><td><strong>Stakeholder approval — Ram Santhanam (Director+)</strong></td></tr>
+          <tr><td>⏳</td><td>BUS-7.1 audit event filed — Stage A → B transition</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>What Happens When Ram Approves</h3>
+        <div class="flow-row" style="flex-direction:column; gap:8px; align-items:stretch;">
+          <div class="flow-step" style="text-align:left; padding:10px 14px;">1. Record approval in <code>§Stakeholder Approval</code> block — name, role, date, method</div>
+          <div class="flow-arrow" style="transform:rotate(90deg); text-align:center;">↓</div>
+          <div class="flow-step" style="text-align:left; padding:10px 14px;">2. File BUS-7.1 audit event in <code>§Audit Log</code> — actor, timestamp, outcome: APPROVED</div>
+          <div class="flow-arrow" style="transform:rotate(90deg); text-align:center;">↓</div>
+          <div class="flow-step" style="text-align:left; padding:10px 14px;">3. Commit to workspace repo — <code>hangar-w4-dp-mobile</code></div>
+          <div class="flow-arrow" style="transform:rotate(90deg); text-align:center;">↓</div>
+          <div class="flow-step highlight" style="text-align:left; padding:10px 14px;">4. Stage A is COMPLETE — disc-2026-003 is a real committed discovery</div>
+        </div>
+        <div class="noneg-banner" style="margin-top:12px;">
+          <span class="icon">🚫</span>
+          <p><strong>Self-certification is PROHIBITED</strong> by PRD-2.5. The approver must be distinct from the discovery initiator (Adeel Ali).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>16 / 19</span></div>
+</div>
+
+<!-- ══════════════════════════════════════ SLIDE 17 — WHAT COMES NEXT ══ -->
+<div class="slide" id="slide-17">
+  <div class="slide-header teal">
+    <div class="eyebrow">After Stage A</div>
+    <h2>Where Discovery Goes From Here — Stages B through F</h2>
+    <div class="sub">Each stage builds on the last. Each produces a rendered artifact. Each requires human approval.</div>
+  </div>
+  <div class="slide-body">
+    <div class="phase-row" style="margin-bottom:20px;">
+      <div class="phase-pill done"><span class="icon">✅</span><strong>A</strong><div class="lbl">Initialize</div></div>
+      <div class="phase-pill active"><span class="icon">🔭</span><strong>B</strong><div class="lbl">Field Study</div></div>
+      <div class="phase-pill locked"><span class="icon">💻</span><strong>C</strong><div class="lbl">Code Evidence</div></div>
+      <div class="phase-pill locked"><span class="icon">✅</span><strong>D</strong><div class="lbl">Validation</div></div>
+      <div class="phase-pill locked"><span class="icon">📊</span><strong>E</strong><div class="lbl">Metrics</div></div>
+      <div class="phase-pill locked"><span class="icon">🗺️</span><strong>F</strong><div class="lbl">Roadmap Lock</div></div>
+    </div>
+    <div class="grid-3" style="gap:14px;">
+      <div class="card blue-border">
+        <h4>Stage B — Field Study</h4>
+        <p style="font-size:0.82rem;">Deep dive into the booking flow. User interviews with AA customers. Competitive analysis — how do Delta and United handle booking session loss? JTBD framing. Personas.</p>
+        <div style="margin-top:8px;"><span class="law-tag prd">PRD-2.3</span><span class="law-tag prd">PRD-3.1</span><span class="law-tag prd">PRD-2.4</span></div>
+      </div>
+      <div class="card blue-border">
+        <h4>Stage C — Code Evidence</h4>
+        <p style="font-size:0.82rem;">Ingest <code>booking-ios</code> and <code>aa-ct-mobile-booking-bff</code>. Map the BookingCoordinator complexity. Find the payment state machine. Inventory test coverage gaps per ENG-4.1.</p>
+        <div style="margin-top:8px;"><span class="law-tag eng">ENG-3.1</span><span class="law-tag eng">ENG-4.1</span><span class="law-tag eng">ENG-6.7</span></div>
+      </div>
+      <div class="card blue-border">
+        <h4>Stage D — Validation</h4>
+        <p style="font-size:0.82rem;">Stakeholder review with Buy Checkout and Buy Booking teams. Assumption mapping — which of our Stage A findings do engineers confirm? Blocker resolution.</p>
+        <div style="margin-top:8px;"><span class="law-tag prd">PRD-2.2</span><span class="law-tag prd">PRD-2.1</span></div>
+      </div>
+      <div class="card gold-border">
+        <h4>Stage E — Metrics</h4>
+        <p style="font-size:0.82rem;">Define success: booking completion rate, payment success rate, session persistence rate. Set baselines from current analytics. Define PMF targets.</p>
+        <div style="margin-top:8px;"><span class="law-tag prd">PRD-6.1</span><span class="law-tag eng">ENG-10.1</span></div>
+      </div>
+      <div class="card gold-border" style="grid-column: span 2;">
+        <h4>Stage F — Roadmap Lock</h4>
+        <p style="font-size:0.82rem;"><strong>Now:</strong> Fix payment page crash (ENG-4.1 test coverage) + add booking review screen (PRD-3.2). <strong>Next:</strong> Session state persistence + price consistency guarantee (BUS-2.1). <strong>Later:</strong> OS version gate removal + full journey re-instrumentation. Produces implementation proposal + PDF.</p>
+        <div style="margin-top:8px;"><span class="law-tag prd">PRD-4.1</span><span class="law-tag prd">PRD-4.2</span><span class="law-tag eng">ENG-13.3</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>17 / 19</span></div>
+</div>
+
+<!-- ════════════════════════════════════════ SLIDE 18 — META PROMPTS ══ -->
+<div class="slide" id="slide-18">
+  <div class="slide-header gold">
+    <div class="eyebrow">Track B — Take-Home</div>
+    <h2>Meta Prompts — How to Run This Yourself</h2>
+    <div class="sub">A meta prompt loads the full constitutional context into an AI session so it can run the workflow without re-explanation.</div>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="gap:24px; align-items:start;">
+      <div>
+        <h3>What a Meta Prompt Contains</h3>
+        <div class="card gold-border" style="margin-bottom:12px;">
+          <h4>The Five Elements</h4>
+          <ul>
+            <li><strong>Context block</strong> — repo paths, discovery ID, mode, avatar</li>
+            <li><strong>Evidence reference</strong> — where the source data lives</li>
+            <li><strong>Session structure</strong> — what to do, in what order</li>
+            <li><strong>Rules</strong> — only cite real laws, render gate required, no push</li>
+            <li><strong>Start signal</strong> — the exact phrase that kicks off the session</li>
+          </ul>
+        </div>
+        <div class="card gold-border">
+          <h4>Why It Works</h4>
+          <p style="font-size:0.83rem;">The AI has no memory between sessions. A meta prompt is the handshake that says: "Here is everything you need to know to run this workflow correctly, right now, for this team." Without it, you start from zero. With it, you start from Stage A.</p>
+        </div>
+      </div>
+      <div>
+        <h3>The Template Pattern</h3>
+        <div style="background:#0d1b2a; border-radius:10px; padding:16px 18px; font-family:monospace; font-size:0.76rem; color:#e2e8f0; line-height:1.7;">
+          <span style="color:#f59e0b;">The [team name] is here. We are running [Track A / B / both].</span><br><br>
+          <span style="color:#86efac;">CONTEXT:</span><br>
+          - Constitution repo: [path]<br>
+          - Discovery: [disc-YYYY-NNN] — "[title]"<br>
+          - Stage A HTML: [path] (rendered, N citations resolved)<br>
+          - Evidence: [URL or path] — [N complaints, key stats]<br>
+          - Avatar: [avatar-id] vX.Y.Z + business<br>
+          - Approver pending: [Name] ([role])<br><br>
+          <span style="color:#86efac;">RULES:</span> Only cite laws that exist in the constitution. Render gate is NON-NEGOTIABLE. No git push without confirmation.<br><br>
+          <span style="color:#f59e0b;">Begin when [name] says: "[start signal]."</span>
+        </div>
+        <div class="noneg-banner" style="margin-top:12px;">
+          <span class="icon">📋</span>
+          <p>Today's meta prompt is saved and will be shared with the team. You can adapt it for any discovery in any domain — internal or external.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Product Discovery Workshop · Hangar Wave 4</span><span>18 / 19</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════ SLIDE 19 — CLOSING ══ -->
+<div class="slide closing-slide" id="slide-19">
+  <div class="slide-header">
+    <div class="eyebrow">Hangar Wave 4 Mobile · May 2026</div>
+    <h1>What You Leave With Today</h1>
+    <div class="sub" style="margin-top:16px; font-size:1rem; line-height:1.7;">
+      A real committed discovery (disc-2026-003) · A Stage A artifact backed by 7 evidence sources ·
+      The constitutional workflow in your hands · A meta prompt you can run tomorrow
+    </div>
+  </div>
+  <div class="slide-body" style="background: var(--aa-navy); padding: 28px 44px;">
+    <div class="grid-3" style="gap:16px;">
+      <div style="background:rgba(255,255,255,0.08); border-radius:10px; padding:18px 16px; text-align:center;">
+        <div style="font-size:2rem; margin-bottom:8px;">🔍</div>
+        <div style="color:#fff; font-weight:700; font-size:0.88rem; margin-bottom:6px;">The Workflow Is Real</div>
+        <p style="color:rgba(255,255,255,0.65); font-size:0.78rem; margin:0;">disc-2026-003 is not a simulation. It's a committed, rendered, evidence-backed discovery artifact in your repository.</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.08); border-radius:10px; padding:18px 16px; text-align:center;">
+        <div style="font-size:2rem; margin-bottom:8px;">⚖️</div>
+        <div style="color:#fff; font-weight:700; font-size:0.88rem; margin-bottom:6px;">Laws, Not Opinions</div>
+        <p style="color:rgba(255,255,255,0.65); font-size:0.78rem; margin:0;">Every finding today cited a real law. ENG-4.1, ENG-3.1, PRD-3.2, BUS-2.1. That's constitutional governance — not a slide deck.</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.08); border-radius:10px; padding:18px 16px; text-align:center;">
+        <div style="font-size:2rem; margin-bottom:8px;">🤖</div>
+        <div style="color:#fff; font-weight:700; font-size:0.88rem; margin-bottom:6px;">You Can Run This</div>
+        <p style="color:rgba(255,255,255,0.65); font-size:0.78rem; margin:0;">The meta prompt you're taking home is the same one that bootstrapped today's session. Paste it. Say the start signal. Run the workflow.</p>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);">
+      <p style="color:rgba(255,255,255,0.55); font-size:0.8rem;">Hangar AI Constitution · AAInternal/hangar-ai-constitution · main @ 6e80bf2</p>
+      <p style="color:rgba(255,255,255,0.4); font-size:0.75rem; margin-top:4px;">Charles · Willem · Adeel · Shayne · Griff · Sponsored by Ram Santhanam</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- #deck -->
+
+<div id="keyboard-hint" style="display:none">← → arrow keys or buttons to navigate</div>
+
+<script>
+  let current = 1;
+  const total = 19;
+
+  function showSlide(n) {
+    document.querySelector('.slide.active')?.classList.remove('active');
+    document.getElementById('slide-' + n)?.classList.add('active');
+    document.getElementById('slide-counter').textContent = n + ' / ' + total;
+    document.getElementById('btn-prev').disabled = n === 1;
+    document.getElementById('btn-next').disabled = n === total;
+    document.getElementById('progress-bar').style.width = ((n / total) * 100) + '%';
+    fitSlide();
+  }
+
+  function fitSlide() {
+    const slide = document.getElementById('slide-' + current);
+    if (!slide) return;
+    slide.style.transform = 'none';
+    const deck = document.getElementById('deck');
+    const availW = deck.clientWidth - 32;
+    const availH = deck.clientHeight - 16;
+    const slideH = slide.offsetHeight;
+    const scale = Math.min(availW / 960, availH / slideH, 1);
+    slide.style.transform = scale < 1 ? `scale(${scale})` : 'none';
+  }
+
+  function changeSlide(dir) {
+    const next = current + dir;
+    if (next >= 1 && next <= total) {
+      current = next;
+      showSlide(current);
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   changeSlide(-1);
+  });
+
+  window.addEventListener('resize', fitSlide);
+  showSlide(1);
+</script>
+</body>
+</html>

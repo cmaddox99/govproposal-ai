@@ -1,0 +1,96 @@
+# Citation Audit CI Pipeline (Phase 3 §5 — ENG-5.2)
+#
+# Scans ALL modified .md artifacts in a PR against the checked-out registry.
+# Registry is always read from the PR branch (not pinned to main).
+# If a PR modifies both an artifact AND laws/index.yaml, both changes are in scope.
+#
+# Staged rollout (design spec §6):
+#   Week 1 (warn-only): exit 0 regardless of citation failures
+#   Week 2+: exit $FAILED — citation failures block merge
+#
+# Exit codes:
+#   0 — all citations PASS (or warn-only mode)
+#   1 — citation FAIL found; blocks merge (Week 2+)
+#   2 — tool error; ALWAYS halts CI immediately (fail-closed guarantee)
+
+name: Citation Audit
+
+on:
+  pull_request:
+    paths:
+      - '**/*.md'
+      - 'laws/index.yaml'
+      - 'laws/**/*.md'
+
+jobs:
+  citation-audit:
+    name: Audit Law Citations
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # need full history for git diff vs origin/main
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install aa-citation-audit
+        run: |
+          pip install --quiet ./tools/citation-auditor
+
+      - name: Citation audit — all modified artifacts
+        env:
+          # WARN_ONLY: set to "true" for staged rollout Week 1 (non-blocking)
+          # Remove or set to "false" for Week 2+ enforcement.
+          WARN_ONLY: "false"
+        run: |
+          set -e
+          LAWS_DIR="laws"
+
+          # Get list of modified/added .md files against main
+          ARTIFACTS=$(git diff --name-only origin/main HEAD | grep '\.md$' || true)
+
+          if [ -z "$ARTIFACTS" ]; then
+            echo "No .md artifacts modified — skipping citation audit."
+            exit 0
+          fi
+
+          FAILED=0
+          for ARTIFACT in $ARTIFACTS; do
+            if [ ! -f "$ARTIFACT" ]; then
+              echo "Skipping deleted file: $ARTIFACT"
+              continue
+            fi
+            echo "Auditing: $ARTIFACT"
+            # Article XIV merged 2026-05-25 — --allow-draft no longer needed
+            aa-citation-audit "$ARTIFACT" \
+              --laws-dir "$LAWS_DIR"
+            EXIT=$?
+            if [ $EXIT -eq 2 ]; then
+              echo "TOOL ERROR on $ARTIFACT — halting CI."
+              exit 2
+            fi
+            if [ $EXIT -ne 0 ]; then
+              echo "CITATION FAIL: $ARTIFACT has hallucinated or misrepresented law IDs."
+              FAILED=1
+            fi
+          done
+
+          if [ "$WARN_ONLY" = "true" ]; then
+            echo "Warn-only mode (staged rollout Week 1) — not blocking merge."
+            exit 0
+          fi
+
+          exit $FAILED
+
+      - name: Upload audit log artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: citation-audit-log
+          path: ~/.aa-citation-audit/audit.log
+          if-no-files-found: ignore

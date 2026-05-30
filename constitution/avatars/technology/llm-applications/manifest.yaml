@@ -1,0 +1,138 @@
+# LLM Applications Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-llm-applications
+  type: technology
+  name: LLM Applications
+  version: "2.0.0"
+
+stack:
+  language: Python 3.11+
+  frameworks:
+    - OpenAI SDK
+    - Anthropic SDK
+    - Google AI SDK
+  testing:
+    - pytest
+    - pytest-asyncio
+    - responses
+    - httpx-mock
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - openai: ">=1.10.0"
+    - anthropic: ">=0.18.0"
+    - tiktoken: ">=0.5.0"
+    - tenacity: ">=8.2.0"
+  dev:
+    - pytest: ">=8.0.0"
+    - pytest-asyncio: ">=0.23.0"
+    - pytest-cov: ">=4.1.0"
+    - responses: ">=0.24.0"
+    - ruff: ">=0.1.0"
+    - mypy: ">=1.8.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-6.1
+    title: Observability Law
+    example_file: examples/ENG-6.1-observability.md
+  - id: ENG-6.5
+    title: Input Validation
+    example_file: examples/ENG-6.5-validation.md
+
+conventions:
+  naming:
+    modules: snake_case
+    classes: PascalCase
+    constants: UPPER_SNAKE
+    prompts: UPPER_SNAKE
+    config_keys: snake_case
+
+  patterns:
+    client: "LLMClient wrapper with retry logic"
+    prompt: "PromptTemplate with versioning"
+    cache: "ResponseCache for cost reduction"
+    cost_tracker: "CostTracker for usage monitoring"
+
+commands:
+  test:
+    all: pytest
+    unit: pytest tests/ -m "not integration"
+    integration: pytest tests/integration/ -m integration
+    coverage: pytest --cov=src --cov-report=html
+  dev:
+    set_api_key: "export OPENAI_API_KEY=xxx"
+
+project_structure: |
+  llm_app/
+  ├── src/
+  │   ├── llm/                     # LLM client layer
+  │   │   ├── __init__.py
+  │   │   ├── client.py            # LLM client wrapper
+  │   │   ├── providers/           # Provider-specific clients
+  │   │   │   ├── __init__.py
+  │   │   │   ├── openai.py
+  │   │   │   ├── anthropic.py
+  │   │   │   └── google.py
+  │   │   ├── models.py            # Response models
+  │   │   └── retry.py             # Retry logic
+  │   ├── prompts/                 # Prompt management
+  │   │   ├── __init__.py
+  │   │   ├── templates.py         # Prompt template class
+  │   │   ├── registry.py          # Prompt registry
+  │   │   └── library/             # Prompt library
+  │   │       ├── summarization.py
+  │   │       ├── extraction.py
+  │   │       └── classification.py
+  │   ├── services/                # Business logic
+  │   │   ├── __init__.py
+  │   │   ├── completion.py        # Completion service
+  │   │   ├── chat.py              # Chat service
+  │   │   └── batch.py             # Batch processing
+  │   ├── guardrails/              # Safety layer
+  │   │   ├── __init__.py
+  │   │   ├── input_filter.py
+  │   │   ├── output_filter.py
+  │   │   └── pii_detector.py
+  │   ├── cache/                   # Caching layer
+  │   │   ├── __init__.py
+  │   │   └── response_cache.py
+  │   ├── metrics/                 # Observability
+  │   │   ├── __init__.py
+  │   │   ├── token_counter.py
+  │   │   └── cost_tracker.py
+  │   └── utils/
+  │       ├── __init__.py
+  │       └── tokenizer.py
+  ├── tests/
+  │   ├── llm/
+  │   │   └── test_client.py
+  │   ├── prompts/
+  │   │   └── test_templates.py
+  │   ├── services/
+  │   │   └── test_completion.py
+  │   ├── integration/
+  │   │   └── test_e2e.py
+  │   └── conftest.py
+  ├── configs/
+  │   ├── models.yaml              # Model configurations
+  │   ├── prompts.yaml             # Prompt configurations
+  │   └── limits.yaml              # Rate limits, quotas
+  ├── .env.example
+  ├── requirements.txt
+  └── README.md

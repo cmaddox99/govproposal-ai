@@ -1,0 +1,208 @@
+# Legacy ML Interoperability Avatar Manifest
+# Defines strategy and conventions for preserving legacy R/PySpark/notebook-based ML systems
+
+avatar:
+  id: avatar-legacy-ml-interop
+  type: technology
+  name: Legacy ML Interoperability
+  version: "1.0.0"
+  created: "2026-02-20"
+  last_updated: "2026-02-20"
+
+stack:
+  preservation_languages:
+    - R (statistical modeling, H2O)
+    - PySpark (large-scale data processing)
+    - Jupyter notebooks (ad-hoc analysis)
+  interop_technologies:
+    - Docker (containerization)
+    - FastAPI (API wrappers)
+    - Python (integration layer)
+  testing:
+    - pytest (regression tests)
+    - pytest-cov (coverage)
+    - requests (API client tests)
+
+dependencies:
+  required:
+    - docker>=24.0.0
+    - fastapi>=0.109.0
+    - uvicorn[standard]>=0.27.0
+    - pydantic>=2.5.0
+    - requests>=2.31.0
+  dev:
+    - pytest>=8.0.0
+    - pytest-cov>=4.1.0
+    - httpx>=0.26.0
+    - ruff>=0.1.0
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-07-vertical-slice-dev
+    - skill-08-code-review
+    - skill-30-taxonomy-governed-avatar-enrichment
+  workflows:
+    - legacy-rescue-decision-track
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-10.1
+    title: Brownfield Code Preservation
+    description: "Default to preserve legacy R/PySpark/notebook logic with containerization and API wrappers—do NOT rewrite without validation"
+    example_file: examples/ENG-10.1-brownfield.md
+    key_practices:
+      - "Containerize legacy R scripts with Docker and Rscript entrypoint"
+      - "Wrap PySpark jobs with FastAPI endpoints for API-driven execution"
+      - "Extract reusable logic from Jupyter notebooks to tested Python modules"
+      - "Run side-by-side validation tests (output parity within 1% tolerance)"
+  
+  - id: ENG-4.1
+    title: Atomic TDD for Regression Testing
+    description: "Write regression tests to validate containerized legacy models produce identical outputs to original code"
+    example_file: examples/ENG-4.1-regression.md
+    key_practices:
+      - "Capture baseline outputs from legacy code with historical data"
+      - "Write regression tests that assert containerized model matches baseline"
+      - "Validate output parity within 1% tolerance (account for floating-point precision)"
+      - "Run regression tests in CI/CD before deploying containerized models"
+  
+  - id: ENG-2.2
+    title: Layered Architecture with Legacy Integration
+    description: "Separate presentation (Streamlit/UI), API layer (FastAPI), and legacy model execution (Docker containers)"
+    example_file: examples/ENG-2.2-layers.md
+    key_practices:
+      - "Presentation: Streamlit dashboard or React UI"
+      - "API Layer: FastAPI wrapper with Pydantic validation"
+      - "Legacy Execution: Docker container with R/PySpark code preserved"
+      - "No direct calls to legacy code from presentation layer"
+  
+  - id: ENG-6.5
+    title: Input Validation at API Boundary
+    description: "Validate inputs at FastAPI wrapper before passing to legacy models (prevent injection, malformed data)"
+    example_file: examples/ENG-6.5-validation.md
+    key_practices:
+      - "Use Pydantic models for request validation (type checks, range checks)"
+      - "Sanitize inputs before subprocess calls to legacy code"
+      - "Return user-friendly error messages for invalid inputs"
+
+conventions:
+  file_structure: |
+    legacy_ml_interop/
+      docker/                   # Docker containers for legacy models
+        r-profitability/
+          Dockerfile
+          profitability_model.R
+          requirements.R
+      api/                      # FastAPI wrappers
+        main.py
+        routers/
+          profitability.py
+        models/
+          requests.py           # Pydantic request models
+          responses.py          # Pydantic response models
+      clients/                  # Python clients for API (used by Streamlit/UI)
+        profitability_client.py
+      tests/
+        test_r_model_regression.py
+        test_api_wrapper.py
+        test_client.py
+      requirements.txt
+      docker-compose.yaml
+
+  containerization_conventions:
+    - name: "R Containerization"
+      description: "Use rocker/r-ver base image, install packages with install.packages(), copy R scripts, set Rscript entrypoint"
+    - name: "PySpark Containerization"
+      description: "Use pyspark base image, copy PySpark scripts, set spark-submit entrypoint"
+    - name: "Jupyter Extraction"
+      description: "Extract reusable functions from notebooks to .py modules, containerize if needed"
+  
+  api_wrapper_conventions:
+    - name: "FastAPI Wrapper"
+      description: "Create /predict or /forecast endpoints, validate inputs with Pydantic, call Docker container via subprocess or HTTP"
+    - name: "Error Handling"
+      description: "Catch subprocess errors, return HTTP 500 with user-friendly message"
+    - name: "Logging"
+      description: "Log inputs, outputs, execution time for debugging and monitoring"
+
+preservation_policy:
+  default_strategy: "Preserve legacy code with containerization—do NOT rewrite without approval"
+  
+  preserve_when:
+    - "Legacy model has validated accuracy (e.g., 9% MAPE, stakeholder trust)"
+    - "Domain logic is complex and poorly documented (rewrite risk high)"
+    - "Time-to-market is critical (containerization faster than rewrite)"
+    - "No clear accuracy/performance improvement from migration"
+  
+  migrate_when:
+    - "New model demonstrates 10%+ accuracy improvement (e.g., 9% → 8% MAPE)"
+    - "New model demonstrates 50%+ performance improvement (e.g., 6 hours → 3 hours)"
+    - "Legacy code is unmaintainable (no documentation, dependencies broken)"
+    - "Stakeholder approval obtained with validated side-by-side tests"
+  
+  never_migrate_without:
+    - "Stakeholder signoff from model owners and users"
+    - "Side-by-side validation tests (output parity within 1% tolerance)"
+    - "Regression test suite covering critical use cases"
+    - "Rollback plan (keep containerized legacy model deployable)"
+
+use_cases:
+  - "Containerize legacy R statistical models for route profitability forecasting"
+  - "Wrap PySpark optimization pipelines with FastAPI for API-driven execution"
+  - "Extract reusable logic from Jupyter notebooks to tested Python modules"
+  - "Build Streamlit dashboards that call containerized legacy models via API"
+  - "Preserve domain logic while modernizing infrastructure and UI"
+
+anti_patterns:
+  - name: "Rewrite Without Validation"
+    description: "DO NOT rewrite R/PySpark to Python without side-by-side validation and stakeholder approval"
+  - name: "Direct Legacy Calls from UI"
+    description: "DO NOT call R scripts or PySpark jobs directly from Streamlit/UI—use API layer"
+  - name: "No Regression Tests"
+    description: "DO NOT containerize legacy models without regression tests validating output parity"
+  - name: "Assume Python Is Better"
+    description: "DO NOT assume Python is superior to R/PySpark without data-driven proof (accuracy, performance, maintainability)"
+
+brownfield_context:
+  description: |
+    Many brownfield ML systems have legacy code in R, PySpark, or Jupyter notebooks:
+    - **R Scripts:** Statistical models (forecasting, profitability, optimization) built with R packages (dplyr, forecast, H2O)
+    - **PySpark Jobs:** Large-scale data processing and ML pipelines (millions of rows, distributed compute)
+    - **Jupyter Notebooks:** Ad-hoc analysis, prototyping, one-off reports (not production-ready)
+    
+    **Default Strategy:** Preserve legacy logic with containerization and API wrappers. Only migrate when there's:
+    1. Validated accuracy/performance improvement (10%+ for accuracy, 50%+ for performance)
+    2. Stakeholder approval with side-by-side validation tests
+    3. Regression test suite covering critical use cases
+    
+    **Why Preserve:**
+    - Avoids rewrite risk (introducing bugs, degrading accuracy)
+    - Faster time-to-market (containerization < 2 weeks, rewrite = 8-12 weeks)
+    - Maintains stakeholder trust (analysts trust existing models)
+    - Enables modernization (infrastructure, UI) without logic changes
+  
+  brownfield_workflow: "docs/guides/adoption/taxonomy-aligned-avatar-enrichment-workflow.md"
+  preservation_policy: "docs/guides/adoption/brownfield-code-preservation.md"
+
+related_avatars:
+  technology:
+    - python-fastapi
+    - python-streamlit
+    - python-pyspark
+    - azure-ml
+  products:
+    - network-planning-optimization
+    - cargo-freight
+
+rag_retrieval:
+  triggers:
+    - "legacy ML"
+    - "R model preservation"
+    - "PySpark containerization"
+    - "Jupyter notebook extraction"
+    - "brownfield ML"
+    - "containerize R script"
+    - "legacy model API"
+    - "side-by-side validation"
+    - "regression testing legacy models"

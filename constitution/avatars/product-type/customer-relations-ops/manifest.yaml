@@ -1,0 +1,191 @@
+avatar:
+  id: avatar-customer-relations-ops
+  type: product
+  name: "Customer Relations Operations"
+  version: "1.1.0"
+  created: "2026-03-18"
+  last_updated: "2026-06-01"
+
+domain:
+  category: "Customer Relations Operations — AI-Assisted Complaint Response Drafting"
+  description: |
+    American Airlines Customer Relations Operations provides AI-assisted drafting
+    support for Customer Relations Representatives (CR Reps) handling passenger
+    complaints across hundreds of complaint categories.
+
+    The system receives structured complaint records, applies PII redaction before
+    any LLM interaction, executes a silent 3-stage compliance agent pipeline
+    (Analysis → Compliance → Drafting), enforces template governance (compensation
+    rules, prohibited language, trademark policies, liability constraints), and
+    returns policy-compliant draft responses audited against an immutable trace log.
+
+    Key differentiators:
+    - Compliance-first: Company policy always outranks stylistic preferences
+    - PII safety: Redacted before LLM call, restored only in final output
+    - Silent orchestration: Only the final compliant draft is surfaced to the CR Rep
+    - Audit immutability: Every LLM call and compensation decision is traced
+
+  personas:
+    - CR Specialist
+    - CR Supervisor
+    - Compliance Reviewer
+  personas_file: "examples/personas.md"
+  tech_notes:
+    target_repo: "codebases/oraa/cr-genai-draft-response"
+    tech_stack:
+      - "Python 3.12"
+      - "FastAPI"
+      - "LangChain (core, openai, community)"
+      - "Azure OpenAI Service"
+      - "PostgreSQL + SQLAlchemy + asyncpg"
+      - "OpenTelemetry (full distro)"
+      - "structlog"
+    preservation_policy: "Preserve all working compliance, PII, and audit patterns. Never change PII redaction/restoration pipeline, audit trace immutability, compensation validation rules, or prohibited-words enforcement without executive approval. Migration gate required for: complaint category/subcategory classification logic, 3-stage silent agent orchestration flow, PII encryption key management."
+
+core_journeys:
+  - "Complaint Intake and Category Classification"
+  - "Template Selection and Compensation Validation"
+  - "PII-Safe LLM Draft Generation"
+  - "Draft Review, Edit, and Acceptance"
+  - "Case Close and Audit Trace"
+
+activates:
+  skills:
+    - spec-governance
+    - 04-business-domain-modeling
+    - 05-business-rules
+    - 06-atomic-tdd
+    - 07-vertical-slice-dev
+    - 08-code-review
+    - 21-prompt-engineering
+    - 30-taxonomy-governed-avatar-enrichment
+  workflows:
+    - product-discovery-stage-a-f
+    - greenfield-development
+    - legacy-rescue-decision-track
+    - legacy-rescue-refactor
+
+compliance_domains:
+  key_metrics:
+    draft_acceptance_rate: ">80% of drafts accepted without major edit"
+    compliance_violation_rate: "0% — no drafts with policy violations delivered"
+    pii_in_llm_payload_rate: "0% — PII never crosses LLM boundary"
+    avg_review_time_seconds: "<120s per draft review cycle"
+    audit_trace_completeness: "100% of LLM calls traced"
+
+specializes_laws:
+  - id: PRD-1.1
+    title: "Continuous Discovery"
+    description: |
+      Continuously research CR Rep efficiency, draft acceptance patterns, and complaint
+      category classification accuracy. Analyze draft rejection reasons, average review
+      time, and compliance violation rates to prioritize improvements to the AI pipeline.
+    key_practices:
+      - "Track weekly draft acceptance rate by complaint category — target >80%"
+      - "Interview CR Reps on draft quality pain points and rejection root causes"
+      - "Analyze compliance violation types — which categories trigger most PII/template violations?"
+      - "Study competitor/peer AI-assisted drafting tools for benchmark comparison"
+    example_file: examples/PRD-1.1-discovery.md
+    law_citations:
+      - "CR Rep efficiency discovery and draft quality analysis"
+      - "AI compliance pipeline improvement through usage pattern discovery"
+  
+  - id: PRD-2.1
+    title: "User Journey Mapping"
+    description: |
+      Map the CR Rep journey from complaint intake through draft review to case close.
+      Capture the silent AI pipeline (Analysis → Compliance → Drafting) as a journey
+      component the Rep does not see but whose output they review.
+    key_practices:
+      - "Map CR Rep journey: Complaint intake → Category classification → Draft receive → Review → Edit → Send → Close"
+      - "Identify Rep decision points: accept draft, edit draft, reject and retype, escalate"
+      - "Map supervisor journey: Override review, compensation approval, compliance audit"
+      - "Measure time at each step: classification delay, draft latency, review time, send rate"
+    example_file: examples/PRD-2.1-journey.md
+    law_citations:
+      - "CR Rep complaint workflow from intake to case close"
+      - "Silent AI pipeline journey and output review workflow"
+  
+  - id: PRD-5.1
+    title: "Metrics & Success Definition"
+    description: |
+      Define and track KPIs for draft quality, compliance safety, PII protection, and
+      operational efficiency. All four metrics are non-negotiable — PII and compliance
+      metrics have 0% violation targets.
+    key_practices:
+      - "Draft acceptance rate: >80% of drafts accepted without major edit"
+      - "Compliance violation rate: 0% — no drafts with policy violations delivered"
+      - "PII in LLM payload rate: 0% — PII never crosses LLM boundary"
+      - "Average review time: <120s per draft review cycle"
+      - "Audit trace completeness: 100% of LLM calls traced"
+    example_file: examples/PRD-5.1-metrics.md
+    law_citations:
+      - "CR AI pipeline quality and safety KPIs"
+      - "PII protection and compliance violation measurement"
+
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: "DOT 14 CFR Part 250 (denied boarding / IDB/VDB compensation); DOT 14 CFR Part 260 (refund SLAs); ADA 14 CFR Part 382 (disability-related complaints); CCPA complaint data for California residents"
+  - id: BUS-2.4
+    title: "Evidence Collection"
+    description: "All compensation decisions and refusal-to-compensate determinations must cite the applicable DOT regulation, compensation tier, and supervisor approval. DOT 30-day response clock tracked per written complaint"
+  - id: ENG-6.4
+    title: "PII & Complaint Data"
+    description: "Complaint records contain PII (name, booking ref, medical conditions for ADA complaints). CCPA: right to know and delete for CA residents. Medical/disability information classified RESTRICTED — LLM boundary enforced by pii_redact.py"
+    justification: "ENG-6.x permitted: customer-relations-ops has direct PII security obligations — passenger medical data and complaint PII require explicit security controls"
+    example_file: guidance.md
+    law_citations:
+      - "PII redaction before LLM boundary (pii_redact.py pattern)"
+      - "CCPA right-to-delete for CA resident complaint data"
+  - id: ENG-6.7
+    title: "Audit Trail"
+    description: "All LLM calls, draft generations, compliance checks, and compensation decisions must be traced per append-only audit trace. Required for DOT audit response and regulatory inquiry"
+    justification: "ENG-6.x permitted: customer-relations-ops has direct audit obligations — DOT regulatory inquiry and compliance review require immutable append-only trace per LLM call"
+
+dependencies:
+  - "CRM Platform"
+  - "Refund Processing System"
+  - "DOT Complaint Management Portal"
+  - "LLM Gateway (with PII redaction layer)"
+  - "PostgreSQL (append-only audit traces)"
+
+project_structure:
+  repos:
+    - name: ct-service-recovery-bff
+      path: bff/ct-service-recovery-bff/
+      stack: "Kotlin / Spring Boot 3.5.3 / Java 17"
+      description: "Service recovery BFF — IROP eligibility, hotel/meal/transport vouchers, dynamic reaccommodation"
+      key_packages:
+        - "com.aa.servicerecovery.bff.api.controller"
+        - "com.aa.servicerecovery.bff.api.service.implementation"
+        - "com.aa.servicerecovery.bff.api.connector"
+    - name: servicerecovery-ios
+      path: ios/servicerecovery-ios/
+      stack: "Swift / SwiftUI / Xcode"
+      description: "iOS service recovery UI — DynamicReaccomUI views, IROPs eligibility, HMT vouchers"
+  test_pattern: "*Test.kt"
+  ci_workflows:
+    - ".github/workflows/deploy-QA.yaml"
+    - ".github/workflows/deploy-IQA.yaml"
+
+commands:
+  build: "./gradlew clean build"
+  test: "./gradlew test"
+  run_local: "./gradlew bootRun"
+
+conventions:
+  - "Apollo GraphQL client for downstream queries (ApolloClientConnector)"
+  - "GraphQL schema in src/main/resources/schema.graphqls and queries.graphql"
+  - "IROP eligibility checks via IROPSHubConnector + HierarchyConnector"
+  - "DynamicReaccommodation via DynamicReaccomConnector (flight rebooking)"
+  - "Hotel/Meal/Transport vouchers via HotelMealTransportServiceImpl"
+  - "iOS: DynamicReaccomUI SwiftUI views for flight updates, trip summary, choose flight"
+  - "Kotlin coroutines for async service calls; Java 17 target"
+
+tags:
+  - product
+  - service-recovery
+  - irops
+  - complaint-resolution
+  - compliance
+  - pii-safety

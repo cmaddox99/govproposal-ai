@@ -1,0 +1,91 @@
+avatar:
+  id: avatar-product-internal-productivity
+  type: product
+  name: "Internal Productivity & Tooling"
+  version: "1.0.0"
+  created: "2026-03-31"
+  last_updated: "2026-03-31"
+
+domain:
+  category: "Internal Productivity & Enterprise Tooling"
+  description: |
+    Internal tools, dashboards, automation, and AI-assisted workflows for AA employees.
+    Handles employee PII under BUS-3.x data governance constraints and GDPR/CCPA
+    workforce data rules. Brand compliance and content classification apply to all
+    AI-generated outputs. AI governance (BUS-5.x / ENG-11.x) applies to any
+    LLM-assisted internal tooling — hallucination risk and PII leakage into
+    AI prompts are the primary compliance concerns.
+
+  personas:
+    - Operations Analyst
+    - Finance Business Partner
+    - HR Business Partner
+    - IT Systems Administrator
+
+core_journeys:
+  - "Internal Reporting & Dashboards"
+  - "AI-Assisted Document Drafting"
+  - "Process Automation"
+  - "Employee Self-Service Tools"
+  - "Data Export & Analysis"
+
+activates:
+  skills:
+    - skill-spec-governance
+    - skill-03-executable-spec
+    - skill-04-business-domain-modeling
+    - skill-05-business-rules
+    - skill-06-atomic-tdd
+    - skill-08-code-review
+    - skill-10-security-review
+    - skill-27-constitution-compliance
+
+  workflows:
+    - greenfield-development
+    - legacy-rescue-refactor
+
+specializes_laws:
+  - id: BUS-2.1
+    title: "Regulatory Mapping"
+    description: "GDPR Article 88 (employee data processing); CCPA workforce exemption (expiry 2023 — full compliance required for CA employees); SOX controls for finance tooling accessing GL data; HIPAA-adjacent rules for benefits/health-adjacent data"
+  - id: BUS-2.2
+    title: "Control Framework"
+    description: "Employee PII access controls: role-based access, data minimization in dashboards. Finance tooling: SOX change management controls, audit log of GL access. AI tools: no PII in LLM prompts without explicit sanitization step"
+  - id: BUS-2.4
+    title: "Evidence Collection"
+    description: "Data access audit trail for PII-touching tools. AI governance log: prompt→response record with model version, user ID, content classification for all internal AI tools"
+  - id: ENG-6.4
+    title: "PII & Employee Data"
+    description: "Employee PII classification: SSN/DOB/compensation as RESTRICTED. HR data flows must enforce data residency (EU employees: EU data centers). No employee PII in AI training pipelines without explicit consent and legal basis"
+  - id: ENG-6.7
+    title: "Audit Trail"
+    description: "All internal tool data access events, AI-generated outputs distributed to users, and automated decisions affecting employees must be logged with user ID, data classification, and legal basis"
+
+compliance_domains:
+  - standard: "GDPR Article 88"
+    scope: "Employee data processing in employment context"
+  - standard: "CCPA (California Employees)"
+    scope: "CA employee personal information — full CCPA rights as of 2023"
+  - standard: "SOX"
+    scope: "Finance tooling accessing GL, forecasting, audit data"
+    key_rules:
+      - "ITGC change management for finance system access"
+      - "Audit log of GL data access"
+  - standard: "AA Content Classification Policy"
+    scope: "Brand compliance and content classification for all AI outputs"
+
+dependencies:
+  - "Enterprise SSO / IAM"
+  - "Data Catalog & Classification Service"
+  - "Finance ERP (SAP)"
+  - "HRIS (Workday)"
+  - "LLM Gateway / AI Platform"
+
+tags:
+  - product
+  - internal-tooling
+  - employee-pii
+  - gdpr
+  - ccpa
+  - sox
+  - ai-governance

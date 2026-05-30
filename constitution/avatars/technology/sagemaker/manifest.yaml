@@ -1,0 +1,137 @@
+# AWS SageMaker Avatar Manifest
+# Defines stack configuration and law specializations
+
+avatar:
+  id: avatar-sagemaker
+  type: technology
+  name: AWS SageMaker
+  version: "2.0.0"
+
+stack:
+  language: Python 3.11+
+  platform: AWS SageMaker
+  frameworks:
+    - SageMaker SDK
+    - SageMaker Pipelines
+  testing:
+    - pytest
+    - moto
+    - localstack
+  tools:
+    formatter: ruff
+    linter: ruff
+    type_checker: mypy
+
+dependencies:
+  required:
+    - sagemaker: ">=2.200.0"
+    - boto3: ">=1.34.0"
+  dev:
+    - pytest: ">=8.0.0"
+    - pytest-cov: ">=4.1.0"
+    - moto: ">=5.0.0"
+    - ruff: ">=0.1.0"
+    - mypy: ">=1.8.0"
+
+activates:
+  skills:
+    - skill-06-atomic-tdd
+    - skill-04-business-domain-modeling
+  workflows:
+    - product-discovery-stage-a-f
+
+specializes_laws:
+  - id: ENG-4.1
+    title: Atomic TDD Law
+    example_file: examples/ENG-4.1-atomic-tdd.md
+  - id: ENG-6.1
+    title: Observability Law
+    example_file: examples/ENG-6.1-observability.md
+  - id: ENG-2.1
+    title: Simplicity Law
+    example_file: examples/ENG-2.1-simplicity.md
+
+conventions:
+  naming:
+    modules: snake_case
+    functions: snake_case
+    classes: PascalCase
+    endpoints: lowercase-dashes
+    pipelines: lowercase-dashes
+    model_packages: lowercase-dashes
+
+  patterns:
+    trainer: "SageMakerTrainer wrapper class"
+    pipeline: "SageMaker Pipeline with steps"
+    predictor: "SageMakerPredictor for endpoints"
+    registry: "ModelRegistry for model packages"
+
+commands:
+  test:
+    all: pytest
+    unit: pytest tests/ -m "not integration"
+    integration: pytest tests/integration/ --run-aws
+    coverage: pytest --cov=src --cov-report=html
+  dev:
+    authenticate: aws configure
+    local_mode: "python -c 'from sagemaker.local import LocalSession; ...'"
+  pipeline:
+    create: python scripts/create_pipeline.py
+    start: aws sagemaker start-pipeline-execution --pipeline-name my-pipeline
+    describe: aws sagemaker describe-pipeline-execution --pipeline-execution-arn <arn>
+
+project_structure: |
+  sagemaker_project/
+  ├── src/
+  │   ├── training/                # Training code
+  │   │   ├── __init__.py
+  │   │   ├── train.py             # Training entry point
+  │   │   ├── trainer.py           # SageMaker trainer wrapper
+  │   │   └── hyperparameters.py   # HP configuration
+  │   ├── inference/               # Inference code
+  │   │   ├── __init__.py
+  │   │   ├── inference.py         # Inference entry point
+  │   │   ├── predictor.py         # Endpoint predictor
+  │   │   └── model.py             # Model loading
+  │   ├── processing/              # Data processing
+  │   │   ├── __init__.py
+  │   │   ├── preprocess.py        # Preprocessing script
+  │   │   └── feature_eng.py       # Feature engineering
+  │   ├── pipelines/               # SageMaker Pipelines
+  │   │   ├── __init__.py
+  │   │   ├── training_pipeline.py
+  │   │   ├── inference_pipeline.py
+  │   │   └── steps/
+  │   │       ├── preprocess.py
+  │   │       ├── train.py
+  │   │       └── evaluate.py
+  │   ├── monitoring/              # Model monitoring
+  │   │   ├── __init__.py
+  │   │   ├── data_quality.py
+  │   │   └── model_quality.py
+  │   └── utils/
+  │       ├── __init__.py
+  │       ├── s3_utils.py
+  │       └── config.py
+  ├── tests/
+  │   ├── training/
+  │   │   └── test_trainer.py
+  │   ├── inference/
+  │   │   └── test_predictor.py
+  │   ├── pipelines/
+  │   │   └── test_pipeline.py
+  │   └── conftest.py
+  ├── notebooks/
+  │   ├── exploration.ipynb
+  │   └── pipeline_testing.ipynb
+  ├── configs/
+  │   ├── training.yaml
+  │   ├── inference.yaml
+  │   └── pipeline.yaml
+  ├── docker/
+  │   ├── training/
+  │   │   └── Dockerfile
+  │   └── inference/
+  │       └── Dockerfile
+  ├── requirements.txt
+  └── README.md

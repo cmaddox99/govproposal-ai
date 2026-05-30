@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 4 — Remediate — AAdvantage Legacy Rescue</title>
+<style>
+/* ── AA Constitutional Design System ── */
+@page { size: 1088px 1408px; margin: 0; }
+
+:root {
+  --aa-blue: #003087;
+  --aa-red:  #C8102E;
+  --ink:     #17202a;
+  --muted:   #5f6d7a;
+  --line:    #d9e1ea;
+  --soft:    #f3f7fb;
+  --soft-2:  #eef3f8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* ── Page layout ── */
+.page {
+  width: 1088px;
+  min-height: 1408px;
+  padding: 94px 88px 100px;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  page-break-after: always;
+}
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 12px;
+  background: linear-gradient(90deg, var(--aa-blue), var(--aa-red));
+}
+.page::after {
+  content: "✈";
+  position: absolute;
+  right: 34px; bottom: -10px;
+  font-size: 240px;
+  color: var(--aa-blue);
+  opacity: .03;
+  transform: rotate(18deg);
+  pointer-events: none;
+}
+.page.cover {
+  background:
+    radial-gradient(circle at 85% 16%, rgba(0,48,135,.08), transparent 22%),
+    linear-gradient(180deg, #fbfcfe 0%, #f1f6fa 100%);
+}
+.footer {
+  position: absolute;
+  left: 88px; right: 88px; bottom: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5ebf1;
+  padding-top: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #7f8b97;
+}
+.footer .pn { color: var(--aa-blue); font-weight: 800; }
+
+/* ── Typography ── */
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--aa-red);
+}
+h1 {
+  margin-top: 22px;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--aa-blue);
+  font-weight: 850;
+  max-width: 820px;
+}
+h2 {
+  margin-top: 32px;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -.6px;
+  color: var(--aa-blue);
+  font-weight: 800;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+h3 { margin-top: 20px; font-size: 19px; color: var(--aa-blue); font-weight: 700; }
+h4 { margin-top: 16px; font-size: 16px; color: var(--ink); font-weight: 700; }
+p  { margin-top: 12px; font-size: 15px; line-height: 1.6; color: #32404d; }
+ul, ol { margin-top: 10px; padding-left: 24px; }
+li { font-size: 15px; line-height: 1.55; color: #32404d; margin-top: 4px; }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  background: var(--soft-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+pre {
+  margin-top: 14px;
+  background: #1e2832;
+  color: #c9d1d9;
+  padding: 16px 18px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); font-size: 13.5px; line-height: 1.4; }
+th { border-top: 0; background: var(--soft); color: var(--aa-blue); font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+blockquote { border-left: 4px solid var(--aa-blue); margin-top: 14px; padding: 10px 16px; background: var(--soft); color: var(--muted); font-size: 14px; }
+
+/* ── Meta / stat cards ── */
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; max-width: 820px; }
+.meta-card { border: 1px solid var(--line); background: #fff; padding: 16px 18px; }
+.meta-card .k { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: var(--aa-red); font-weight: 800; }
+.meta-card .v { margin-top: 7px; font-size: 17px; line-height: 1.4; color: #23303d; }
+.summary-band { margin-top: 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card { border: 1px solid var(--line); background: #fff; padding: 14px; }
+.stat-card .n { font-size: 34px; line-height: 1; color: var(--aa-blue); font-weight: 850; letter-spacing: -1px; }
+.stat-card .l { margin-top: 7px; font-size: 13px; line-height: 1.35; color: #52606d; }
+.stat-card.danger .n { color: var(--aa-red); }
+.stat-card.warn .n { color: #b36b00; }
+
+/* ── Status badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.status-badge.proposed  { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.implemented { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.archived  { background: var(--soft-2); color: var(--muted); border: 1px solid var(--line); }
+.status-badge.accepted  { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.deprecated { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.pass   { background: #e8f5e9; color: #1b7a2b; border: 1px solid #a5d6a7; }
+.status-badge.fail   { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.warn   { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+.status-badge.critical { background: #fde8ec; color: var(--aa-red); border: 1px solid #f8bbd0; }
+.status-badge.high   { background: #fff8e1; color: #b36b00; border: 1px solid #ffe082; }
+
+/* ── Chip row ── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--aa-blue);
+  letter-spacing: .3px;
+}
+
+/* ── Confidence band ── */
+.confidence-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-left: 6px solid var(--aa-blue);
+  background: var(--soft);
+  margin-top: 24px;
+}
+.confidence-band .cb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+.confidence-band.high  { border-left-color: #1b7a2b; }
+.confidence-band.medium { border-left-color: #b36b00; }
+.confidence-band.low   { border-left-color: var(--aa-red); }
+
+/* ── Phase header ── */
+.phase-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+.phase-num {
+  background: var(--aa-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+
+/* ── Law citation tooltips ── */
+.law-cite {
+  position: relative;
+  display: inline;
+  color: var(--aa-blue);
+  font-weight: 700;
+  border-bottom: 1px dashed var(--aa-blue);
+  cursor: help;
+  white-space: nowrap;
+}
+.law-cite[data-non-negotiable="true"] {
+  color: var(--aa-red);
+  border-bottom-color: var(--aa-red);
+}
+.law-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 9999;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2832;
+  color: #e8edf2;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: normal;
+  min-width: 220px;
+  max-width: 340px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: opacity .15s ease, visibility .15s ease;
+  text-align: left;
+  font-weight: 400;
+}
+.law-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e2832;
+}
+.law-tooltip .law-summary { font-size: 12px; color: #9aaab8; margin-top: 4px; display: block; }
+.law-cite:hover .law-tooltip,
+.law-cite:focus .law-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+.law-cite.flip-below .law-tooltip {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.law-cite.flip-below .law-tooltip::after {
+  top: auto; bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #1e2832;
+}
+
+.gate-block {
+  margin-top: 24px;
+  border: 2px solid var(--aa-red);
+  padding: 18px 22px;
+  background: #fdf2f4;
+}
+.gate-block .gate-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--aa-red); font-weight: 800; margin-bottom: 8px; }
+.gate-block .gate-row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+.gate-block .gate-item { font-size: 14px; color: var(--ink); }
+.gate-block .gate-item strong { color: var(--aa-red); }
+
+td.critical { color: var(--aa-red); font-weight: 700; }
+td.high-sev { color: #b36b00; font-weight: 700; }
+
+@media print {
+  .law-tooltip { display: none; }
+  .law-cite { border-bottom: none; color: inherit; font-weight: inherit; }
+}
+</style>
+</head>
+<body>
+
+<!-- AI-GENERATED DEMO REPO BANNER — copy exactly, do not omit -->
+<div style="position:fixed; top:0; left:0; right:0; z-index:9999; background:#fef3c7; border-bottom:2px solid #f59e0b; padding:6px 16px; display:flex; align-items:center; gap:10px; font-family:sans-serif; font-size:0.8rem; color:#78350f;">
+  <span style="font-size:1rem;">&#9888;&#65039;</span>
+  <strong>AI-GENERATED DEMO REPO</strong> &mdash; This codebase (<code>aa-loyalty-legacy</code>) is entirely AI-generated for illustration purposes. It is <strong>not</strong> real AA production code and does not represent any AA system.
+</div>
+<div style="height:38px;"></div>
+
+<!-- PAGE 1: COVER -->
+<div class="page cover">
+  <div class="eyebrow">Legacy Rescue · AAdvantage Loyalty Platform</div>
+  <h1>Phase 4 — Remediate</h1>
+  <div class="meta" style="margin-top:48px; max-width:680px;">
+    <div class="meta-card"><div class="k">Project</div><div class="v">AA AAdvantage Loyalty Platform — Legacy Rescue</div></div>
+    <div class="meta-card"><div class="k">Codebase</div><div class="v"><code>aa-loyalty-legacy — Java 8 / Spring Boot 2.3 / Maven</code></div></div>
+    <div class="meta-card"><div class="k">SonarQube Project Key</div><div class="v"><code>aa-loyalty-legacy</code></div></div>
+    <div class="meta-card"><div class="k">Phase</div><div class="v">4 of 6 — Violation Fixes &amp; Security Gate</div></div>
+    <div class="meta-card"><div class="k">Date</div><div class="v">2026-05-05</div></div>
+  </div>
+  <div class="chip-row" style="margin-top:40px;">
+    <span class="chip">V-03 Fixed — Resource Leak</span><span class="chip">V-08 Fixed — Idempotency</span>
+    <span class="chip">V-09 Fixed — Input Validation</span><span class="chip">239 Tests Green</span>
+    <span class="chip">Security Rating A</span>
+  </div>
+  <div class="gate-block" style="margin-top:52px; max-width:680px; border-color:#1b7a2b; background:#e8f5e9;">
+    <div class="gate-label" style="color:#1b7a2b;">Constitutional Gate — Phase 4 Result</div>
+    <div class="gate-row">
+      <div class="gate-item" style="color:#1b7a2b;">SonarQube Quality Gate: <strong>PASSED</strong></div>
+      <div class="gate-item" style="color:#1b7a2b;">Constitutional Gate: <strong>PASSED</strong></div>
+      <div class="gate-item" style="color:#1b7a2b;">Disposition: <strong>PHASE 5 MAY BEGIN</strong></div>
+    </div>
+    <p style="margin-top:10px; font-size:13px; color:#1b5e20;">All P0 security/safety violations resolved. 239 characterization tests remain green. Complexity refactoring (V-01, V-02, V-05) deferred to Phase 5 per ENG-3.1 accepted-deferral protocol.</p>
+  </div>
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 4 — Remediate</div><div class="pn">1</div></div>
+</div>
+
+<!-- PAGE 2: REMEDIATION LOG -->
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 4</span>
+    <span style="font-size:20px; font-weight:800; color:var(--aa-blue);">Remediation Log — Fixes Applied</span>
+  </div>
+  <p>Phase 4 addresses all P0 (blocker) and P0-adjacent violations. Complexity violations requiring structural changes are explicitly deferred to Phase 5 per the accepted-deferral protocol in <span class="law-cite" data-law-id="ENG-3.1" data-non-negotiable="false">ENG-3.1<span class="law-tooltip"><strong>Complexity Law</strong><span class="law-summary">Complexity reductions requiring structural extraction are deferred to the refactor phase.</span></span></span>.</p>
+  <h2>Violations Fixed in Phase 4</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Fix Applied</th><th>File</th><th>Law</th><th>Status</th><th>Tests</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>V-03</strong></td>
+        <td>Wrapped <code>FileWriter</code> audit log in <code>try-with-resources</code> — eliminates resource leak on exception path</td>
+        <td><code>RedemptionService.java</code></td>
+        <td><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1 ⛔<span class="law-tooltip"><strong>Resource Safety Law</strong><span class="law-summary">All closeable resources must be managed with try-with-resources.</span></span></span></td>
+        <td><span class="status-badge pass">FIXED</span></td>
+        <td><span class="status-badge pass">239 / 239</span></td>
+      </tr>
+      <tr>
+        <td><strong>V-08</strong></td>
+        <td>Added idempotency key check in <code>bookAwardFlight</code> — duplicate booking reference returns existing redemption, no duplicate state created</td>
+        <td><code>RedemptionService.java</code></td>
+        <td><span class="law-cite" data-law-id="ENG-6.7" data-non-negotiable="true">ENG-6.7 ⛔<span class="law-tooltip"><strong>Idempotency Law</strong><span class="law-summary">Mutating endpoints must be idempotent. Duplicate state changes prohibited.</span></span></span></td>
+        <td><span class="status-badge pass">FIXED</span></td>
+        <td><span class="status-badge pass">239 / 239</span></td>
+      </tr>
+      <tr>
+        <td><strong>V-09</strong></td>
+        <td>Added RFC 5322 email format validation in <code>MemberService.updateProfile</code> — invalid emails throw <code>IllegalArgumentException</code> before persistence</td>
+        <td><code>MemberService.java</code></td>
+        <td><span class="law-cite" data-law-id="ENG-6.1" data-non-negotiable="true">ENG-6.1 ⛔<span class="law-tooltip"><strong>Input Validation Law</strong><span class="law-summary">All user-supplied inputs must be validated before persistence.</span></span></span></td>
+        <td><span class="status-badge pass">FIXED</span></td>
+        <td><span class="status-badge pass">239 / 239</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <h2 style="margin-top:20px;">Violations Deferred to Phase 5 (Accepted Deferral)</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Violation</th><th>Deferral Reason</th><th>Phase 5 Action</th></tr></thead>
+    <tbody>
+      <tr><td><strong>V-01</strong></td><td>MileageCalculator CC=35</td><td>Requires structural extraction — characterization tests protect against regression</td><td>Decompose into focused private methods; extract route table to constants</td></tr>
+      <tr><td><strong>V-02</strong></td><td>TierCalculator duplicate elite bonus logic</td><td><span class="law-cite" data-law-id="ENG-2.1" data-non-negotiable="false">ENG-2.1<span class="law-tooltip"><strong>DRY Law</strong><span class="law-summary">Accepted deferral — will be unified in Phase 5.</span></span></span> accepted deferral</td><td>Delegate to single canonical method in TierCalculator</td></tr>
+      <tr><td><strong>V-05</strong></td><td>MileageService god class (300+ lines)</td><td>Requires class extraction — safe to defer; fully characterized before extraction</td><td>Decompose into AccrualService + MileageAdminService + thin MileageService</td></tr>
+      <tr><td><strong>V-06</strong></td><td>Raw SQL in MileageAdminService service layer</td><td>Structural refactor — Phase 5</td><td>Replace JDBC calls with MileageRepository</td></tr>
+      <tr><td><strong>V-07, V-10</strong></td><td>Magic numbers and hardcoded route distance table</td><td>Configuration extraction — Phase 5</td><td>Named constants + constant map for route distances</td></tr>
+    </tbody>
+  </table>
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 4 — Remediate</div><div class="pn">2</div></div>
+</div>
+
+<!-- PAGE 3: SECURITY GATE -->
+<div class="page">
+  <div class="phase-hdr">
+    <span class="phase-num">Phase 4</span>
+    <span style="font-size:20px; font-weight:800; color:var(--aa-blue);">Security Gate &amp; Post-Fix Verification</span>
+  </div>
+  <div class="summary-band">
+    <div class="stat-card"><div class="n">239</div><div class="l">Tests Run<br><span style="color:#1b7a2b;font-size:11px;font-weight:700;">ALL GREEN</span></div></div>
+    <div class="stat-card"><div class="n">0</div><div class="l">Failures<br><span style="font-size:11px;">Characterization suite intact</span></div></div>
+    <div class="stat-card"><div class="n">0</div><div class="l">Blocker Violations<br><span style="color:#1b7a2b;font-size:11px;font-weight:700;">CLEARED</span></div></div>
+    <div class="stat-card"><div class="n">0</div><div class="l">Critical Violations<br><span style="color:#1b7a2b;font-size:11px;font-weight:700;">CLEARED</span></div></div>
+  </div>
+  <h2>Phase 4 Security Gate Checklist</h2>
+  <table>
+    <thead><tr><th>Check</th><th>Required</th><th>Actual</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Vulnerabilities</td><td>= 0</td><td>0</td><td><span class="status-badge pass">PASS</span></td></tr>
+      <tr><td>Security hotspots reviewed</td><td>100%</td><td>100%</td><td><span class="status-badge pass">PASS</span></td></tr>
+      <tr><td>Security rating</td><td>A</td><td>A</td><td><span class="status-badge pass">PASS</span></td></tr>
+      <tr><td>Blocker violations</td><td>= 0</td><td>0</td><td><span class="status-badge pass">PASS</span></td></tr>
+      <tr><td>Critical violations</td><td>= 0</td><td>0</td><td><span class="status-badge pass">PASS</span></td></tr>
+      <tr><td>Resource leaks (ENG-6.1)</td><td>= 0</td><td>0</td><td><span class="status-badge pass">PASS</span></td></tr>
+      <tr><td>Idempotency gaps (ENG-6.7)</td><td>= 0</td><td>0</td><td><span class="status-badge pass">PASS</span></td></tr>
+      <tr><td>Input validation missing (ENG-6.1)</td><td>= 0</td><td>0</td><td><span class="status-badge pass">PASS</span></td></tr>
+      <tr><td>Characterization tests green</td><td>239 / 239</td><td>239 / 239</td><td><span class="status-badge pass">PASS</span></td></tr>
+    </tbody>
+  </table>
+  <div class="gate-block" style="margin-top:20px; border-color:#1b7a2b; background:#e8f5e9;">
+    <div class="gate-label" style="color:#1b7a2b;">Phase 4 SonarQube HARD_BLOCK — ALL CONDITIONS MET</div>
+    <div class="gate-row">
+      <div class="gate-item" style="color:#1b7a2b;">vulnerabilities = 0: <strong>YES</strong></div>
+      <div class="gate-item" style="color:#1b7a2b;">security_hotspots_reviewed = 100%: <strong>YES</strong></div>
+      <div class="gate-item" style="color:#1b7a2b;">security_rating = A: <strong>YES</strong></div>
+    </div>
+    <div class="gate-row" style="margin-top:4px;">
+      <div class="gate-item" style="color:#1b7a2b;">blocker_violations = 0: <strong>YES</strong></div>
+      <div class="gate-item" style="color:#1b7a2b;">critical_violations = 0: <strong>YES</strong></div>
+      <div class="gate-item" style="color:#1b7a2b;">characterization tests: <strong>239 GREEN</strong></div>
+    </div>
+    <p style="margin-top:8px; font-size:13px; color:#1b5e20;">Phase 5 (Refactor) may begin. Complexity violations V-01, V-02, V-05, V-06, V-07, V-10 remain open and are the subject of Phase 5 refactoring work.</p>
+  </div>
+  <div class="footer"><div>AAdvantage Legacy Rescue · Phase 4 — Remediate</div><div class="pn">3</div></div>
+</div>
+
+<script>
+document.querySelectorAll('.law-cite').forEach(function(el) {
+  el.addEventListener('mouseenter', function() {
+    var rect = el.getBoundingClientRect();
+    var tooltip = el.querySelector('.law-tooltip');
+    if (!tooltip) return;
+    var tipH = tooltip.offsetHeight || 80;
+    if (rect.top < tipH + 12) { el.classList.add('flip-below'); } else { el.classList.remove('flip-below'); }
+  });
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  var tip = el.querySelector('.law-tooltip');
+  if (tip) tip.id = 'tooltip-' + el.dataset.lawId;
+});
+</script>
+</body>
+</html>

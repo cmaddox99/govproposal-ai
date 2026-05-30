@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 0 — Pre-flight | BFF Avatar Clinic</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; color: #1a1a2e; margin: 0; padding: 24px; }
+  h1 { font-size: 1.6rem; font-weight: 700; }
+  h2 { font-size: 1.1rem; font-weight: 600; margin: 28px 0 10px; border-bottom: 2px solid #e0e0e0; padding-bottom: 6px; }
+  .header { background: linear-gradient(135deg, #6a1b9a, #4a148c); color: white; border-radius: 10px; padding: 24px 28px; margin-bottom: 28px; }
+  .header p { opacity: 0.88; margin: 6px 0 0; font-size: 0.92rem; }
+  .header .meta { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .header .meta span { background: rgba(255,255,255,0.18); border-radius: 6px; padding: 4px 12px; font-size: 0.82rem; }
+  .section { background: white; border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 8px; }
+  th { background: #f0f4f8; font-weight: 600; text-align: left; padding: 8px 10px; border-bottom: 2px solid #dde; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; }
+  .pass { background: #e8f5e9; color: #2e7d32; }
+  .reject { background: #fce4ec; color: #c62828; }
+  .proceed { background: #e8eaf6; color: #283593; }
+  .primary { background: #e3f2fd; color: #0d47a1; }
+  .secondary { background: #f3e5f5; color: #6a1b9a; }
+  .enrich { background: #fff8e1; color: #f57f17; }
+  .verdict { padding: 14px 18px; border-radius: 8px; font-weight: 600; margin-top: 12px; }
+  .verdict.green { background: #e8f5e9; color: #1b5e20; border-left: 5px solid #43a047; }
+  .verdict.purple { background: #f3e5f5; color: #4a148c; border-left: 5px solid #7b1fa2; }
+  code { font-size: 0.82rem; background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+  footer { text-align: center; color: #aaa; font-size: 0.78rem; margin-top: 32px; }
+  .tier-red { color: #c62828; font-weight: 600; }
+  .tier-yellow { color: #f57f17; font-weight: 600; }
+  .tier-green { color: #2e7d32; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🔍 Phase 0 — Pre-flight</h1>
+  <p>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF Session</p>
+  <div class="meta">
+    <span>📅 2026-04-27</span>
+    <span>📦 25 BFF repositories</span>
+    <span>☕ 19 Java · 3 TS · 2 TS/Node · 1 Kotlin</span>
+    <span>⚡ Fleet avg 5.0 / 10</span>
+    <span>🐛 30+ confirmed bugs</span>
+  </div>
+</div>
+
+<!-- TAXONOMY GATE -->
+<div class="section">
+  <h2>Taxonomy Gate — Is "BFF" a New Avatar Taxon?</h2>
+  <p>Five-gate test to determine if the BFF portfolio warrants a new avatar registration or maps to existing.</p>
+  <table>
+    <thead><tr><th>#</th><th>Gate</th><th>Question</th><th>Answer</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Language boundary</td><td>Is the primary language distinct from all registered avatars?</td><td>Java — <code>avatar-java-spring</code> already registered</td><td><span class="badge reject">FAIL</span></td></tr>
+      <tr><td>2</td><td>Framework boundary</td><td>Is the framework distinct from all registered avatars?</td><td>Spring Boot — already covered by <code>avatar-java-spring</code></td><td><span class="badge reject">FAIL</span></td></tr>
+      <tr><td>3</td><td>Pattern novelty</td><td>Does "BFF" (Backend-for-Frontend) require unique laws not covered by existing avatars?</td><td>No — BFF is a deployment pattern, not a stack. Same SOLID/GRASP/TDD laws apply</td><td><span class="badge reject">FAIL</span></td></tr>
+      <tr><td>4</td><td>Semantic gap</td><td>Is there intelligence that existing avatars cannot express?</td><td>Fleet-specific god-class patterns, ServiceLocator anti-pattern, thread-safety bugs — all expressible in <code>avatar-java-spring</code> use cases</td><td><span class="badge reject">FAIL</span></td></tr>
+      <tr><td>5</td><td>Uniqueness of toolchain</td><td>Does the BFF fleet use a toolchain (CI/CD, build, test) absent from java-spring avatar?</td><td>Maven/Gradle + JUnit — already covered. Fastlane not used.</td><td><span class="badge reject">FAIL</span></td></tr>
+    </tbody>
+  </table>
+  <div class="verdict green">✅ 5/5 FAIL → REJECT "BFF" as new taxon. Map to existing <code>avatar-java-spring</code>.</div>
+</div>
+
+<!-- FLEET OVERVIEW -->
+<div class="section">
+  <h2>Fleet Intelligence Summary</h2>
+  <table>
+    <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Total repositories</td><td>25</td></tr>
+      <tr><td>Language breakdown</td><td>19 Java · 3 TypeScript · 2 TypeScript/Node · 1 Kotlin</td></tr>
+      <tr><td>Primary framework</td><td>Spring Boot 2.x/3.x (Java repos) · Express/Node (TS repos)</td></tr>
+      <tr><td>Fleet composite avg</td><td>5.0 / 10</td></tr>
+      <tr><td>Below 6.0 ("unhealthy")</td><td>21 / 25 = 84%</td></tr>
+      <tr><td>Red tier (< 4.0)</td><td>4 repos: Minilith (3.0), boardingpass-bff (3.5), manage-bff (3.9), Update-Reservation (3.9)</td></tr>
+      <tr><td>Confirmed bugs</td><td>30+: 5 CRITICAL · 13 HIGH · 12 MEDIUM</td></tr>
+      <tr><td>Thread-safety defects</td><td>3 services (TravelHubResponseBuilderV2/V3/V4 — mutable singletons)</td></tr>
+      <tr><td>God classes > 1,000 LOC</td><td>6 repos — largest: MobileUtils.java (2,287 LOC), CuratedFlightEvent (2,139 LOC)</td></tr>
+      <tr><td>Analysis window</td><td>Dec 18, 2025 – Mar 18, 2026 (90 days)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- QUALITY TIERS -->
+<div class="section">
+  <h2>Quality Tier Distribution</h2>
+  <table>
+    <thead><tr><th>Tier</th><th>Repos</th><th>Avg Score</th></tr></thead>
+    <tbody>
+      <tr><td class="tier-red">🔴 Red — High Risk</td><td>Minilith, boardingpass-bff, manage-bff, Update-Reservation</td><td>3.0 – 3.9</td></tr>
+      <tr><td class="tier-yellow">🟡 Yellow — Moderate Risk</td><td>change-bff, travelhub-bff, iu-bff, ancillary-bff, airship, checkin-bff, airfare-search, Loyalty-Events, reservation-bff, ai-inspiration, Event-Processor, cache-ms, loyalty-bff, reservationlist-bff, aadvantage-bff, FLIFO-BFF, service-recovery-bff</td><td>4.0 – 5.9</td></tr>
+      <tr><td class="tier-green">🟢 Green — Healthy</td><td>offers-bff, platform-config, platform-bff, <strong>booking-bff (7.4)</strong></td><td>6.1 – 7.4</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- TARGET AVATAR MAPPING -->
+<div class="section">
+  <h2>Target Avatar Mapping</h2>
+  <table>
+    <thead><tr><th>Avatar</th><th>Type</th><th>Mode</th><th>Scope</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>avatar-java-spring</code></td>
+        <td>Technology</td>
+        <td><span class="badge primary">Mode 2+4</span></td>
+        <td><strong>PRIMARY — this session</strong></td>
+        <td>19 Java repos (76% of fleet). Multiple BLOCKINGs detected. Rich enrichment: god-class evidence, ServiceLocator anti-pattern, thread-safety, currency precision, copy-paste versioning.</td>
+      </tr>
+      <tr>
+        <td><code>avatar-check-in-travel</code></td>
+        <td>Product</td>
+        <td><span class="badge enrich">Mode 4</span></td>
+        <td>Enrich — BFF layer evidence</td>
+        <td><code>mobile-fly-checkin-bff</code>: year-boundary date bug (Dec 31/Jan 1 flights), god method <code>mapFlifoResponse()</code> (177 lines), HTTP calls hidden in getter methods</td>
+      </tr>
+      <tr>
+        <td><code>avatar-passenger-booking</code></td>
+        <td>Product</td>
+        <td><span class="badge enrich">Mode 4</span></td>
+        <td>Enrich — BFF layer evidence</td>
+        <td><code>booking-bff</code> (7.4 — highest scorer, reference implementation). <code>airfare-search-bff</code>: <code>BigDecimal(double)</code> currency precision critical bug. <code>reservation-bff</code>.</td>
+      </tr>
+      <tr>
+        <td><code>avatar-loyalty-aadvantage</code></td>
+        <td>Product</td>
+        <td><span class="badge enrich">Mode 4</span></td>
+        <td>Enrich — BFF layer evidence</td>
+        <td><code>aa-ct-fly-mobile-loyalty-bff</code> + <code>mobile-aadvantage-bff</code>: loyalty BFF intelligence for AAdvantage feature teams</td>
+      </tr>
+      <tr>
+        <td><code>avatar-nodejs-typescript</code></td>
+        <td>Technology</td>
+        <td><span class="badge secondary">DEFER</span></td>
+        <td>Separate session</td>
+        <td>5 TypeScript/Node repos (20% of fleet). Requires separate scan — not mixed into this Java session.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- TOP BFF BUGS FOR PRODUCT CONTEXT -->
+<div class="section">
+  <h2>Critical Bugs — Product Risk Summary</h2>
+  <table>
+    <thead><tr><th>Severity</th><th>Repo</th><th>Bug</th><th>Business Impact</th></tr></thead>
+    <tbody>
+      <tr><td>🔴 CRITICAL</td><td>travelhub-bff</td><td><code>TravelHubResponseBuilderV2/V3/V4</code> mutable <code>@Service</code> singletons</td><td>Race conditions under load — intermittent travel hub data corruption</td></tr>
+      <tr><td>🔴 CRITICAL</td><td>boardingpass-bff</td><td>Gate/terminal fields swapped in <code>GooglePassBuilder</code></td><td>Passengers see wrong gate/terminal on Google Wallet boarding pass</td></tr>
+      <tr><td>🔴 CRITICAL</td><td>boardingpass-bff</td><td>Duplicate <code>TSA_ID</code> row in <code>GooglePassBuilder</code></td><td>TSA PreCheck / Known Traveler info incorrectly displayed</td></tr>
+      <tr><td>🔴 CRITICAL</td><td>mobile-iu-bff</td><td>Pass-by-value 12-param method — mutations never propagate</td><td>Analytics data silently lost — revenue metrics unreliable</td></tr>
+      <tr><td>🔴 CRITICAL</td><td>mobile-change-bff</td><td><code>BigDecimal(double)</code> for currency</td><td>Fare differences show incorrect prices to customers</td></tr>
+      <tr><td>🟠 HIGH</td><td>mobile-fly-checkin-bff</td><td>Year-boundary date comparison in <code>FlifoAdapter</code> (L679-684)</td><td>Check-in validation breaks on Dec 31 / Jan 1 flights</td></tr>
+      <tr><td>🟠 HIGH</td><td>Minilith</td><td><code>getAllPassengers()</code> returns only last passenger</td><td>Multi-passenger reservations display incomplete data</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="verdict purple" style="margin-bottom: 24px;">
+  🚀 Pre-flight complete — 1 primary avatar (java-spring, Mode 2+4), 3 product avatars (check-in-travel, passenger-booking, loyalty-aadvantage, Mode 4), nodejs-typescript deferred. Proceeding to Phase 1.
+</div>
+
+<footer>Hangar AI Constitution Clinic · Wave 4 Mobile · BFF Session · 2026-04-27</footer>
+</body>
+</html>
