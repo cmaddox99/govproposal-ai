@@ -97,7 +97,7 @@ def _label_value(soup: BeautifulSoup, label_re: re.Pattern) -> str:
     for dt in soup.find_all(["dt", "th", "label", "strong", "b"]):
         text = _clean(dt.get_text())
         if label_re.search(text):
-            sibling = dt.find_next(["dd", "td", "span", "p"])
+            sibling = dt.find_next(["dd", "td", "span", "p", "div"])
             if sibling is not None:
                 value = _clean(sibling.get_text())
                 if value:
@@ -175,17 +175,25 @@ def _parse_detail(solicitation_id: str, html: str, detail_url: str) -> Optional[
         if match:
             nigp_code = match.group(1)
 
-    # Description: ESBD doesn't label this with "Description:" — the body
-    # copy lives in the main content area. Best-effort grab: the longest
-    # paragraph after the title, up to 5000 chars.
+    # Description: ESBD labels the scope-of-work narrative
+    # "Solicitation Description:" (it sits in the same block as the
+    # "Follow Solicitation" button, NOT the "Download PDF" / attachments
+    # block). Use the labeled value; only fall back to the longest
+    # paragraph if the label isn't found.
     description: Optional[str] = None
-    longest_p = ""
-    for p in soup.find_all("p"):
-        text = _clean(p.get_text())
-        if len(text) > len(longest_p):
-            longest_p = text
-    if len(longest_p) > 60:
-        description = longest_p[:5000]
+    desc_text = _label_value(
+        soup, re.compile(r"solicitation\s*description|description", re.I)
+    )
+    if desc_text and len(desc_text) > 20:
+        description = desc_text[:5000]
+    else:
+        longest_p = ""
+        for p in soup.find_all("p"):
+            text = _clean(p.get_text())
+            if len(text) > len(longest_p):
+                longest_p = text
+        if len(longest_p) > 60:
+            description = longest_p[:5000]
 
     # Map ESBD status to is_active. Posted / Active = live; everything else
     # (Awarded, Closed, No Award, Posting Cancelled) is not.
