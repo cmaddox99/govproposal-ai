@@ -89,6 +89,19 @@ def _clean(text: Optional[str]) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+def _cap(value: Optional[str], limit: int) -> Optional[str]:
+    """Truncate to a column's max length so inserts can't overflow.
+
+    ESBD class/item code lists and some fields can run well past the
+    String() limits on the Opportunity model (e.g. naics_description is
+    varchar(255) but NIGP code lists concatenate many entries). A single
+    oversized row otherwise aborts the whole sync transaction.
+    """
+    if value is None:
+        return None
+    return value[:limit]
+
+
 def _parse_date(text: str) -> Optional[datetime]:
     """Parse common ESBD date formats. Returns timezone-aware UTC."""
     if not text:
@@ -246,21 +259,25 @@ def _parse_detail(
     if status and status.lower() not in {"posted", "active", "open"}:
         is_active = False
 
+    # Cap each value to its column's varchar limit so an oversized field
+    # (notably the concatenated NIGP class/item list) can't abort the sync.
+    # description is a TEXT column, so it only needs the 5000-char guard
+    # already applied above.
     return {
-        "notice_id": f"txsmartbuy-{solicitation_id}",
-        "solicitation_number": solicitation_id,
-        "title": title[:500],
+        "notice_id": _cap(f"txsmartbuy-{solicitation_id}", 100),
+        "solicitation_number": _cap(solicitation_id, 100),
+        "title": _cap(title, 500),
         "description": description,
-        "agency": agency or None,
+        "agency": _cap(agency or None, 255),
         "notice_type": "solicitation",
-        "naics_code": nigp_code,
-        "naics_description": nigp_text or None,
+        "naics_code": _cap(nigp_code, 10),
+        "naics_description": _cap(nigp_text or None, 255),
         "posted_date": _parse_date(posted),
         "response_deadline": _parse_date(deadline) if deadline else None,
-        "primary_contact_name": contact_name or None,
-        "primary_contact_email": contact_email or None,
-        "primary_contact_phone": contact_phone or None,
-        "sam_url": detail_url,
+        "primary_contact_name": _cap(contact_name or None, 255),
+        "primary_contact_email": _cap(contact_email or None, 255),
+        "primary_contact_phone": _cap(contact_phone or None, 50),
+        "sam_url": _cap(detail_url, 500),
         "source": "txsmartbuy",
         "market": "sled",
         "is_active": is_active,
