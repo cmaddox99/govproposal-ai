@@ -374,11 +374,16 @@ class PastPerformanceExtractedFields(BaseModel):
 class PastPerformanceExtractResponse(BaseModel):
     """Response from the upload-and-extract endpoint.
 
+    A document may contain several past performances; `records` holds one
+    entry per past performance found. `extracted` mirrors the first record
+    for backward compatibility.
+
     The file is stored under source_document_path; pass that path back when
-    calling POST /past-performance to attach the file to the new record.
+    calling POST /past-performance to attach the file to the new record(s).
     """
 
     extracted: PastPerformanceExtractedFields
+    records: list[PastPerformanceExtractedFields] = Field(default_factory=list)
     source_document_path: str
     source_document_filename: str
     source_document_content_type: str | None = None

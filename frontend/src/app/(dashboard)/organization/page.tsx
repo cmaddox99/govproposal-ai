@@ -57,6 +57,19 @@ interface PpFormState {
   source_document_content_type: string | null;
 }
 
+interface ReviewRecord extends PpFormState {
+  selected: boolean;
+}
+
+const toIsoDate = (value: string | null | undefined): string | null => {
+  if (!value) return null;
+  try {
+    return new Date(value).toISOString().split('T')[0];
+  } catch {
+    return null;
+  }
+};
+
 const EMPTY_PP: PpFormState = {
   contract_name: '',
   agency: '',
@@ -107,6 +120,8 @@ export default function OrganizationPage() {
   const [newTag, setNewTag] = useState('');
   const [extractingPp, setExtractingPp] = useState(false);
   const [extractionBanner, setExtractionBanner] = useState<string | null>(null);
+  const [reviewRecords, setReviewRecords] = useState<ReviewRecord[] | null>(null);
+  const [savingReview, setSavingReview] = useState(false);
   const ppFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -259,6 +274,7 @@ export default function OrganizationPage() {
   const handleEditPp = (record: PastPerformanceRecord) => {
     setEditingPpId(record.id);
     setExtractionBanner(null);
+    setReviewRecords(null);
     setPpForm({
       contract_name: record.contract_name,
       agency: record.agency || '',
@@ -288,21 +304,16 @@ export default function OrganizationPage() {
     setError('');
     setExtractingPp(true);
     setExtractionBanner(null);
+    setReviewRecords(null);
     try {
       const res = await pastPerformanceApi.extract(orgId, file);
       const data = res.data;
-      const extracted = data.extracted || {};
-      const toIsoDate = (value: string | null | undefined): string | null => {
-        if (!value) return null;
-        try {
-          return new Date(value).toISOString().split('T')[0];
-        } catch {
-          return null;
-        }
-      };
+      const rawRecords: any[] =
+        Array.isArray(data.records) && data.records.length > 0
+          ? data.records
+          : [data.extracted || {}];
 
-      setEditingPpId(null);
-      setPpForm({
+      const toFormState = (extracted: any): PpFormState => ({
         contract_name: extracted.contract_name || '',
         agency: extracted.agency || '',
         contract_number: extracted.contract_number || '',
@@ -319,17 +330,68 @@ export default function OrganizationPage() {
         source_document_filename: data.source_document_filename,
         source_document_content_type: data.source_document_content_type,
       });
-      setShowPpForm(true);
-      setExtractionBanner(
-        data.extraction_available
-          ? `Extracted fields from ${data.source_document_filename}. Review and edit before saving.`
-          : `${data.source_document_filename} attached. AI extraction unavailable — fill in the fields manually.`
-      );
+
+      if (data.extraction_available && rawRecords.length > 1) {
+        // Multiple past performances found — show the review list
+        setShowPpForm(false);
+        setEditingPpId(null);
+        setReviewRecords(rawRecords.map((r) => ({ ...toFormState(r), selected: true })));
+        setExtractionBanner(
+          `Found ${rawRecords.length} past performances in ${data.source_document_filename}. Review, edit, and uncheck any you don't want before saving.`
+        );
+      } else {
+        setEditingPpId(null);
+        setPpForm(toFormState(rawRecords[0]));
+        setShowPpForm(true);
+        setExtractionBanner(
+          data.extraction_available
+            ? `Extracted fields from ${data.source_document_filename}. Review and edit before saving.`
+            : `${data.source_document_filename} attached. AI extraction unavailable — fill in the fields manually.`
+        );
+      }
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Failed to extract from document');
     } finally {
       setExtractingPp(false);
       if (ppFileInputRef.current) ppFileInputRef.current.value = '';
+    }
+  };
+
+  const updateReviewRecord = (index: number, patch: Partial<ReviewRecord>) => {
+    setReviewRecords((prev) =>
+      prev ? prev.map((r, i) => (i === index ? { ...r, ...patch } : r)) : prev
+    );
+  };
+
+  const handleSaveReview = async () => {
+    if (!orgId || !reviewRecords) return;
+    const selected = reviewRecords.filter((r) => r.selected && r.contract_name);
+    if (selected.length === 0) return;
+
+    setSavingReview(true);
+    setError('');
+    let saved = 0;
+    try {
+      for (const record of selected) {
+        const { selected: _omit, ...payload } = record;
+        await pastPerformanceApi.create(orgId, {
+          ...payload,
+          contract_value: payload.contract_value || null,
+          relevance_tags: payload.relevance_tags && payload.relevance_tags.length > 0 ? payload.relevance_tags : null,
+        });
+        saved += 1;
+      }
+      setReviewRecords(null);
+      setExtractionBanner(null);
+      setSuccessMessage(`${saved} past performance record${saved === 1 ? '' : 's'} added`);
+    } catch (err: any) {
+      setError(
+        err.response?.data?.detail ||
+          `Failed after saving ${saved} of ${selected.length} records — the rest were not saved`
+      );
+    } finally {
+      setSavingReview(false);
+      fetchPastPerformance(orgId);
     }
   };
 
@@ -598,12 +660,110 @@ export default function OrganizationPage() {
               )}
               {extractingPp ? 'Extracting…' : 'Smart Upload'}
             </button>
-            <button onClick={() => { setShowPpForm(true); setEditingPpId(null); setPpForm(EMPTY_PP); setExtractionBanner(null); }}
+            <button onClick={() => { setShowPpForm(true); setEditingPpId(null); setPpForm(EMPTY_PP); setExtractionBanner(null); setReviewRecords(null); }}
               className="flex items-center gap-2 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm">
               <Plus className="w-4 h-4" /> Add Record
             </button>
           </div>
         </div>
+
+        {/* Multi-record extraction review */}
+        {reviewRecords && (
+          <div className="mb-6 p-4 bg-white/[0.05] border border-purple-500/30 rounded-lg space-y-4">
+            <div className="flex items-start gap-2 p-3 rounded-lg bg-purple-500/10 border border-purple-500/30 text-xs text-purple-100">
+              <Sparkles className="w-4 h-4 text-purple-300 flex-shrink-0 mt-0.5" />
+              <span>{extractionBanner}</span>
+            </div>
+
+            <div className="space-y-3">
+              {reviewRecords.map((record, index) => (
+                <div key={index}
+                  className={`p-4 rounded-lg border ${record.selected ? 'bg-white/[0.05] border-white/[0.12]' : 'bg-white/[0.02] border-white/[0.05] opacity-60'}`}>
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      checked={record.selected}
+                      onChange={(e) => updateReviewRecord(index, { selected: e.target.checked })}
+                      className="mt-1.5 w-4 h-4 rounded border-white/[0.2] bg-white/[0.05] accent-purple-500 flex-shrink-0 cursor-pointer"
+                    />
+                    <div className="flex-1 space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div className="md:col-span-2">
+                          <label className="block text-xs text-gray-400 mb-1">Contract Name *</label>
+                          <input type="text" value={record.contract_name}
+                            onChange={(e) => updateReviewRecord(index, { contract_name: e.target.value })}
+                            className="w-full px-3 py-1.5 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Agency</label>
+                          <input type="text" value={record.agency}
+                            onChange={(e) => updateReviewRecord(index, { agency: e.target.value })}
+                            className="w-full px-3 py-1.5 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Contract Number</label>
+                          <input type="text" value={record.contract_number}
+                            onChange={(e) => updateReviewRecord(index, { contract_number: e.target.value })}
+                            className="w-full px-3 py-1.5 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Contract Value ($)</label>
+                          <input type="number" value={record.contract_value ?? ''}
+                            onChange={(e) => updateReviewRecord(index, { contract_value: e.target.value ? parseFloat(e.target.value) : null })}
+                            className="w-full px-3 py-1.5 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs text-gray-400 mb-1">Period Start</label>
+                            <input type="date" value={record.period_of_performance_start || ''}
+                              onChange={(e) => updateReviewRecord(index, { period_of_performance_start: e.target.value || null })}
+                              className="w-full px-3 py-1.5 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm" />
+                          </div>
+                          <div>
+                            <label className="block text-xs text-gray-400 mb-1">Period End</label>
+                            <input type="date" value={record.period_of_performance_end || ''}
+                              onChange={(e) => updateReviewRecord(index, { period_of_performance_end: e.target.value || null })}
+                              className="w-full px-3 py-1.5 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm" />
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-400 mb-1">Description</label>
+                        <textarea value={record.description}
+                          onChange={(e) => updateReviewRecord(index, { description: e.target.value })}
+                          rows={2}
+                          className="w-full px-3 py-1.5 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm" />
+                      </div>
+                      {(record.contact_name || record.contact_email || record.contact_phone) && (
+                        <p className="text-xs text-gray-500">
+                          Contact: {[record.contact_name, record.contact_email, record.contact_phone].filter(Boolean).join(' · ')}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleSaveReview}
+                disabled={savingReview || reviewRecords.filter((r) => r.selected && r.contract_name).length === 0}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm disabled:opacity-50">
+                {savingReview && <Loader2 className="w-4 h-4 animate-spin" />}
+                {savingReview
+                  ? 'Saving…'
+                  : `Save ${reviewRecords.filter((r) => r.selected && r.contract_name).length} Selected`}
+              </button>
+              <button
+                onClick={() => { setReviewRecords(null); setExtractionBanner(null); }}
+                disabled={savingReview}
+                className="px-4 py-2 bg-white/[0.05] text-gray-300 rounded-lg hover:bg-white/[0.08] text-sm disabled:opacity-50">
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* PP Form */}
         {showPpForm && (

@@ -128,11 +128,12 @@ async def extract_from_document(
         raise HTTPException(status_code=413, detail=str(exc)) from exc
 
     text = extract_text(stored.absolute_path, stored.content_type, stored.original_filename)
-    raw = await extract_past_performance(text) if text else None
+    raw_records = await extract_past_performance(text) if text else []
 
-    if not raw:
+    if not raw_records:
         return PastPerformanceExtractResponse(
             extracted=PastPerformanceExtractedFields(),
+            records=[],
             source_document_path=stored.relative_path,
             source_document_filename=stored.original_filename,
             source_document_content_type=stored.content_type,
@@ -151,27 +152,31 @@ async def extract_from_document(
         except (TypeError, ValueError):
             return None
 
-    fields = PastPerformanceExtractedFields(
-        contract_name=raw.get("contract_name"),
-        agency=raw.get("agency"),
-        contract_number=raw.get("contract_number"),
-        contract_value=raw.get("contract_value"),
-        period_of_performance_start=_parse_date(raw.get("period_of_performance_start")),
-        period_of_performance_end=_parse_date(raw.get("period_of_performance_end")),
-        description=raw.get("description"),
-        contact_name=raw.get("contact_name"),
-        contact_email=raw.get("contact_email"),
-        contact_phone=raw.get("contact_phone"),
-        performance_rating=raw.get("performance_rating"),
-        confidence={
-            k: float(v)
-            for k, v in (raw.get("confidence") or {}).items()
-            if isinstance(v, (int, float))
-        },
-    )
+    def _to_fields(raw: dict) -> PastPerformanceExtractedFields:
+        return PastPerformanceExtractedFields(
+            contract_name=raw.get("contract_name"),
+            agency=raw.get("agency"),
+            contract_number=raw.get("contract_number"),
+            contract_value=raw.get("contract_value"),
+            period_of_performance_start=_parse_date(raw.get("period_of_performance_start")),
+            period_of_performance_end=_parse_date(raw.get("period_of_performance_end")),
+            description=raw.get("description"),
+            contact_name=raw.get("contact_name"),
+            contact_email=raw.get("contact_email"),
+            contact_phone=raw.get("contact_phone"),
+            performance_rating=raw.get("performance_rating"),
+            confidence={
+                k: float(v)
+                for k, v in (raw.get("confidence") or {}).items()
+                if isinstance(v, (int, float))
+            },
+        )
+
+    records = [_to_fields(raw) for raw in raw_records]
 
     return PastPerformanceExtractResponse(
-        extracted=fields,
+        extracted=records[0],
+        records=records,
         source_document_path=stored.relative_path,
         source_document_filename=stored.original_filename,
         source_document_content_type=stored.content_type,
@@ -294,12 +299,21 @@ async def delete_past_performance(
     await session.delete(record)
     await session.commit()
 
-    # Clean up the source document file once the record is gone
+    # Clean up the source document file once the record is gone — but only if
+    # no other record still references it (one upload can back several records).
     if src_path:
-        try:
-            get_storage().delete(src_path)
-        except Exception:
-            pass
+        still_referenced = (
+            await session.execute(
+                select(OrgPastPerformance.id)
+                .where(OrgPastPerformance.source_document_path == src_path)
+                .limit(1)
+            )
+        ).scalar_one_or_none()
+        if not still_referenced:
+            try:
+                get_storage().delete(src_path)
+            except Exception:
+                pass
 
     audit = AuditService(session)
     await audit.log_event(

@@ -15,7 +15,7 @@ from __future__ import annotations
 import io
 import json
 import logging
-from typing import Any, Optional
+from typing import Any
 
 import anthropic
 
@@ -109,37 +109,42 @@ def _read_docx(path: str) -> str:
 
 EXTRACTION_SYSTEM_PROMPT = """You extract structured fields from past-performance documents for a government contracting platform.
 
-You receive the plain text of a contract, CPARS report, project summary, or similar document, and you produce a JSON object matching this schema:
+You receive the plain text of a contract, CPARS report, project summary, or similar document. A single document may describe ONE past performance or SEVERAL distinct past performances (e.g. a references package listing multiple contracts). You produce a JSON object matching this schema:
 
 {
-  "contract_name": string,           // required — the project / contract title
-  "agency": string | null,           // the contracting agency or customer name
-  "contract_number": string | null,  // contract / task order number
-  "contract_value": number | null,   // total contract value in USD (number only, no currency symbol)
-  "period_of_performance_start": string | null,  // ISO 8601 date "YYYY-MM-DD"
-  "period_of_performance_end": string | null,    // ISO 8601 date "YYYY-MM-DD"
-  "description": string | null,      // 2-4 sentence summary of scope of work
-  "contact_name": string | null,     // government technical point of contact
-  "contact_email": string | null,
-  "contact_phone": string | null,
-  "performance_rating": string | null,  // CPARS-style rating: "Exceptional", "Very Good", "Satisfactory", "Marginal", "Unsatisfactory" — or null if unknown
-  "confidence": {                    // 0.0 - 1.0 per field, your confidence in the value
-    "contract_name": number,
-    "agency": number,
-    "contract_number": number,
-    "contract_value": number,
-    "period_of_performance_start": number,
-    "period_of_performance_end": number,
-    "description": number,
-    "contact_name": number,
-    "contact_email": number,
-    "contact_phone": number,
-    "performance_rating": number
-  }
+  "records": [                         // one entry PER distinct past performance in the document
+    {
+      "contract_name": string,           // required — the project / contract title
+      "agency": string | null,           // the contracting agency or customer name
+      "contract_number": string | null,  // contract / task order number
+      "contract_value": number | null,   // total contract value in USD (number only, no currency symbol)
+      "period_of_performance_start": string | null,  // ISO 8601 date "YYYY-MM-DD"
+      "period_of_performance_end": string | null,    // ISO 8601 date "YYYY-MM-DD"
+      "description": string | null,      // 2-4 sentence summary of scope of work
+      "contact_name": string | null,     // government technical point of contact
+      "contact_email": string | null,
+      "contact_phone": string | null,
+      "performance_rating": string | null,  // CPARS-style rating: "Exceptional", "Very Good", "Satisfactory", "Marginal", "Unsatisfactory" — or null if unknown
+      "confidence": {                    // 0.0 - 1.0 per field, your confidence in the value
+        "contract_name": number,
+        "agency": number,
+        "contract_number": number,
+        "contract_value": number,
+        "period_of_performance_start": number,
+        "period_of_performance_end": number,
+        "description": number,
+        "contact_name": number,
+        "contact_email": number,
+        "contact_phone": number,
+        "performance_rating": number
+      }
+    }
+  ]
 }
 
 Rules:
 - Output ONLY the JSON object. No prose, no markdown fences, no commentary.
+- Emit one records[] entry for EACH distinct contract / past performance described. Do not merge separate contracts into one entry, and do not split one contract into several.
 - If a field cannot be found, set it to null and confidence to 0.
 - For dates, prefer the explicit period of performance over award dates.
 - For contract_value, sum line items if the document lists them; if a range is given, use the maximum.
@@ -147,13 +152,13 @@ Rules:
 """
 
 
-async def extract_past_performance(text: str) -> Optional[dict[str, Any]]:
-    """Run Claude over document text and return the structured fields."""
+async def extract_past_performance(text: str) -> list[dict[str, Any]]:
+    """Run Claude over document text and return one dict per past performance found."""
     if not text or not text.strip():
-        return None
+        return []
     if not settings.anthropic_api_key:
         logger.info("Anthropic key not configured; skipping past-performance extraction")
-        return None
+        return []
 
     snippet = text[:MAX_EXTRACT_CHARS]
     client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
@@ -161,14 +166,15 @@ async def extract_past_performance(text: str) -> Optional[dict[str, Any]]:
     try:
         message = await client.messages.create(
             model=settings.anthropic_model,
-            max_tokens=2048,
+            max_tokens=8192,
             system=EXTRACTION_SYSTEM_PROMPT,
             messages=[
                 {
                     "role": "user",
                     "content": (
                         "Extract past-performance fields from this document. "
-                        "Return only the JSON object as specified.\n\n"
+                        "Return only the JSON object as specified, with one "
+                        "records[] entry per distinct past performance.\n\n"
                         f"<document>\n{snippet}\n</document>"
                     ),
                 }
@@ -176,13 +182,13 @@ async def extract_past_performance(text: str) -> Optional[dict[str, Any]]:
         )
     except anthropic.AuthenticationError:
         logger.error("Invalid Anthropic API key for past-performance extraction")
-        return None
+        return []
     except anthropic.RateLimitError:
         logger.warning("Anthropic rate limit reached during extraction")
-        return None
+        return []
     except Exception as exc:
         logger.error("Claude extraction error: %s", exc)
-        return None
+        return []
 
     try:
         raw = message.content[0].text
@@ -190,7 +196,20 @@ async def extract_past_performance(text: str) -> Optional[dict[str, Any]]:
             raw = raw.split("```json", 1)[1].split("```", 1)[0]
         elif "```" in raw:
             raw = raw.split("```", 1)[1].split("```", 1)[0]
-        return json.loads(raw.strip())
+        parsed = json.loads(raw.strip())
     except (json.JSONDecodeError, IndexError, AttributeError) as exc:
         logger.warning("Could not parse extraction JSON: %s", exc)
-        return None
+        return []
+
+    # Expected shape: {"records": [...]}. Tolerate a bare list or a single
+    # object (older prompt shape) so a drifting model response still works.
+    if isinstance(parsed, dict) and isinstance(parsed.get("records"), list):
+        records = parsed["records"]
+    elif isinstance(parsed, list):
+        records = parsed
+    elif isinstance(parsed, dict):
+        records = [parsed]
+    else:
+        return []
+
+    return [r for r in records if isinstance(r, dict) and r.get("contract_name")]
