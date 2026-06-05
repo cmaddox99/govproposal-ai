@@ -734,11 +734,26 @@ export default function OrganizationPage() {
                           rows={2}
                           className="w-full px-3 py-1.5 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm" />
                       </div>
-                      {(record.contact_name || record.contact_email || record.contact_phone) && (
-                        <p className="text-xs text-gray-500">
-                          Contact: {[record.contact_name, record.contact_email, record.contact_phone].filter(Boolean).join(' · ')}
-                        </p>
-                      )}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Contact Name</label>
+                          <input type="text" value={record.contact_name}
+                            onChange={(e) => updateReviewRecord(index, { contact_name: e.target.value })}
+                            className="w-full px-3 py-1.5 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Contact Email</label>
+                          <input type="email" value={record.contact_email}
+                            onChange={(e) => updateReviewRecord(index, { contact_email: e.target.value })}
+                            className="w-full px-3 py-1.5 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Contact Phone</label>
+                          <input type="tel" value={record.contact_phone}
+                            onChange={(e) => updateReviewRecord(index, { contact_phone: e.target.value })}
+                            className="w-full px-3 py-1.5 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm" />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -852,6 +867,20 @@ export default function OrganizationPage() {
                   onChange={(e) => setPpForm({ ...ppForm, contact_name: e.target.value })}
                   className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm" />
               </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Contact Email</label>
+                <input type="email" value={ppForm.contact_email || ''}
+                  onChange={(e) => setPpForm({ ...ppForm, contact_email: e.target.value })}
+                  placeholder="poc@agency.gov"
+                  className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm placeholder-gray-500" />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Contact Phone</label>
+                <input type="tel" value={ppForm.contact_phone || ''}
+                  onChange={(e) => setPpForm({ ...ppForm, contact_phone: e.target.value })}
+                  placeholder="(555) 123-4567"
+                  className="w-full px-3 py-2 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white text-sm placeholder-gray-500" />
+              </div>
             </div>
             <div>
               <label className="block text-sm text-gray-400 mb-1">Description</label>
@@ -915,6 +944,11 @@ export default function OrganizationPage() {
                       )}
                     </div>
                     {record.description && <p className="text-gray-400 text-sm mt-2 line-clamp-2">{record.description}</p>}
+                    {(record.contact_name || record.contact_email || record.contact_phone) && (
+                      <p className="text-gray-500 text-xs mt-2">
+                        POC: {[record.contact_name, record.contact_email, record.contact_phone].filter(Boolean).join(' · ')}
+                      </p>
+                    )}
                     <div className="flex flex-wrap gap-2 mt-2">
                       {record.performance_rating && (
                         <span className="px-2 py-0.5 bg-green-600/20 text-green-400 rounded text-xs">{record.performance_rating}</span>
