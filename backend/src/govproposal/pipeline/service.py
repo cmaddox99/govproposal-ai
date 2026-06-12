@@ -423,7 +423,22 @@ async def compute_match_score(
     org_naics = _parse_naics_list(org.naics_codes)
     org_set_asides = _parse_naics_list(getattr(org, "set_asides", None))
 
-    naics_pts, naics_note, naics_imps = _naics_score(opp.naics_code, org_naics)
+    # For SLED opportunities the naics_code column actually holds a Texas
+    # NIGP commodity code (5 digits), not a federal NAICS code. Orgs only
+    # store federal NAICS, so comparing them would always miss. Give the
+    # NAICS factor a neutral score instead of penalizing the org for a
+    # data shape we don't yet capture.
+    is_sled = getattr(opp, "market", "federal") == "sled"
+    if is_sled:
+        naics_pts = 15
+        naics_note = (
+            f"NIGP commodity code {opp.naics_code or '—'} (SLED) — not directly "
+            "comparable to org NAICS, scored neutral"
+        )
+        naics_imps: list[Improvement] = []
+    else:
+        naics_pts, naics_note, naics_imps = _naics_score(opp.naics_code, org_naics)
+
     pp_pts, pp_note, pp_values, pp_imps = _past_performance_score(opp, past_perf)
     sa_pts, sa_note, sa_imps = _set_aside_fit(opp.set_aside_type, org_set_asides)
     val_pts, val_note, val_imps = _value_fit(

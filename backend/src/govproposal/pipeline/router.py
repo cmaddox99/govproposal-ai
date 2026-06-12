@@ -310,6 +310,7 @@ async def create_proposal_from_pipeline(
         naics_code=opp.naics_code,
         due_date=item.proposal_due_date_override or opp.response_deadline,
         estimated_value=float(opp.estimated_value) if opp.estimated_value else None,
+        market=opp.market,
         created_by=current_user.id,
     )
     session.add(proposal)
